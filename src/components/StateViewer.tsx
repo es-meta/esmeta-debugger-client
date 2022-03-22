@@ -33,83 +33,83 @@ class StateViewerItem extends React.Component<
   StateViewerItemProps,
   StateViewerItemState
 > {
-  constructor ( props: StateViewerItemProps ) {
-    super( props );
+  constructor(props: StateViewerItemProps) {
+    super(props);
     this.state = { expanded: false };
   }
-  componentDidUpdate ( prev: StateViewerItemProps ) {
+  componentDidUpdate(prev: StateViewerItemProps) {
     // close accordian when diasabled
-    if ( !prev.disabled && this.props.disabled )
-      this.setState( { ...this.state, expanded: false } );
+    if (!prev.disabled && this.props.disabled)
+      this.setState({ ...this.state, expanded: false });
   }
-  onItemClick () {
+  onItemClick() {
     const { disabled } = this.props;
-    if ( !disabled ) {
+    if (!disabled) {
       const expanded = !this.state.expanded;
-      this.setState( { ...this.state, expanded } );
+      this.setState({ ...this.state, expanded });
     }
   }
-  render () {
+  render() {
     const { disabled, header, headerStyle, body, bodyStyle } = this.props;
     const { expanded } = this.state;
     return (
-      <Accordion expanded={ expanded } disabled={ disabled }>
+      <Accordion expanded={expanded} disabled={disabled}>
         <AccordionSummary
-          onClick={ () => this.onItemClick() }
-          expandIcon={ <Icon>expand_more</Icon> }
-          style={ headerStyle }
+          onClick={() => this.onItemClick()}
+          expandIcon={<Icon>expand_more</Icon>}
+          style={headerStyle}
         >
-          { header }
+          {header}
         </AccordionSummary>
-        <AccordionDetails style={ bodyStyle }>{ body }</AccordionDetails>
+        <AccordionDetails style={bodyStyle}>{body}</AccordionDetails>
       </Accordion>
     );
   }
 }
 
 // connect redux store
-const mapStateToProps = ( st: ReduxState ) => ( {
+const mapStateToProps = (st: ReduxState) => ({
   disableStateViewer: !(
     st.appState.state === AppState.DEBUG_READY ||
     st.appState.state === AppState.TERMINATED
   ),
-} );
-const mapDispatchToProps = (dispatch : Dispatch) => ( {
-  dispatch
 });
-const connector = connect( mapStateToProps, mapDispatchToProps );
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  dispatch,
+});
+const connector = connect(mapStateToProps, mapDispatchToProps);
 type StateViewerProps = ConnectedProps<typeof connector>;
 
 class StateViewer extends React.Component<StateViewerProps> {
-  render () {
+  render() {
     const { disableStateViewer } = this.props;
 
     return (
       <div className="spec-state-viewer-container">
         <StateViewerItem
-          disabled={ disableStateViewer }
-          header={ <Typography>ECMAScript Call Stack</Typography> }
-          body={ <StackFrameViewer /> }
+          disabled={disableStateViewer}
+          header={<Typography>ECMAScript Call Stack</Typography>}
+          body={<StackFrameViewer />}
         />
         <StateViewerItem
-          disabled={ disableStateViewer }
-          header={ <Typography>ECMAScript Environment</Typography> }
-          body={ <SpecEnvViewer /> }
+          disabled={disableStateViewer}
+          header={<Typography>ECMAScript Environment</Typography>}
+          body={<SpecEnvViewer />}
         />
         <StateViewerItem
-          disabled={ disableStateViewer }
-          header={ <Typography>ECMAScript Heap</Typography> }
-          bodyStyle={ { paddingTop: 0 } }
-          body={ <HeapViewer /> }
+          disabled={disableStateViewer}
+          header={<Typography>ECMAScript Heap</Typography>}
+          bodyStyle={{ paddingTop: 0 }}
+          body={<HeapViewer />}
         />
         <StateViewerItem
-          disabled={ disableStateViewer }
-          header={ <Typography>ECMAScript Breakpoints</Typography> }
-          body={ <Breakpoints /> }
+          disabled={disableStateViewer}
+          header={<Typography>ECMAScript Breakpoints</Typography>}
+          body={<Breakpoints />}
         />
       </div>
     );
   }
 }
 
-export default connector( StateViewer );
+export default connector(StateViewer);

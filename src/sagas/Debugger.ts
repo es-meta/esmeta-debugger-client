@@ -26,7 +26,7 @@ function* runSaga() {
       console.log(code, breakpoints, compressed);
       // run server debugger with js code and breakpoints
       yield call(() =>
-        doAPIPostRequest("exec/run", { compressed, breakpoints })
+        doAPIPostRequest("exec/run", { compressed, breakpoints }),
       );
       // move app state to DEBUG_READY
       yield put(move(AppState.DEBUG_READY));
@@ -62,7 +62,7 @@ function mkStepSaga(endpoint: string) {
   function* _stepBodySaga() {
     try {
       const { result, jsRanges, heap, stackFrames }: StepResult = yield call(
-        () => doAPIPostRequest(endpoint)
+        () => doAPIPostRequest(endpoint),
       );
       if (result === StepResultType.TERMINATE) toast.success("Terminated");
       else if (result === StepResultType.BREAK) toast.info("Breaked");
@@ -70,7 +70,7 @@ function mkStepSaga(endpoint: string) {
       yield put(updateInfo(stackFrames, heap, []));
       yield put(updateRange(...jsRanges));
     } catch (e: unknown) {
-      toast.error((e as Error));
+      toast.error(e as Error);
     }
   }
   return _stepBodySaga;
@@ -84,21 +84,21 @@ function* specStepSaga() {
 function* specStepOverSaga() {
   yield takeLatest(
     DebuggerActionType.SPEC_STEP_OVER,
-    mkStepSaga("exec/specStepOver")
+    mkStepSaga("exec/specStepOver"),
   );
 }
 // spec step over saga
 function* specStepOutSaga() {
   yield takeLatest(
     DebuggerActionType.SPEC_STEP_OUT,
-    mkStepSaga("exec/specStepOut")
+    mkStepSaga("exec/specStepOut"),
   );
 }
 // spec continue saga
 function* specContinueSaga() {
   yield takeLatest(
     DebuggerActionType.SPEC_CONTINUE,
-    mkStepSaga("exec/specContinue")
+    mkStepSaga("exec/specContinue"),
   );
 }
 
@@ -111,7 +111,7 @@ function* jsStepSaga() {
 function* jsStepOverSaga() {
   yield takeLatest(
     DebuggerActionType.JS_STEP_OVER,
-    mkStepSaga("exec/jsStepOver")
+    mkStepSaga("exec/jsStepOver"),
   );
 }
 
@@ -119,7 +119,7 @@ function* jsStepOverSaga() {
 function* jsStepOutSaga() {
   yield takeLatest(
     DebuggerActionType.JS_STEP_OUT,
-    mkStepSaga("exec/jsStepOut")
+    mkStepSaga("exec/jsStepOut"),
   );
 }
 

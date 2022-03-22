@@ -13,25 +13,25 @@ type AlgoStepProps = {
 };
 
 class AlgoStep extends React.Component<AlgoStepProps> {
-  getClassName (): string {
+  getClassName(): string {
     let className = "algo-step";
     const { highlight } = this.props;
-    if ( highlight ) className += " highlight";
+    if (highlight) className += " highlight";
     return className;
   }
 
-  render () {
+  render() {
     const { node } = this.props;
     const { name, contents, indent, step } = node;
 
-    const numberOrBullet = name.startsWith( "ordered" ) ? `${ step }. ` : '• ';
-    const marginLeft = `${ indent * 16 }px`
+    const numberOrBullet = name.startsWith("ordered") ? `${step}. ` : "• ";
+    const marginLeft = `${indent * 16}px`;
     const className = this.getClassName();
 
     return (
-      <div className={ className } style={ { marginLeft, color: 'black' } }>
-        { numberOrBullet }
-        { Emitter.emit(contents) }
+      <div className={className} style={{ marginLeft, color: "black" }}>
+        {numberOrBullet}
+        {Emitter.emit(contents)}
       </div>
     );
   }
@@ -43,16 +43,16 @@ type AlgoViewerProps = {
 };
 class AlgoViewer extends React.Component<AlgoViewerProps> {
   // TODO
-  renderFail () {
+  renderFail() {
     return <Typography variant="subtitle1">TODO...</Typography>;
   }
 
-  flattenAlgo ( algo: AlgorithmNode ) {
+  flattenAlgo(algo: AlgorithmNode) {
     const { contents: ol } = algo;
-    return flattenList( ol );
+    return flattenList(ol);
   }
 
-  parseAlgo (algo: Algo) {
+  parseAlgo(algo: Algo) {
     const code = algo.code.join("\n");
     try {
       return this.flattenAlgo(parseAlgorithm(code));
@@ -61,11 +61,11 @@ class AlgoViewer extends React.Component<AlgoViewerProps> {
     }
   }
 
-  render () {
+  render() {
     const { data, currentStep } = this.props;
-    if ( data === undefined ) return this.renderFail();
+    if (data === undefined) return this.renderFail();
     // get header string
-    const headerStr = getHeaderStr( data );
+    const headerStr = getHeaderStr(data);
 
     const algo = this.parseAlgo(data);
 
@@ -74,14 +74,16 @@ class AlgoViewer extends React.Component<AlgoViewerProps> {
     // render
     return (
       <div className="algo-container">
-        <Typography variant="subtitle1"><b>{ headerStr }</b></Typography>
-        { algo.map( ( node, index ) => (
+        <Typography variant="subtitle1">
+          <b>{headerStr}</b>
+        </Typography>
+        {algo.map((node, index) => (
           <AlgoStep
-            key={ uuid() }
-            node={ node }
-            highlight={ index === currentStep }
+            key={uuid()}
+            node={node}
+            highlight={index === currentStep}
           />
-        ) ) }
+        ))}
       </div>
     );
   }

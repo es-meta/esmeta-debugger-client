@@ -47,7 +47,7 @@ export default function reducer(state = initialState, action: SpecAction) {
   switch (action.type) {
     case SpecActionType.LOAD_SUCCESS: {
       state.spec = action.spec;
-      state.algoNames = action.spec.algos.map((algo) => getName(algo));
+      state.algoNames = action.spec.algos.map(algo => getName(algo));
       return state;
     }
     case SpecActionType.LOAD_FAIL: {

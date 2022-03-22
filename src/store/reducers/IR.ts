@@ -18,7 +18,7 @@ export enum IRActionType {
 export const updateInfo = (
   stackFrame: StackFrame,
   heap: [string, string][],
-  env: [string, string][][]
+  env: [string, string][][],
 ): IRAction => ({
   type: IRActionType.UPDATE,
   stackFrame,
@@ -84,7 +84,7 @@ const initialState: IRState = {
 export default function reducer(state = initialState, action: IRAction) {
   switch (action.type) {
     case IRActionType.UPDATE:
-      return produce(state, (draft) => {
+      return produce(state, draft => {
         draft.stackFrame = {
           data: action.stackFrame,
           idx: 0,
@@ -99,15 +99,15 @@ export default function reducer(state = initialState, action: IRAction) {
         };
       });
     case IRActionType.SHOW_ALGO:
-      return produce(state, (draft) => {
+      return produce(state, draft => {
         draft.stackFrame.idx = action.idx;
       });
     case IRActionType.SHOW_ENV:
-      return produce(state, (draft) => {
+      return produce(state, draft => {
         draft.env.idx = action.idx;
       });
     case IRActionType.CLEAR:
-      return produce(state, (draft) => {
+      return produce(state, draft => {
         draft.stackFrame = initialState.stackFrame;
         draft.heap = initialState.heap;
         draft.env = initialState.env;

@@ -11,11 +11,11 @@ export interface Spec {
   section: unknown;
 }
 
-export function getAlgo (
+export function getAlgo(
   spec: Spec | undefined,
-  algoName: string
+  algoName: string,
 ): Algo | undefined {
-  if ( spec === undefined ) return undefined;
-  const algos = spec.algos.filter( ( algo ) => getName( algo ) === algoName );
-  return algos.length === 1 ? algos[ 0 ] : undefined;
+  if (spec === undefined) return undefined;
+  const algos = spec.algos.filter(algo => getName(algo) === algoName);
+  return algos.length === 1 ? algos[0] : undefined;
 }

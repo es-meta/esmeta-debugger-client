@@ -1,7 +1,7 @@
 import React from "react";
 
 class Stat extends React.Component {
-  render () {
+  render() {
     return <div>Stat</div>;
   }
 }

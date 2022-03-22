@@ -34,7 +34,7 @@ const initialState: AppStateState = { state: AppState.INIT, busy: false };
 export default function reducer(state = initialState, action: AppStateAction) {
   switch (action.type) {
     case AppStateActionType.MOVE:
-      return produce(state, (draft) => {
+      return produce(state, draft => {
         draft.state = action.nextState;
       });
     default:

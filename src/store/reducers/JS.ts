@@ -14,7 +14,7 @@ export const updateRange = (
   lineFrom: number,
   lineTo: number,
   start: number,
-  end: number
+  end: number,
 ): JSAction => ({
   type: JSActionType.UPDATE_RANGE,
   lineFrom,
@@ -83,16 +83,16 @@ f();`,
 export default function reducer(state = initialState, action: JSAction) {
   switch (action.type) {
     case JSActionType.EDIT:
-      return produce(state, (draft) => {
+      return produce(state, draft => {
         draft.code = action.code;
       });
     case JSActionType.CLEAR:
-      return produce(state, (draft) => {
+      return produce(state, draft => {
         draft.start = -1;
         draft.end = -1;
       });
     case JSActionType.UPDATE_RANGE:
-      return produce(state, (draft) => {
+      return produce(state, draft => {
         draft.start = action.start;
         draft.end = action.end;
       });

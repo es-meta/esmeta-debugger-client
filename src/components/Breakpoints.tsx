@@ -31,29 +31,29 @@ type BreakpointItemProp = {
 };
 
 class BreakpointItem extends React.Component<BreakpointItemProp> {
-  onToggleClick () {
+  onToggleClick() {
     const { idx, onToggleClick } = this.props;
     onToggleClick(idx.toString());
   }
-  onRemoveClick () {
+  onRemoveClick() {
     const { idx, onRemoveClick } = this.props;
     onRemoveClick(idx.toString());
   }
-  render () {
+  render() {
     const { data } = this.props;
     const { name, enabled } = data;
     return (
       <TableRow>
-        <TableCell style={ { width: "50%", overflow: "hidden" } }>
-          <Tooltip title={ name }>
-            <span>{ name }</span>
+        <TableCell style={{ width: "50%", overflow: "hidden" }}>
+          <Tooltip title={name}>
+            <span>{name}</span>
           </Tooltip>
         </TableCell>
-        <TableCell style={ { width: "15%" } }>
-          <Switch checked={ enabled } onChange={ () => this.onToggleClick() } />
+        <TableCell style={{ width: "15%" }}>
+          <Switch checked={enabled} onChange={() => this.onToggleClick()} />
         </TableCell>
-        <TableCell style={ { width: "15%" } }>
-          <IconButton component="span" onClick={ () => this.onRemoveClick() }>
+        <TableCell style={{ width: "15%" }}>
+          <IconButton component="span" onClick={() => this.onRemoveClick()}>
             <Icon color="secondary">remove_circle</Icon>
           </IconButton>
         </TableCell>
@@ -63,16 +63,16 @@ class BreakpointItem extends React.Component<BreakpointItemProp> {
 }
 
 // connect redux store
-const mapStateToProps = ( st: ReduxState ) => ( {
+const mapStateToProps = (st: ReduxState) => ({
   breakpoints: st.webDebugger.breakpoints,
   algoNames: st.spec.algoNames,
-} );
-const mapDispatchToProps = (dispatch : Dispatch) => ( {
+});
+const mapDispatchToProps = (dispatch: Dispatch) => ({
   addBreak: (bpName: string) => dispatch(addBreak(bpName)),
   rmBreak: (opt: string) => dispatch(rmBreak(opt)),
   toggleBreak: (opt: string) => dispatch(toggleBreak(opt)),
 });
-const connector = connect( mapStateToProps, mapDispatchToProps );
+const connector = connect(mapStateToProps, mapDispatchToProps);
 type BreakpointsProps = ConnectedProps<typeof connector>;
 type BreakpointsState = { bpName: string };
 
@@ -82,25 +82,26 @@ type BreakpointsState = { bpName: string };
 // sort
 // type Hack = { [ key: string ]: any };
 class Breakpoints extends React.Component<BreakpointsProps, BreakpointsState> {
-  constructor ( props: BreakpointsProps ) {
-    super( props );
+  constructor(props: BreakpointsProps) {
+    super(props);
     this.state = { bpName: "" };
   }
 
-  onAddChange ( bpName: string ) {
-    this.setState( { ...this.state, bpName } );
+  onAddChange(bpName: string) {
+    this.setState({ ...this.state, bpName });
   }
-  onAddClick () {
+  onAddClick() {
     const bpName = this.state.bpName;
-    const duplicated = this.props.breakpoints
-      .some( ( {name} ) => name === bpName );
-    const valid = this.props.algoNames.some( ( name ) => name === bpName );
-    if ( valid && !duplicated ) this.props.addBreak(bpName);
-    else if ( duplicated ) toast.warning( `Breakpoint already set: ${ bpName }` );
-    else toast.warning( `Wrong breakpoint name: ${ bpName }` );
+    const duplicated = this.props.breakpoints.some(
+      ({ name }) => name === bpName,
+    );
+    const valid = this.props.algoNames.some(name => name === bpName);
+    if (valid && !duplicated) this.props.addBreak(bpName);
+    else if (duplicated) toast.warning(`Breakpoint already set: ${bpName}`);
+    else toast.warning(`Wrong breakpoint name: ${bpName}`);
   }
 
-  render () {
+  render() {
     const { breakpoints, algoNames } = this.props;
     const { bpName } = this.state;
 
@@ -109,54 +110,54 @@ class Breakpoints extends React.Component<BreakpointsProps, BreakpointsState> {
         <Autocomplete
           freeSolo
           disableClearable
-          options={ algoNames }
-          onChange={ ( _, value ) => this.onAddChange( value ) }
-          renderInput={ ( params ) => (
+          options={algoNames}
+          onChange={(_, value) => this.onAddChange(value)}
+          renderInput={params => (
             <TextField
-              { ...params }
+              {...params}
               label="Algorithm Name"
               variant="outlined"
               size="small"
-              value={ bpName }
+              value={bpName}
               margin="normal"
-              InputProps={ {
+              InputProps={{
                 ...params.InputProps,
                 type: "search",
                 endAdornment: (
                   <IconButton
-                    style={ { padding: 0 } }
-                    onClick={ () => this.onAddClick() }
+                    style={{ padding: 0 }}
+                    onClick={() => this.onAddClick()}
                   >
                     <Icon>add_circle</Icon>
                   </IconButton>
                 ),
-              } }
-              onChange={ ( event ) => this.onAddChange( event.target.value ) }
+              }}
+              onChange={event => this.onAddChange(event.target.value)}
             />
-          ) }
+          )}
         />
         <TableContainer
-          component={ Paper }
+          component={Paper}
           className="breakpoints-table-container"
         >
           <Table stickyHeader size="small">
             <TableHead>
               <TableRow>
-                <TableCell style={ { width: "50%" } }>Name</TableCell>
-                <TableCell style={ { width: "15%" } }>Enable</TableCell>
-                <TableCell style={ { width: "15%" } }>Remove</TableCell>
+                <TableCell style={{ width: "50%" }}>Name</TableCell>
+                <TableCell style={{ width: "15%" }}>Enable</TableCell>
+                <TableCell style={{ width: "15%" }}>Remove</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              { breakpoints.map( ( bp, idx ) => (
-                <BreakpointItem 
-                  key={ uuid() } 
-                  data={ bp } 
-                  idx={ idx } 
-                  onRemoveClick={(opt: string) => this.props.rmBreak(opt)} 
-                  onToggleClick= {(opt: string) => this.props.toggleBreak(opt)}
+              {breakpoints.map((bp, idx) => (
+                <BreakpointItem
+                  key={uuid()}
+                  data={bp}
+                  idx={idx}
+                  onRemoveClick={(opt: string) => this.props.rmBreak(opt)}
+                  onToggleClick={(opt: string) => this.props.toggleBreak(opt)}
                 />
-              ) ) }
+              ))}
             </TableBody>
           </Table>
         </TableContainer>
@@ -165,4 +166,4 @@ class Breakpoints extends React.Component<BreakpointsProps, BreakpointsState> {
   }
 }
 
-export default connector( Breakpoints );
+export default connector(Breakpoints);

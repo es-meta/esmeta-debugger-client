@@ -17,7 +17,7 @@ export const trim_slash = (input: string): string => {
 export const mkURL = (
   host: string,
   endpoint: string,
-  queryObj: { [key: string]: unknown } = {}
+  queryObj: { [key: string]: unknown } = {},
 ): string => {
   let url = `${trim_slash(host)}/${trim_slash(endpoint)}`;
   const listParams: string[] = [];
@@ -29,7 +29,7 @@ export const mkURL = (
       typeof entry === "boolean"
     ) {
       const param = `${encodeURIComponent(key)}=${encodeURIComponent(
-        entry.toString()
+        entry.toString(),
       )}`;
       listParams.push(param);
     } else if (entry !== undefined || entry !== null) {
@@ -57,7 +57,7 @@ type HTTPMethod =
 const doGetRequest = async (
   host: string,
   endpoint: string,
-  queryObj?: { [key: string]: any }
+  queryObj?: { [key: string]: any },
 ): Promise<unknown> => {
   try {
     const url = mkURL(host, endpoint, queryObj);
@@ -75,7 +75,7 @@ const doWriteRequest = async (
   host: string,
   method: HTTPMethod,
   endpoint: string,
-  bodyObj?: unknown
+  bodyObj?: unknown,
 ): Promise<unknown> => {
   try {
     const url = mkURL(host, endpoint);
@@ -88,7 +88,7 @@ const doWriteRequest = async (
     });
     if (!response.ok)
       throw new Error(
-        `${method} request to ${url} failed with ${response.status}`
+        `${method} request to ${url} failed with ${response.status}`,
       );
     return await response.json();
   } catch (e) {
@@ -100,7 +100,7 @@ const doWriteRequest = async (
 // GET request to API server
 export const doAPIGetRequest = (
   endpoint: string,
-  queryObj?: { [key: string]: any }
+  queryObj?: { [key: string]: any },
 ): Promise<unknown> => {
   return doGetRequest(API_HOST, endpoint, queryObj);
 };
@@ -109,28 +109,28 @@ export const doAPIGetRequest = (
 const doAPIWriteRequest = (
   method: HTTPMethod,
   endpoint: string,
-  bodyObj?: unknown
+  bodyObj?: unknown,
 ): Promise<unknown> => {
   return doWriteRequest(API_HOST, method, endpoint, bodyObj);
 };
 // POST
 export const doAPIPostRequest = (
   endpoint: string,
-  bodyObj?: unknown
+  bodyObj?: unknown,
 ): Promise<unknown> => {
   return doAPIWriteRequest("POST", endpoint, bodyObj);
 };
 // DELETE
 export const doAPIDeleteRequest = (
   endpoint: string,
-  bodyObj?: unknown
+  bodyObj?: unknown,
 ): Promise<unknown> => {
   return doAPIWriteRequest("DELETE", endpoint, bodyObj);
 };
 // PUT
 export const doAPIPutRequest = (
   endpoint: string,
-  bodyObj?: unknown
+  bodyObj?: unknown,
 ): Promise<unknown> => {
   return doAPIWriteRequest("PUT", endpoint, bodyObj);
 };

@@ -108,19 +108,19 @@ const initialState: DebuggerState = {
 export default function reducer(state = initialState, action: DebuggerAction) {
   switch (action.type) {
     case DebuggerActionType.ADD_BREAK:
-      return produce(state, (draft) => {
+      return produce(state, draft => {
         console.log(action);
         draft.breakpoints.push({ name: action.bpName, enabled: true });
       });
     case DebuggerActionType.RM_BREAK:
-      return produce(state, (draft) => {
+      return produce(state, draft => {
         if (action.opt === "all") draft.breakpoints = [];
         else draft.breakpoints.splice(Number(action.opt), 1);
       });
     case DebuggerActionType.TOGGLE_BREAK:
-      return produce(state, (draft) => {
+      return produce(state, draft => {
         if (action.opt === "all")
-          draft.breakpoints.forEach((bp) => (bp.enabled = !bp.enabled));
+          draft.breakpoints.forEach(bp => (bp.enabled = !bp.enabled));
         else {
           const i = Number(action.opt);
           draft.breakpoints[i].enabled = !draft.breakpoints[i].enabled;
