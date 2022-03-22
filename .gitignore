@@ -1,0 +1,22 @@
+# file systems
+.DS_Store
+*.swp
+*.swo
+*.log
+logs/
+.cache/
+
+# node projects
+**/node_modules
+package-lock.json
+npm-debug.log*
+
+# IDEs
+.idea/
+.vscode/
+
+# TypeScript
+lib/
+
+# dev
+.*.js
