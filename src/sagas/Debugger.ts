@@ -3,33 +3,33 @@ import { toast } from "react-toastify";
 
 import { ReduxState } from "../store";
 import { AppState, move } from "../store/reducers/AppState";
-import { DebuggerAction, DebuggerActionType } from "../store/reducers/Debugger";
-import { StackFrame, updateInfo, clearIR } from "../store/reducers/IR";
-import { updateRange, clearJS } from "../store/reducers/JS";
+import { DebuggerActionType } from "../store/reducers/Debugger";
 import {
-  doAPIPostRequest,
-  doAPIDeleteRequest,
-  doAPIPutRequest,
-} from "../util/api";
-import { StepResultType } from "../object/StepResult";
+  clearIrState,
+  updateHeapRequest,
+  updateCallStackRequest,
+} from "../store/reducers/IrState";
+import { clearJS } from "../store/reducers/JS";
+import { doAPIPostRequest } from "../util/api";
 
 // run debugger saga
 function* runSaga() {
   function* _runSaga() {
     try {
-      // get code, breakpoints and run esparse
+      // get code, breakpoints
       const state: ReduxState = yield select();
       const code = state.js.code;
-      const breakpoints = state.webDebugger.breakpoints;
-      const compressed = new ESParse("2021").parseWithCompress(code);
-      console.log("A");
-      console.log(code, breakpoints, compressed);
+      const breakpoints = state.breakpoint.items;
+      console.log(code, breakpoints);
+
       // run server debugger with js code and breakpoints
-      yield call(() =>
-        doAPIPostRequest("exec/run", { compressed, breakpoints }),
-      );
+      // TODO yield call(() => doAPIPostRequest("exec/run", { code, breakpoints }));
+      yield call(() => doAPIPostRequest("exec/run", code));
       // move app state to DEBUG_READY
       yield put(move(AppState.DEBUG_READY));
+      // update heap, call stack
+      yield put(updateHeapRequest());
+      yield put(updateCallStackRequest());
     } catch (e: unknown) {
       // show error toast
       toast.error((e as Error).message);
@@ -42,33 +42,34 @@ function* runSaga() {
 // stop debugger saga
 function* stopSaga() {
   function* _stopSaga() {
-    yield put(clearIR());
+    yield put(clearIrState());
     yield put(clearJS());
     yield put(move(AppState.JS_INPUT));
   }
   yield takeLatest(DebuggerActionType.STOP, _stopSaga);
 }
 
-// step result type
-type StepResult = {
-  result: StepResultType;
-  jsRanges: [number, number, number, number];
-  heap: [string, string][];
-  stackFrames: StackFrame;
-};
+// step result
+enum StepResult {
+  BREAKED,
+  TERMINATED,
+  SUCCEED,
+}
 
 // step body saga
 function mkStepSaga(endpoint: string) {
   function* _stepBodySaga() {
     try {
-      const { result, jsRanges, heap, stackFrames }: StepResult = yield call(
-        () => doAPIPostRequest(endpoint),
-      );
-      if (result === StepResultType.TERMINATE) toast.success("Terminated");
-      else if (result === StepResultType.BREAK) toast.info("Breaked");
-      console.log(result);
-      yield put(updateInfo(stackFrames, heap, []));
-      yield put(updateRange(...jsRanges));
+      // TODO
+      const res: StepResult = yield call(() => doAPIPostRequest(endpoint));
+      if (res === StepResult.TERMINATED) toast.success("Terminated");
+      else if (res === StepResult.BREAKED) toast.info("Breaked");
+      console.log(res);
+
+      // update heap, call stack
+      yield put(updateHeapRequest());
+      yield put(updateCallStackRequest());
+      // TODO yield put(updateRange(...jsRanges));
     } catch (e: unknown) {
       toast.error(e as Error);
     }
@@ -102,55 +103,26 @@ function* specContinueSaga() {
   );
 }
 
-// js step saga
-function* jsStepSaga() {
-  yield takeLatest(DebuggerActionType.JS_STEP, mkStepSaga("exec/jsStep"));
-}
-
-// js step over saga
-function* jsStepOverSaga() {
-  yield takeLatest(
-    DebuggerActionType.JS_STEP_OVER,
-    mkStepSaga("exec/jsStepOver"),
-  );
-}
-
-// js step out saga
-function* jsStepOutSaga() {
-  yield takeLatest(
-    DebuggerActionType.JS_STEP_OUT,
-    mkStepSaga("exec/jsStepOut"),
-  );
-}
-
-// add breakpoint saga
-function* addBreakSaga() {
-  function* _addBreakSaga(action: DebuggerAction) {
-    if (action.type !== DebuggerActionType.ADD_BREAK) return;
-    const bp = { name: action.bpName, enabled: true };
-    console.log(bp);
-    yield call(() => doAPIPostRequest("breakpoint", bp));
-  }
-  yield takeLatest(DebuggerActionType.ADD_BREAK, _addBreakSaga);
-}
-
-// remove breakpoint saga
-function* rmBreakSaga() {
-  function* _rmBreakSaga(action: DebuggerAction) {
-    if (action.type !== DebuggerActionType.RM_BREAK) return;
-    yield call(() => doAPIDeleteRequest("breakpoint", action.opt));
-  }
-  yield takeLatest(DebuggerActionType.RM_BREAK, _rmBreakSaga);
-}
-
-// toggle breakpoint saga
-function* toggleBreakSaga() {
-  function* _toggleBreakSaga(action: DebuggerAction) {
-    if (action.type !== DebuggerActionType.TOGGLE_BREAK) return;
-    yield call(() => doAPIPutRequest("breakpoint", action.opt));
-  }
-  yield takeLatest(DebuggerActionType.TOGGLE_BREAK, _toggleBreakSaga);
-}
+// // js step saga
+// function* jsStepSaga() {
+//   yield takeLatest(DebuggerActionType.JS_STEP, mkStepSaga("exec/jsStep"));
+// }
+//
+// // js step over saga
+// function* jsStepOverSaga() {
+//   yield takeLatest(
+//     DebuggerActionType.JS_STEP_OVER,
+//     mkStepSaga("exec/jsStepOver"),
+//   );
+// }
+//
+// // js step out saga
+// function* jsStepOutSaga() {
+//   yield takeLatest(
+//     DebuggerActionType.JS_STEP_OUT,
+//     mkStepSaga("exec/jsStepOut"),
+//   );
+// }
 
 // debugger sagas
 export default function* debuggerSaga() {
@@ -160,12 +132,9 @@ export default function* debuggerSaga() {
     specStepSaga(),
     specStepOverSaga(),
     specStepOutSaga(),
-    jsStepSaga(),
-    jsStepOverSaga(),
-    jsStepOutSaga(),
+    // jsStepSaga(),
+    // jsStepOverSaga(),
+    // jsStepOutSaga(),
     specContinueSaga(),
-    addBreakSaga(),
-    rmBreakSaga(),
-    toggleBreakSaga(),
   ]);
 }

@@ -9,29 +9,30 @@ import {
   Paper,
 } from "@material-ui/core";
 import { v4 as uuid } from "uuid";
-import "../styles/StackFrameViewer.css";
+import "../styles/CallStackViewer.css";
 
 import { connect, ConnectedProps } from "react-redux";
-import { StackFrameData, showAlgo } from "../store/reducers/IR";
+import { Context, updateContextIdx } from "../store/reducers/IrState";
 import { ReduxState, Dispatch } from "../store";
 
-type StackFrameItemProps = {
-  data: StackFrameData;
+type ContextItemProps = {
+  data: Context;
   highlight: boolean;
   idx: number;
   onItemClick: (idx: number) => void;
 };
-class StackFrameItem extends React.Component<StackFrameItemProps> {
+class ContextItem extends React.Component<ContextItemProps> {
   getClassName(): string {
-    let className = "stackframe-item";
+    let className = "context-item";
     const { highlight } = this.props;
     if (highlight) className += " highlight";
     return className;
   }
   render() {
     const { data, idx, onItemClick } = this.props;
-    const [name, step] = data;
-    const content = step === -1 ? name : `${step} @ ${name}`;
+    const { name, steps } = data;
+    // TODO beautify steps
+    const content = steps.length === 0 ? name : `${steps} @ ${name}`;
 
     return (
       <TableRow
@@ -47,28 +48,24 @@ class StackFrameItem extends React.Component<StackFrameItemProps> {
 
 // connect redux store
 const mapStateToProps = (st: ReduxState) => ({
-  stackFrame: st.ir.stackFrame,
+  irState: st.irState,
 });
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  showAlgo: (idx: number) => dispatch(showAlgo(idx)),
+  updateContextIdx: (idx: number) => dispatch(updateContextIdx(idx)),
 });
 const connector = connect(mapStateToProps, mapDispatchToProps);
-type StackFrameViewerProps = ConnectedProps<typeof connector>;
+type CallStackViewerProps = ConnectedProps<typeof connector>;
 
-class StackFrameViewer extends React.Component<StackFrameViewerProps> {
+class CallStackViewer extends React.Component<CallStackViewerProps> {
   onItemClick(idx: number) {
-    this.props.showAlgo(idx);
+    this.props.updateContextIdx(idx);
   }
   render() {
-    const { stackFrame } = this.props;
-    const { data, idx } = stackFrame;
+    const { callStack, contextIdx } = this.props.irState;
 
     return (
-      <div className="stackframe-container">
-        <TableContainer
-          component={Paper}
-          className="stackframe-table-container"
-        >
+      <div className="callstack-container">
+        <TableContainer component={Paper} className="callstack-table-container">
           <Table stickyHeader size="small">
             <TableHead>
               <TableRow>
@@ -77,12 +74,12 @@ class StackFrameViewer extends React.Component<StackFrameViewerProps> {
               </TableRow>
             </TableHead>
             <TableBody>
-              {data.map((ctxtInfo, ctxtIdx) => (
-                <StackFrameItem
+              {callStack.map((ctxt, idx) => (
+                <ContextItem
                   key={uuid()}
-                  data={ctxtInfo}
-                  idx={ctxtIdx}
-                  highlight={idx === ctxtIdx}
+                  data={ctxt}
+                  idx={idx}
+                  highlight={idx === contextIdx}
                   onItemClick={(idx: number) => this.onItemClick(idx)}
                 />
               ))}
@@ -94,4 +91,4 @@ class StackFrameViewer extends React.Component<StackFrameViewerProps> {
   }
 }
 
-export default connector(StackFrameViewer);
+export default connector(CallStackViewer);

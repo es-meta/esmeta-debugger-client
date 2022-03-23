@@ -1,59 +1,70 @@
-import { Spec } from "../../object/Spec";
-import { getName } from "../../object/Algo";
+import produce from "immer";
 
 // redux actions
 export enum SpecActionType {
-  LOAD_REQUEST = "SpecAction/LOAD_REQUEST",
-  LOAD_SUCCESS = "SpecAction/LOAD_SUCCESS",
-  LOAD_FAIL = "SpecAction/LOAD_FAIL",
+  UPDATE_BY_FID_REQUEST = "SpecActionType/UPDATE_BY_FID_REQUSET",
+  UPDATE_ALGO_SUCCESS = "SpecActionType/UPDATE_ALGO_SUCCESS",
 }
-export const loadSpecRequest = (): SpecAction => ({
-  type: SpecActionType.LOAD_REQUEST,
+export const updateAlgoByFidRequset = (fid: number): SpecAction => ({
+  type: SpecActionType.UPDATE_BY_FID_REQUEST,
+  fid,
 });
-export const loadSpecSuccess = (spec: Spec): SpecAction => ({
-  type: SpecActionType.LOAD_SUCCESS,
-  spec,
+export const updateAlgoSuccess = (algo: Algorithm) => ({
+  type: SpecActionType.UPDATE_ALGO_SUCCESS,
+  algo,
 });
-export const loadSpecFail = (err: unknown): SpecAction => ({
-  type: SpecActionType.LOAD_FAIL,
-  err,
-});
-
 export type SpecAction =
   | {
-      type: SpecActionType.LOAD_REQUEST;
+      type: SpecActionType.UPDATE_BY_FID_REQUEST;
+      fid: number;
     }
   | {
-      type: SpecActionType.LOAD_FAIL;
-      err: unknown;
-    }
-  | {
-      type: SpecActionType.LOAD_SUCCESS;
-      spec: Spec;
+      type: SpecActionType.UPDATE_ALGO_SUCCESS;
+      algo: Algorithm;
     };
 
 // redux state
-type SpecState = {
-  spec: undefined | Spec;
-  algoNames: string[];
+export interface Parameter {
+  name: string;
+  optional: boolean;
+  type: string;
+}
+export enum AlgorithmKind {
+  AbstractOperation,
+  NumericMethod,
+  SyntaxDirectedOperation,
+  ConcreteMethod,
+  InternalMethod,
+  Builtin,
+}
+export interface Algorithm {
+  kind: AlgorithmKind;
+  name: string;
+  params: Parameter[];
+  body: string;
+  code: string;
+}
+
+export type SpecState = {
+  algorithm: Algorithm;
 };
 const initialState: SpecState = {
-  spec: undefined,
-  algoNames: [],
+  algorithm: {
+    kind: AlgorithmKind.AbstractOperation,
+    name: "",
+    params: [],
+    body: "",
+    code: "",
+  },
 };
 
 // reducer
 export default function reducer(state = initialState, action: SpecAction) {
   switch (action.type) {
-    case SpecActionType.LOAD_SUCCESS: {
-      state.spec = action.spec;
-      state.algoNames = action.spec.algos.map(algo => getName(algo));
-      return state;
-    }
-    case SpecActionType.LOAD_FAIL: {
-      console.error(action.err);
-      return state;
-    }
+    case SpecActionType.UPDATE_ALGO_SUCCESS:
+      return produce(state, draft => {
+        draft.algorithm = action.algo;
+      });
     default:
       return state;
   }

@@ -3,25 +3,20 @@ import EnvViewer from "./EnvViewer";
 
 import { connect, ConnectedProps } from "react-redux";
 import { ReduxState } from "../store";
+import { Environment } from "../store/reducers/IrState";
 
 // connect redux store
 const mapStateToProps = (st: ReduxState) => ({
-  stackFrame: st.ir.stackFrame,
+  irState: st.irState,
 });
 const connector = connect(mapStateToProps);
 type SpecEnvViewerProps = ConnectedProps<typeof connector>;
 
 class SpecEnvViewer extends React.Component<SpecEnvViewerProps> {
   render() {
-    const { stackFrame } = this.props;
-    let env: [string, string][] = [];
-    if (stackFrame.data.length > 0) {
-      env = stackFrame.data[stackFrame.idx][2];
-      // filter temporary variable
-      env = env.filter(
-        ([name, _]) => !(name.startsWith("__") && name.endsWith("__")),
-      );
-    }
+    const { callStack, contextIdx } = this.props.irState;
+    const env: Environment =
+      callStack.length > 0 ? callStack[contextIdx].env : [];
     return <EnvViewer env={env} />;
   }
 }

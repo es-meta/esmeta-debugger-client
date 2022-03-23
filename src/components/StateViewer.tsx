@@ -8,7 +8,7 @@ import {
 } from "@material-ui/core";
 import "../styles/StateViewer.css";
 
-import StackFrameViewer from "./StackFrameViewer";
+import CallStackViewer from "./CallStackViewer";
 import HeapViewer from "./HeapViewer";
 import Breakpoints from "./Breakpoints";
 import SpecEnvViewer from "./SpecEnvViewer";
@@ -89,7 +89,7 @@ class StateViewer extends React.Component<StateViewerProps> {
         <StateViewerItem
           disabled={disableStateViewer}
           header={<Typography>ECMAScript Call Stack</Typography>}
-          body={<StackFrameViewer />}
+          body={<CallStackViewer />}
         />
         <StateViewerItem
           disabled={disableStateViewer}

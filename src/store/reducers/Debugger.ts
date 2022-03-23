@@ -1,5 +1,4 @@
-import produce from "immer";
-import { Breakpoint } from "../../object/Breakpoint";
+// import produce from "immer";
 
 // redux actions
 export enum DebuggerActionType {
@@ -12,9 +11,6 @@ export enum DebuggerActionType {
   JS_STEP_OUT = "DebuggerAction/JS_STEP_OUT",
   JS_STEP_OVER = "DebuggerAction/JS_STEP_OVER",
   SPEC_CONTINUE = "DebuggerAction/SPEC_CONTINUE",
-  ADD_BREAK = "DebuggerAction/ADD_BREAK",
-  RM_BREAK = "DebuggerAction/RM_BREAK",
-  TOGGLE_BREAK = "DebuggerAction/TOGGLE_BREAK",
 }
 export const run = (): DebuggerAction => ({
   type: DebuggerActionType.RUN,
@@ -43,18 +39,6 @@ export const jsStepOut = (): DebuggerAction => ({
 export const specContinue = (): DebuggerAction => ({
   type: DebuggerActionType.SPEC_CONTINUE,
 });
-export const addBreak = (bpName: string): DebuggerAction => ({
-  type: DebuggerActionType.ADD_BREAK,
-  bpName,
-});
-export const rmBreak = (opt: string): DebuggerAction => ({
-  type: DebuggerActionType.RM_BREAK,
-  opt,
-});
-export const toggleBreak = (opt: string): DebuggerAction => ({
-  type: DebuggerActionType.TOGGLE_BREAK,
-  opt,
-});
 export type DebuggerAction =
   | {
       type: DebuggerActionType.RUN;
@@ -82,51 +66,13 @@ export type DebuggerAction =
     }
   | {
       type: DebuggerActionType.SPEC_CONTINUE;
-    }
-  | {
-      type: DebuggerActionType.ADD_BREAK;
-      bpName: string;
-    }
-  | {
-      type: DebuggerActionType.RM_BREAK;
-      opt: string;
-    }
-  | {
-      type: DebuggerActionType.TOGGLE_BREAK;
-      opt: string;
     };
 
 // redux state
-type DebuggerState = {
-  breakpoints: Breakpoint[];
-};
-const initialState: DebuggerState = {
-  breakpoints: [],
-};
+type DebuggerState = Record<string, never>;
+const initialState: DebuggerState = {};
 
 // reducer
-export default function reducer(state = initialState, action: DebuggerAction) {
-  switch (action.type) {
-    case DebuggerActionType.ADD_BREAK:
-      return produce(state, draft => {
-        console.log(action);
-        draft.breakpoints.push({ name: action.bpName, enabled: true });
-      });
-    case DebuggerActionType.RM_BREAK:
-      return produce(state, draft => {
-        if (action.opt === "all") draft.breakpoints = [];
-        else draft.breakpoints.splice(Number(action.opt), 1);
-      });
-    case DebuggerActionType.TOGGLE_BREAK:
-      return produce(state, draft => {
-        if (action.opt === "all")
-          draft.breakpoints.forEach(bp => (bp.enabled = !bp.enabled));
-        else {
-          const i = Number(action.opt);
-          draft.breakpoints[i].enabled = !draft.breakpoints[i].enabled;
-        }
-      });
-    default:
-      return state;
-  }
+export default function reducer(state = initialState) {
+  return state;
 }

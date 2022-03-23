@@ -1,26 +1,46 @@
-import { call, put, takeLatest } from "redux-saga/effects";
+import { call, put, takeLatest, all } from "redux-saga/effects";
+import { toast } from "react-toastify";
 
 import {
+  AlgorithmKind,
   SpecActionType,
-  loadSpecFail,
-  loadSpecSuccess,
+  updateAlgoSuccess,
 } from "../store/reducers/Spec";
-import { AppState, move } from "../store/reducers/AppState";
 import { doAPIGetRequest } from "../util/api";
-import { Spec } from "../object/Spec";
 
-// load spec saga
-function* loadSpecSaga() {
-  try {
-    const spec: Spec = yield call(() => doAPIGetRequest("spec"));
-    console.log("spec loadead", spec);
-    yield put(loadSpecSuccess(spec));
-    yield put(move(AppState.JS_INPUT));
-  } catch (e) {
-    yield put(loadSpecFail(e));
+// get algorithm by fid
+function* updateByFidSaga() {
+  function* _updateByFid({
+    fid,
+  }: {
+    type: SpecActionType.UPDATE_BY_FID_REQUEST;
+    fid: number;
+  }) {
+    try {
+      const [kind, name, rawParams, body, code]: [
+        AlgorithmKind,
+        string,
+        [string, boolean, string][],
+        string,
+        string,
+      ] = yield call(() => doAPIGetRequest(`spec/func/${fid}`));
+      const params = rawParams.map(([name, optional, type]) => ({
+        name,
+        optional,
+        type,
+      }));
+      const algo = { kind, name, params, body, code };
+      yield put(updateAlgoSuccess(algo));
+    } catch (e: unknown) {
+      // show error toast
+      toast.error((e as Error).message);
+      console.error(e);
+    }
   }
+  yield takeLatest(SpecActionType.UPDATE_BY_FID_REQUEST, _updateByFid);
 }
 
+// spec sagas
 export default function* specSaga() {
-  yield takeLatest(SpecActionType.LOAD_REQUEST, loadSpecSaga);
+  yield all([updateByFidSaga()]);
 }

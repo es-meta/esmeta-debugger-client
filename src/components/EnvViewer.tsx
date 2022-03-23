@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactElement } from "react";
 import { v4 as uuid } from "uuid";
 import {
   Tooltip,
@@ -17,7 +17,7 @@ type EnvViewerProps = {
   env: [string, string][];
 };
 class EnvViewer extends React.Component<EnvViewerProps> {
-  render() {
+  render(): ReactElement {
     const { env } = this.props;
 
     return (

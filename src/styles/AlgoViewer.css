@@ -9,6 +9,14 @@
   font-family: Cambria, Palatino Linotype, Palatino, Liberation Serif, serif;
 }
 
+.algo-container ol {
+  padding-inline-start: 20px;
+}
+
+.algo-parameters {
+  font-size: 14px;
+}
+
 .algo-step {
   white-space: pre-wrap;
 }

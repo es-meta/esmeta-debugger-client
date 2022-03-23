@@ -8,7 +8,7 @@ import { ReduxState } from "../store";
 
 // connect redux store
 const mapStateToProps = (st: ReduxState) => ({
-  heap: st.ir.heap,
+  heap: st.irState.heap,
 });
 const connector = connect(mapStateToProps);
 type HeapViewerProps = ConnectedProps<typeof connector>;

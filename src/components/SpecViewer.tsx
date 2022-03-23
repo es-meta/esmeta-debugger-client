@@ -1,8 +1,6 @@
 import React from "react";
 import { Typography, Paper } from "@material-ui/core";
 import AlgoViewer from "./AlgoViewer";
-import { getAlgo } from "../object/Spec";
-import { Algo } from "../object/Algo";
 import "../styles/SpecViewer.css";
 
 import { connect, ConnectedProps } from "react-redux";
@@ -10,32 +8,26 @@ import { ReduxState } from "../store";
 
 // connect redux store
 const mapStateToProps = (st: ReduxState) => ({
-  stackFrame: st.ir.stackFrame,
-  spec: st.spec.spec,
+  spec: st.spec,
+  irState: st.irState,
 });
 const connector = connect(mapStateToProps);
 type SpecViewerProps = ConnectedProps<typeof connector>;
 
 class SpecViewer extends React.Component<SpecViewerProps> {
+  // render() {
+  //   return <div className="algo-container">TODO...</div>;
+  // }
   render() {
-    const { stackFrame, spec } = this.props;
-    let algo: Algo | undefined;
-    let currentStep: number;
-    let algoName: string;
-
-    if (stackFrame.data.length === 0) {
-      algo = getAlgo(spec, "RunJobs"); // show top-level algorithms
-      currentStep = -1;
-    } else {
-      [algoName, currentStep] = stackFrame.data[stackFrame.idx];
-      algo = getAlgo(spec, algoName);
-      if (currentStep === undefined) currentStep = -1;
-    }
+    const { irState, spec } = this.props;
+    const context = irState.callStack[irState.contextIdx];
+    const steps = context === undefined ? [] : context.steps;
 
     return (
       <Paper className="spec-viewer-container" variant="outlined">
         <Typography variant="h6">ECMAScript Specification</Typography>
-        <AlgoViewer data={algo} currentStep={currentStep} />
+        {/*<div>{JSON.stringify(spec.algorithm)}</div>*/}
+        <AlgoViewer algorithm={spec.algorithm} steps={steps} />
       </Paper>
     );
   }

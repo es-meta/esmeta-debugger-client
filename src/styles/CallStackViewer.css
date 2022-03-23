@@ -1,18 +1,18 @@
-.stackframe-container {
+.callstack-container {
   height: 25vh;
   width: 100%;
 }
 
-.stackframe-table-container {
+.callstack-table-container {
   height: 25vh;
   max-height: 25vh;
 }
 
-.stackframe-item {
+.context-item {
   cursor: pointer;
 }
 
-.stackframe-item.highlight {
+.context-item.highlight {
   background-color: #E9FBE9;
 }
 

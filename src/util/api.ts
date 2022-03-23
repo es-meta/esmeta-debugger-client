@@ -57,7 +57,7 @@ type HTTPMethod =
 const doGetRequest = async (
   host: string,
   endpoint: string,
-  queryObj?: { [key: string]: any },
+  queryObj?: { [key: string]: unknown },
 ): Promise<unknown> => {
   try {
     const url = mkURL(host, endpoint, queryObj);
@@ -100,7 +100,7 @@ const doWriteRequest = async (
 // GET request to API server
 export const doAPIGetRequest = (
   endpoint: string,
-  queryObj?: { [key: string]: any },
+  queryObj?: { [key: string]: unknown },
 ): Promise<unknown> => {
   return doGetRequest(API_HOST, endpoint, queryObj);
 };

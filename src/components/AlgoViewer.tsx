@@ -1,45 +1,77 @@
 import React from "react";
 import { v4 as uuid } from "uuid";
 import { Typography } from "@material-ui/core";
-import { Algo, getHeaderStr } from "../object/Algo";
-import { AlgoStepNode, flattenList, Emitter } from "../util/ecmarkdown";
+import { Emitter, FragmentNode } from "../util/ecmarkdown";
 import { parseAlgorithm } from "ecmarkdown";
-import type { AlgorithmNode } from "ecmarkdown";
+import type { AlgorithmNode, ListNode, OrderedListNode } from "ecmarkdown";
+import { Algorithm } from "../store/reducers/Spec";
 import "../styles/AlgoViewer.css";
 
 type AlgoStepProps = {
-  node: AlgoStepNode;
-  highlight: boolean;
+  contents: FragmentNode[];
+  sublist: ListNode | null;
+  depth: number;
+  idx: number;
+  steps: number[];
 };
 
+const renderListNode = (
+  listNode: OrderedListNode,
+  steps: number[],
+  depth = 0,
+) => {
+  return (
+    <ol>
+      {listNode.contents.map((listItemNode, idx) => {
+        return (
+          <AlgoStep
+            key={uuid()}
+            contents={listItemNode.contents}
+            sublist={listItemNode.sublist}
+            depth={depth}
+            idx={idx}
+            steps={steps}
+          />
+        );
+      })}
+    </ol>
+  );
+};
+
+// algorithm steps
 class AlgoStep extends React.Component<AlgoStepProps> {
   getClassName(): string {
     let className = "algo-step";
-    const { highlight } = this.props;
+    const { idx, steps } = this.props;
+    const highlight = steps.length === 1 && steps[0] === idx + 1;
     if (highlight) className += " highlight";
     return className;
   }
 
-  render() {
-    const { node } = this.props;
-    const { name, contents, indent, step } = node;
+  renderSublist() {
+    const { sublist, steps, depth, idx } = this.props;
+    if (sublist === null || sublist.name === "ul") return <></>;
+    const nextSteps = steps[0] === idx + 1 ? steps.slice(1) : [];
+    return renderListNode(sublist, nextSteps, depth + 1);
+  }
 
-    const numberOrBullet = name.startsWith("ordered") ? `${step}. ` : "• ";
-    const marginLeft = `${indent * 16}px`;
-    const className = this.getClassName();
+  render() {
+    const { contents } = this.props;
 
     return (
-      <div className={className} style={{ marginLeft, color: "black" }}>
-        {numberOrBullet}
-        {Emitter.emit(contents)}
-      </div>
+      <>
+        <li className={this.getClassName()} style={{ color: "black" }}>
+          {Emitter.emit(contents)}
+        </li>
+        {this.renderSublist()}
+      </>
     );
   }
 }
 
 type AlgoViewerProps = {
-  data: Algo | undefined;
-  currentStep: number;
+  algorithm: Algorithm;
+  steps: number[];
 };
 class AlgoViewer extends React.Component<AlgoViewerProps> {
   // TODO
@@ -47,43 +79,40 @@ class AlgoViewer extends React.Component<AlgoViewerProps> {
     return <Typography variant="subtitle1">TODO...</Typography>;
   }
 
-  flattenAlgo(algo: AlgorithmNode) {
-    const { contents: ol } = algo;
-    return flattenList(ol);
+  renderHeader() {
+    const { algorithm } = this.props;
+    return (
+      <Typography variant="subtitle1">
+        <b>{algorithm.name}</b>
+        &nbsp;
+        <span className="algo-parameters">
+          (
+          {algorithm.params
+            .map(({ name, optional }) => {
+              return optional ? name + "?" : name;
+            })
+            .join(", ")}
+          )
+        </span>
+      </Typography>
+    );
   }
 
-  parseAlgo(algo: Algo) {
-    const code = algo.code.join("\n");
-    try {
-      return this.flattenAlgo(parseAlgorithm(code));
-    } catch (e) {
-      return undefined;
-    }
+  renderBody(parsed: AlgorithmNode) {
+    const { steps } = this.props;
+    return renderListNode(parsed.contents, steps);
   }
 
   render() {
-    const { data, currentStep } = this.props;
-    if (data === undefined) return this.renderFail();
-    // get header string
-    const headerStr = getHeaderStr(data);
-
-    const algo = this.parseAlgo(data);
-
-    if (algo === undefined) return this.renderFail();
+    const { algorithm } = this.props;
+    if (algorithm.code === "") return this.renderFail();
+    const parsed = parseAlgorithm(algorithm.code);
 
     // render
     return (
       <div className="algo-container">
-        <Typography variant="subtitle1">
-          <b>{headerStr}</b>
-        </Typography>
-        {algo.map((node, index) => (
-          <AlgoStep
-            key={uuid()}
-            node={node}
-            highlight={index === currentStep}
-          />
-        ))}
+        {this.renderHeader()}
+        {this.renderBody(parsed)}
       </div>
     );
   }

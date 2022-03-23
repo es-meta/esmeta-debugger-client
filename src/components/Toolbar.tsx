@@ -12,9 +12,9 @@ import {
   specStep,
   specStepOut,
   specStepOver,
-  jsStep,
-  jsStepOut,
-  jsStepOver,
+  // jsStep,
+  // jsStepOut,
+  // jsStepOver,
   specContinue,
 } from "../store/reducers/Debugger";
 
@@ -29,9 +29,10 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   specStep: () => dispatch(specStep()),
   specStepOut: () => dispatch(specStepOut()),
   specStepOver: () => dispatch(specStepOver()),
-  jsStep: () => dispatch(jsStep()),
-  jsStepOut: () => dispatch(jsStepOut()),
-  jsStepOver: () => dispatch(jsStepOver()),
+  // TODO js steps
+  // jsStep: () => dispatch(jsStep()),
+  // jsStepOut: () => dispatch(jsStepOut()),
+  // jsStepOver: () => dispatch(jsStepOver()),
   specContinue: () => dispatch(specContinue()),
 });
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -48,9 +49,9 @@ class Toolbar extends React.Component<ToolbarProps> {
       specStep,
       specStepOver,
       specStepOut,
-      jsStep,
-      jsStepOver,
-      jsStepOut,
+      // jsStep,
+      // jsStepOver,
+      // jsStepOut,
     } = this.props;
     return (
       <div className="toolbar-container">
@@ -70,7 +71,7 @@ class Toolbar extends React.Component<ToolbarProps> {
           <Button disabled={disableDebuggerBtn} onClick={() => specStepOut()}>
             Step-Out
           </Button>
-          <Button disabled={disableDebuggerBtn} onClick={() => jsStep()}>
+          {/*<Button disabled={disableDebuggerBtn} onClick={() => jsStep()}>
             Js-Step
           </Button>
           <Button disabled={disableDebuggerBtn} onClick={() => jsStepOver()}>
@@ -78,7 +79,7 @@ class Toolbar extends React.Component<ToolbarProps> {
           </Button>
           <Button disabled={disableDebuggerBtn} onClick={() => jsStepOut()}>
             Js-Step-Out
-          </Button>
+          </Button>*/}
           <Button disabled={disableDebuggerBtn} onClick={() => specContinue()}>
             Continue
           </Button>

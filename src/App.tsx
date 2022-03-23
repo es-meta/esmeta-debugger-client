@@ -10,30 +10,19 @@ import JSEditor from "./components/JSEditor";
 import "./styles/App.css";
 
 import { connect, ConnectedProps } from "react-redux";
-import { ReduxState, Dispatch } from "./store";
-
-import { AppState } from "./store/reducers/AppState";
-import { loadSpecRequest } from "./store/reducers/Spec";
+import { ReduxState } from "./store";
 
 // connect redux store
 const mapStateToProps = (st: ReduxState) => ({
   appState: st.appState.state,
 });
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  loadSpecRequest: () => dispatch(loadSpecRequest()),
-});
+const mapDispatchToProps = () => ({});
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type AppProps = ConnectedProps<typeof connector>;
 
 // App component
 class App extends React.Component<AppProps> {
-  componentDidMount() {
-    this.props.loadSpecRequest();
-  }
-  renderInit() {
-    return <div>Loading ECMAScript 2021...</div>;
-  }
-  renderSuccess() {
+  render() {
     return (
       <div>
         <ToastContainer autoClose={3000} hideProgressBar={true} />
@@ -65,15 +54,6 @@ class App extends React.Component<AppProps> {
         </Grid>
       </div>
     );
-  }
-  render() {
-    const { appState } = this.props;
-    switch (appState) {
-      case AppState.INIT:
-        return this.renderInit();
-      default:
-        return this.renderSuccess();
-    }
   }
 }
 
