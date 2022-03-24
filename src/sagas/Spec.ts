@@ -5,7 +5,9 @@ import {
   AlgorithmKind,
   SpecActionType,
   updateAlgoSuccess,
+  updateAlgoListSuccess,
 } from "../store/reducers/Spec";
+import { AppState, move } from "../store/reducers/AppState";
 import { doAPIGetRequest } from "../util/api";
 
 // get algorithm by fid
@@ -29,7 +31,7 @@ function* updateByFidSaga() {
         optional,
         type,
       }));
-      const algo = { kind, name, params, body, code };
+      const algo = { fid, kind, name, params, body, code };
       yield put(updateAlgoSuccess(algo));
     } catch (e: unknown) {
       // show error toast
@@ -40,7 +42,32 @@ function* updateByFidSaga() {
   yield takeLatest(SpecActionType.UPDATE_BY_FID_REQUEST, _updateByFid);
 }
 
+// update algorithm list
+function* updateAlgoListSaga() {
+  function* _updateAlgoList() {
+    try {
+      const raw: [number, string][] = yield call(() =>
+        doAPIGetRequest(`spec/func`),
+      );
+      const nameMap: Record<string, number> = {};
+      raw.forEach(([fid, name]) => {
+        nameMap[name] = fid;
+      });
+      yield put(updateAlgoListSuccess(nameMap));
+      yield put(move(AppState.JS_INPUT));
+    } catch (e: unknown) {
+      // show error toast
+      toast.error((e as Error).message);
+      console.error(e);
+    }
+  }
+  yield takeLatest(
+    SpecActionType.UPDATE_ALGORITHM_LIST_REQUEST,
+    _updateAlgoList,
+  );
+}
+
 // spec sagas
 export default function* specSaga() {
-  yield all([updateByFidSaga()]);
+  yield all([updateByFidSaga(), updateAlgoListSaga()]);
 }

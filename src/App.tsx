@@ -10,19 +10,32 @@ import JSEditor from "./components/JSEditor";
 import "./styles/App.css";
 
 import { connect, ConnectedProps } from "react-redux";
-import { ReduxState } from "./store";
+import { ReduxState, Dispatch } from "./store";
+import { AppState } from "./store/reducers/AppState";
+import { updateAlgoListRequest } from "./store/reducers/Spec";
 
 // connect redux store
 const mapStateToProps = (st: ReduxState) => ({
   appState: st.appState.state,
 });
-const mapDispatchToProps = () => ({});
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  updateAlgoListRequest: () => dispatch(updateAlgoListRequest()),
+});
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type AppProps = ConnectedProps<typeof connector>;
 
 // App component
 class App extends React.Component<AppProps> {
-  render() {
+  componentDidMount() {
+    if (this.props.appState === AppState.INIT)
+      this.props.updateAlgoListRequest();
+  }
+
+  renderLoading() {
+    return <div>Loading...</div>;
+  }
+
+  renderSuccess() {
     return (
       <div>
         <ToastContainer autoClose={3000} hideProgressBar={true} />
@@ -54,6 +67,11 @@ class App extends React.Component<AppProps> {
         </Grid>
       </div>
     );
+  }
+
+  render() {
+    if (this.props.appState === AppState.INIT) return this.renderLoading();
+    else return this.renderSuccess();
   }
 }
 

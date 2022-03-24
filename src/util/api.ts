@@ -84,7 +84,7 @@ const doWriteRequest = async (
       headers: {
         ...(bodyObj ? mkJSONHeader() : undefined),
       },
-      body: bodyObj ? JSON.stringify(bodyObj) : undefined,
+      body: bodyObj !== undefined ? JSON.stringify(bodyObj) : undefined,
     });
     if (!response.ok)
       throw new Error(

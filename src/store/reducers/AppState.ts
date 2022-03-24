@@ -2,7 +2,7 @@ import produce from "immer";
 
 // app state
 export enum AppState {
-  // INIT = "AppState/INIT",
+  INIT = "AppState/INIT",
   JS_INPUT = "AppState/JS_INPUT",
   TERMINATED = "AppState/TERMINATED",
   DEBUG_READY = "AppState/DEBUG_READY",
@@ -28,7 +28,7 @@ type AppStateState = {
   state: AppState;
   busy: boolean;
 };
-const initialState: AppStateState = { state: AppState.JS_INPUT, busy: false };
+const initialState: AppStateState = { state: AppState.INIT, busy: false };
 
 // reducer
 export default function reducer(state = initialState, action: AppStateAction) {

@@ -19,12 +19,14 @@ function* runSaga() {
       // get code, breakpoints
       const state: ReduxState = yield select();
       const code = state.js.code;
-      const breakpoints = state.breakpoint.items;
+      const breakpoints = state.breakpoint.items.map(({ fid, enabled }) => [
+        fid,
+        enabled,
+      ]);
       console.log(code, breakpoints);
 
       // run server debugger with js code and breakpoints
-      // TODO yield call(() => doAPIPostRequest("exec/run", { code, breakpoints }));
-      yield call(() => doAPIPostRequest("exec/run", code));
+      yield call(() => doAPIPostRequest("exec/run", [code, breakpoints]));
       // move app state to DEBUG_READY
       yield put(move(AppState.DEBUG_READY));
       // update heap, call stack

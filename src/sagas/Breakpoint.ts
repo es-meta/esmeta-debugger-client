@@ -11,12 +11,12 @@ import {
 } from "../util/api";
 
 // add breakpoint saga
+// TODO add steps
 function* addBreakSaga() {
   function* _addBreakSaga(action: BreakpointAction) {
     if (action.type !== BreakpointActionType.ADD_BREAK) return;
-    const bp = { name: action.bpName, enabled: true };
-    console.log(bp);
-    yield call(() => doAPIPostRequest("breakpoint", bp));
+    const { fid, enabled } = action.bp;
+    yield call(() => doAPIPostRequest("breakpoint", [fid, enabled]));
   }
   yield takeLatest(BreakpointActionType.ADD_BREAK, _addBreakSaga);
 }
