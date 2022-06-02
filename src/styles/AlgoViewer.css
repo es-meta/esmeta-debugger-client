@@ -1,9 +1,10 @@
 .algo-container {
   border: 1px solid #ccc;
-  max-height: 80vh;
-  min-height: 80vh;
   overflow: auto;
   padding: 16px;
+  position: relative;
+  max-height: 80vh;
+  min-height: 80vh;
 
   /* ecmascript spec font */
   font-family: Cambria, Palatino Linotype, Palatino, Liberation Serif, serif;
@@ -15,6 +16,19 @@
 
 .algo-parameters {
   font-size: 14px;
+}
+
+.algo-step-prefix {
+  position: absolute;
+  color: red;
+  left: 3px;
+  min-width: 20px;
+}
+
+.algo-step-prefix:hover {
+  background-color: #ddd;
+  opacity: 0.5;
+  cursor: pointer;
 }
 
 .algo-step {

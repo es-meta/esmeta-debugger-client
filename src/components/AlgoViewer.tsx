@@ -7,18 +7,50 @@ import type { AlgorithmNode, ListNode, OrderedListNode } from "ecmarkdown";
 import { Algorithm } from "../store/reducers/Spec";
 import "../styles/AlgoViewer.css";
 
+// util
+function isSameStep(steps1: number[], steps2: number[]) {
+  return (
+    steps1.length === steps2.length &&
+    steps1.every((s, idx) => s === steps2[idx])
+  );
+}
+
+// algo steps prefix
+type AlgoStepPrefixProps = {
+  steps: number[];
+  getBreakedStepsList: () => number[][];
+  onPrefixClick: (steps: number[]) => void;
+};
+class AlgoStepPrefix extends React.Component<AlgoStepPrefixProps> {
+  render() {
+    const { getBreakedStepsList, steps, onPrefixClick } = this.props;
+    const isBreaked = getBreakedStepsList().some(breakedSteps =>
+      isSameStep(steps, breakedSteps),
+    );
+    return (
+      <div className="algo-step-prefix" onClick={() => onPrefixClick(steps)}>
+        {isBreaked ? "\u25CF" : "\u00A0"}
+      </div>
+    );
+  }
+}
+
+// algo steps
 type AlgoStepProps = {
   contents: FragmentNode[];
   sublist: ListNode | null;
-  depth: number;
-  idx: number;
   steps: number[];
+  getCurrentSteps: () => number[];
+  getBreakedStepsList: () => number[][];
+  onPrefixClick: (steps: number[]) => void;
 };
 
 const renderListNode = (
   listNode: OrderedListNode,
   steps: number[],
-  depth = 0,
+  getCurrentSteps: () => number[],
+  getBreakedStepsList: () => number[][],
+  onPrefixClick: (steps: number[]) => void,
 ) => {
   return (
     <ol>
@@ -28,9 +60,10 @@ const renderListNode = (
             key={uuid()}
             contents={listItemNode.contents}
             sublist={listItemNode.sublist}
-            depth={depth}
-            idx={idx}
-            steps={steps}
+            steps={steps.concat([idx + 1])}
+            getCurrentSteps={getCurrentSteps}
+            getBreakedStepsList={getBreakedStepsList}
+            onPrefixClick={onPrefixClick}
           />
         );
       })}
@@ -42,24 +75,41 @@ const renderListNode = (
 class AlgoStep extends React.Component<AlgoStepProps> {
   getClassName(): string {
     let className = "algo-step";
-    const { idx, steps } = this.props;
-    const highlight = steps.length === 1 && steps[0] === idx + 1;
+    const { steps, getCurrentSteps } = this.props;
+    const currentSteps = getCurrentSteps();
+    const highlight = isSameStep(steps, currentSteps);
     if (highlight) className += " highlight";
     return className;
   }
 
   renderSublist() {
-    const { sublist, steps, depth, idx } = this.props;
+    const {
+      sublist,
+      steps,
+      getCurrentSteps,
+      getBreakedStepsList,
+      onPrefixClick,
+    } = this.props;
     if (sublist === null || sublist.name === "ul") return <></>;
-    const nextSteps = steps[0] === idx + 1 ? steps.slice(1) : [];
-    return renderListNode(sublist, nextSteps, depth + 1);
+    return renderListNode(
+      sublist,
+      steps,
+      getCurrentSteps,
+      getBreakedStepsList,
+      onPrefixClick,
+    );
   }
 
   render() {
-    const { contents } = this.props;
+    const { contents, steps, getBreakedStepsList, onPrefixClick } = this.props;
 
     return (
       <>
+        <AlgoStepPrefix
+          steps={steps}
+          getBreakedStepsList={getBreakedStepsList}
+          onPrefixClick={onPrefixClick}
+        />
         <li className={this.getClassName()} style={{ color: "black" }}>
           {Emitter.emit(contents)}
         </li>
@@ -71,7 +121,9 @@ class AlgoStep extends React.Component<AlgoStepProps> {
 
 type AlgoViewerProps = {
   algorithm: Algorithm;
-  steps: number[];
+  currentSteps: number[];
+  breakedStepsList: number[][];
+  onPrefixClick: (fid: number, algoName: string, steps: number[]) => void;
 };
 class AlgoViewer extends React.Component<AlgoViewerProps> {
   // TODO
@@ -99,8 +151,18 @@ class AlgoViewer extends React.Component<AlgoViewerProps> {
   }
 
   renderBody(parsed: AlgorithmNode) {
-    const { steps } = this.props;
-    return renderListNode(parsed.contents, steps);
+    const getCurrentSteps = () => this.props.currentSteps;
+    const getBreakedStepsList = () => this.props.breakedStepsList;
+    const { fid, name } = this.props.algorithm;
+    const onPrefixClick = (steps: number[]) =>
+      this.props.onPrefixClick(fid, name, steps);
+    return renderListNode(
+      parsed.contents,
+      [],
+      getCurrentSteps,
+      getBreakedStepsList,
+      onPrefixClick,
+    );
   }
 
   render() {
