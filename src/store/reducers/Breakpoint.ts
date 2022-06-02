@@ -33,11 +33,36 @@ export type BreakpointAction =
     };
 
 // type
-export interface Breakpoint {
+export enum BreakpointType {
+  Spec = "BreakpointType/Spec",
+  Js = "BreakpointType/Js",
+}
+export type Breakpoint = SpecBreakpoint | JsBreakpoint;
+export interface SpecBreakpoint {
+  type: BreakpointType.Spec;
   fid: number;
   name: string;
-  // TODO steps: number[] | null;
+  steps: number[];
   enabled: boolean;
+}
+export interface JsBreakpoint {
+  type: BreakpointType.Js;
+  name: string;
+  line: number;
+  enabled: boolean;
+}
+
+// helper functions
+export function serialize(bp: Breakpoint) {
+  let data: [boolean, number, number[], boolean];
+  if (bp.type == BreakpointType.Spec) {
+    const { fid, steps, enabled } = bp;
+    data = [false, fid, steps, enabled];
+  } else {
+    const { line, enabled } = bp;
+    data = [true, line, [], enabled];
+  }
+  return data;
 }
 
 // redux state

@@ -22,6 +22,7 @@ import { connect, ConnectedProps } from "react-redux";
 import { ReduxState, Dispatch } from "../store";
 import {
   Breakpoint,
+  BreakpointType,
   addBreak,
   rmBreak,
   toggleBreak,
@@ -79,7 +80,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
 });
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type BreakpointsProps = ConnectedProps<typeof connector>;
-type BreakpointsState = { bpName: string };
+type BreakpointsState = { algoName: string };
 
 // TODO add util buttons
 // delete all
@@ -88,32 +89,36 @@ type BreakpointsState = { bpName: string };
 class Breakpoints extends React.Component<BreakpointsProps, BreakpointsState> {
   constructor(props: BreakpointsProps) {
     super(props);
-    this.state = { bpName: "" };
+    this.state = { algoName: "" };
   }
 
-  onAddChange(bpName: string) {
-    this.setState({ ...this.state, bpName });
+  onAddChange(algoName: string) {
+    this.setState({ ...this.state, algoName });
   }
   onAddClick() {
-    const bpName = this.state.bpName;
+    const algoName = this.state.algoName;
+    const steps: number[] = [1];
+
+    const bpName = `${steps} @ ${algoName}`;
     const duplicated = this.props.breakpoints.some(
       ({ name }) => name === bpName,
     );
-    const valid = this.props.algos.hasOwnProperty(bpName);
+    const valid = this.props.algos.hasOwnProperty(algoName);
     if (valid && !duplicated)
       this.props.addBreak({
-        fid: this.props.algos[bpName],
+        type: BreakpointType.Spec,
+        fid: this.props.algos[algoName],
         name: bpName,
-        // TODO steps: null,
+        steps: steps,
         enabled: true,
       });
     else if (duplicated) toast.warning(`Breakpoint already set: ${bpName}`);
-    else toast.warning(`Wrong breakpoint name: ${bpName}`);
+    else toast.warning(`Wrong algorithm name: ${algoName}`);
   }
 
   render() {
     const { breakpoints, algoNames } = this.props;
-    const { bpName } = this.state;
+    const { algoName } = this.state;
 
     return (
       <div className="breakpoints-container">
@@ -128,7 +133,7 @@ class Breakpoints extends React.Component<BreakpointsProps, BreakpointsState> {
               label="Algorithm Name"
               variant="outlined"
               size="small"
-              value={bpName}
+              value={algoName}
               margin="normal"
               InputProps={{
                 ...params.InputProps,

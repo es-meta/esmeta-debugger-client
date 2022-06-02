@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { ReduxState } from "../store";
 import { AppState, move } from "../store/reducers/AppState";
 import { DebuggerActionType } from "../store/reducers/Debugger";
+import { serialize } from "../store/reducers/Breakpoint";
 import {
   clearIrState,
   updateHeapRequest,
@@ -19,11 +20,7 @@ function* runSaga() {
       // get code, breakpoints
       const state: ReduxState = yield select();
       const code = state.js.code;
-      const breakpoints = state.breakpoint.items.map(({ fid, enabled }) => [
-        fid,
-        enabled,
-      ]);
-      console.log(code, breakpoints);
+      const breakpoints = state.breakpoint.items.map(_ => serialize(_));
 
       // run server debugger with js code and breakpoints
       yield call(() => doAPIPostRequest("exec/run", [code, breakpoints]));

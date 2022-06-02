@@ -3,6 +3,7 @@ import { call, takeLatest, all } from "redux-saga/effects";
 import {
   BreakpointAction,
   BreakpointActionType,
+  serialize,
 } from "../store/reducers/Breakpoint";
 import {
   doAPIPostRequest,
@@ -15,8 +16,7 @@ import {
 function* addBreakSaga() {
   function* _addBreakSaga(action: BreakpointAction) {
     if (action.type !== BreakpointActionType.ADD_BREAK) return;
-    const { fid, enabled } = action.bp;
-    yield call(() => doAPIPostRequest("breakpoint", [fid, enabled]));
+    yield call(() => doAPIPostRequest("breakpoint", serialize(action.bp)));
   }
   yield takeLatest(BreakpointActionType.ADD_BREAK, _addBreakSaga);
 }
