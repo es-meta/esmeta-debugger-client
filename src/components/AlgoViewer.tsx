@@ -126,11 +126,6 @@ type AlgoViewerProps = {
   onPrefixClick: (fid: number, algoName: string, steps: number[]) => void;
 };
 class AlgoViewer extends React.Component<AlgoViewerProps> {
-  // TODO
-  renderFail() {
-    return <Typography variant="subtitle1">TODO...</Typography>;
-  }
-
   renderHeader() {
     const { algorithm } = this.props;
     return (
@@ -167,7 +162,6 @@ class AlgoViewer extends React.Component<AlgoViewerProps> {
 
   render() {
     const { algorithm } = this.props;
-    if (algorithm.code === "") return this.renderFail();
     const parsed = parseAlgorithm(algorithm.code);
 
     // render

@@ -1,7 +1,7 @@
-import { call, put, select, takeLatest, all } from "redux-saga/effects";
+import { call, put, takeLatest, all } from "redux-saga/effects";
 import { toast } from "react-toastify";
 
-import { ReduxState } from "../store";
+// import { ReduxState } from "../store";
 import {
   Environment,
   Heap,
@@ -11,7 +11,7 @@ import {
   updateHeapSuccess,
   updateCallStackSuccess,
 } from "../store/reducers/IrState";
-import { updateAlgoByFidRequset } from "../store/reducers/Spec";
+import { updateAlgoByCidRequset } from "../store/reducers/Spec";
 import { doAPIGetRequest } from "../util/api";
 
 // heap saga
@@ -65,10 +65,8 @@ function* updateContextIdxSaga() {
     idx: number;
   }) {
     try {
-      const state: ReduxState = yield select();
-      console.log(state.irState.callStack);
-      const fid = state.irState.callStack[idx].fid;
-      yield put(updateAlgoByFidRequset(fid));
+      // const state: ReduxState = yield select();
+      yield put(updateAlgoByCidRequset(idx));
     } catch (e: unknown) {
       // show error toast
       toast.error((e as Error).message);

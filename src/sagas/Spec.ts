@@ -10,28 +10,29 @@ import {
 import { AppState, move } from "../store/reducers/AppState";
 import { doAPIGetRequest } from "../util/api";
 
-// get algorithm by fid
-function* updateByFidSaga() {
-  function* _updateByFid({
-    fid,
+// get algorithm by cid
+function* updateByCidSaga() {
+  function* _updateByCid({
+    cid,
   }: {
-    type: SpecActionType.UPDATE_BY_FID_REQUEST;
-    fid: number;
+    type: SpecActionType.UPDATE_BY_CID_REQUEST;
+    cid: number;
   }) {
     try {
-      const [kind, name, rawParams, body, code]: [
+      const [fid, kind, name, rawParams, dot, code]: [
+        number,
         AlgorithmKind,
         string,
         [string, boolean, string][],
         string,
         string,
-      ] = yield call(() => doAPIGetRequest(`spec/func/${fid}`));
+      ] = yield call(() => doAPIGetRequest(`/state/context/${cid}`));
       const params = rawParams.map(([name, optional, type]) => ({
         name,
         optional,
         type,
       }));
-      const algo = { fid, kind, name, params, body, code };
+      const algo = { fid, kind, name, params, dot, code };
       yield put(updateAlgoSuccess(algo));
     } catch (e: unknown) {
       // show error toast
@@ -39,7 +40,7 @@ function* updateByFidSaga() {
       console.error(e);
     }
   }
-  yield takeLatest(SpecActionType.UPDATE_BY_FID_REQUEST, _updateByFid);
+  yield takeLatest(SpecActionType.UPDATE_BY_CID_REQUEST, _updateByCid);
 }
 
 // update algorithm list
@@ -69,5 +70,5 @@ function* updateAlgoListSaga() {
 
 // spec sagas
 export default function* specSaga() {
-  yield all([updateByFidSaga(), updateAlgoListSaga()]);
+  yield all([updateByCidSaga(), updateAlgoListSaga()]);
 }

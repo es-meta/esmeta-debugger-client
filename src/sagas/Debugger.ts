@@ -11,6 +11,7 @@ import {
   updateCallStackRequest,
 } from "../store/reducers/IrState";
 import { clearJS } from "../store/reducers/JS";
+import { clearAlgo } from "../store/reducers/Spec";
 import { doAPIPostRequest } from "../util/api";
 
 // run debugger saga
@@ -41,6 +42,7 @@ function* runSaga() {
 // stop debugger saga
 function* stopSaga() {
   function* _stopSaga() {
+    yield put(clearAlgo());
     yield put(clearIrState());
     yield put(clearJS());
     yield put(move(AppState.JS_INPUT));

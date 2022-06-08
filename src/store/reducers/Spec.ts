@@ -4,8 +4,9 @@ import produce from "immer";
 export enum SpecActionType {
   UPDATE_ALGORITHM_LIST_REQUEST = "SpecActionType/UPDATE_ALGORITHM_LIST_REQUEST",
   UPDATE_ALGORITHM_LIST_SUCCESS = "SpecActionType/UPDATE_ALGORITHM_LIST_SUCCESS",
-  UPDATE_BY_FID_REQUEST = "SpecActionType/UPDATE_BY_FID_REQUSET",
+  UPDATE_BY_CID_REQUEST = "SpecActionType/UPDATE_BY_CID_REQUSET",
   UPDATE_ALGO_SUCCESS = "SpecActionType/UPDATE_ALGO_SUCCESS",
+  CLEAR = "SpecActionType/CLEAR",
 }
 export const updateAlgoListRequest = (): SpecAction => ({
   type: SpecActionType.UPDATE_ALGORITHM_LIST_REQUEST,
@@ -16,18 +17,22 @@ export const updateAlgoListSuccess = (
   type: SpecActionType.UPDATE_ALGORITHM_LIST_SUCCESS,
   nameMap,
 });
-export const updateAlgoByFidRequset = (fid: number): SpecAction => ({
-  type: SpecActionType.UPDATE_BY_FID_REQUEST,
-  fid,
+export const updateAlgoByCidRequset = (cid: number): SpecAction => ({
+  type: SpecActionType.UPDATE_BY_CID_REQUEST,
+  cid,
 });
 export const updateAlgoSuccess = (algo: Algorithm) => ({
   type: SpecActionType.UPDATE_ALGO_SUCCESS,
   algo,
 });
+export const clearAlgo = (): SpecAction => ({
+  type: SpecActionType.CLEAR,
+});
+
 export type SpecAction =
   | {
-      type: SpecActionType.UPDATE_BY_FID_REQUEST;
-      fid: number;
+      type: SpecActionType.UPDATE_BY_CID_REQUEST;
+      cid: number;
     }
   | {
       type: SpecActionType.UPDATE_ALGO_SUCCESS;
@@ -39,6 +44,9 @@ export type SpecAction =
   | {
       type: SpecActionType.UPDATE_ALGORITHM_LIST_SUCCESS;
       nameMap: Record<string, number>;
+    }
+  | {
+      type: SpecActionType.CLEAR;
     };
 
 // redux state
@@ -60,7 +68,7 @@ export interface Algorithm {
   kind: AlgorithmKind;
   name: string;
   params: Parameter[];
-  body: string;
+  dot: string;
   code: string;
 }
 
@@ -74,7 +82,7 @@ const initialState: SpecState = {
     kind: AlgorithmKind.AbstractOperation,
     name: "",
     params: [],
-    body: "",
+    dot: "",
     code: "",
   },
   nameMap: {}, // algoirhtm lists
@@ -90,6 +98,10 @@ export default function reducer(state = initialState, action: SpecAction) {
     case SpecActionType.UPDATE_ALGORITHM_LIST_SUCCESS:
       return produce(state, draft => {
         draft.nameMap = action.nameMap;
+      });
+    case SpecActionType.CLEAR:
+      return produce(state, draft => {
+        draft.algorithm = initialState.algorithm;
       });
     default:
       return state;
