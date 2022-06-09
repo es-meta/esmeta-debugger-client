@@ -34,7 +34,6 @@ function* updateByCidSaga() {
         optional,
         type,
       }));
-      console.log(start, end);
       const algo = { fid, kind, name, params, dot, code };
       yield put(updateAlgoSuccess(algo));
       yield put(updateRange(start, end));

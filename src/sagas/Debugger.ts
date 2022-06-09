@@ -65,7 +65,6 @@ function mkStepSaga(endpoint: string) {
       const res: StepResult = yield call(() => doAPIPostRequest(endpoint));
       if (res === StepResult.TERMINATED) toast.success("Terminated");
       else if (res === StepResult.BREAKED) toast.info("Breaked");
-      console.log(res);
 
       // update heap, call stack
       yield put(updateHeapRequest());

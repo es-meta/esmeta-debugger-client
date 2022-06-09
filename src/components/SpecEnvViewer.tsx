@@ -15,7 +15,6 @@ type SpecEnvViewerProps = ConnectedProps<typeof connector>;
 class SpecEnvViewer extends React.Component<SpecEnvViewerProps> {
   render() {
     const { callStack, contextIdx } = this.props.irState;
-    console.log(callStack, contextIdx);
     const env: Environment =
       callStack.length > 0 ? callStack[contextIdx].env : [];
     return <EnvViewer env={env} />;

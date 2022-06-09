@@ -47,11 +47,9 @@ class JSEditor extends React.Component<JSEditorProps> {
         code.slice(start, end) +
         endMarker +
         code.slice(end, code.length);
-      console.log(marked);
       highlighted = highlight(marked, languages.js, "js")
         .replace(startMarker, "<mark>")
         .replace(endMarker, "</mark>");
-      console.log(highlighted);
     } else highlighted = highlight(code, languages.js, "js");
     // decorate with line info
     return highlighted
