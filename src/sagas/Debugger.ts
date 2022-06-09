@@ -32,7 +32,7 @@ function* runSaga() {
       yield put(updateCallStackRequest());
     } catch (e: unknown) {
       // show error toast
-      toast.error((e as Error).message);
+      // toast.error((e as Error).message);
       console.error(e);
     }
   }
@@ -70,7 +70,6 @@ function mkStepSaga(endpoint: string) {
       // update heap, call stack
       yield put(updateHeapRequest());
       yield put(updateCallStackRequest());
-      // TODO yield put(updateRange(...jsRanges));
     } catch (e: unknown) {
       toast.error(e as Error);
     }
@@ -104,26 +103,26 @@ function* specContinueSaga() {
   );
 }
 
-// // js step saga
-// function* jsStepSaga() {
-//   yield takeLatest(DebuggerActionType.JS_STEP, mkStepSaga("exec/jsStep"));
-// }
-//
-// // js step over saga
-// function* jsStepOverSaga() {
-//   yield takeLatest(
-//     DebuggerActionType.JS_STEP_OVER,
-//     mkStepSaga("exec/jsStepOver"),
-//   );
-// }
-//
-// // js step out saga
-// function* jsStepOutSaga() {
-//   yield takeLatest(
-//     DebuggerActionType.JS_STEP_OUT,
-//     mkStepSaga("exec/jsStepOut"),
-//   );
-// }
+// js step saga
+function* jsStepSaga() {
+  yield takeLatest(DebuggerActionType.JS_STEP, mkStepSaga("exec/jsStep"));
+}
+
+// js step over saga
+function* jsStepOverSaga() {
+  yield takeLatest(
+    DebuggerActionType.JS_STEP_OVER,
+    mkStepSaga("exec/jsStepOver"),
+  );
+}
+
+// js step out saga
+function* jsStepOutSaga() {
+  yield takeLatest(
+    DebuggerActionType.JS_STEP_OUT,
+    mkStepSaga("exec/jsStepOut"),
+  );
+}
 
 // debugger sagas
 export default function* debuggerSaga() {
@@ -133,9 +132,9 @@ export default function* debuggerSaga() {
     specStepSaga(),
     specStepOverSaga(),
     specStepOutSaga(),
-    // jsStepSaga(),
-    // jsStepOverSaga(),
-    // jsStepOutSaga(),
+    jsStepSaga(),
+    jsStepOverSaga(),
+    jsStepOutSaga(),
     specContinueSaga(),
   ]);
 }

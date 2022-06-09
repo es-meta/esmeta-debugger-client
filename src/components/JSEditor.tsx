@@ -27,24 +27,31 @@ class JSEditor extends React.Component<JSEditorProps> {
   onCodeChange(code: string) {
     if (this.props.appState === AppState.JS_INPUT) this.props.edit(code);
   }
-  private genMarker(): [string, string] {
-    const genUid = () => ` __${uuid().replaceAll("-", "_")}__ `;
-    return [` ${genUid()} `, ` ${genUid()} `];
+  private genMarker(needSpace: boolean): [string, string] {
+    const space = "\n";
+    const genUid = () => {
+      const marker = `__${uuid().replaceAll("-", "_")}__`;
+      return needSpace ? space + marker + space : marker;
+    };
+
+    return [genUid(), genUid()];
   }
   highlightWithLine(code: string, start = -1, end = -1): string {
     let highlighted: string;
     // use highlighting when start, end index is given
-    if (start >= 0 && end >= 0) {
-      const [startMarker, endMarker] = this.genMarker();
+    if (start >= 0 && end >= 0 && start != end) {
+      const [startMarker, endMarker] = this.genMarker(end - start !== 1);
       const marked =
         code.slice(0, start) +
         startMarker +
         code.slice(start, end) +
         endMarker +
         code.slice(end, code.length);
+      console.log(marked);
       highlighted = highlight(marked, languages.js, "js")
         .replace(startMarker, "<mark>")
         .replace(endMarker, "</mark>");
+      console.log(highlighted);
     } else highlighted = highlight(code, languages.js, "js");
     // decorate with line info
     return highlighted

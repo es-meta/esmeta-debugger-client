@@ -1,3 +1,5 @@
+import { toast } from "react-toastify";
+
 const API_HOST = "http://localhost:8080";
 
 // json header
@@ -66,6 +68,7 @@ const doGetRequest = async (
       throw new Error(`GET request to ${url} failed with ${response.status}`);
     return await response.json();
   } catch (e) {
+    toast.error((e as Error).message);
     throw e; // new Error(e);
   }
 };
@@ -92,6 +95,7 @@ const doWriteRequest = async (
       );
     return await response.json();
   } catch (e) {
+    toast.error((e as Error).message);
     throw e;
     // throw new Error(e);
   }

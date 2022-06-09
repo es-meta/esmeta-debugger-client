@@ -10,15 +10,8 @@ export const edit = (code: string): JSAction => ({
   type: JSActionType.EDIT,
   code,
 });
-export const updateRange = (
-  lineFrom: number,
-  lineTo: number,
-  start: number,
-  end: number,
-): JSAction => ({
+export const updateRange = (start: number, end: number): JSAction => ({
   type: JSActionType.UPDATE_RANGE,
-  lineFrom,
-  lineTo,
   start,
   end,
 });
@@ -36,8 +29,6 @@ export type JSAction =
     }
   | {
       type: JSActionType.UPDATE_RANGE;
-      lineFrom: number;
-      lineTo: number;
       start: number;
       end: number;
     };

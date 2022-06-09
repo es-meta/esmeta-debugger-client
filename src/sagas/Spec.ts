@@ -7,6 +7,7 @@ import {
   updateAlgoSuccess,
   updateAlgoListSuccess,
 } from "../store/reducers/Spec";
+import { updateRange } from "../store/reducers/JS";
 import { AppState, move } from "../store/reducers/AppState";
 import { doAPIGetRequest } from "../util/api";
 
@@ -19,21 +20,24 @@ function* updateByCidSaga() {
     cid: number;
   }) {
     try {
-      const [fid, kind, name, rawParams, dot, code]: [
+      const [fid, kind, name, rawParams, dot, code, [start, end]]: [
         number,
         AlgorithmKind,
         string,
         [string, boolean, string][],
         string,
         string,
+        [number, number],
       ] = yield call(() => doAPIGetRequest(`/state/context/${cid}`));
       const params = rawParams.map(([name, optional, type]) => ({
         name,
         optional,
         type,
       }));
+      console.log(start, end);
       const algo = { fid, kind, name, params, dot, code };
       yield put(updateAlgoSuccess(algo));
+      yield put(updateRange(start, end));
     } catch (e: unknown) {
       // show error toast
       toast.error((e as Error).message);
