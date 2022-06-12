@@ -83,6 +83,7 @@ export default function reducer(state = initialState, action: IrStateAction) {
       });
     case IrStateActionType.CLEAR:
       return produce(state, draft => {
+        draft.contextIdx = 0;
         draft.callStack = initialState.callStack;
         draft.heap = initialState.heap;
       });
