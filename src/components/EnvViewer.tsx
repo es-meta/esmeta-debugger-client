@@ -19,6 +19,7 @@ type EnvViewerProps = {
 class EnvViewer extends React.Component<EnvViewerProps> {
   render(): ReactElement {
     const { env } = this.props;
+    const sorted = env.slice().sort((a, b) => a[0].localeCompare(b[0]));
 
     return (
       <div className="env-viewer-container">
@@ -34,7 +35,7 @@ class EnvViewer extends React.Component<EnvViewerProps> {
               </TableRow>
             </TableHead>
             <TableBody>
-              {env.map(([name, value]) => (
+              {sorted.map(([name, value]) => (
                 <TableRow key={uuid()}>
                   <TableCell style={{ width: "25%", overflow: "hidden" }}>
                     <Tooltip title={name}>
