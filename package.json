@@ -53,6 +53,7 @@
     ]
   },
   "devDependencies": {
+    "@playwright/test": "^1.28.1",
     "@types/prismjs": "^1.16.6",
     "@types/react": "^17.0.19",
     "@types/uuid": "^8.3.1",
