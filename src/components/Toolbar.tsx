@@ -1,5 +1,5 @@
-import React from "react";
-import { Button, ButtonGroup } from "@material-ui/core";
+import React, { useCallback, useEffect, useState } from "react";
+import { Button, ButtonGroup, Step } from "@material-ui/core";
 import "../styles/Toolbar.css";
 
 import { connect, ConnectedProps } from "react-redux";
@@ -38,6 +38,49 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type ToolbarProps = ConnectedProps<typeof connector>;
 
 function Toolbar(props: ToolbarProps) {
+  const [focus, setFocus] = useState(false)
+
+  const handleKeyPress = useCallback((event) => {
+    if (!focus) return
+    switch (event.key) {
+      case 'r':
+        run()
+        break
+      case 'a':
+        stop()
+        break
+      case 's':
+        specStep()
+        break
+      case 'o':
+        specStepOver()
+        break
+      case 'u':
+        specStepOut()
+        break
+      case 'j':
+        jsStep()
+        break
+      case 'v':
+        jsStepOver()
+        break
+      case 't':
+        jsStepOut()
+        break
+      case 'c':
+        specContinue()
+        break
+      default:
+        console.log(`other: ${event.key}`)
+    }
+  }, [focus]);
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyPress);
+    return () => {
+      document.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [handleKeyPress]);
+
     const {
       specContinue,
       disableRun,
@@ -51,35 +94,53 @@ function Toolbar(props: ToolbarProps) {
       jsStepOver,
       jsStepOut,
     } = props;
+  const red = { color: focus ? 'red' : '' };
     return (
-      <div className="toolbar-container">
+      <div className="toolbar-container" tabIndex={0} onClick={() => {
+        setFocus(true)
+      }} onBlur={() => {
+        setFocus(false)
+      }}>
         <ButtonGroup variant="text" color="primary">
           <Button disabled={disableRun} onClick={() => run()}>
-            Run
+            <span style={red}>R</span>
+            <span>un</span>
           </Button>
           <Button disabled={disableDebuggerBtn} onClick={() => stop()}>
-            Cancel
+            <span>C</span>
+            <span style={red}>a</span>
+            <span>ncel</span>
           </Button>
           <Button disabled={disableDebuggerBtn} onClick={() => specStep()}>
-            Step
+            <span style={red}>S</span>
+            <span>tep</span>
           </Button>
           <Button disabled={disableDebuggerBtn} onClick={() => specStepOver()}>
-            Step-Over
+            <span>Step-</span>
+            <span style={red}>O</span>
+            <span>ver</span>
           </Button>
           <Button disabled={disableDebuggerBtn} onClick={() => specStepOut()}>
-            Step-Out
+            <span>Step-O</span>
+            <span style={red}>u</span>
+            <span>t</span>
           </Button>
           <Button disabled={disableDebuggerBtn} onClick={() => jsStep()}>
-            Js-Step
+            <span style={red}>J</span>
+            <span>s-Step</span>
           </Button>
           <Button disabled={disableDebuggerBtn} onClick={() => jsStepOver()}>
-            Js-Step-Over
+            <span>Js-Step-O</span>
+            <span style={red}>v</span>
+            <span>er</span>
           </Button>
           <Button disabled={disableDebuggerBtn} onClick={() => jsStepOut()}>
-            Js-Step-Out
+            <span>Js-Step-Ou</span>
+            <span style={red}>t</span>
           </Button>
           <Button disabled={disableDebuggerBtn} onClick={() => specContinue()}>
-            Continue
+            <span style={red}>C</span>
+            <span>ontinue</span>
           </Button>
         </ButtonGroup>
       </div>
