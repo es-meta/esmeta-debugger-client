@@ -37,8 +37,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type ToolbarProps = ConnectedProps<typeof connector>;
 
-class Toolbar extends React.Component<ToolbarProps> {
-  render() {
+function Toolbar(props: ToolbarProps) {
     const {
       specContinue,
       disableRun,
@@ -51,7 +50,7 @@ class Toolbar extends React.Component<ToolbarProps> {
       jsStep,
       jsStepOver,
       jsStepOut,
-    } = this.props;
+    } = props;
     return (
       <div className="toolbar-container">
         <ButtonGroup variant="text" color="primary">
@@ -85,7 +84,6 @@ class Toolbar extends React.Component<ToolbarProps> {
         </ButtonGroup>
       </div>
     );
-  }
 }
 
 export default connector(Toolbar);
