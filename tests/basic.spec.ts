@@ -1,8 +1,10 @@
 import { test, expect } from '@playwright/test';
 
-test('run-stepout terminates', async ({ page }) => {
+test('run-continue terminates', async ({ page }) => {
   await page.goto('http://localhost:3000/');
-  await page.getByRole('button', { name: 'Run' }).click();
-  await page.getByRole('button', { name: 'Step-Out' }).first().click();
+  // name is 'un' because of separate span
+  await page.getByRole('button', { name: 'un' }).click();
+  // name is 'ontinue' because of separate span
+  await page.getByRole('button', { name: 'ontinue' }).first().click();
   await page.getByText('Terminated').click();
 });
