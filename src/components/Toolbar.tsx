@@ -70,6 +70,9 @@ function Toolbar(props: ToolbarProps) {
       case 'c':
         specContinue()
         break
+      case 'Escape':
+        setFocus(false);
+        break
       default:
         console.log(`other: ${event.key}`)
     }
