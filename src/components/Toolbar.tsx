@@ -38,10 +38,15 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type ToolbarProps = ConnectedProps<typeof connector>;
 
 function Toolbar(props: ToolbarProps) {
-  const [focus, setFocus] = useState(false)
-
   const handleKeyPress = useCallback((event) => {
-    if (!focus) return
+    /*
+      prevent handleKeyPress called while adding breakpoints
+     */
+    const focusedElement = document.activeElement;
+    if(focusedElement && (focusedElement.tagName==="INPUT" || focusedElement.tagName==="TEXTAREA")) {
+      return;
+    }
+
     switch (event.key) {
       case 'r':
         run()
@@ -71,12 +76,12 @@ function Toolbar(props: ToolbarProps) {
         specContinue()
         break
       case 'Escape':
-        setFocus(false);
         break
       default:
         console.log(`other: ${event.key}`)
     }
   }, [focus]);
+
   useEffect(() => {
     document.addEventListener('keydown', handleKeyPress);
     return () => {
@@ -97,52 +102,49 @@ function Toolbar(props: ToolbarProps) {
       jsStepOver,
       jsStepOut,
     } = props;
-  const red = { color: focus ? 'red' : '' };
+
+  const emphasize = { color: 'black', fontWeight: 'bold' };
     return (
-      <div className="toolbar-container" tabIndex={0} onClick={() => {
-        setFocus(true)
-      }} onBlur={() => {
-        setFocus(false)
-      }}>
+      <div className="toolbar-container" tabIndex={0}>
         <ButtonGroup variant="text" color="primary">
           <Button disabled={disableRun} onClick={() => run()}>
-            <span style={red}>R</span>
+            <span style={emphasize}>R</span>
             <span>un</span>
           </Button>
           <Button disabled={disableDebuggerBtn} onClick={() => stop()}>
             <span>C</span>
-            <span style={red}>a</span>
+            <span style={emphasize}>a</span>
             <span>ncel</span>
           </Button>
           <Button disabled={disableDebuggerBtn} onClick={() => specStep()}>
-            <span style={red}>S</span>
+            <span style={emphasize}>S</span>
             <span>tep</span>
           </Button>
           <Button disabled={disableDebuggerBtn} onClick={() => specStepOver()}>
             <span>Step-</span>
-            <span style={red}>O</span>
+            <span style={emphasize}>O</span>
             <span>ver</span>
           </Button>
           <Button disabled={disableDebuggerBtn} onClick={() => specStepOut()}>
             <span>Step-O</span>
-            <span style={red}>u</span>
+            <span style={emphasize}>u</span>
             <span>t</span>
           </Button>
           <Button disabled={disableDebuggerBtn} onClick={() => jsStep()}>
-            <span style={red}>J</span>
+            <span style={emphasize}>J</span>
             <span>s-Step</span>
           </Button>
           <Button disabled={disableDebuggerBtn} onClick={() => jsStepOver()}>
             <span>Js-Step-O</span>
-            <span style={red}>v</span>
+            <span style={emphasize}>v</span>
             <span>er</span>
           </Button>
           <Button disabled={disableDebuggerBtn} onClick={() => jsStepOut()}>
             <span>Js-Step-Ou</span>
-            <span style={red}>t</span>
+            <span style={emphasize}>t</span>
           </Button>
           <Button disabled={disableDebuggerBtn} onClick={() => specContinue()}>
-            <span style={red}>C</span>
+            <span style={emphasize}>C</span>
             <span>ontinue</span>
           </Button>
         </ButtonGroup>
