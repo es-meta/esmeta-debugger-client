@@ -116,6 +116,12 @@ class Breakpoints extends React.Component<BreakpointsProps, BreakpointsState> {
     else toast.warning(`Wrong algorithm name: ${algoName}`);
   }
 
+  onKeyDown = (e : React.KeyboardEvent<HTMLDivElement>) => {
+    if(e.key === "Enter"){
+      this.onAddClick()
+    }
+  }
+
   render() {
     const { breakpoints, algoNames } = this.props;
     const { algoName } = this.state;
@@ -147,6 +153,7 @@ class Breakpoints extends React.Component<BreakpointsProps, BreakpointsState> {
                   </IconButton>
                 ),
               }}
+              onKeyDown={e=> this.onKeyDown(e)}
               onChange={event => this.onAddChange(event.target.value)}
             />
           )}
