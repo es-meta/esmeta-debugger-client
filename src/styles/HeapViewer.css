@@ -5,6 +5,7 @@
 }
 
 .heap-viewer-obj-wrapper {
+  overflow: scroll;
   background-color: #eee;
   padding: 8px;
   margin: 0;
