@@ -1,5 +1,5 @@
 import React from "react";
-import { Typography, Paper } from "@material-ui/core";
+import { Typography, Paper } from "@mui/material";
 import AlgoViewer from "./AlgoViewer";
 import "../styles/SpecViewer.css";
 import { Graphviz } from "graphviz-react";

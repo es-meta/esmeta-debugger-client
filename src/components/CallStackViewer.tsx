@@ -7,7 +7,7 @@ import {
   TableHead,
   TableRow,
   Paper,
-} from "@material-ui/core";
+} from "@mui/material";
 import { v4 as uuid } from "uuid";
 import "../styles/CallStackViewer.css";
 

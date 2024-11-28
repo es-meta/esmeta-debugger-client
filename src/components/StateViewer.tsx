@@ -5,7 +5,7 @@ import {
   AccordionDetails,
   Icon,
   Typography,
-} from "@material-ui/core";
+} from "@mui/material";
 import "../styles/StateViewer.css";
 
 import CallStackViewer from "./CallStackViewer";

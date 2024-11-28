@@ -1,7 +1,7 @@
 import React from "react";
 import { toast } from "react-toastify";
 import { v4 as uuid } from "uuid";
-import { Autocomplete } from "@material-ui/lab";
+import { Autocomplete } from "@mui/lab";
 import {
   Tooltip,
   IconButton,
@@ -15,7 +15,7 @@ import {
   TableHead,
   TableRow,
   Paper,
-} from "@material-ui/core";
+} from "@mui/material";
 import "../styles/Breakpoints.css";
 
 import { connect, ConnectedProps } from "react-redux";

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Button, ButtonGroup, Step } from "@material-ui/core";
+import { Button, ButtonGroup, Step } from "@mui/material";
 import "../styles/Toolbar.css";
 
 import { connect, ConnectedProps } from "react-redux";
