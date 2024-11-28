@@ -16,6 +16,7 @@ npm-debug.log*
 
 # TypeScript
 lib/
+tsconfig.tsbuildinfo
 
 # dev
 .*.js
