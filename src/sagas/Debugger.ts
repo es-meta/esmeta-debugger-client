@@ -70,7 +70,12 @@ function mkStepSaga(endpoint: string) {
       yield put(updateHeapRequest());
       yield put(updateCallStackRequest());
     } catch (e: unknown) {
-      toast.error(e as Error);
+      console.error(e);
+      if (e instanceof Error) {
+        toast.error(e.message);
+      } else {
+        toast.error("Unknown error : check console");
+      }
     }
   }
   return _stepBodySaga;

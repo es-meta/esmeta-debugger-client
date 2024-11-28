@@ -38,7 +38,7 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type ToolbarProps = ConnectedProps<typeof connector>;
 
 function Toolbar(props: ToolbarProps) {
-  const handleKeyPress = useCallback((event) => {
+  const handleKeyPress  = useCallback((event : KeyboardEvent) => {
     /*
       prevent handleKeyPress called while adding breakpoints
      */
