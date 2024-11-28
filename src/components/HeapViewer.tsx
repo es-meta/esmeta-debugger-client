@@ -1,6 +1,6 @@
 import React from "react";
 import { TextField } from "@mui/material";
-import { Autocomplete } from "@mui/lab";
+import { Autocomplete } from "@mui/material";
 import "../styles/HeapViewer.css";
 
 import { connect, ConnectedProps } from "react-redux";

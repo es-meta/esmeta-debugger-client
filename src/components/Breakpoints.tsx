@@ -1,7 +1,7 @@
 import React from "react";
 import { toast } from "react-toastify";
 import { v4 as uuid } from "uuid";
-import { Autocomplete } from "@mui/lab";
+import { Autocomplete } from "@mui/material";
 import {
   Tooltip,
   IconButton,

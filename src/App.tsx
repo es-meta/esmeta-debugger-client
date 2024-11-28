@@ -1,6 +1,6 @@
 import React from "react";
-import { Grid } from "@mui/material";
-import { ThemeProvider, createTheme, makeStyles } from "@mui/material/styles";
+import { Grid, ThemeProvider, createTheme } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
