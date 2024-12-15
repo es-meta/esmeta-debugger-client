@@ -1,140 +1,61 @@
 import { toast } from "react-toastify";
+import { Route } from "./route.type";
 
-const API_HOST = "http://localhost:8080";
+// Create worker instance
+const worker = new Worker(new URL('./api.worker.ts', import.meta.url));
 
-// json header
-export const mkJSONHeader = (): Record<string, string> => {
-  const headers: { [index: string]: string } = {};
-  headers["Content-Type"] = "application/json";
-  headers["Accept"] = "application/json";
-  return headers;
+// Request counter for unique IDs
+const ta = new Uint8Array(new SharedArrayBuffer(1));
+
+// Helper function to handle worker communication
+const createWorkerRequest = (type: string, endpoint: Route, data?: unknown): Promise<unknown> => {
+  return new Promise((resolve, reject) => {
+    const id = Atomics.add(ta, 0, 1);
+    
+    const handler = (e: MessageEvent) => {
+      const response = e.data;
+      if (response.id === id) {
+        worker.removeEventListener('message', handler);
+        if (response.success) {
+          resolve(response.data);
+        } else {
+          const error = new Error(response.error);
+          toast.error(error.message);
+          reject(error);
+        }
+      }
+    };
+
+    worker.addEventListener('message', handler);
+    worker.postMessage({ id, type, endpoint, data });
+  });
 };
 
-// trim slash
-export const trim_slash = (input: string): string => {
-  return input.replace(/\/+$/, "").replace(/^\/+/, "");
-};
-
-// make url for GET request
-export const mkURL = (
-  host: string,
-  endpoint: string,
-  queryObj: { [key: string]: unknown } = {},
-): string => {
-  let url = `${trim_slash(host)}/${trim_slash(endpoint)}`;
-  const listParams: string[] = [];
-  for (const key in queryObj) {
-    const entry = queryObj[key];
-    if (
-      typeof entry === "string" ||
-      typeof entry === "number" ||
-      typeof entry === "boolean"
-    ) {
-      const param = `${encodeURIComponent(key)}=${encodeURIComponent(
-        entry.toString(),
-      )}`;
-      listParams.push(param);
-    } else if (entry !== undefined || entry !== null) {
-      throw new Error(`Not supported entry type: ${typeof entry}(${entry})`);
-    }
-  }
-  if (listParams.length > 0) {
-    const querystring = listParams.join("&");
-    url += `?${querystring}`;
-  }
-  return url;
-};
-
-// HTTP methods
-type HTTPMethod =
-  | "DELETE"
-  | "GET"
-  | "HEAD"
-  | "PATCH"
-  | "POST"
-  | "PUT"
-  | "OPTIONS";
-
-// raw GET request
-const doGetRequest = async (
-  host: string,
-  endpoint: string,
-  queryObj?: { [key: string]: unknown },
-): Promise<unknown> => {
-  try {
-    const url = mkURL(host, endpoint, queryObj);
-    const response = await fetch(url, { method: "GET" });
-    if (!response.ok)
-      throw new Error(`GET request to ${url} failed with ${response.status}`);
-    return await response.json();
-  } catch (e) {
-    toast.error((e as Error).message);
-    throw e; // new Error(e);
-  }
-};
-
-// raw POST-like request
-const doWriteRequest = async (
-  host: string,
-  method: HTTPMethod,
-  endpoint: string,
-  bodyObj?: unknown,
-): Promise<unknown> => {
-  try {
-    const url = mkURL(host, endpoint);
-    const response = await fetch(url, {
-      method,
-      headers: {
-        ...(bodyObj ? mkJSONHeader() : undefined),
-      },
-      body: bodyObj !== undefined ? JSON.stringify(bodyObj) : undefined,
-    });
-    if (!response.ok)
-      throw new Error(
-        `${method} request to ${url} failed with ${response.status}`,
-      );
-    return await response.json();
-  } catch (e) {
-    toast.error((e as Error).message);
-    throw e;
-    // throw new Error(e);
-  }
-};
-
-// GET request to API server
+// Modified API request functions
 export const doAPIGetRequest = (
-  endpoint: string,
-  queryObj?: { [key: string]: unknown },
+  endpoint: Route,
+  queryObj?: { [key: string]: unknown }
 ): Promise<unknown> => {
-  return doGetRequest(API_HOST, endpoint, queryObj);
+  return createWorkerRequest('GET', endpoint, queryObj);
 };
 
-// POST-like request to API server
-const doAPIWriteRequest = (
-  method: HTTPMethod,
-  endpoint: string,
-  bodyObj?: unknown,
-): Promise<unknown> => {
-  return doWriteRequest(API_HOST, method, endpoint, bodyObj);
-};
-// POST
 export const doAPIPostRequest = (
-  endpoint: string,
-  bodyObj?: unknown,
+  endpoint: Route,
+  bodyObj?: unknown
 ): Promise<unknown> => {
-  return doAPIWriteRequest("POST", endpoint, bodyObj);
+  return createWorkerRequest('POST', endpoint, bodyObj);
 };
-// DELETE
+
 export const doAPIDeleteRequest = (
-  endpoint: string,
-  bodyObj?: unknown,
+  endpoint: Route,
+  bodyObj?: unknown
 ): Promise<unknown> => {
-  return doAPIWriteRequest("DELETE", endpoint, bodyObj);
+  return createWorkerRequest('DELETE', endpoint, bodyObj);
 };
-// PUT
+
 export const doAPIPutRequest = (
-  endpoint: string,
-  bodyObj?: unknown,
+  endpoint: Route,
+  bodyObj?: unknown
 ): Promise<unknown> => {
-  return doAPIWriteRequest("PUT", endpoint, bodyObj);
+  return createWorkerRequest('PUT', endpoint, bodyObj);
 };

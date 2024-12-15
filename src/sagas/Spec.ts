@@ -28,7 +28,7 @@ function* updateByCidSaga() {
         string,
         string,
         [number, number],
-      ] = yield call(() => doAPIGetRequest(`/state/context/${cid}`));
+      ] = yield call(() => doAPIGetRequest(`state/context/${cid}`));
       const params = rawParams.map(([name, optional, type]) => ({
         name,
         optional,

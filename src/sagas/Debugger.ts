@@ -13,6 +13,7 @@ import {
 import { clearJS } from "../store/reducers/JS";
 import { clearAlgo } from "../store/reducers/Spec";
 import { doAPIPostRequest } from "../util/api";
+import { Route } from "@/util/route.type";
 
 // run debugger saga
 function* runSaga() {
@@ -58,7 +59,7 @@ enum StepResult {
 }
 
 // step body saga
-function mkStepSaga(endpoint: string) {
+function mkStepSaga(endpoint: Route) {
   function* _stepBodySaga() {
     try {
       // TODO
@@ -109,14 +110,14 @@ function* specContinueSaga() {
 
 // js step saga
 function* jsStepSaga() {
-  yield takeLatest(DebuggerActionType.JS_STEP, mkStepSaga("exec/jsStep"));
+  yield takeLatest(DebuggerActionType.JS_STEP, mkStepSaga("exec/esStep"));
 }
 
 // js step over saga
 function* jsStepOverSaga() {
   yield takeLatest(
     DebuggerActionType.JS_STEP_OVER,
-    mkStepSaga("exec/jsStepOver"),
+    mkStepSaga("exec/esStepOver"),
   );
 }
 
@@ -124,7 +125,7 @@ function* jsStepOverSaga() {
 function* jsStepOutSaga() {
   yield takeLatest(
     DebuggerActionType.JS_STEP_OUT,
-    mkStepSaga("exec/jsStepOut"),
+    mkStepSaga("exec/esStepOut"),
   );
 }
 
