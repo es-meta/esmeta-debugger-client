@@ -8,6 +8,17 @@ export default defineConfig({
 	server: {
 		port: 3000,
 	},
+	build: {
+    target: 'esnext', // or appropriate target for your environment
+    rollupOptions: {
+      output: {
+        format: 'es', // Ensure workers use ES modules
+      },
+    },
+  },
+  worker: {
+    format: 'es', // Use ES module format for workers
+  },
 	resolve: {
 		alias: {
 			"@": path.resolve(__dirname, "./src"),
