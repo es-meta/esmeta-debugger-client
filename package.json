@@ -25,6 +25,7 @@
     "web-vitals": "^4.2.4"
   },
   "scripts": {
+    "start": "npm run dev",
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
