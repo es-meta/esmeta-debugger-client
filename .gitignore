@@ -16,9 +16,12 @@ npm-debug.log*
 
 # TypeScript
 lib/
+tsconfig.tsbuildinfo
 
 # dev
 .*.js
 /test-results/
 /playwright-report/
 /playwright/.cache/
+
+/dist/

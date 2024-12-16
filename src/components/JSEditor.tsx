@@ -5,7 +5,7 @@ import { highlight, languages } from "prismjs";
 import "prismjs/components/prism-javascript";
 import "prismjs/themes/prism.css";
 import "../styles/JSEditor.css";
-import { Typography, Paper } from "@material-ui/core";
+import { Typography, Paper } from "@mui/material";
 
 import { connect, ConnectedProps } from "react-redux";
 import { ReduxState, Dispatch } from "../store";

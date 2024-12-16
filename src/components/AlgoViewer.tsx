@@ -1,6 +1,6 @@
 import React from "react";
 import { v4 as uuid } from "uuid";
-import { Typography } from "@material-ui/core";
+import { Typography } from "@mui/material";
 import { Emitter, FragmentNode } from "../util/ecmarkdown";
 import { parseAlgorithm } from "ecmarkdown";
 import type { AlgorithmNode, ListNode, OrderedListNode } from "ecmarkdown";

@@ -1,7 +1,7 @@
 import React from "react";
 import { toast } from "react-toastify";
 import { v4 as uuid } from "uuid";
-import { Autocomplete } from "@material-ui/lab";
+import { Autocomplete } from "@mui/material";
 import {
   Tooltip,
   IconButton,
@@ -15,7 +15,7 @@ import {
   TableHead,
   TableRow,
   Paper,
-} from "@material-ui/core";
+} from "@mui/material";
 import "../styles/Breakpoints.css";
 
 import { connect, ConnectedProps } from "react-redux";
@@ -116,6 +116,12 @@ class Breakpoints extends React.Component<BreakpointsProps, BreakpointsState> {
     else toast.warning(`Wrong algorithm name: ${algoName}`);
   }
 
+  onKeyDown = (e : React.KeyboardEvent<HTMLDivElement>) => {
+    if(e.key === "Enter"){
+      this.onAddClick()
+    }
+  }
+
   render() {
     const { breakpoints, algoNames } = this.props;
     const { algoName } = this.state;
@@ -147,6 +153,7 @@ class Breakpoints extends React.Component<BreakpointsProps, BreakpointsState> {
                   </IconButton>
                 ),
               }}
+              onKeyDown={e=> this.onKeyDown(e)}
               onChange={event => this.onAddChange(event.target.value)}
             />
           )}

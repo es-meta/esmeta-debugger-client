@@ -1,5 +1,6 @@
 import React from "react";
-import { Grid } from "@material-ui/core";
+import { Grid, ThemeProvider, createTheme } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -13,6 +14,16 @@ import { connect, ConnectedProps } from "react-redux";
 import { ReduxState, Dispatch } from "./store";
 import { AppState } from "./store/reducers/AppState";
 import { updateAlgoListRequest } from "./store/reducers/Spec";
+
+
+const theme = createTheme();
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const useStyles = makeStyles((theme : unknown) => {
+  root: {
+    // some CSS that accesses the theme
+  }
+});
 
 // connect redux store
 const mapStateToProps = (st: ReduxState) => ({
@@ -37,6 +48,7 @@ class App extends React.Component<AppProps> {
 
   renderSuccess() {
     return (
+      <ThemeProvider theme={theme}>
       <div>
         <ToastContainer autoClose={3000} hideProgressBar={true} />
         <Grid container className="app-container">
@@ -65,7 +77,8 @@ class App extends React.Component<AppProps> {
             </Grid>
           </Grid>
         </Grid>
-      </div>
+        </div>
+      </ThemeProvider>
     );
   }
 

@@ -3,7 +3,7 @@
 ## Installation Guide
 
 The double debugger client is developed using React framework and requires
-[Node.js](https://nodejs.org/en/) (>=v14.5.0).
+[Node.js](https://nodejs.org/en/) (>=v22.10.2).
 
 ### Download Double Debugger Client
 ```bash
