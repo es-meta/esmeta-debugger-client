@@ -5,12 +5,13 @@ import { Route } from "./route.type";
 const worker = new Worker(new URL('./api.worker.ts', import.meta.url));
 
 // Request counter for unique IDs
-const ta = new Uint8Array(new SharedArrayBuffer(1));
+// XXX if need better atomics const ta = new Uint8Array(new SharedArrayBuffer(1));
+var counter = 0;
 
 // Helper function to handle worker communication
 const createWorkerRequest = (type: string, endpoint: Route, data?: unknown): Promise<unknown> => {
   return new Promise((resolve, reject) => {
-    const id = Atomics.add(ta, 0, 1);
+    const id = counter++;
     
     const handler = (e: MessageEvent) => {
       const response = e.data;
