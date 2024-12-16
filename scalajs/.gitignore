@@ -1,0 +1,9 @@
+/project/target/
+/project/project
+/project/metals.sbt
+
+/target/**/*
+!/target/scala-3.3.3/
+!/target/scala-3.3.3/esmeta-worker-opt/
+!/target/scala-3.3.3/esmeta-worker-opt/main.mjs
+!/target/scala-3.3.3/esmeta-worker-opt/main.mjs.map

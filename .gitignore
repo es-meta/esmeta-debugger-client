@@ -25,3 +25,8 @@ tsconfig.tsbuildinfo
 /playwright/.cache/
 
 /dist/
+
+.bloop/
+.bsp/
+/target/
+.metals/
