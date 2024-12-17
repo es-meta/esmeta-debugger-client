@@ -4,16 +4,13 @@ import { makeStyles } from "@mui/styles";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import SpecViewer from "./components/SpecViewer";
-import Toolbar from "./components/Toolbar";
-import StateViewer from "./components/StateViewer";
-import JSEditor from "./components/JSEditor";
-import "./styles/App.css";
-
 import { connect, ConnectedProps } from "react-redux";
 import { ReduxState, Dispatch } from "./store";
 import { AppState } from "./store/reducers/AppState";
 import { updateAlgoListRequest } from "./store/reducers/Spec";
+import Header from "@/components/custom/Header";
+import Footer from "@/components/custom/Footer";
+import DebuggerApp from "@/features/DebuggerApp";
 
 
 const theme = createTheme();
@@ -37,54 +34,18 @@ type AppProps = ConnectedProps<typeof connector>;
 
 // App component
 class App extends React.Component<AppProps> {
-  componentDidMount() {
-    if (this.props.appState === AppState.INIT)
-      this.props.updateAlgoListRequest();
-  }
 
-  renderLoading() {
-    return <div>Loading...</div>;
-  }
-
-  renderSuccess() {
+  render() {
     return (
       <ThemeProvider theme={theme}>
-      <div>
-        <ToastContainer autoClose={3000} hideProgressBar={true} />
-        <Grid container className="app-container">
-          <Grid item xs={12}>
-            <Toolbar />
-          </Grid>
-          <Grid item xs={12}>
-            <Grid container spacing={2} style={{ width: "100%" }}>
-              <Grid
-                container
-                item
-                xs={9}
-                spacing={2}
-                style={{ padding: "0px 24px" }}
-              >
-                <Grid item xs={6}>
-                  <JSEditor />
-                </Grid>
-                <Grid item xs={6}>
-                  <SpecViewer />
-                </Grid>
-              </Grid>
-              <Grid item xs={3}>
-                <StateViewer />
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
+        <div className="min-h-dvh bg-neutral-50">
+          <ToastContainer autoClose={3000} hideProgressBar={true} />
+          <Header />
+          <DebuggerApp />
+          <Footer />
         </div>
       </ThemeProvider>
     );
-  }
-
-  render() {
-    if (this.props.appState === AppState.INIT) return this.renderLoading();
-    else return this.renderSuccess();
   }
 }
 

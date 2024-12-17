@@ -1,11 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Button, ButtonGroup, Step } from "@mui/material";
-import "../styles/Toolbar.css";
 
 import { connect, ConnectedProps } from "react-redux";
-import { ReduxState, Dispatch } from "../store";
+import { ReduxState, Dispatch } from "@/store";
 
-import { AppState } from "../store/reducers/AppState";
+import { AppState } from "@/store/reducers/AppState";
 import {
   run,
   stop,
@@ -16,7 +15,7 @@ import {
   jsStepOut,
   jsStepOver,
   specContinue,
-} from "../store/reducers/Debugger";
+} from "@/store/reducers/Debugger";
 
 // connect redux store
 const mapStateToProps = (st: ReduxState) => ({
@@ -105,8 +104,15 @@ function Toolbar(props: ToolbarProps) {
 
   const emphasize = { color: 'black', fontWeight: 'bold' };
     return (
-      <div className="toolbar-container" tabIndex={0}>
-        <ButtonGroup variant="text" color="primary">
+      <div className="bg-white rounded-xl border border-neutral-300 p-2" tabIndex={0}>
+        <div>{
+          props.disableDebuggerBtn && props.disableRun ?
+            ('ESMeta is not ready') :
+            ('ESMeta is ready (from localhost:8080)')
+        }
+        </div>
+
+        <ButtonGroup className="flex-wrap" variant="text" color="primary">
           <Button disabled={disableRun} onClick={() => run()}>
             <span style={emphasize}>R</span>
             <span>un</span>

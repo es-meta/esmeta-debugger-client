@@ -64,8 +64,11 @@ class JSEditor extends React.Component<JSEditorProps> {
   render() {
     const { code, start, end } = this.props.js;
     return (
+      <div className=" bg-white rounded-xl border border-neutral-300 p-2">
+        
       <Paper className="editor-container" variant="outlined">
         <Typography variant="h6">JavaScript</Typography>
+        <div>parse ready</div>
         <div className="editor-wrapper">
           <Editor
             value={code}
@@ -78,9 +81,10 @@ class JSEditor extends React.Component<JSEditorProps> {
             }}
             textareaId="editor-textarea"
             className="editor"
-          />
+            />
         </div>
       </Paper>
+      </div>
     );
   }
 }
