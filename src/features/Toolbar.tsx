@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Button, ButtonGroup, Step } from "@mui/material";
+
+import { Button } from "@/components/ui/button";
 
 import { connect, ConnectedProps } from "react-redux";
 import { ReduxState, Dispatch } from "@/store";
@@ -16,6 +17,9 @@ import {
   jsStepOver,
   specContinue,
 } from "@/store/reducers/Debugger";
+import { ArrowDownToDotIcon, ArrowUpFromDotIcon,PlayIcon, RedoDotIcon,  Square,  SquareIcon,  StepForwardIcon, XIcon } from "lucide-react";
+
+import { Separator } from "@/components/ui/separator";
 
 // connect redux store
 const mapStateToProps = (st: ReduxState) => ({
@@ -50,7 +54,7 @@ function Toolbar(props: ToolbarProps) {
       case 'r':
         run()
         break
-      case 'a':
+      case 'a': case 'x': case 'q': 
         stop()
         break
       case 's':
@@ -102,59 +106,109 @@ function Toolbar(props: ToolbarProps) {
       jsStepOut,
     } = props;
 
-  const emphasize = { color: 'black', fontWeight: 'bold' };
-    return (
-      <div className="bg-white rounded-xl border border-neutral-300 p-2" tabIndex={0}>
-        <div>{
-          props.disableDebuggerBtn && props.disableRun ?
-            ('ESMeta is not ready') :
-            ('ESMeta is ready (from localhost:8080)')
-        }
-        </div>
+  const emphasize = 'text-blue-500';
 
-        <ButtonGroup className="flex-wrap" variant="text" color="primary">
-          <Button disabled={disableRun} onClick={() => run()}>
-            <span style={emphasize}>R</span>
-            <span>un</span>
+  return (
+      <aside className="sticky top-0 w-full
+  backdrop-blur-sm
+  z-50
+   
+  py-0 mb-4
+  "//border-b border-b-neutral-300 
+    >  
+
+        <div className="bg-neutral-100 size-full flex-row bg-opacity-75 flex items-center min-h-full space-x-0 flex-wrap p-2 gap-y-2 gap-x-1 justify-start z-[1001] lg:px-24 px-4" >
+
+        
+        {/* <div className="flex flex-row flex-wrap space-x-1 min-h-full" tabIndex={0}> */}
+          <Button variant='outline' size='sm' disabled={disableRun} onClick={() => run()}>
+            <PlayIcon />
+            <span>
+              <span className={emphasize}>R</span>
+              <span>un</span>
+            </span>
+        </Button>
+        
+        <Button variant='outline' size='sm' disabled={disableDebuggerBtn} onClick={() => specContinue()}>
+            <StepForwardIcon />
+          <span>
+            <span className={emphasize}>C</span>
+            ontinue</span>
+        </Button>
+        
+            <Button variant='outline' size='sm' disabled={disableDebuggerBtn} onClick={() => stop()}>
+          <SquareIcon />
+              <span>
+              <span className={emphasize}>Q</span>
+                <span>uit</span>
+              </span>
+        </Button>
+        
+        
+        <div className="h-full min-w-[1px] max-w-[1px] bg-neutral-400 block">&nbsp;</div>
+        
+
+            <Button variant='outline' size='sm' disabled={disableDebuggerBtn} onClick={() => specStep()}>
+              <ArrowDownToDotIcon />
+              <span>
+              <span className={emphasize}>S</span>
+                <span>tep</span>
+              </span>
+            </Button>
+            <Button variant='outline' size='sm' disabled={disableDebuggerBtn} onClick={() => specStepOver()}>
+              <RedoDotIcon />
+              <span>Step&nbsp;
+              <span className={emphasize}>O</span>
+              ver</span>
+            </Button>
+            <Button variant='outline' size='sm' disabled={disableDebuggerBtn} onClick={() => specStepOut()}>
+              <ArrowUpFromDotIcon />
+              <span>Step&nbsp;O
+              <span className={emphasize}>u</span>
+              t</span>
+        </Button>
+        
+        <div className="h-full min-w-[1px] max-w-[1px] bg-neutral-400 block">&nbsp;</div>
+
+
+        
+        <Button variant='outline' size='sm' disabled={disableDebuggerBtn} onClick={() => jsStep()}>
+        <ArrowDownToDotIcon />
+          <span>
+            <span className={emphasize}>J</span>
+            S Step</span>
           </Button>
-          <Button disabled={disableDebuggerBtn} onClick={() => stop()}>
-            <span>C</span>
-            <span style={emphasize}>a</span>
-            <span>ncel</span>
+        <Button variant='outline' size='sm' disabled={disableDebuggerBtn} onClick={() => jsStepOver()}>
+        <RedoDotIcon size={64} />
+          
+            <span>JS Step O
+              <span className={emphasize}>v</span>
+            er</span>
+        </Button>
+        
+          <Button variant='outline' size='sm' disabled={disableDebuggerBtn} onClick={() => jsStepOut()}>
+            <ArrowUpFromDotIcon />
+            <span>JS Step Ou
+              <span className={emphasize}>t</span>
+            </span>
           </Button>
-          <Button disabled={disableDebuggerBtn} onClick={() => specStep()}>
-            <span style={emphasize}>S</span>
-            <span>tep</span>
-          </Button>
-          <Button disabled={disableDebuggerBtn} onClick={() => specStepOver()}>
-            <span>Step-</span>
-            <span style={emphasize}>O</span>
-            <span>ver</span>
-          </Button>
-          <Button disabled={disableDebuggerBtn} onClick={() => specStepOut()}>
-            <span>Step-O</span>
-            <span style={emphasize}>u</span>
-            <span>t</span>
-          </Button>
-          <Button disabled={disableDebuggerBtn} onClick={() => jsStep()}>
-            <span style={emphasize}>J</span>
-            <span>s-Step</span>
-          </Button>
-          <Button disabled={disableDebuggerBtn} onClick={() => jsStepOver()}>
-            <span>Js-Step-O</span>
-            <span style={emphasize}>v</span>
-            <span>er</span>
-          </Button>
-          <Button disabled={disableDebuggerBtn} onClick={() => jsStepOut()}>
-            <span>Js-Step-Ou</span>
-            <span style={emphasize}>t</span>
-          </Button>
-          <Button disabled={disableDebuggerBtn} onClick={() => specContinue()}>
-            <span style={emphasize}>C</span>
-            <span>ontinue</span>
-          </Button>
-        </ButtonGroup>
+
+          <div className="h-full min-w-[1px] max-w-[1px] bg-neutral-400 block">&nbsp;</div>
+
+        <div className="flex flex-row flex-wrap text-blue-500 underline gap-2 px-1">
+          <a href="#jseditor">Editor</a>
+          <a href="#jseditor">Spec</a>
+          <a href="#jseditor">Call Stack</a>
+          <a href="#jseditor">Env.</a>
+          <a href="#jseditor">Heap</a>
+          <a href="#jseditor">B.P.</a>
+        </div>
       </div>
+      
+      
+      </aside>
+
+
     );
 }
 

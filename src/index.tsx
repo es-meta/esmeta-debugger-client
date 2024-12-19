@@ -4,6 +4,8 @@ import "./styles/index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import CssBaseline from "@mui/material/CssBaseline";
+import 'react-grid-layout/css/styles.css';
+import 'react-resizable/css/styles.css';
 import store from "./store";
 import { Provider } from "react-redux";
 

@@ -53,7 +53,7 @@ class StateViewerItem extends React.Component<
     const { disabled, header, headerStyle, body, bodyStyle } = this.props;
     const { expanded } = this.state;
     return (
-      <Accordion expanded={expanded} disabled={disabled}>
+      <Accordion expanded={true} disabled={disabled}>
         <AccordionSummary
           onClick={() => this.onItemClick()}
           expandIcon={<Icon>expand_more</Icon>}

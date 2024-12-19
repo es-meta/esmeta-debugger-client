@@ -32,16 +32,21 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type AppProps = ConnectedProps<typeof connector>;
 
+import MyResponsiveGrid from "./components/custom/Grid";
+
 // App component
 class App extends React.Component<AppProps> {
 
   render() {
     return (
       <ThemeProvider theme={theme}>
-        <div className="min-h-dvh bg-neutral-50">
+        <div className="min-h-dvh bg-neutral-100">
           <ToastContainer autoClose={3000} hideProgressBar={true} />
           <Header />
-          <DebuggerApp />
+          <MyResponsiveGrid />
+          <div className="relative">
+            <DebuggerApp />
+          </div>
           <Footer />
         </div>
       </ThemeProvider>

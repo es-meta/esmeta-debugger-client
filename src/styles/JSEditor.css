@@ -2,7 +2,9 @@
   max-height: 80vh;
   min-height: 80vh;
   overflow: auto;
-  border: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+  border-radius: 0px 0px 12px 12px;
+  background-color: #fafafa;
 }
 .editor {
   counter-reset: line;

@@ -10,6 +10,7 @@ import { connect, ConnectedProps } from "react-redux";
 import { ReduxState, Dispatch } from "@/store";
 import { AppState } from "@/store/reducers/AppState";
 import { updateAlgoListRequest } from "@/store/reducers/Spec";
+import ConnectState from "./ConnectState";
 
 // connect redux store
 const mapStateToProps = (st: ReduxState) => ({
@@ -31,19 +32,11 @@ class DebuggerApp extends React.Component<AppProps> {
   render() {
     return (
       <>
-        <div className="sticky top-0 flex flex-row z-50 bg-white gap-4">
-          <h1>Debugger</h1>
-          <div>editor</div>
-          <div>spec viewer</div>
-          <div>tools</div>
-          <div></div>
-        </div>
-        
-      <Grid container spacing={2} columns={{ xs: 6, sm: 12, md: 18, lg: 32 }}
-        className="w-full justify-center items-start relative">
-        <Grid item xs={6}>
+        <ConnectState disableDebuggerBtn disableRun />
         <Toolbar />
-        </Grid>
+        
+      <Grid container spacing={2} columns={{ xs: 6, sm: 12, md: 18, lg: 18 }}
+        className="w-full justify-center items-start relative lg:px-24">
         <Grid item xs={6}>
         <JSEditor />
         </Grid>

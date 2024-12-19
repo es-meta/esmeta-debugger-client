@@ -1,6 +1,5 @@
 import React from "react";
 import { v4 as uuid } from "uuid";
-import { Typography } from "@mui/material";
 import { Emitter, FragmentNode } from "../util/ecmarkdown";
 import { parseAlgorithm } from "ecmarkdown";
 import type { AlgorithmNode, ListNode, OrderedListNode } from "ecmarkdown";
@@ -129,7 +128,8 @@ class AlgoViewer extends React.Component<AlgoViewerProps> {
   renderHeader() {
     const { algorithm } = this.props;
     return (
-      <Typography variant="subtitle1">
+      // typography
+      <span className="font-600 text-lg">
         <b>{algorithm.name}</b>
         &nbsp;
         <span className="algo-parameters">
@@ -141,7 +141,7 @@ class AlgoViewer extends React.Component<AlgoViewerProps> {
             .join(", ")}
           )
         </span>
-      </Typography>
+      </span>
     );
   }
 
