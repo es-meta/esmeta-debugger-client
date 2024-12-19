@@ -2,7 +2,7 @@ import React from "react";
 import { Typography, Paper } from "@mui/material";
 import AlgoViewer from "./AlgoViewer";
 import "../styles/SpecViewer.css";
-import { Graphviz } from "graphviz-react";
+import Graphviz from "./Graphviz";
 
 import { connect, ConnectedProps } from "react-redux";
 import { ReduxState, Dispatch } from "../store";

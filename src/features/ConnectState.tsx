@@ -35,7 +35,9 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type ToolbarProps = ConnectedProps<typeof connector>;
 
-import { CircleCheckBigIcon, ServerIcon } from "lucide-react";
+import { CircleCheckBigIcon, GitBranchIcon, PlugIcon, ServerIcon } from "lucide-react";
+import Settings from "./modal/Settings";
+import SelectServer from "./input/SelectServer";
 
 
 function ConnectState(props :ToolbarProps ) {
@@ -45,12 +47,26 @@ function ConnectState(props :ToolbarProps ) {
         ESMeta&nbsp;{'>'}&nbsp;JavaScript&nbsp;Double&nbsp;Debugger&nbsp;
       </div>
 
-      <div className="flex flex-row  flex-wrap items-center">
-        <ServerIcon />
+      <div className="flex flex-row gap-4 text-xs font-800 text-neutral-500">
+      
+       
+        
+
+        <SelectServer  />
+        
+          <div className="flex flex-row items-center">
+            <PlugIcon />
+            localhost:8080
+          </div>
+
+          <div className="flex flex-row items-center"> 
+            <GitBranchIcon />
+            J8AZ1M2
+        </div>
+        
         {
           props.isInit ?
-
-            <div className="flex flex-row gap-1 items-center bg-yellow-500 text-white px-4 py-2 rounded-lg text-xs uppercase font-800">
+            <div className="flex flex-row gap-1 items-center text-yellow-500 rounded-lg text-xs uppercase font-800">
               <span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -67,22 +83,19 @@ function ConnectState(props :ToolbarProps ) {
                   <path d="M21 12a9 9 0 1 1-6.219-8.56" />
                 </svg>
               </span>
-              Loading ESMeta…
+              Loading…
             </div>
             :
-            <div className="flex flex-row gap-1 items-center text-green-500 px-4 py-2 rounded-lg text-xs uppercase font-800">
+            <div className="flex flex-row gap-1 items-center text-green-500 rounded-lg text-xs font-800">
               <CircleCheckBigIcon size={18} />
-              ESMeta Connected
+              Connected
             </div>
         }
-      
 
-        <span>
-          Source: localhost:8080
-          Version: ES2024
-        </span>
+        <Settings />
+
+        </div>
       </div>
-    </div>
   );
 }
 

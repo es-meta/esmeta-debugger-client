@@ -117,7 +117,7 @@ function Toolbar(props: ToolbarProps) {
   return (
       <aside className="sticky top-0 w-full
   backdrop-blur-sm
-  z-50
+  z-[2]
    
   py-0 mb-4
   "//border-b border-b-neutral-300 

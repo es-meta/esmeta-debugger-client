@@ -32,7 +32,6 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type AppProps = ConnectedProps<typeof connector>;
 
-
 // App component
 class App extends React.Component<AppProps> {
 
