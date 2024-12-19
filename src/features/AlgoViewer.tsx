@@ -130,8 +130,12 @@ class AlgoViewer extends React.Component<AlgoViewerProps> {
     return (
       // typography
       <span className="font-600 text-lg">
-        <b>{algorithm.name}</b>
+        <b>{algorithm.name}
+        </b>
         &nbsp;
+        <span className="font-mono text-blue-500 underline">
+          to ecma 262 spec {'->'}
+        </span>
         <span className="algo-parameters">
           (
           {algorithm.params

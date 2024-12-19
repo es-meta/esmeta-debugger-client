@@ -1,8 +1,8 @@
 import { ChevronRight, GithubIcon } from "lucide-react"
  
-import { Button } from "@/components/ui/button"
+import { Button } from "@headlessui/react";
 import StateTransition from "./StateTransition";
-import { Separator } from "@radix-ui/react-separator";
+// import { Separator } from "@radix-ui/react-separator";
  
 export function ButtonIcon() {
   return (

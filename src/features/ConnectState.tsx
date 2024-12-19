@@ -17,6 +17,7 @@ import {
 
 // connect redux store
 const mapStateToProps = (st: ReduxState) => ({
+  isInit: st.appState.state === AppState.INIT,
   disableRun: st.appState.state !== AppState.JS_INPUT,
   disableDebuggerBtn: st.appState.state !== AppState.DEBUG_READY,
 });
@@ -47,7 +48,7 @@ function ConnectState(props :ToolbarProps ) {
       <div className="flex flex-row  flex-wrap items-center">
         <ServerIcon />
         {
-          props.disableDebuggerBtn && props.disableRun ?
+          props.isInit ?
 
             <div className="flex flex-row gap-1 items-center bg-yellow-500 text-white px-4 py-2 rounded-lg text-xs uppercase font-800">
               <span>

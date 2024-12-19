@@ -2,7 +2,7 @@ import React from "react";
 import { Grid } from "@mui/material";
 
 import SpecViewer from "./SpecViewer";
-import Toolbar from "./Toolbar";
+import Toolbar from "./toolbar/Toolbar";
 import StateViewer from "./StateViewer";
 import JSEditor from "./JSEditor";
 
@@ -32,7 +32,7 @@ class DebuggerApp extends React.Component<AppProps> {
   render() {
     return (
       <>
-        <ConnectState disableDebuggerBtn disableRun />
+        <ConnectState />
         <Toolbar />
         
       <Grid container spacing={2} columns={{ xs: 6, sm: 12, md: 18, lg: 18 }}

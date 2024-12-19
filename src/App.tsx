@@ -17,7 +17,7 @@ const theme = createTheme();
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const useStyles = makeStyles((theme : unknown) => {
-  root: {
+root: {
     // some CSS that accesses the theme
   }
 });
@@ -32,7 +32,6 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type AppProps = ConnectedProps<typeof connector>;
 
-import MyResponsiveGrid from "./components/custom/Grid";
 
 // App component
 class App extends React.Component<AppProps> {
@@ -43,7 +42,6 @@ class App extends React.Component<AppProps> {
         <div className="min-h-dvh bg-neutral-100">
           <ToastContainer autoClose={3000} hideProgressBar={true} />
           <Header />
-          <MyResponsiveGrid />
           <div className="relative">
             <DebuggerApp />
           </div>
