@@ -14,4 +14,4 @@ export const routes = [
   "exec/esStepOut",
 ] as const;
 
-export type Route = typeof routes[number] | `state/context/${number}`;
+export type Route = (typeof routes)[number] | `state/context/${number}`;

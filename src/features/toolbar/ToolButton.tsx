@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import type { ReactNode } from "react";
+import { forwardRef, type ReactNode } from "react";
 import { Button } from "@headlessui/react";
 import { twJoin } from "tailwind-merge";
 
@@ -11,26 +11,33 @@ interface Props {
   children: ReactNode;
 }
 
-function ToolButton({children, disabled, onClick, position = "single"} : Props) {
+const ToolButton = forwardRef(function (
+  { children, disabled, onClick, position = "single" }: Props,
+  ref?: React.ForwardedRef<HTMLButtonElement> | undefined,
+) {
   return (
-    <Button className={
-      twJoin(
+    <Button
+      ref={ref}
+      className={twJoin(
         "flex flex-row items-center gap-[2px] px-3 py-2",
         "bg-white border border-neutral-200",
         "transition-all",
-        "[&>svg]:size-3",
+        "[&>svg]:size-4",
         "uppercase text-xs font-500",
+        "active:scale-90",
         disabled ? "opacity-25" : "hover:z-[1] hover:bg-neutral-200",
 
         position === "left" ? "rounded-l-md" : "",
         position === "right" ? "rounded-r-md" : "",
         position === "center" ? "rounded-none" : "",
         position === "single" ? "rounded-md" : "",
-      )
-    } disabled={disabled} onClick={onClick}>
+      )}
+      disabled={disabled}
+      onClick={onClick}
+    >
       {children}
     </Button>
-  )
-}
+  );
+});
 
 export default ToolButton;

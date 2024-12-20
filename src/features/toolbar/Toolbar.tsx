@@ -17,7 +17,20 @@ import {
   jsStepOver,
   specContinue,
 } from "@/store/reducers/Debugger";
-import { ArrowDownToDotIcon, ArrowLeftIcon, ArrowUpFromDotIcon,CornerUpLeftIcon,PlayIcon, RedoDotIcon, Square,  SquareIcon,  StepForwardIcon, UndoIcon, XIcon } from "lucide-react";
+import {
+  ArrowDownToDotIcon,
+  ArrowLeftIcon,
+  ArrowUpFromDotIcon,
+  CornerUpLeftIcon,
+  PlayIcon,
+  RedoDotIcon,
+  Square,
+  SquareIcon,
+  StepForwardIcon,
+  UndoDotIcon,
+  UndoIcon,
+  XIcon,
+} from "lucide-react";
 
 import ToolButton from "./ToolButton";
 import ToolButtonGroup from "./ButtonGroup";
@@ -26,7 +39,9 @@ import ConnectState from "../ConnectState";
 // connect redux store
 const mapStateToProps = (st: ReduxState) => ({
   disableRun: st.appState.state !== AppState.JS_INPUT,
-  disableContinue: st.appState.state !== AppState.DEBUG_READY && st.appState.state !== AppState.TERMINATED,
+  disableContinue:
+    st.appState.state !== AppState.DEBUG_READY &&
+    st.appState.state !== AppState.TERMINATED,
   disableDebuggerBtn: st.appState.state !== AppState.DEBUG_READY,
 });
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -43,197 +58,245 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type ToolbarProps = ConnectedProps<typeof connector>;
 
-
 function Toolbar(props: ToolbarProps) {
-  
-
   const handleKeyPress = useCallback((event: KeyboardEvent) => {
     /*
       prevent handleKeyPress called while adding breakpoints
      */
     const focusedElement = document.activeElement;
-    if (focusedElement && (focusedElement.tagName === "INPUT" || focusedElement.tagName === "TEXTAREA")) {
+    if (
+      focusedElement &&
+      (focusedElement.tagName === "INPUT" ||
+        focusedElement.tagName === "TEXTAREA")
+    ) {
       return;
     }
 
     switch (event.key) {
-      case 'r':
-        run()
-        break
-      case 'a': case 'x': case 'q':
-        stop()
-        break
-      case 's':
-        specStep()
-        break
-      case 'o':
-        specStepOver()
-        break
-      case 'u':
-        specStepOut()
-        break
-      case 'b':
-        alert('not implemented');
-        break
-      case 'j':
-        jsStep()
-        break
-      case 'v':
-        jsStepOver()
-        break
-      case 't':
-        jsStepOut()
-        break
-      case 'c':
-        specContinue()
-        break
-      case 'Escape':
-        break
+      case "r":
+        run();
+        break;
+      case "a":
+      case "x":
+      case "q":
+        stop();
+        break;
+      case "s":
+        specStep();
+        break;
+      case "o":
+        specStepOver();
+        break;
+      case "u":
+        specStepOut();
+        break;
+      case "b":
+        alert("not implemented");
+        break;
+      case "j":
+        jsStep();
+        break;
+      case "v":
+        jsStepOver();
+        break;
+      case "t":
+        jsStepOut();
+        break;
+      case "c":
+        specContinue();
+        break;
+      case "Escape":
+        break;
       default:
-        console.log(`other: ${event.key}`)
+        console.log(`other: ${event.key}`);
     }
   }, []);
 
   useEffect(() => {
-    document.addEventListener('keydown', handleKeyPress);
+    document.addEventListener("keydown", handleKeyPress);
     return () => {
-      document.removeEventListener('keydown', handleKeyPress);
+      document.removeEventListener("keydown", handleKeyPress);
     };
   }, [handleKeyPress]);
 
-    const {
-      specContinue,
-      disableRun,
-      disableDebuggerBtn,
-      disableContinue,
-      run,
-      stop,
-      specStep,
-      specStepOver,
-      specStepOut,
-      jsStep,
-      jsStepOver,
-      jsStepOut,
-    } = props;
+  const {
+    specContinue,
+    disableRun,
+    disableDebuggerBtn,
+    disableContinue,
+    run,
+    stop,
+    specStep,
+    specStepOver,
+    specStepOut,
+    jsStep,
+    jsStepOver,
+    jsStepOut,
+  } = props;
 
-  const emphasize = 'text-blue-500';
+  const emphasize = "text-blue-500";
 
   return (
-      <aside className="sticky top-0 w-full
+    <aside
+      className="sticky top-0 w-full
   backdrop-blur-sm
   z-[2]
    
   py-0 mb-4
-  "//border-b border-b-neutral-300 
-    >  
-
-        <div className="bg-neutral-100 size-full flex-row bg-opacity-75 flex items-center min-h-full space-x-0 flex-wrap p-2 gap-y-2 gap-x-1 justify-start z-[1001] lg:px-24 px-4" >
-
-
-        
-
+  " //border-b border-b-neutral-300
+    >
+      <div className="bg-neutral-100 size-full flex-row bg-opacity-75 flex items-center min-h-full space-x-0 flex-wrap p-2 gap-y-2 gap-x-1 justify-start z-[1001] lg:px-24 px-4">
         <ToolButtonGroup>
-          <ToolButton position="left"  disabled={disableRun} onClick={() => run()}>
+          <ToolButton
+            position="left"
+            disabled={disableRun}
+            onClick={() => run()}
+          >
             <PlayIcon />
             <span>
               <span className={emphasize}>R</span>
               <span>un</span>
             </span>
           </ToolButton>
-        
-        <ToolButton position="center"  disabled={disableDebuggerBtn} onClick={() => specContinue()}>
+
+          <ToolButton
+            position="center"
+            disabled={disableDebuggerBtn}
+            onClick={() => specContinue()}
+          >
             <StepForwardIcon />
-          <span>
-            <span className={emphasize}>C</span>
-            ontinue</span>
-        </ToolButton>
-        
-            <ToolButton position="right"   disabled={disableContinue} onClick={() => stop()}>
-          <SquareIcon />
-              <span>
-              <span className={emphasize}>Q</span>
-                <span>uit</span>
-              </span>
-          </ToolButton>
-          
-          </ToolButtonGroup>
-        
-        
-        <div className="h-full min-w-[1px] max-w-[1px] bg-neutral-400 block">&nbsp;</div>
-        
-        <ToolButtonGroup>
-
-            <ToolButton position="left"  disabled={disableDebuggerBtn} onClick={() => specStep()}>
-              <ArrowDownToDotIcon />
-              <span>
-              <span className={emphasize}>S</span>
-                <span>tep</span>
-              </span>
-            </ToolButton>
-            <ToolButton position="center"  disabled={disableDebuggerBtn} onClick={() => specStepOver()}>
-              <RedoDotIcon />
-              <span>Step&nbsp;
-              <span className={emphasize}>O</span>
-              ver</span>
-            </ToolButton>
-            <ToolButton position="center"  disabled={disableDebuggerBtn} onClick={() => specStepOut()}>
-              <ArrowUpFromDotIcon />
-              <span>Step&nbsp;O
-              <span className={emphasize}>u</span>
-              t</span>
-          </ToolButton>
-            
-          <ToolButton position="right"  disabled={disableDebuggerBtn} onClick={() => alert('not implemented')}>
-            <UndoIcon />
-            <span>Step&nbsp;
-              <span className={emphasize}>B</span>
-              ack</span>
-          </ToolButton>
-
-          </ToolButtonGroup>
-        
-        <div className="h-full min-w-[1px] max-w-[1px] bg-neutral-400 block">&nbsp;</div>
-
-
-        <ToolButtonGroup>
-        
-        <ToolButton position="left"  disabled={disableDebuggerBtn} onClick={() => jsStep()}>
-        <ArrowDownToDotIcon />
-          <span>
-            <span className={emphasize}>J</span>
-            S Step</span>
-          </ToolButton>
-        <ToolButton position="center"  disabled={disableDebuggerBtn} onClick={() => jsStepOver()}>
-        <RedoDotIcon />
-          <span>JS Step O
-            <span className={emphasize}>v</span>
-          er</span>
-        </ToolButton>
-        
-          <ToolButton position="right"  disabled={disableDebuggerBtn} onClick={() => jsStepOut()}>
-            <ArrowUpFromDotIcon />
-            <span>JS Step Ou
-              <span className={emphasize}>t</span>
+            <span>
+              <span className={emphasize}>C</span>
+              ontinue
             </span>
           </ToolButton>
 
+          <ToolButton
+            position="right"
+            disabled={disableContinue}
+            onClick={() => stop()}
+          >
+            <SquareIcon />
+            <span>
+              <span className={emphasize}>Q</span>
+              <span>uit</span>
+            </span>
+          </ToolButton>
         </ToolButtonGroup>
 
+        <div className="h-full min-w-[1px] max-w-[1px] bg-neutral-400 block">
+          &nbsp;
+        </div>
 
+        <ToolButtonGroup>
+          <ToolButton
+            position="left"
+            disabled={disableDebuggerBtn}
+            onClick={() => specStep()}
+          >
+            <ArrowDownToDotIcon />
+            <span>
+              <span className={emphasize}>S</span>
+              <span>tep</span>
+            </span>
+          </ToolButton>
+          <ToolButton
+            position="center"
+            disabled={disableDebuggerBtn}
+            onClick={() => specStepOver()}
+          >
+            <RedoDotIcon />
+            <span>
+              Step&nbsp;
+              <span className={emphasize}>O</span>
+              ver
+            </span>
+          </ToolButton>
+          <ToolButton
+            position="center"
+            disabled={disableDebuggerBtn}
+            onClick={() => specStepOut()}
+          >
+            <ArrowUpFromDotIcon />
+            <span>
+              Step&nbsp;O
+              <span className={emphasize}>u</span>t
+            </span>
+          </ToolButton>
 
-        <div className="h-full min-w-[1px] max-w-[1px] bg-neutral-400 block">&nbsp;</div>
-      <ConnectState />
+          <ToolButton
+            position="center"
+            disabled={disableDebuggerBtn}
+            onClick={() => alert("not implemented")}
+          >
+            <UndoIcon />
+            <span>
+              Step&nbsp;
+              <span className={emphasize}>B</span>
+              ack
+            </span>
+          </ToolButton>
 
-      
+          <ToolButton
+            position="right"
+            disabled={disableDebuggerBtn}
+            onClick={() => alert("not implemented")}
+          >
+            <UndoDotIcon />
+            <span>
+              Step&nbsp;Over&nbsp;Bac
+              <span className={emphasize}>k</span>
+            </span>
+          </ToolButton>
+        </ToolButtonGroup>
 
-      
+        <div className="h-full min-w-[1px] max-w-[1px] bg-neutral-400 block">
+          &nbsp;
+        </div>
+
+        <ToolButtonGroup>
+          <ToolButton
+            position="left"
+            disabled={disableDebuggerBtn}
+            onClick={() => jsStep()}
+          >
+            <ArrowDownToDotIcon />
+            <span>
+              <span className={emphasize}>J</span>S Step
+            </span>
+          </ToolButton>
+          <ToolButton
+            position="center"
+            disabled={disableDebuggerBtn}
+            onClick={() => jsStepOver()}
+          >
+            <RedoDotIcon />
+            <span>
+              JS Step O<span className={emphasize}>v</span>
+              er
+            </span>
+          </ToolButton>
+
+          <ToolButton
+            position="right"
+            disabled={disableDebuggerBtn}
+            onClick={() => jsStepOut()}
+          >
+            <ArrowUpFromDotIcon />
+            <span>
+              JS Step Ou
+              <span className={emphasize}>t</span>
+            </span>
+          </ToolButton>
+        </ToolButtonGroup>
+
+        <div className="h-full min-w-[1px] max-w-[1px] bg-neutral-400 block">
+          &nbsp;
+        </div>
+        <ConnectState />
       </div>
-
-      
-      </aside>
-
-
-    );
+    </aside>
+  );
 }
 
 export default connector(Toolbar);

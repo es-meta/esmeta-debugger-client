@@ -1,27 +1,85 @@
-import { Dialog, Transition, TransitionChild } from '@headlessui/react'
-import { SettingsIcon } from 'lucide-react'
-import { Fragment, useState } from 'react'
+import { Dialog, Transition, TransitionChild } from "@headlessui/react";
+import { SettingsIcon } from "lucide-react";
+import { Fragment, useState } from "react";
+import ConnectStateViewer from "@/components/custom/ConnectStateViewer";
 
-export default function Settings() {
-  let [isOpen, setIsOpen] = useState(false)
+import { connect, ConnectedProps } from "react-redux";
+import { ReduxState, Dispatch } from "@/store";
+
+import { AppState } from "@/store/reducers/AppState";
+import {
+  run,
+  stop,
+  specStep,
+  specStepOut,
+  specStepOver,
+  jsStep,
+  jsStepOut,
+  jsStepOver,
+  specContinue,
+} from "@/store/reducers/Debugger";
+
+// connect redux store
+const mapStateToProps = (st: ReduxState) => ({
+  isInit: st.appState.state === AppState.INIT,
+  disableRun: st.appState.state !== AppState.JS_INPUT,
+  disableDebuggerBtn: st.appState.state !== AppState.DEBUG_READY,
+  busy: st.appState.busy > 0,
+  busyCount: st.appState.busy,
+});
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  run: () => dispatch(run()),
+  stop: () => dispatch(stop()),
+  specStep: () => dispatch(specStep()),
+  specStepOut: () => dispatch(specStepOut()),
+  specStepOver: () => dispatch(specStepOver()),
+  jsStep: () => dispatch(jsStep()),
+  jsStepOut: () => dispatch(jsStepOut()),
+  jsStepOver: () => dispatch(jsStepOver()),
+  specContinue: () => dispatch(specContinue()),
+});
+const connector = connect(mapStateToProps, mapDispatchToProps);
+type ToolbarProps = ConnectedProps<typeof connector>;
+
+import { GitBranchIcon, PlugIcon } from "lucide-react";
+import Settings from "./modal/Settings";
+import ToolButtonPlain from "./toolbar/ToolButtonPlain";
+
+export default connector(function Settings(props: ToolbarProps) {
+  let [isOpen, setIsOpen] = useState(false);
 
   function closeModal() {
-    setIsOpen(false)
+    setIsOpen(false);
   }
 
   function openModal() {
-    setIsOpen(true)
+    setIsOpen(true);
   }
 
   return (
     <>
-      <div className="relative inset-0 flex items-center justify-center">
+      <div
+        className="group relative inset-0 flex items-center justify-center
+      transition-transform active:scale-90
+      "
+      >
         <button
           type="button"
           onClick={openModal}
-          className="rounded-md bg-black/50 text-sm font-medium text-white hover:bg-black/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
+          className="flex flex-row rounded-md text-sm font-medium text-white transition-all items-center justify-between hover:bg-neutral-500/25 bg-neutral-500/0 focus:outline-none focus-visible:ring-1 focus-visible:ring-neutral-300/75"
         >
-          <SettingsIcon size={24} />
+          <div className="w-32 h-8 flex flex-row">
+            <ConnectStateViewer
+              state={props.isInit ? "init" : props.busy ? "busy" : "connected"}
+            />
+          </div>
+
+          <div className="pr-2 text-black">
+            <SettingsIcon
+              size={18}
+              className="group-hover:rotate-45 group-active:rotate-90 transition-transform"
+            />
+          </div>
         </button>
       </div>
 
@@ -61,13 +119,13 @@ export default function Settings() {
                     <p className="text-sm text-gray-500">
                       Your payment has been successfully submitted. We’ve sent
                       you an email with all of the details of your order.
-
                       Settings
-                      <br /><br />
+                      <br />
+                      <br />
                       use browser-side esmeta
                       <br />
-                      pre-compute ast
-                      performance optimized for browser-side environments
+                      pre-compute ast performance optimized for browser-side
+                      environments
                       <br />
                       Window size
                     </p>
@@ -89,5 +147,5 @@ export default function Settings() {
         </Dialog>
       </Transition>
     </>
-  )
-}
+  );
+});

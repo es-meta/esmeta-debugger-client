@@ -1,20 +1,46 @@
-import { motion, AnimatePresence } from "motion/react"
+import { motion, AnimatePresence } from "motion/react";
 
-import { CheckIcon, BanIcon, Loader2Icon, TriangleAlertIcon } from "lucide-react";
+import {
+  CheckIcon,
+  BanIcon,
+  Loader2Icon,
+  TriangleAlertIcon,
+} from "lucide-react";
 
 const parsingState = {
-  'astReady'     : <div className="uppercase text-xs font-700 flex flex-row gap-1 justify-start items-center text-green-600"><CheckIcon /><span>AST&nbsp;Ready</span></div>,
-  'loading'    : <div className="uppercase text-xs font-700 flex flex-row gap-1 justify-start items-center text-neutral-700"><span className="animate-spin"><Loader2Icon /></span><span>Parsing</span></div>,
-  'syntaxError' : <div className="uppercase text-xs font-700 flex flex-row gap-1 justify-start items-center text-yellow-600"><TriangleAlertIcon /><span>Syntax&nbsp;Error</span></div>,
-  'error'       : <div className="uppercase text-xs font-700 flex flex-row gap-1 justify-start items-center text-red-600"><BanIcon /><span>Error</span></div>,
+  astReady: (
+    <div className="uppercase top-1/2 text-xs font-700 flex flex-row gap-1 justify-start items-center text-green-600">
+      <CheckIcon />
+      <span>AST&nbsp;Ready</span>
+    </div>
+  ),
+  loading: (
+    <div className="uppercase top-1/2 text-xs font-700 flex flex-row gap-1 justify-start items-center text-neutral-700">
+      <span className="animate-spin">
+        <Loader2Icon />
+      </span>
+      <span>Parsing</span>
+    </div>
+  ),
+  syntaxError: (
+    <div className="uppercase top-1/2 text-xs font-700 flex flex-row gap-1 justify-start items-center text-yellow-600">
+      <TriangleAlertIcon />
+      <span>Syntax&nbsp;Error</span>
+    </div>
+  ),
+  error: (
+    <div className="uppercase top-1/2 text-xs font-700 flex flex-row gap-1 justify-start items-center text-red-600">
+      <BanIcon />
+      <span>Error</span>
+    </div>
+  ),
 } as const;
 
 interface Props {
   state: keyof typeof parsingState;
 }
 
-const StateTransition = ({ state } : Props ) => {
-
+const StateTransition = ({ state }: Props) => {
   const variants = {
     initial: { opacity: 0, y: 16 },
     animate: { opacity: 1, y: 0 },
@@ -22,7 +48,7 @@ const StateTransition = ({ state } : Props ) => {
   };
 
   return (
-    <div className="relative w-full h-full">
+    <div className="relative w-32 h-full">
       <div className="relative min-h-full">&nbsp;</div>
       <AnimatePresence initial={false}>
         <motion.div
@@ -39,7 +65,7 @@ const StateTransition = ({ state } : Props ) => {
           {parsingState[state]}
         </motion.div>
       </AnimatePresence>
-      </div>
+    </div>
   );
 };
 

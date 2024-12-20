@@ -62,13 +62,13 @@ const doGetRequest = async (
   endpoint: string,
   queryObj?: { [key: string]: unknown },
 ): Promise<unknown> => {
-    const url = mkURL(host, endpoint, queryObj);
+  const url = mkURL(host, endpoint, queryObj);
   const response = await fetch(url, {
     method: "GET",
-    });
-    if (!response.ok)
-      throw new Error(`GET request to ${url} failed with ${response.status}`);
-    return await response.json();
+  });
+  if (!response.ok)
+    throw new Error(`GET request to ${url} failed with ${response.status}`);
+  return await response.json();
 };
 
 // raw POST-like request
@@ -78,51 +78,51 @@ const doWriteRequest = async (
   endpoint: string,
   bodyObj?: unknown,
 ): Promise<unknown> => {
-    const url = mkURL(host, endpoint);
-    const response = await fetch(url, {
-      method,
-      headers: {
-        ...(bodyObj ? mkJSONHeader() : undefined),
-      },
-      body: bodyObj !== undefined ? JSON.stringify(bodyObj) : undefined,
-    });
-    if (!response.ok)
-      throw new Error(
-        `${method} request to ${url} failed with ${response.status}`,
-      );
-    return await response.json();
+  const url = mkURL(host, endpoint);
+  const response = await fetch(url, {
+    method,
+    headers: {
+      ...(bodyObj ? mkJSONHeader() : undefined),
+    },
+    body: bodyObj !== undefined ? JSON.stringify(bodyObj) : undefined,
+  });
+  if (!response.ok)
+    throw new Error(
+      `${method} request to ${url} failed with ${response.status}`,
+    );
+  return await response.json();
 };
 
 // Modify the request handlers to send responses back to the main thread
 self.onmessage = async (e: MessageEvent) => {
   const { id, type, endpoint, data } = e.data;
-  
+
   try {
     let result;
     switch (type) {
-      case 'GET':
+      case "GET":
         result = await doGetRequest(API_HOST, endpoint, data);
         break;
-      case 'POST':
-        result = await doWriteRequest(API_HOST, 'POST', endpoint, data);
+      case "POST":
+        result = await doWriteRequest(API_HOST, "POST", endpoint, data);
         break;
-      case 'PUT':
-        result = await doWriteRequest(API_HOST, 'PUT', endpoint, data);
+      case "PUT":
+        result = await doWriteRequest(API_HOST, "PUT", endpoint, data);
         break;
-      case 'DELETE':
-        result = await doWriteRequest(API_HOST, 'DELETE', endpoint, data);
+      case "DELETE":
+        result = await doWriteRequest(API_HOST, "DELETE", endpoint, data);
         break;
       default:
         throw new Error(`Unsupported request type: ${type}`);
     }
-    
+
     self.postMessage({ id, success: true, data: result });
   } catch (error) {
-    console.error('error', error);
-    self.postMessage({ 
-      id, 
-      success: false, 
-      error: (error as Error).message 
+    console.error("error", error);
+    self.postMessage({
+      id,
+      success: false,
+      error: (error as Error).message,
     });
   }
 };

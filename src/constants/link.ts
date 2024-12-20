@@ -1,5 +1,1 @@
-export const Link = [
-  'jseditor',
-  'specviewer',
-]
-
+export const Link = ["jseditor", "specviewer"];

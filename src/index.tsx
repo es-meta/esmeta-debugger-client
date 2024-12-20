@@ -12,17 +12,16 @@ import { BrowserRouter, Route, Routes } from "react-router";
 
 const root = createRoot(document.getElementById("root")!);
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode> </React.StrictMode>,
+  <Provider store={store}>
     <CssBaseline />
-    <Provider store={store}>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<App />} />
-          <Route path="/doc" element={<div>Document</div>} />
-        </Routes>
-      </BrowserRouter>
-    </Provider>
-  </React.StrictMode>,
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<App />} />
+        <Route path="/doc" element={<div>Document</div>} />
+      </Routes>
+    </BrowserRouter>
+  </Provider>,
 );
 
 // If you want to start measuring performance in your app, pass a function

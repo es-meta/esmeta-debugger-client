@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import type { ReactNode } from "react";
 import { Button } from "@headlessui/react";
@@ -11,10 +11,15 @@ interface Props {
   children: ReactNode;
 }
 
-export default function ToolButtonPlain({children, disabled, onClick, position = "single"} : Props) {
+export default function ToolButtonPlain({
+  children,
+  disabled,
+  onClick,
+  position = "single",
+}: Props) {
   return (
-    <Button className={
-      twJoin(
+    <Button
+      className={twJoin(
         "flex flex-row items-center gap-[2px] px-3 py-2",
         "bg-neutral-300 border bg-opacity-0 border-neutral-200",
         "transition-all",
@@ -27,9 +32,11 @@ export default function ToolButtonPlain({children, disabled, onClick, position =
         position === "right" ? "rounded-r-md" : "",
         position === "center" ? "rounded-none" : "",
         position === "single" ? "rounded-md" : "",
-      )
-    } disabled={disabled} onClick={onClick}>
+      )}
+      disabled={disabled}
+      onClick={onClick}
+    >
       {children}
     </Button>
-  )
+  );
 }

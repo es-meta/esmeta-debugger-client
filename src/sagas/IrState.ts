@@ -19,9 +19,9 @@ import { AppStateActionType } from "@/store/reducers/AppState";
 function* updateHeapSaga() {
   function* _updateHeap() {
     try {
-      yield put({type : AppStateActionType.SEND});
+      yield put({ type: AppStateActionType.SEND });
       const heap: Heap = yield call(() => doAPIGetRequest("state/heap"));
-      yield put({type : AppStateActionType.RECIEVE});
+      yield put({ type: AppStateActionType.RECIEVE });
       yield put(updateHeapSuccess(heap));
     } catch (e: unknown) {
       // show error toast

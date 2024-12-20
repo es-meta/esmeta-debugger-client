@@ -14,7 +14,6 @@ import {
   specContinue,
 } from "@/store/reducers/Debugger";
 
-
 // connect redux store
 const mapStateToProps = (st: ReduxState) => ({
   isInit: st.appState.state === AppState.INIT,
@@ -37,75 +36,30 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type ToolbarProps = ConnectedProps<typeof connector>;
 
-import { CircleAlertIcon, CircleCheckBigIcon, GitBranchIcon, LoaderPinwheelIcon, PlugIcon, ServerIcon } from "lucide-react";
+import { GitBranchIcon, PlugIcon } from "lucide-react";
 import Settings from "./modal/Settings";
 import ToolButtonPlain from "./toolbar/ToolButtonPlain";
+import ConnectStateViewer from "@/components/custom/ConnectStateViewer";
 
-function ConnectState(props :ToolbarProps ) {
+function ConnectState(props: ToolbarProps) {
   return (
-
-      <div className="flex flex-row gap-1 text-xs font-800 text-neutral-500 *:border-neutral-50/0  *:p-1 *:rounded-lg *:transition-all">
-      
-       <ToolButtonPlain>
-          <PlugIcon />
-          localhost:8080
-        </ToolButtonPlain>
-
+    <div
+      className="
+      flex flex-row gap-1 text-xs font-800 text-neutral-500 *:border-neutral-50/0  *:p-1 *:rounded-lg *:transition-all
+      "
+    >
       <ToolButtonPlain>
-          <GitBranchIcon />
-          J8AZ1M2
+        <PlugIcon />
+        localhost:8080
       </ToolButtonPlain>
-        
-      <ToolButtonPlain>{
-        <>
-            <div className="flex flex-row gap-1 items-center text-yellow-500 rounded-lg text-xs uppercase font-800">
-              <span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className={("animate-spin")}
-                >
-                  <path d="M21 12a9 9 0 1 1-6.219-8.56" />
-                </svg>
-              </span>
-              Initializing...
-            </div>
-            
-            <div className="flex flex-row gap-1 items-center text-green-500 rounded-lg text-xs font-800">
-              <CircleCheckBigIcon size={18}  />
-              Connected
-          </div>
-
-
-          <div className="flex flex-row gap-1 items-center text-red-500 rounded-lg text-xs font-800">
-              <CircleAlertIcon size={18}  />
-              Not Connected
-          </div>
-
-
-          {props.busy && <div className="flex flex-row gap-1 items-center text-blue-500 rounded-lg text-xs font-800">
-              <LoaderPinwheelIcon size={18} className="animate-spin" />
-              Busy
-          </div>}
-
-          {props.busyCount}
-
-          
-          </>
-        }</ToolButtonPlain>
 
       <ToolButtonPlain>
-        <Settings />
-    </ToolButtonPlain>
+        <GitBranchIcon />
+        J8AZ1M2
+      </ToolButtonPlain>
 
-      </div>
+      <Settings />
+    </div>
   );
 }
 

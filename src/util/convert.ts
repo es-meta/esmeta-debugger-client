@@ -37,7 +37,10 @@ function RomanToNumber(roman: string): number {
   let num = 0;
 
   while (index < roman.length) {
-    if (index + 1 < roman.length && romanMapping.has(roman.substring(index, index + 2))) {
+    if (
+      index + 1 < roman.length &&
+      romanMapping.has(roman.substring(index, index + 2))
+    ) {
       num += romanMapping.get(roman.substring(index, index + 2))!;
       index += 2;
     } else {

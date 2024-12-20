@@ -79,9 +79,7 @@ class SpecViewer extends React.Component<SpecViewerProps> {
   renderGraphViewer() {
     const dot = this.props.spec.algorithm.dot;
     // const options = { fit: true, zoom: true };
-    return (
-      <Graphviz className="graphviz-container" dot={dot} options={{}} />
-    );
+    return <Graphviz className="graphviz-container" dot={dot} options={{}} />;
   }
 
   renderDefaultViewer() {
@@ -103,8 +101,8 @@ class SpecViewer extends React.Component<SpecViewerProps> {
         {viewType === SpecViewType.ALGORITHM
           ? this.renderAlgoViewer()
           : viewType === SpecViewType.GRAPH
-          ? this.renderGraphViewer()
-          : this.renderDefaultViewer()}
+            ? this.renderGraphViewer()
+            : this.renderDefaultViewer()}
       </Paper>
     );
   }

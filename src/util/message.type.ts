@@ -4,4 +4,3 @@ export interface ApiMessageData<T> {
   endpoint: string;
   data?: T;
 }
-

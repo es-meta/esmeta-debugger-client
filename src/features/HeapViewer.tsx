@@ -33,7 +33,8 @@ class HeapViewer extends React.Component<HeapViewerProps, HeapViewerState> {
 
     // obj가 존재할 때만 클립보드에 복사
     if (obj !== undefined) {
-      navigator.clipboard.writeText(obj)
+      navigator.clipboard
+        .writeText(obj)
         .then(() => alert("Copied to clipboard!"))
         .catch(err => console.error("Failed to copy: ", err));
     } else {

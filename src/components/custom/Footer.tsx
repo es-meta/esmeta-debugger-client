@@ -1,7 +1,7 @@
 import React from "react";
 
-import SettingsIcon from '@mui/icons-material/Settings';
-import GitHubIcon from '@mui/icons-material/GitHub';
+import SettingsIcon from "@mui/icons-material/Settings";
+import GitHubIcon from "@mui/icons-material/GitHub";
 
 function IconExample() {
   return (
@@ -12,10 +12,11 @@ function IconExample() {
 }
 
 function Footer() {
-    return <footer className="header flex flex-row justify-center items-center w-full p-8">
+  return (
+    <footer className="header flex flex-row justify-center items-center w-full p-8">
       <div className="flex flex-row gap-8">
         <div>
-          <GitHubIcon style={{ fontSize: 24  }} />
+          <GitHubIcon style={{ fontSize: 24 }} />
           ESMeta
         </div>
         <div>
@@ -23,7 +24,8 @@ function Footer() {
           ESMeta Debugger
         </div>
       </div>
-    </footer>;
-};
+    </footer>
+  );
+}
 
 export default Footer;

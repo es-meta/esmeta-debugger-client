@@ -25,9 +25,9 @@ function* runSaga() {
       const breakpoints = state.breakpoint.items.map(_ => serialize(_));
 
       // run server debugger with js code and breakpoints
-      yield put({type : AppStateActionType.SEND});
+      yield put({ type: AppStateActionType.SEND });
       yield call(() => doAPIPostRequest("exec/run", [code, breakpoints]));
-      yield put({type : AppStateActionType.RECIEVE});
+      yield put({ type: AppStateActionType.RECIEVE });
       // move app state to DEBUG_READY
       yield put(move(AppState.DEBUG_READY));
       // update heap, call stack
@@ -71,8 +71,7 @@ function mkStepSaga(endpoint: Route) {
       if (res === StepResult.TERMINATED) {
         toast.success("Terminated");
         yield put(move(AppState.TERMINATED));
-      }
-      else if (res === StepResult.BREAKED) toast.info("Breaked");
+      } else if (res === StepResult.BREAKED) toast.info("Breaked");
 
       // update heap, call stack
       yield put(updateHeapRequest());
@@ -86,7 +85,6 @@ function mkStepSaga(endpoint: Route) {
       }
     }
     yield put({ type: AppStateActionType.RECIEVE });
-
   }
   return _stepBodySaga;
 }

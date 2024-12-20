@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { graphviz, GraphvizOptions } from 'd3-graphviz';
-import { twJoin } from 'tailwind-merge';
-import { LoaderIcon } from 'lucide-react';
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { graphviz, GraphvizOptions } from "d3-graphviz";
+import { twJoin } from "tailwind-merge";
+import { LoaderIcon } from "lucide-react";
 
 interface IGraphvizProps {
   /**
@@ -28,15 +28,14 @@ const defaultOptions: GraphvizOptions = {
 };
 
 let counter = 0;
- 
+
 const getId = () => `graphviz${counter++}`;
 
 const Graphviz = ({ dot, className, options = {} }: IGraphvizProps) => {
   const id = useMemo(getId, []);
 
-  const [lastCompleted, setLastCompleted] = useState('');
+  const [lastCompleted, setLastCompleted] = useState("");
   // const notify = useCallback(, [dot]);
-  
 
   // useEffect(() => {
   //   console.log('lastCompleted', lastCompleted);
@@ -46,23 +45,36 @@ const Graphviz = ({ dot, className, options = {} }: IGraphvizProps) => {
   // }, [lastCompleted, dot]);
 
   useEffect(() => {
-
     graphviz(`#${id}`, {
       ...defaultOptions,
       ...options,
     }).renderDot(dot, () => {
-      console.log('rendered');
-      setTimeout(() => { setLastCompleted(dot) }, 0);
+      console.log("rendered");
+      setTimeout(() => {
+        setLastCompleted(dot);
+      }, 0);
     });
-
   }, [dot, options]);
 
-  return <div className='relative [&>&>svg]:size-full size-full'>
-      <div className={twJoin('absolute', 'top-1/2', 'left-1/2', 'transform', '-translate-x-1/2', '-translate-y-1/2')}>
-        <LoaderIcon className={lastCompleted === dot ? 'hidden' : 'animate-spin'} />
+  return (
+    <div className="relative [&>&>svg]:size-full size-full">
+      <div
+        className={twJoin(
+          "absolute",
+          "top-1/2",
+          "left-1/2",
+          "transform",
+          "-translate-x-1/2",
+          "-translate-y-1/2",
+        )}
+      >
+        <LoaderIcon
+          className={lastCompleted === dot ? "hidden" : "animate-spin"}
+        />
       </div>
       <div className={className} id={id} />
     </div>
+  );
 };
 
 export { Graphviz, type IGraphvizProps };
