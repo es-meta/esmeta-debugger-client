@@ -1,7 +1,7 @@
 import { connect, ConnectedProps } from "react-redux";
 import { ReduxState, Dispatch } from "@/store";
 
-import { AppState, ConnectionState } from "@/store/reducers/AppState";
+import { AppState } from "@/store/reducers/AppState";
 import {
   run,
   stop,

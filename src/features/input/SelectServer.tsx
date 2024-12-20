@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useMemo, useState } from 'react';
-import { getArtists } from '@/app/actions/artists.action';
+// import { getArtists } from '@/app/actions/artists.action';
 
 import {
   Combobox,

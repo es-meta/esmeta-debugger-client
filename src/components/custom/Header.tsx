@@ -6,7 +6,7 @@ import StateTransition from "./StateTransition";
  
 export function ButtonIcon() {
   return (
-    <Button variant="outline" size="icon">
+    <Button>
       <ChevronRight />
     </Button>
   )
