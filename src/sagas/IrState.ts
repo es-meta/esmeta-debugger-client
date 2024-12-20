@@ -13,12 +13,15 @@ import {
 } from "../store/reducers/IrState";
 import { updateAlgoByCidRequset } from "../store/reducers/Spec";
 import { doAPIGetRequest } from "../util/api";
+import { AppStateActionType } from "@/store/reducers/AppState";
 
 // heap saga
 function* updateHeapSaga() {
   function* _updateHeap() {
     try {
+      yield put({type : AppStateActionType.SEND});
       const heap: Heap = yield call(() => doAPIGetRequest("state/heap"));
+      yield put({type : AppStateActionType.RECIEVE});
       yield put(updateHeapSuccess(heap));
     } catch (e: unknown) {
       // show error toast

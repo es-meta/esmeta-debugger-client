@@ -8,7 +8,7 @@ import {
   updateAlgoListSuccess,
 } from "../store/reducers/Spec";
 import { updateRange } from "../store/reducers/JS";
-import { AppState, move } from "../store/reducers/AppState";
+import { AppState, AppStateActionType, move } from "../store/reducers/AppState";
 import { doAPIGetRequest } from "../util/api";
 
 // get algorithm by cid
@@ -20,6 +20,7 @@ function* updateByCidSaga() {
     cid: number;
   }) {
     try {
+      yield put({type : AppStateActionType.SEND});
       const [fid, kind, name, rawParams, dot, code, [start, end]]: [
         number,
         AlgorithmKind,
@@ -29,6 +30,7 @@ function* updateByCidSaga() {
         string,
         [number, number],
       ] = yield call(() => doAPIGetRequest(`state/context/${cid}`));
+      yield put({type : AppStateActionType.RECIEVE});
       const params = rawParams.map(([name, optional, type]) => ({
         name,
         optional,
@@ -50,9 +52,11 @@ function* updateByCidSaga() {
 function* updateAlgoListSaga() {
   function* _updateAlgoList() {
     try {
+      yield put({type : AppStateActionType.SEND});
       const raw: [number, string][] = yield call(() =>
         doAPIGetRequest(`spec/func`),
       );
+      yield put({type : AppStateActionType.RECIEVE});
       const nameMap: Record<string, number> = {};
       raw.forEach(([fid, name]) => {
         nameMap[name] = fid;

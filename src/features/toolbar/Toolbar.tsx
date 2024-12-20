@@ -17,10 +17,11 @@ import {
   jsStepOver,
   specContinue,
 } from "@/store/reducers/Debugger";
-import { ArrowDownToDotIcon, ArrowUpFromDotIcon,PlayIcon, RedoDotIcon, Square,  SquareIcon,  StepForwardIcon, XIcon } from "lucide-react";
+import { ArrowDownToDotIcon, ArrowLeftIcon, ArrowUpFromDotIcon,CornerUpLeftIcon,PlayIcon, RedoDotIcon, Square,  SquareIcon,  StepForwardIcon, UndoIcon, XIcon } from "lucide-react";
 
 import ToolButton from "./ToolButton";
 import ToolButtonGroup from "./ButtonGroup";
+import ConnectState from "../ConnectState";
 
 // connect redux store
 const mapStateToProps = (st: ReduxState) => ({
@@ -70,6 +71,9 @@ function Toolbar(props: ToolbarProps) {
         break
       case 'u':
         specStepOut()
+        break
+      case 'b':
+        alert('not implemented');
         break
       case 'j':
         jsStep()
@@ -126,6 +130,8 @@ function Toolbar(props: ToolbarProps) {
         <div className="bg-neutral-100 size-full flex-row bg-opacity-75 flex items-center min-h-full space-x-0 flex-wrap p-2 gap-y-2 gap-x-1 justify-start z-[1001] lg:px-24 px-4" >
 
 
+        
+
         <ToolButtonGroup>
           <ToolButton position="left"  disabled={disableRun} onClick={() => run()}>
             <PlayIcon />
@@ -170,11 +176,18 @@ function Toolbar(props: ToolbarProps) {
               <span className={emphasize}>O</span>
               ver</span>
             </ToolButton>
-            <ToolButton position="right"  disabled={disableDebuggerBtn} onClick={() => specStepOut()}>
+            <ToolButton position="center"  disabled={disableDebuggerBtn} onClick={() => specStepOut()}>
               <ArrowUpFromDotIcon />
               <span>Step&nbsp;O
               <span className={emphasize}>u</span>
               t</span>
+          </ToolButton>
+            
+          <ToolButton position="right"  disabled={disableDebuggerBtn} onClick={() => alert('not implemented')}>
+            <UndoIcon />
+            <span>Step&nbsp;
+              <span className={emphasize}>B</span>
+              ack</span>
           </ToolButton>
 
           </ToolButtonGroup>
@@ -205,19 +218,17 @@ function Toolbar(props: ToolbarProps) {
           </ToolButton>
 
         </ToolButtonGroup>
-        
-          <div className="h-full min-w-[1px] max-w-[1px] bg-neutral-400 block">&nbsp;</div>
 
-        <div className="flex flex-row flex-wrap text-blue-500 underline gap-2 px-1">
-          <a href="#jseditor">Editor</a>
-          <a href="#jseditor">Spec</a>
-          <a href="#jseditor">Call Stack</a>
-          <a href="#jseditor">Env.</a>
-          <a href="#jseditor">Heap</a>
-          <a href="#jseditor">B.P.</a>
-        </div>
-      </div>
+
+
+        <div className="h-full min-w-[1px] max-w-[1px] bg-neutral-400 block">&nbsp;</div>
+      <ConnectState />
+
       
+
+      
+      </div>
+
       
       </aside>
 

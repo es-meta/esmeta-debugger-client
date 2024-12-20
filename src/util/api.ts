@@ -7,11 +7,13 @@ const worker = new Worker(new URL('./api.worker.ts', import.meta.url));
 // Request counter for unique IDs
 // XXX if need better atomics const ta = new Uint8Array(new SharedArrayBuffer(1));
 var counter = 0;
+var workingset = new Set();
 
 // Helper function to handle worker communication
 const createWorkerRequest = (type: string, endpoint: Route, data?: unknown): Promise<unknown> => {
   return new Promise((resolve, reject) => {
     const id = counter++;
+    workingset.add(id);
     
     const handler = (e: MessageEvent) => {
       const response = e.data;
@@ -25,6 +27,7 @@ const createWorkerRequest = (type: string, endpoint: Route, data?: unknown): Pro
           reject(error);
         }
       }
+      workingset.delete(id);
     };
 
     worker.addEventListener('message', handler);

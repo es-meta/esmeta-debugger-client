@@ -78,9 +78,9 @@ class SpecViewer extends React.Component<SpecViewerProps> {
 
   renderGraphViewer() {
     const dot = this.props.spec.algorithm.dot;
-    const options = { fit: true, zoom: true };
+    // const options = { fit: true, zoom: true };
     return (
-      <Graphviz className="graphviz-container" dot={dot} options={options} />
+      <Graphviz className="graphviz-container" dot={dot} options={{}} />
     );
   }
 

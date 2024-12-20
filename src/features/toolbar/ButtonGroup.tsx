@@ -5,7 +5,7 @@ interface Props {
 }
 
 export default function ToolButtonGroup({ children} : Props) {
-  return <div className="flex flex-row justify-start px-[1px]">
+  return <div className="flex flex-row flex-wrap justify-start pr-[1px] *:-mr-[1px]">
     {children}
   </div>
 }

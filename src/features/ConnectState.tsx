@@ -1,7 +1,7 @@
 import { connect, ConnectedProps } from "react-redux";
 import { ReduxState, Dispatch } from "@/store";
 
-import { AppState } from "@/store/reducers/AppState";
+import { AppState, ConnectionState } from "@/store/reducers/AppState";
 import {
   run,
   stop,
@@ -20,6 +20,8 @@ const mapStateToProps = (st: ReduxState) => ({
   isInit: st.appState.state === AppState.INIT,
   disableRun: st.appState.state !== AppState.JS_INPUT,
   disableDebuggerBtn: st.appState.state !== AppState.DEBUG_READY,
+  busy: st.appState.busy > 0,
+  busyCount: st.appState.busy,
 });
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   run: () => dispatch(run()),
@@ -35,37 +37,27 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type ToolbarProps = ConnectedProps<typeof connector>;
 
-import { CircleCheckBigIcon, GitBranchIcon, PlugIcon, ServerIcon } from "lucide-react";
+import { CircleAlertIcon, CircleCheckBigIcon, GitBranchIcon, LoaderPinwheelIcon, PlugIcon, ServerIcon } from "lucide-react";
 import Settings from "./modal/Settings";
-import SelectServer from "./input/SelectServer";
-
+import ToolButtonPlain from "./toolbar/ToolButtonPlain";
 
 function ConnectState(props :ToolbarProps ) {
   return (
-    <div className="flex flex-row flex-wrap gap-4 flew-wrap items-center min-h-full lg:px-24 px-4 py-4 justify-between">
-      <div>
-        ESMeta&nbsp;{'>'}&nbsp;JavaScript&nbsp;Double&nbsp;Debugger&nbsp;
-      </div>
 
-      <div className="flex flex-row gap-4 text-xs font-800 text-neutral-500">
+      <div className="flex flex-row gap-1 text-xs font-800 text-neutral-500 *:border-neutral-50/0  *:p-1 *:rounded-lg *:transition-all">
       
-       
-        
+       <ToolButtonPlain>
+          <PlugIcon />
+          localhost:8080
+        </ToolButtonPlain>
 
-        <SelectServer  />
+      <ToolButtonPlain>
+          <GitBranchIcon />
+          J8AZ1M2
+      </ToolButtonPlain>
         
-          <div className="flex flex-row items-center">
-            <PlugIcon />
-            localhost:8080
-          </div>
-
-          <div className="flex flex-row items-center"> 
-            <GitBranchIcon />
-            J8AZ1M2
-        </div>
-        
-        {
-          props.isInit ?
+      <ToolButtonPlain>{
+        <>
             <div className="flex flex-row gap-1 items-center text-yellow-500 rounded-lg text-xs uppercase font-800">
               <span>
                 <svg
@@ -83,18 +75,36 @@ function ConnectState(props :ToolbarProps ) {
                   <path d="M21 12a9 9 0 1 1-6.219-8.56" />
                 </svg>
               </span>
-              Loading…
+              Initializing...
             </div>
-            :
+            
             <div className="flex flex-row gap-1 items-center text-green-500 rounded-lg text-xs font-800">
-              <CircleCheckBigIcon size={18} />
+              <CircleCheckBigIcon size={18}  />
               Connected
-            </div>
-        }
+          </div>
 
+
+          <div className="flex flex-row gap-1 items-center text-red-500 rounded-lg text-xs font-800">
+              <CircleAlertIcon size={18}  />
+              Not Connected
+          </div>
+
+
+          {props.busy && <div className="flex flex-row gap-1 items-center text-blue-500 rounded-lg text-xs font-800">
+              <LoaderPinwheelIcon size={18} className="animate-spin" />
+              Busy
+          </div>}
+
+          {props.busyCount}
+
+          
+          </>
+        }</ToolButtonPlain>
+
+      <ToolButtonPlain>
         <Settings />
+    </ToolButtonPlain>
 
-        </div>
       </div>
   );
 }

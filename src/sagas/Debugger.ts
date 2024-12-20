@@ -1,8 +1,8 @@
-import { call, put, select, takeLatest, all } from "redux-saga/effects";
+import { call, put, take, select, takeLatest, all } from "redux-saga/effects";
 import { toast } from "react-toastify";
 
 import { ReduxState } from "../store";
-import { AppState, move } from "../store/reducers/AppState";
+import { AppState, AppStateActionType, move } from "../store/reducers/AppState";
 import { DebuggerActionType } from "../store/reducers/Debugger";
 import { serialize } from "../store/reducers/Breakpoint";
 import {
@@ -25,7 +25,9 @@ function* runSaga() {
       const breakpoints = state.breakpoint.items.map(_ => serialize(_));
 
       // run server debugger with js code and breakpoints
+      yield put({type : AppStateActionType.SEND});
       yield call(() => doAPIPostRequest("exec/run", [code, breakpoints]));
+      yield put({type : AppStateActionType.RECIEVE});
       // move app state to DEBUG_READY
       yield put(move(AppState.DEBUG_READY));
       // update heap, call stack
@@ -63,6 +65,8 @@ function mkStepSaga(endpoint: Route) {
   function* _stepBodySaga() {
     try {
       // TODO
+      yield put({ type: AppStateActionType.SEND });
+
       const res: StepResult = yield call(() => doAPIPostRequest(endpoint));
       if (res === StepResult.TERMINATED) {
         toast.success("Terminated");
@@ -81,6 +85,8 @@ function mkStepSaga(endpoint: Route) {
         toast.error("Unknown error : check console");
       }
     }
+    yield put({ type: AppStateActionType.RECIEVE });
+
   }
   return _stepBodySaga;
 }

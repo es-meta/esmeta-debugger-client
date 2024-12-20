@@ -1,5 +1,6 @@
 import produce from "immer";
 
+
 // app state
 export enum AppState {
   INIT = "AppState/INIT",
@@ -10,8 +11,12 @@ export enum AppState {
 
 // redux actions
 export enum AppStateActionType {
-  MOVE = "AppStateAction/MOVE",
+  MOVE = "ConnectionStateAction/MOVE",
+  SEND = "ConnectionStateAction/SEND",
+  RECIEVE = "ConnectionStateAction/RECIEVE",
+  TIMEOUT = "ConnectionStateAction/TIMEOUT",
 }
+
 export function move(nextState: AppState): AppStateAction {
   return {
     type: AppStateActionType.MOVE,
@@ -21,14 +26,23 @@ export function move(nextState: AppState): AppStateAction {
 export type AppStateAction = {
   type: AppStateActionType.MOVE;
   nextState: AppState;
+} | {
+  type: AppStateActionType.SEND;
+} | {
+  type: AppStateActionType.RECIEVE;
+} | {
+  type: AppStateActionType.TIMEOUT;
 };
 
 // redux state
 type AppStateState = {
   state: AppState;
-  busy: boolean;
+  busy: number;
 };
-const initialState: AppStateState = { state: AppState.INIT, busy: false };
+
+
+
+const initialState: AppStateState = { state: AppState.INIT, busy: -0 };
 
 // reducer
 export default function reducer(state = initialState, action: AppStateAction) {
@@ -37,6 +51,22 @@ export default function reducer(state = initialState, action: AppStateAction) {
       return produce(state, draft => {
         draft.state = action.nextState;
       });
+    
+    case AppStateActionType.SEND:
+      return produce(state, draft => {
+        draft.busy += 1;
+      });
+    
+    case AppStateActionType.RECIEVE:
+      return produce(state, draft => {
+        draft.busy -= 1;
+      });
+    
+    case AppStateActionType.TIMEOUT:
+      return produce(state, draft => {
+        draft.busy -= 1;
+      });
+    
     default:
       return state;
   }

@@ -19,7 +19,7 @@ export default function Settings() {
         <button
           type="button"
           onClick={openModal}
-          className="rounded-md bg-black/50 px-4 py-2 text-sm font-medium text-white hover:bg-black/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
+          className="rounded-md bg-black/50 text-sm font-medium text-white hover:bg-black/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
         >
           <SettingsIcon size={24} />
         </button>
@@ -69,6 +69,7 @@ export default function Settings() {
                       pre-compute ast
                       performance optimized for browser-side environments
                       <br />
+                      Window size
                     </p>
                   </div>
 

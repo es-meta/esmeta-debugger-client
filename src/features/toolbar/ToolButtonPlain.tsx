@@ -11,16 +11,17 @@ interface Props {
   children: ReactNode;
 }
 
-function ToolButton({children, disabled, onClick, position = "single"} : Props) {
+export default function ToolButtonPlain({children, disabled, onClick, position = "single"} : Props) {
   return (
     <Button className={
       twJoin(
         "flex flex-row items-center gap-[2px] px-3 py-2",
-        "bg-white border border-neutral-200",
+        "bg-neutral-300 border bg-opacity-0 border-neutral-200",
         "transition-all",
         "[&>svg]:size-3",
         "uppercase text-xs font-500",
-        disabled ? "opacity-25" : "hover:z-[1] hover:bg-neutral-200",
+        "cursor-default",
+        disabled ? "opacity-25" : "hover:z-[1] hover:bg-opacity-100",
 
         position === "left" ? "rounded-l-md" : "",
         position === "right" ? "rounded-r-md" : "",
@@ -32,5 +33,3 @@ function ToolButton({children, disabled, onClick, position = "single"} : Props) 
     </Button>
   )
 }
-
-export default ToolButton;
