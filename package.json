@@ -31,10 +31,11 @@
     "web-vitals": "^4.2.4"
   },
   "scripts": {
-    "start": "npm run dev",
+    "start": "vite build && vite preview",
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "format": "npx prettier --write 'src/**/*.{js,ts,tsx,mjs,cjs,json}' | grep -v '(unchanged)'",
     "preview": "vite preview"
   },
   "eslintConfig": {
