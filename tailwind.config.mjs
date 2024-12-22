@@ -14,7 +14,11 @@ export default {
       "900": "900",
     },
 
-    extend: {},
+    extend: {
+      colors: {
+        es: '#ffa31a',
+      }
+    },
   },
   plugins: [],
 };

@@ -1,9 +1,8 @@
-import { Switch } from '@headlessui/react'
-
+import { Switch } from "@headlessui/react";
 
 interface Props {
-  checked: boolean
-  onChange: (value: boolean) => void
+  checked: boolean;
+  onChange: (value: boolean) => void;
 }
 
 export default function MySwitch({ checked, onChange }: Props) {
@@ -15,5 +14,5 @@ export default function MySwitch({ checked, onChange }: Props) {
     >
       <span className="size-4 translate-x-1 rounded-full bg-white transition group-data-[checked]:translate-x-6" />
     </Switch>
-  )
+  );
 }

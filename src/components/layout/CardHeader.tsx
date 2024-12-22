@@ -5,12 +5,14 @@ interface Props extends PropsWithChildren {
   title: string;
 }
 
-export default function CardHeader({title, children}: Props) {
-  return <header className="flex flex-row justify-between py-2 px-4 rounded-xl overflow-hidden">
-    <h3 className="text-xl font-600 text-neutral-600 flex flex-row items-center justify-start gap-1">
-      <GripIcon className="inline" size={18} />
-      {title}
-    </h3>
-    {children}
-  </header>;
+export default function CardHeader({ title, children }: Props) {
+  return (
+    <header className="flex flex-row justify-between py-2 px-4 rounded-xl h-8 min-h-8 overflow-hidden">
+      <h3 className="drag-handle origin-left group hover:scale-95 active:scale-90 transition-all cursor-pointer text-sm font-500 text-neutral-600 flex flex-row items-center justify-start gap-1 line-clamp-1">
+        <GripIcon className="inline" size={14} />
+        {title}
+      </h3>
+      {children}
+    </header>
+  );
 }

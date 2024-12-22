@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { parseAlgorithm } from "ecmarkdown";
 import type { AlgorithmNode } from "ecmarkdown";
 import { Algorithm } from "@/store/reducers/Spec";
@@ -56,7 +56,7 @@ class AlgoViewer extends React.Component<AlgoViewerProps> {
 
     // render
     return (
-      <div className="algo-container">
+      <div className="algo-container size-fit">
         {this.renderHeader()}
         {this.renderBody(parsed)}
       </div>

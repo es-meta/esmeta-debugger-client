@@ -54,12 +54,14 @@ export const renderListNode = (
   level: number,
 ) => {
   return (
-    <ol className={twJoin(
-      level % 3 === 0 && "list-decimal",
-      level % 3 === 1 && "list-[lower-alpha]",
-      level % 3 === 2 && "list-[lower-roman]",
-      "list-inside"
-    )}>
+    <ol
+      className={twJoin(
+        level % 3 === 0 && "list-decimal",
+        level % 3 === 1 && "list-[lower-alpha]",
+        level % 3 === 2 && "list-[lower-roman]",
+        "list-inside",
+      )}
+    >
       {listNode.contents.map((listItemNode, idx) => {
         return (
           <AlgoStep
@@ -134,16 +136,16 @@ interface CoreProps {
 }
 
 export function AlgoStepCore({ className, contents, handleClick }: CoreProps) {
-    return (
-      <li
-        className={twJoin(
-          className,
-          "hover:scale-[0.98] hover:bg-neutral-100 active:scale-[0.94] transition-all cursor-pointer",
-          "text-black",
-        )}
-        onClick={handleClick}
-      >
-        {Emitter.emit(contents)}
-      </li>
-    );
-};
+  return (
+    <li
+      className={twJoin(
+        className,
+        "hover:scale-[0.98] hover:bg-neutral-100 active:scale-[0.94] transition-all cursor-pointer",
+        "text-black",
+      )}
+      onClick={handleClick}
+    >
+      {Emitter.emit(contents)}
+    </li>
+  );
+}

@@ -3,6 +3,7 @@ import Editor, { type Monaco } from "@monaco-editor/react";
 import { editor } from "monaco-editor";
 import * as monaco_editor from "monaco-editor";
 import { createRangeFromIndices } from "./JSEditor.util";
+import { LoaderIcon } from "lucide-react";
 
 interface Props {
   code: string;
@@ -12,6 +13,10 @@ interface Props {
   readOnly?: boolean;
 }
 
+function Loading() {
+  return <LoaderIcon className="animate-spin text-blue-500" size={32} />;
+}
+
 export default function Code({ code, onChange, start, end, readOnly }: Props) {
   const monacoRef = useRef<typeof monaco_editor | null>(null);
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
@@ -19,20 +24,20 @@ export default function Code({ code, onChange, start, end, readOnly }: Props) {
 
   const monacoDidMount = useCallback(
     (mountedEditor: editor.IStandaloneCodeEditor, monaco: Monaco) => {
-
-
       // var coreDefsName = 'lib.es5.d.ts';
 
       // // Import the text of your chosen def file.  This will depend on your bundler.
       // var coreDefs = ('./' + coreDefsName);
-      
-      
+
       monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
-        noLib: true, allowNonTsExtensions: true
+        noLib: true,
+        allowNonTsExtensions: true,
       });
-      monaco.languages.typescript.javascriptDefaults.setExtraLibs([{
-        content: 'declare function print(value: any): void;'
-      }]);
+      monaco.languages.typescript.javascriptDefaults.setExtraLibs([
+        {
+          content: "declare function print(value: any): void;",
+        },
+      ]);
 
       monacoRef.current = monaco;
       editorRef.current = mountedEditor;
@@ -76,8 +81,8 @@ export default function Code({ code, onChange, start, end, readOnly }: Props) {
 
   return (
     <Editor
-      className="size-full bg-neutral-100"
-      height="90vh"
+      className="bg-neutral-100"
+      loading={<Loading />}
       language="javascript"
       value={code}
       onChange={s => onChange(s || "")}
@@ -86,7 +91,6 @@ export default function Code({ code, onChange, start, end, readOnly }: Props) {
     />
   );
 }
-
 
 const options: editor.IStandaloneEditorConstructionOptions = {
   scrollbar: {

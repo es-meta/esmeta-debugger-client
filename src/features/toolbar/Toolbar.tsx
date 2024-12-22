@@ -80,8 +80,6 @@ function Toolbar(props: ToolbarProps) {
       case "r":
         run();
         break;
-      case "a":
-      case "x":
       case "q":
         stop();
         break;
@@ -138,7 +136,7 @@ function Toolbar(props: ToolbarProps) {
     jsStepOut,
   } = props;
 
-  const emphasize = "text-blue-500";
+  const emphasize = "text-es";
 
   return (
     <aside className="sticky top-0 w-full backdrop-blur-sm z-[2]">

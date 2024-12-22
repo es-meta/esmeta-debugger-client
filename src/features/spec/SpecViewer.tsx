@@ -82,7 +82,11 @@ class SpecViewer extends React.Component<SpecViewerProps> {
   }
 
   renderDefaultViewer() {
-    return <p className="px-4">Please write JavaScript code and press the run button.</p>;
+    return (
+      <p className="px-4">
+        Please write JavaScript code and press the run button.
+      </p>
+    );
   }
 
   render() {
@@ -96,9 +100,8 @@ class SpecViewer extends React.Component<SpecViewerProps> {
 
     return (
       <Card>
-      <CardHeader title="ECMAScript Specification">
-      </CardHeader>
-        <div className="size-full overflow-hidden">
+        <CardHeader title="ECMAScript Specification"></CardHeader>
+        <div className="size-full overflow-y-scroll">
           {viewType === SpecViewType.ALGORITHM
             ? this.renderAlgoViewer()
             : viewType === SpecViewType.GRAPH

@@ -4,14 +4,14 @@ import { v4 as uuid } from "uuid";
 import "@/styles/Breakpoints.css";
 
 import { connect, ConnectedProps } from "react-redux";
-import { ReduxState, Dispatch } from "../../store";
+import { ReduxState, Dispatch } from "../../../store";
 import {
   Breakpoint,
   BreakpointType,
   addBreak,
   rmBreak,
   toggleBreak,
-} from "../../store/reducers/Breakpoint";
+} from "../../../store/reducers/Breakpoint";
 
 type BreakpointItemProp = {
   data: Breakpoint;
@@ -119,12 +119,9 @@ class Breakpoints extends React.Component<BreakpointsProps, BreakpointsState> {
           algoNames={algoNames}
           onChange={s => this.onAddChange(s)}
         />
-              <button
-        style={{ padding: 0 }}
-        onClick={() => this.onAddClick()}
-        >
+        <button style={{ padding: 0 }} onClick={() => this.onAddClick()}>
           <PlusIcon />
-      </button>
+        </button>
 
         {algoName}
 
@@ -158,9 +155,7 @@ class Breakpoints extends React.Component<BreakpointsProps, BreakpointsState> {
             />
           )}
         /> */}
-        <div
-          className="breakpoints-table-container"
-        >
+        <div className="breakpoints-table-container">
           <table>
             <thead>
               <tr>
@@ -235,29 +230,28 @@ function MyCombobox({ algoNames, algoName, onChange }: ComboProps) {
         onChange={event => setQuery(event.target.value)}
       />
 
-      
       {
-      <ComboboxOptions
-        transition
-        anchor="bottom"
-        className="z-[1] w-[var(--input-width)] origin-top border transition duration-200 ease-out empty:invisible data-[closed]:scale-95 data-[closed]:opacity-0 h-32 overflow-scroll bg-white rounded-lg"
-      >
-        {({ option: name }) => (
-          <ComboboxOption key={name} value={name} as={React.Fragment}>
-            {({ focus }) => (
-              <li
-              className={twJoin(
-                focus ? "bg-blue-200" : "bg-white",
-                "p-2 cursor-pointer",
-                "w-full",
+        <ComboboxOptions
+          transition
+          anchor="bottom"
+          className="z-[1] w-[var(--input-width)] origin-top border transition duration-200 ease-out empty:invisible data-[closed]:scale-95 data-[closed]:opacity-0 h-32 overflow-scroll bg-white rounded-lg"
+        >
+          {({ option: name }) => (
+            <ComboboxOption key={name} value={name} as={React.Fragment}>
+              {({ focus }) => (
+                <li
+                  className={twJoin(
+                    focus ? "bg-blue-200" : "bg-white",
+                    "p-2 cursor-pointer",
+                    "w-full",
+                  )}
+                >
+                  <CheckIcon className="hidden ui-selected:block" />
+                  {name}
+                </li>
               )}
-              >
-                <CheckIcon className="hidden ui-selected:block" />
-                {name}
-              </li>
-            )}
-          </ComboboxOption>
-        )}
+            </ComboboxOption>
+          )}
         </ComboboxOptions>
       }
     </Combobox>

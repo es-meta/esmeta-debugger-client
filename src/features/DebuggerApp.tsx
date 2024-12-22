@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 
 import SpecViewer from "./spec/SpecViewer";
 import Toolbar from "./toolbar/Toolbar";
-import StateViewer from "./state/StateViewer";
+import StateViewer, { ConnectedBPViewer, ConnectedCallStackViewer, ConnectedEnvViewer, ConnectedHeapViewer } from "./state/StateViewer";
 import JSEditor from "./js-editor/JSEditor";
 
 import { connect, ConnectedProps } from "react-redux";
@@ -92,19 +92,52 @@ const DebuggerApp = ({
     <main className="relative px-4 xl:px-20">
       <Toolbar />
 
-      <div
+      {/* <div
         className="grid
       sm:grid-cols-1
       md:grid-cols-2
       xl:grid-cols-3 gap-4
       "
+      > */}
+      <ResponsiveGridLayout
+        className="flex layout rounded-sm"
+        layouts={layouts}
+        breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+        cols={{ lg: 6, md: 4, sm: 1, xs: 1, xxs: 1 }}
+        draggableHandle=".drag-handle"
       >
-        <JSEditor />
-        <SpecViewer />
-        <StateViewer />
-      </div>
+        <div key="jsedi" className="relative">
+          <JSEditor />
+        </div>
+        <div key="specv" className="relative">
+          <SpecViewer />
+        </div>
+        <div key="calls" className="relative">
+          <ConnectedCallStackViewer />
+        </div>
+        <div key="envir" className="relative">
+          <ConnectedEnvViewer />
+        </div>
+        <div key="heapv" className="relative">
+          <ConnectedHeapViewer />
+        </div>
+        <div key="break" className="relative">
+          <ConnectedBPViewer />
+        </div>
+      </ResponsiveGridLayout>
+      {/* </div> */}
     </main>
   );
 };
 
 export default connector(DebuggerApp);
+
+import { layouts } from "./DebuggerApp.layout";
+
+import { Responsive, WidthProvider } from "react-grid-layout";
+
+const ResponsiveGridLayout = WidthProvider(Responsive);
+
+import "react-grid-layout/css/styles.css";
+import "react-resizable/css/styles.css";
+import "@/styles/DebuggerApp.css";

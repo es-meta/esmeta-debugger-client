@@ -29,7 +29,7 @@ export default connector(function JSEditor({
 
   return (
     <Card>
-      <CardHeader title="JavaScript Editor">
+      <CardHeader title="JavaScript&nbsp;Editor">
         <div className="flex flex-row px-4 justify-between">
           <StateTransition state={true ? "astReady" : "loading"} />
           <div className="flex flex-row gap-2">
@@ -38,7 +38,7 @@ export default connector(function JSEditor({
         </div>
       </CardHeader>
 
-      <div className="overflow-auto border-t rounded bg-neutral-200 size-full flex flex-col">
+      <div className="overflow-hidden size-full border-t rounded flex flex-col">
         <Code
           code={code}
           onChange={onCodeChange}
