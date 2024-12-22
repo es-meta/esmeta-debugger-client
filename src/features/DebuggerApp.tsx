@@ -2,7 +2,12 @@ import React, { useEffect } from "react";
 
 import SpecViewer from "./spec/SpecViewer";
 import Toolbar from "./toolbar/Toolbar";
-import StateViewer, { ConnectedBPViewer, ConnectedCallStackViewer, ConnectedEnvViewer, ConnectedHeapViewer } from "./state/StateViewer";
+import {
+  ConnectedBPViewer,
+  ConnectedCallStackViewer,
+  ConnectedEnvViewer,
+  ConnectedHeapViewer,
+} from "./state/StateViewer";
 import JSEditor from "./js-editor/JSEditor";
 
 import { connect, ConnectedProps } from "react-redux";
@@ -102,8 +107,8 @@ const DebuggerApp = ({
       <ResponsiveGridLayout
         className="flex layout rounded-sm"
         layouts={layouts}
-        breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-        cols={{ lg: 6, md: 4, sm: 1, xs: 1, xxs: 1 }}
+        // breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+        cols={{ lg: 6, md: 4, sm: 2, xs: 1, xxs: 1 }}
         draggableHandle=".drag-handle"
       >
         <div key="jsedi" className="relative">

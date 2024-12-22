@@ -1,33 +1,17 @@
-import React from "react";
-import { connect, ConnectedProps } from "react-redux";
-import { ReduxState } from "@/store";
+import { useCallback, useState } from "react";
 import { toast } from "react-toastify";
 import MyCombobox from "@/components/combobox/MyCombobox";
 import { CopyIcon } from "lucide-react";
 
-// connect redux store
-const mapStateToProps = (st: ReduxState) => ({
-  heap: st.irState.heap,
-});
-const connector = connect(mapStateToProps);
-type HeapViewerProps = ConnectedProps<typeof connector>;
-type HeapViewerState = { searchAddr: string };
+import { connector, type HeapViewerProps } from "./HeapViewer.redux";
 
-class HeapViewer extends React.Component<HeapViewerProps, HeapViewerState> {
-  constructor(props: HeapViewerProps) {
-    super(props);
-    this.state = { searchAddr: "" };
-  }
-  onTextInput(searchAddr: string) {
-    toast.info("hi " + searchAddr);
-    this.setState({ ...this.state, searchAddr });
-  }
+export default connector(function HeapViewer({ heap }: HeapViewerProps) {
+  const [addr, setAddr] = useState("");
 
-  handleCopy = () => {
-    const { heap } = this.props;
-    const { searchAddr } = this.state;
-    const obj = heap[searchAddr];
+  const addrs = Object.keys(heap);
+  const obj = heap[addr];
 
+  const handleCopy = useCallback(() => {
     // obj가 존재할 때만 클립보드에 복사
     if (obj !== undefined) {
       navigator.clipboard
@@ -37,27 +21,18 @@ class HeapViewer extends React.Component<HeapViewerProps, HeapViewerState> {
     } else {
       toast.info("Nothing to copy!");
     }
-  };
+  }, [obj]);
 
-  render() {
-    const { heap } = this.props;
-    const { searchAddr } = this.state;
-    const addrs = Object.keys(heap);
-    const obj = heap[searchAddr];
-    return (
-      <div className="w-full">
-        <MyCombobox
-          values={addrs}
-          value={searchAddr}
-          onChange={s => this.onTextInput(s)}
-        />
-        <button onClick={this.handleCopy}>
+  return (
+    <div className="w-full">
+      <div className="flex flex-row items-center w-full">
+        <MyCombobox values={addrs} value={addr} onChange={setAddr} />
+        <button onClick={handleCopy}>
           <CopyIcon />
         </button>
-        <pre className="p-4 bg-neutral-200">{obj || "NOT FOUND"}</pre>
       </div>
-    );
-  }
-}
 
-export default connector(HeapViewer);
+      <pre className="p-4 bg-neutral-200">{obj || "NOT FOUND"}</pre>
+    </div>
+  );
+});

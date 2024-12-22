@@ -55,7 +55,7 @@ export default connector(function CookiePopup(props: ToolbarProps) {
   return (
     <>
       <div
-        className="group relative inset-0 flex items-center justify-center
+        className="group relative inset-0 inline items-center justify-center
       transition-transform active:scale-90
       "
       >

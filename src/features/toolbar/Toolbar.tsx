@@ -1,68 +1,23 @@
-import React, { useCallback, useEffect, useState } from "react";
-
-// import { ToolButton } from "@headlessui/react";
-
-import { connect, ConnectedProps } from "react-redux";
-import { ReduxState, Dispatch } from "@/store";
-
-import { AppState } from "@/store/reducers/AppState";
-import {
-  run,
-  stop,
-  specStep,
-  specStepOut,
-  specStepOver,
-  jsStep,
-  jsStepOut,
-  jsStepOver,
-  specContinue,
-} from "@/store/reducers/Debugger";
+import { useCallback, useEffect } from "react";
 import {
   ArrowDownToDotIcon,
-  ArrowLeftIcon,
   ArrowUpFromDotIcon,
-  CornerUpLeftIcon,
-  LayoutDashboardIcon,
-  LayoutTemplateIcon,
   PlayIcon,
   RedoDotIcon,
-  Square,
   SquareIcon,
   StepForwardIcon,
   UndoDotIcon,
   UndoIcon,
-  XIcon,
 } from "lucide-react";
 
 import ActionButton from "../../components/button/ActionButton";
 import CollapsableButtonGroup from "../../components/button/CollapsableButtonGroup";
 import Settings from "../modal/Settings";
-import { AlgoStepCore } from "../spec/algo/AlgoStep";
 import LayoutSettings from "../modal/LayoutSettings";
 
-// connect redux store
-const mapStateToProps = (st: ReduxState) => ({
-  disableRun: st.appState.state !== AppState.JS_INPUT,
-  disableContinue:
-    st.appState.state !== AppState.DEBUG_READY &&
-    st.appState.state !== AppState.TERMINATED,
-  disableDebuggerBtn: st.appState.state !== AppState.DEBUG_READY,
-});
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  run: () => dispatch(run()),
-  stop: () => dispatch(stop()),
-  specStep: () => dispatch(specStep()),
-  specStepOut: () => dispatch(specStepOut()),
-  specStepOver: () => dispatch(specStepOver()),
-  jsStep: () => dispatch(jsStep()),
-  jsStepOut: () => dispatch(jsStepOut()),
-  jsStepOver: () => dispatch(jsStepOver()),
-  specContinue: () => dispatch(specContinue()),
-});
-const connector = connect(mapStateToProps, mapDispatchToProps);
-type ToolbarProps = ConnectedProps<typeof connector>;
+import { connector, type ToolbarProps } from "./Toolbar.redux";
 
-function Toolbar(props: ToolbarProps) {
+export default connector(function Toolbar(props: ToolbarProps) {
   const handleKeyPress = useCallback((event: KeyboardEvent) => {
     /*
       prevent handleKeyPress called while adding breakpoints
@@ -295,6 +250,4 @@ function Toolbar(props: ToolbarProps) {
       </div>
     </aside>
   );
-}
-
-export default connector(Toolbar);
+});

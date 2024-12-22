@@ -22,12 +22,15 @@ export default App;
 
 function WarnDebugMode() {
   useEffect(() => {
-
     toast.info(
       <p>
-        {`This app use cookies to enhace user experience.`}<CookiePopup />  </p>, {
+        {`This app use cookies to enhace user experience.`}
+        <CookiePopup />{" "}
+      </p>,
+      {
         autoClose: false,
-    });
+      },
+    );
 
     if (IS_DEBUG)
       toast.warn(

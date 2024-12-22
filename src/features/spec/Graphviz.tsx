@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { graphviz, GraphvizOptions } from "d3-graphviz";
 import { twJoin } from "tailwind-merge";
 import { LoaderIcon } from "lucide-react";
@@ -21,9 +21,6 @@ interface IGraphvizProps {
 
 const defaultOptions: GraphvizOptions = {
   fit: true,
-  // height: 500,
-  // width: 500,
-
   zoom: false,
 };
 
@@ -31,7 +28,7 @@ let counter = 0;
 
 const getId = () => `graphviz${counter++}`;
 
-const Graphviz = ({ dot, className, options = {} }: IGraphvizProps) => {
+export default function Graphviz({ dot, className, options = {} }: IGraphvizProps) {
   const id = useMemo(getId, []);
 
   const [lastCompleted, setLastCompleted] = useState("");
@@ -76,6 +73,3 @@ const Graphviz = ({ dot, className, options = {} }: IGraphvizProps) => {
     </div>
   );
 };
-
-export { Graphviz, type IGraphvizProps };
-export default Graphviz;

@@ -9,13 +9,13 @@ import {
 
 const parsingState = {
   astReady: (
-    <div className="uppercase top-1/2 text-xs font-700 flex flex-row gap-1 justify-start items-center text-green-600">
+    <div className="uppercase top-1/2 -translate-y-1 text-xs font-700 flex flex-row gap-1 justify-start items-center text-green-600">
       <CheckIcon />
       <span>AST&nbsp;Ready</span>
     </div>
   ),
   loading: (
-    <div className="uppercase top-1/2 text-xs font-700 flex flex-row gap-1 justify-start items-center text-neutral-700">
+    <div className="uppercase top-1/2 -translate-y-1 text-xs font-700 flex flex-row gap-1 justify-start items-center text-neutral-700">
       <span className="animate-spin">
         <Loader2Icon />
       </span>
@@ -23,13 +23,13 @@ const parsingState = {
     </div>
   ),
   syntaxError: (
-    <div className="uppercase top-1/2 text-xs font-700 flex flex-row gap-1 justify-start items-center text-yellow-600">
+    <div className="uppercase top-1/2 -translate-y-1 text-xs font-700 flex flex-row gap-1 justify-start items-center text-yellow-600">
       <TriangleAlertIcon />
       <span>Syntax&nbsp;Error</span>
     </div>
   ),
   error: (
-    <div className="uppercase top-1/2 text-xs font-700 flex flex-row gap-1 justify-start items-center text-red-600">
+    <div className="uppercase top-1/2 -translate-y-1 text-xs font-700 flex flex-row gap-1 justify-start items-center text-red-600">
       <BanIcon />
       <span>Error</span>
     </div>
@@ -48,12 +48,11 @@ const StateTransition = ({ state }: Props) => {
   };
 
   return (
-    <div className="relative w-32 h-full">
-      <div className="relative min-h-full">&nbsp;</div>
+    <div className="relative w-32 h-8">
       <AnimatePresence initial={false}>
         <motion.div
           key={state}
-          className="absolute size-fit -translate-y-full top-0"
+          className="absolute size-fit top-0"
           initial={variants.initial}
           animate={variants.animate}
           exit={variants.exit}

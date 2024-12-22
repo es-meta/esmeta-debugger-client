@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import "@/styles/JSEditor.css";
 
 import { AppState } from "@/store/reducers/AppState";
@@ -13,11 +13,9 @@ import CardHeader from "@/components/layout/CardHeader";
 
 export default connector(function JSEditor({
   appState,
-  js,
+  js: { code, start, end },
   edit,
 }: JSEditorProps) {
-  const { code, start, end } = js;
-
   // size = 14;
 
   const onCodeChange = useCallback(
@@ -27,11 +25,17 @@ export default connector(function JSEditor({
     [appState, edit],
   );
 
+  const [toggle, setToggle] = useState(false);
+
+  useEffect(() => {
+    setToggle(t => !t);
+  }, [code]);
+
   return (
     <Card>
       <CardHeader title="JavaScript&nbsp;Editor">
         <div className="flex flex-row px-4 justify-between">
-          <StateTransition state={true ? "astReady" : "loading"} />
+          <StateTransition state={toggle ? "astReady" : "loading"} />
           <div className="flex flex-row gap-2">
             <CopyIcon />
           </div>

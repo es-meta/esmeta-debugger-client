@@ -1,57 +1,63 @@
 import StateViewerItem from "./StateViewerItem";
-import { connector, type StateViewerProps } from "./StateViewer.radix";
+import { connector, type StateViewerProps } from "./StateViewer.redux";
 
 import CallStackViewer from "./callstack/CallStackViewer";
 import HeapViewer from "./heap/HeapViewer";
 import Breakpoints from "./breakpoint/Breakpoints";
 import SpecEnvViewer from "./env/SpecEnvViewer";
 
-export const ConnectedCallStackViewer = connector(function StateViewer(props: StateViewerProps) {
+export const ConnectedCallStackViewer = connector(function StateViewer(
+  props: StateViewerProps,
+) {
   const { disableStateViewer } = props;
 
   return (
-      <StateViewerItem
-        disabled={disableStateViewer}
-        header="Specification Call Stack"
-        body={<CallStackViewer />}
-      />
+    <StateViewerItem
+      disabled={disableStateViewer}
+      header="Specification Call Stack"
+      body={<CallStackViewer />}
+    />
   );
 });
 
-export const ConnectedEnvViewer = connector(function StateViewer(props: StateViewerProps) {
+export const ConnectedEnvViewer = connector(function StateViewer(
+  props: StateViewerProps,
+) {
   const { disableStateViewer } = props;
 
   return (
-      <StateViewerItem
-        disabled={disableStateViewer}
-        header="Specification Environment"
-        body={<SpecEnvViewer />}
-      />
+    <StateViewerItem
+      disabled={disableStateViewer}
+      header="Specification Environment"
+      body={<SpecEnvViewer />}
+    />
   );
 });
 
-
-export const ConnectedHeapViewer = connector(function StateViewer(props: StateViewerProps) {
+export const ConnectedHeapViewer = connector(function StateViewer(
+  props: StateViewerProps,
+) {
   const { disableStateViewer } = props;
 
   return (
-      <StateViewerItem
-        disabled={disableStateViewer}
-        header="Specification Heap"
-        body={<HeapViewer />}
-      />
+    <StateViewerItem
+      disabled={disableStateViewer}
+      header="Specification Heap"
+      body={<HeapViewer />}
+    />
   );
 });
 
-
-export const ConnectedBPViewer = connector(function StateViewer(props: StateViewerProps) {
+export const ConnectedBPViewer = connector(function StateViewer(
+  props: StateViewerProps,
+) {
   const { disableStateViewer } = props;
 
   return (
-      <StateViewerItem
-        disabled={disableStateViewer}
-        header="Specification Breakpoints"
-        body={<Breakpoints />}
-      />
+    <StateViewerItem
+      disabled={disableStateViewer}
+      header="Specification Breakpoints"
+      body={<Breakpoints />}
+    />
   );
 });

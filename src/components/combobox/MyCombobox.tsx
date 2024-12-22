@@ -28,7 +28,7 @@ export default function MyCombobox({ values, value, onChange }: ComboProps) {
     <Combobox
       immediate
       as="div"
-      className="relative"
+      className="relative size-full"
       virtual={{ options: filtered }}
       value={value}
       onChange={value => onChange(value || "")}

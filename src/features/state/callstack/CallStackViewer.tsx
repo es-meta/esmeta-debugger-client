@@ -1,9 +1,9 @@
-import React, { useCallback } from "react";
+import { useCallback } from "react";
 import { v4 as uuid } from "uuid";
-import { connector, type CallStackViewerProps } from "./CallStackViewer.radix";
+import { connector, type CallStackViewerProps } from "./CallStackViewer.redux";
 import ContextItem from "./ContextItem";
 
-function CallStackViewer(props: CallStackViewerProps) {
+export default connector(function CallStackViewer(props: CallStackViewerProps) {
   const {
     irState: { callStack, contextIdx },
     updateContextIdx,
@@ -37,6 +37,4 @@ function CallStackViewer(props: CallStackViewerProps) {
       </tbody>
     </table>
   );
-}
-
-export default connector(CallStackViewer);
+});
