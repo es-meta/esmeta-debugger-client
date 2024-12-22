@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Icon,
-  Typography,
-} from "@mui/material";
-import "../styles/StateViewer.css";
+import "@/styles/StateViewer.css";
 
 import CallStackViewer from "./CallStackViewer";
 import HeapViewer from "./HeapViewer";
@@ -14,14 +7,17 @@ import Breakpoints from "./Breakpoints";
 import SpecEnvViewer from "./SpecEnvViewer";
 
 import { connect, ConnectedProps } from "react-redux";
-import { ReduxState, Dispatch } from "../store";
+import { ReduxState, Dispatch } from "@/store";
 
-import { AppState } from "../store/reducers/AppState";
+import { AppState } from "@/store/reducers/AppState";
+import { twJoin } from "tailwind-merge";
+import Card from "@/components/layout/Card";
+import CardHeader from "@/components/layout/CardHeader";
 
 // State viewer item
 type StateViewerItemProps = {
   disabled: boolean;
-  header: React.ReactElement;
+  header: string;
   headerStyle?: React.CSSProperties;
   body: React.ReactElement;
   bodyStyle?: React.CSSProperties;
@@ -51,18 +47,11 @@ class StateViewerItem extends React.Component<
   }
   render() {
     const { disabled, header, headerStyle, body, bodyStyle } = this.props;
-    const { expanded } = this.state;
     return (
-      <Accordion expanded={true} disabled={disabled}>
-        <AccordionSummary
-          onClick={() => this.onItemClick()}
-          expandIcon={<Icon>expand_more</Icon>}
-          style={headerStyle}
-        >
-          {header}
-        </AccordionSummary>
-        <AccordionDetails style={bodyStyle}>{body}</AccordionDetails>
-      </Accordion>
+      <Card>
+        <CardHeader title={header}/>
+        <div style={bodyStyle}>{body}</div>
+      </Card>
     );
   }
 }
@@ -88,23 +77,23 @@ class StateViewer extends React.Component<StateViewerProps> {
       <div className="spec-state-viewer-container">
         <StateViewerItem
           disabled={disableStateViewer}
-          header={<Typography>ECMAScript Call Stack</Typography>}
+          header="ECMAScript Call Stack"
           body={<CallStackViewer />}
         />
         <StateViewerItem
           disabled={disableStateViewer}
-          header={<Typography>ECMAScript Environment</Typography>}
+          header="ECMAScript Environment"
           body={<SpecEnvViewer />}
         />
         <StateViewerItem
           disabled={disableStateViewer}
-          header={<Typography>ECMAScript Heap</Typography>}
+          header="ECMAScript Heap"
           bodyStyle={{ paddingTop: 0 }}
           body={<HeapViewer />}
         />
         <StateViewerItem
           disabled={disableStateViewer}
-          header={<Typography>ECMAScript Breakpoints</Typography>}
+          header="ECMAScript Breakpoints"
           body={<Breakpoints />}
         />
       </div>

@@ -2,8 +2,8 @@ import React from "react";
 import EnvViewer from "./EnvViewer";
 
 import { connect, ConnectedProps } from "react-redux";
-import { ReduxState } from "../store";
-import { Environment } from "../store/reducers/IrState";
+import { ReduxState } from "@/store";
+import { Environment } from "@/store/reducers/IrState";
 
 // connect redux store
 const mapStateToProps = (st: ReduxState) => ({

@@ -1,19 +1,10 @@
 import React from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-} from "@mui/material";
 import { v4 as uuid } from "uuid";
-import "../styles/CallStackViewer.css";
+import "@/styles/CallStackViewer.css";
 
 import { connect, ConnectedProps } from "react-redux";
-import { Context, updateContextIdx } from "../store/reducers/IrState";
-import { ReduxState, Dispatch } from "../store";
+import { Context, updateContextIdx } from "@/store/reducers/IrState";
+import { ReduxState, Dispatch } from "@/store";
 
 type ContextItemProps = {
   data: Context;
@@ -35,13 +26,13 @@ class ContextItem extends React.Component<ContextItemProps> {
     const content = steps.length === 0 ? name : `${steps} @ ${name}`;
 
     return (
-      <TableRow
+      <tr
         className={this.getClassName()}
         onClick={() => onItemClick(idx)}
       >
-        <TableCell style={{ width: "10%" }}>{idx}</TableCell>
-        <TableCell style={{ width: "90%" }}>{content}</TableCell>
-      </TableRow>
+        <th style={{ width: "10%" }}>{idx}</th>
+        <th style={{ width: "90%" }}>{content}</th>
+      </tr>
     );
   }
 }
@@ -65,15 +56,14 @@ class CallStackViewer extends React.Component<CallStackViewerProps> {
 
     return (
       <div className="callstack-container">
-        <TableContainer component={Paper} className="callstack-table-container">
-          <Table stickyHeader size="small">
-            <TableHead>
-              <TableRow>
-                <TableCell style={{ width: "10%" }}>#</TableCell>
-                <TableCell style={{ width: "90%" }}>name</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
+          <table>
+            <thead>
+              <tr>
+                <th style={{ width: "10%" }}>#</th>
+                <th style={{ width: "90%" }}>name</th>
+              </tr>
+            </thead>
+            <tbody>
               {callStack.map((ctxt, idx) => (
                 <ContextItem
                   key={uuid()}
@@ -83,9 +73,8 @@ class CallStackViewer extends React.Component<CallStackViewerProps> {
                   onItemClick={(idx: number) => this.onItemClick(idx)}
                 />
               ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+            </tbody>
+          </table>
       </div>
     );
   }

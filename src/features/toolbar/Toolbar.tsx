@@ -22,6 +22,8 @@ import {
   ArrowLeftIcon,
   ArrowUpFromDotIcon,
   CornerUpLeftIcon,
+  LayoutDashboardIcon,
+  LayoutTemplateIcon,
   PlayIcon,
   RedoDotIcon,
   Square,
@@ -32,9 +34,11 @@ import {
   XIcon,
 } from "lucide-react";
 
-import ToolButton from "./ToolButton";
-import ToolButtonGroup from "./ButtonGroup";
-import ConnectState from "../ConnectState";
+import ActionButton from "../../components/button/ActionButton";
+import CollapsableButtonGroup from "../../components/button/CollapsableButtonGroup";
+import Settings from "../modal/Settings";
+import { AlgoStepCore } from "../spec/algo/AlgoStep";
+import LayoutSettings from "../modal/LayoutSettings";
 
 // connect redux store
 const mapStateToProps = (st: ReduxState) => ({
@@ -137,17 +141,10 @@ function Toolbar(props: ToolbarProps) {
   const emphasize = "text-blue-500";
 
   return (
-    <aside
-      className="sticky top-0 w-full
-  backdrop-blur-sm
-  z-[2]
-   
-  py-0 mb-4
-  " //border-b border-b-neutral-300
-    >
-      <div className="bg-neutral-100 size-full flex-row bg-opacity-75 flex items-center min-h-full space-x-0 flex-wrap p-2 gap-y-2 gap-x-1 justify-start z-[1001] lg:px-24 px-4">
-        <ToolButtonGroup>
-          <ToolButton
+    <aside className="sticky top-0 w-full backdrop-blur-sm z-[2]">
+      <div className="bg-neutral-100 size-full flex-row bg-opacity-75 flex items-center min-h-full space-x-0 flex-wrap p-2 gap-y-2 gap-x-1 justify-start z-[1001]">
+        <CollapsableButtonGroup>
+          <ActionButton
             position="left"
             disabled={disableRun}
             onClick={() => run()}
@@ -157,9 +154,9 @@ function Toolbar(props: ToolbarProps) {
               <span className={emphasize}>R</span>
               <span>un</span>
             </span>
-          </ToolButton>
+          </ActionButton>
 
-          <ToolButton
+          <ActionButton
             position="center"
             disabled={disableDebuggerBtn}
             onClick={() => specContinue()}
@@ -169,9 +166,9 @@ function Toolbar(props: ToolbarProps) {
               <span className={emphasize}>C</span>
               ontinue
             </span>
-          </ToolButton>
+          </ActionButton>
 
-          <ToolButton
+          <ActionButton
             position="right"
             disabled={disableContinue}
             onClick={() => stop()}
@@ -181,15 +178,15 @@ function Toolbar(props: ToolbarProps) {
               <span className={emphasize}>Q</span>
               <span>uit</span>
             </span>
-          </ToolButton>
-        </ToolButtonGroup>
+          </ActionButton>
+        </CollapsableButtonGroup>
 
         <div className="h-full min-w-[1px] max-w-[1px] bg-neutral-400 block">
           &nbsp;
         </div>
 
-        <ToolButtonGroup>
-          <ToolButton
+        <CollapsableButtonGroup>
+          <ActionButton
             position="left"
             disabled={disableDebuggerBtn}
             onClick={() => specStep()}
@@ -199,8 +196,8 @@ function Toolbar(props: ToolbarProps) {
               <span className={emphasize}>S</span>
               <span>tep</span>
             </span>
-          </ToolButton>
-          <ToolButton
+          </ActionButton>
+          <ActionButton
             position="center"
             disabled={disableDebuggerBtn}
             onClick={() => specStepOver()}
@@ -211,8 +208,8 @@ function Toolbar(props: ToolbarProps) {
               <span className={emphasize}>O</span>
               ver
             </span>
-          </ToolButton>
-          <ToolButton
+          </ActionButton>
+          <ActionButton
             position="center"
             disabled={disableDebuggerBtn}
             onClick={() => specStepOut()}
@@ -222,9 +219,9 @@ function Toolbar(props: ToolbarProps) {
               Step&nbsp;O
               <span className={emphasize}>u</span>t
             </span>
-          </ToolButton>
+          </ActionButton>
 
-          <ToolButton
+          <ActionButton
             position="center"
             disabled={disableDebuggerBtn}
             onClick={() => alert("not implemented")}
@@ -235,9 +232,9 @@ function Toolbar(props: ToolbarProps) {
               <span className={emphasize}>B</span>
               ack
             </span>
-          </ToolButton>
+          </ActionButton>
 
-          <ToolButton
+          <ActionButton
             position="right"
             disabled={disableDebuggerBtn}
             onClick={() => alert("not implemented")}
@@ -247,15 +244,15 @@ function Toolbar(props: ToolbarProps) {
               Step&nbsp;Over&nbsp;Bac
               <span className={emphasize}>k</span>
             </span>
-          </ToolButton>
-        </ToolButtonGroup>
+          </ActionButton>
+        </CollapsableButtonGroup>
 
         <div className="h-full min-w-[1px] max-w-[1px] bg-neutral-400 block">
           &nbsp;
         </div>
 
-        <ToolButtonGroup>
-          <ToolButton
+        <CollapsableButtonGroup>
+          <ActionButton
             position="left"
             disabled={disableDebuggerBtn}
             onClick={() => jsStep()}
@@ -264,8 +261,8 @@ function Toolbar(props: ToolbarProps) {
             <span>
               <span className={emphasize}>J</span>S Step
             </span>
-          </ToolButton>
-          <ToolButton
+          </ActionButton>
+          <ActionButton
             position="center"
             disabled={disableDebuggerBtn}
             onClick={() => jsStepOver()}
@@ -275,9 +272,9 @@ function Toolbar(props: ToolbarProps) {
               JS Step O<span className={emphasize}>v</span>
               er
             </span>
-          </ToolButton>
+          </ActionButton>
 
-          <ToolButton
+          <ActionButton
             position="right"
             disabled={disableDebuggerBtn}
             onClick={() => jsStepOut()}
@@ -287,13 +284,16 @@ function Toolbar(props: ToolbarProps) {
               JS Step Ou
               <span className={emphasize}>t</span>
             </span>
-          </ToolButton>
-        </ToolButtonGroup>
+          </ActionButton>
+        </CollapsableButtonGroup>
 
         <div className="h-full min-w-[1px] max-w-[1px] bg-neutral-400 block">
           &nbsp;
         </div>
-        <ConnectState />
+
+        <LayoutSettings />
+
+        <Settings />
       </div>
     </aside>
   );

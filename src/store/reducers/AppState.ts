@@ -45,12 +45,15 @@ type AppStateState = {
 
 const initialState: AppStateState = { state: AppState.INIT, busy: -0 };
 
+import { workingset } from "@/util/api";
+
 // reducer
 export default function reducer(state = initialState, action: AppStateAction) {
   switch (action.type) {
     case AppStateActionType.MOVE:
       return produce(state, draft => {
         draft.state = action.nextState;
+        draft.busy = workingset.size;
       });
 
     case AppStateActionType.SEND:
@@ -60,12 +63,12 @@ export default function reducer(state = initialState, action: AppStateAction) {
 
     case AppStateActionType.RECIEVE:
       return produce(state, draft => {
-        draft.busy -= 1;
+        draft.busy = workingset.size;
       });
 
     case AppStateActionType.TIMEOUT:
       return produce(state, draft => {
-        draft.busy -= 1;
+        draft.busy = workingset.size;
       });
 
     default:

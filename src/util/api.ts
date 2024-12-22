@@ -7,7 +7,7 @@ const worker = new Worker(new URL("./api.worker.ts", import.meta.url));
 // Request counter for unique IDs
 // XXX if need better atomics const ta = new Uint8Array(new SharedArrayBuffer(1));
 var counter = 0;
-var workingset = new Set();
+export const workingset = new Set();
 
 // Helper function to handle worker communication
 const createWorkerRequest = (

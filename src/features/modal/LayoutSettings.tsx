@@ -42,10 +42,11 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type ToolbarProps = ConnectedProps<typeof connector>;
 
 import { GitBranchIcon, PlugIcon } from "lucide-react";
-
+import ActionButton from "@/components/button/ActionButton";
+import { LayoutTemplateIcon } from "lucide-react";
 import PlainLabel from "./PlainLabel";
 
-export default connector(function Settings(props: ToolbarProps) {
+export default connector(function LayoutSettings(props: ToolbarProps) {
   let [isOpen, setIsOpen] = useState(false);
 
   function closeModal() {
@@ -63,34 +64,10 @@ export default connector(function Settings(props: ToolbarProps) {
       transition-transform active:scale-90
       "
       >
-        <button
-          type="button"
-          onClick={openModal}
-          className="flex flex-row rounded-md text-sm font-medium text-white transition-all items-center justify-between hover:bg-neutral-500/25 bg-neutral-500/0 focus:outline-none focus-visible:ring-1 focus-visible:ring-neutral-300/75"
-        >
-          <div className="w-28 h-8 flex flex-row">
-            <ConnectStateViewer
-              state={props.isInit ? "init" : props.busy ? "busy" : "connected"}
-            />
-          </div>
-
-          <PlainLabel>
-            <PlugIcon />
-            localhost:8080
-          </PlainLabel>
-
-          <PlainLabel>
-            <GitBranchIcon />
-            J8AZ1M2
-          </PlainLabel>
-
-          <div className="pr-2 text-black">
-            <SettingsIcon
-              size={18}
-              className="group-hover:rotate-45 group-active:rotate-90 transition-transform"
-            />
-          </div>
-        </button>
+        <ActionButton onClick={openModal}>
+          <LayoutTemplateIcon />
+          <span className="hidden lg:inline">Layout</span>
+        </ActionButton>
       </div>
 
       <Transition appear show={isOpen} as={Fragment}>

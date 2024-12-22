@@ -1,32 +1,17 @@
-import React from "react";
+import React, { Suspense, useDeferredValue, useMemo } from "react";
 import { toast } from "react-toastify";
 import { v4 as uuid } from "uuid";
-import { Autocomplete } from "@mui/material";
-import {
-  Tooltip,
-  IconButton,
-  Icon,
-  TextField,
-  Switch,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-} from "@mui/material";
-import "../styles/Breakpoints.css";
+import "@/styles/Breakpoints.css";
 
 import { connect, ConnectedProps } from "react-redux";
-import { ReduxState, Dispatch } from "../store";
+import { ReduxState, Dispatch } from "../../store";
 import {
   Breakpoint,
   BreakpointType,
   addBreak,
   rmBreak,
   toggleBreak,
-} from "../store/reducers/Breakpoint";
+} from "../../store/reducers/Breakpoint";
 
 type BreakpointItemProp = {
   data: Breakpoint;
@@ -48,21 +33,22 @@ class BreakpointItem extends React.Component<BreakpointItemProp> {
     const { data } = this.props;
     const { name, enabled } = data;
     return (
-      <TableRow>
-        <TableCell style={{ width: "50%", overflow: "hidden" }}>
-          <Tooltip title={name}>
+      <tr>
+        <th style={{ width: "50%", overflow: "hidden" }}>
+          {/* <Tooltip title={name}>
             <span>{name}</span>
-          </Tooltip>
-        </TableCell>
-        <TableCell style={{ width: "15%" }}>
-          <Switch checked={enabled} onChange={() => this.onToggleClick()} />
-        </TableCell>
-        <TableCell style={{ width: "15%" }}>
-          <IconButton component="span" onClick={() => this.onRemoveClick()}>
-            <Icon color="secondary">remove_circle</Icon>
-          </IconButton>
-        </TableCell>
-      </TableRow>
+          </Tooltip> */}
+          {name}
+        </th>
+        <th style={{ width: "15%" }}>
+          <MySwitch checked={enabled} onChange={() => this.onToggleClick()} />
+        </th>
+        <th style={{ width: "15%" }}>
+          <button onClick={() => this.onRemoveClick()}>
+            <XIcon />
+          </button>
+        </th>
+      </tr>
     );
   }
 }
@@ -80,7 +66,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
 });
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type BreakpointsProps = ConnectedProps<typeof connector>;
-type BreakpointsState = { algoName: string };
+type BreakpointsState = { algoName: string; query: string };
 
 // TODO add util buttons
 // delete all
@@ -89,7 +75,7 @@ type BreakpointsState = { algoName: string };
 class Breakpoints extends React.Component<BreakpointsProps, BreakpointsState> {
   constructor(props: BreakpointsProps) {
     super(props);
-    this.state = { algoName: "" };
+    this.state = { algoName: "", query: "" };
   }
 
   onAddChange(algoName: string) {
@@ -124,11 +110,25 @@ class Breakpoints extends React.Component<BreakpointsProps, BreakpointsState> {
 
   render() {
     const { breakpoints, algoNames } = this.props;
-    const { algoName } = this.state;
+    const { algoName, query } = this.state;
 
     return (
       <div className="breakpoints-container">
-        <Autocomplete
+        <MyCombobox
+          algoName={algoName}
+          algoNames={algoNames}
+          onChange={s => this.onAddChange(s)}
+        />
+              <button
+        style={{ padding: 0 }}
+        onClick={() => this.onAddClick()}
+        >
+          <PlusIcon />
+      </button>
+
+        {algoName}
+
+        {/* <Autocomplete
           freeSolo
           disableClearable
           options={algoNames}
@@ -157,20 +157,19 @@ class Breakpoints extends React.Component<BreakpointsProps, BreakpointsState> {
               onChange={event => this.onAddChange(event.target.value)}
             />
           )}
-        />
-        <TableContainer
-          component={Paper}
+        /> */}
+        <div
           className="breakpoints-table-container"
         >
-          <Table stickyHeader size="small">
-            <TableHead>
-              <TableRow>
-                <TableCell style={{ width: "50%" }}>Name</TableCell>
-                <TableCell style={{ width: "15%" }}>Enable</TableCell>
-                <TableCell style={{ width: "15%" }}>Remove</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
+          <table>
+            <thead>
+              <tr>
+                <th style={{ width: "50%" }}>Name</th>
+                <th style={{ width: "15%" }}>Enable</th>
+                <th style={{ width: "15%" }}>Remove</th>
+              </tr>
+            </thead>
+            <tbody>
               {breakpoints.map((bp, idx) => (
                 <BreakpointItem
                   key={uuid()}
@@ -180,12 +179,87 @@ class Breakpoints extends React.Component<BreakpointsProps, BreakpointsState> {
                   onToggleClick={(idx: number) => this.props.toggleBreak(idx)}
                 />
               ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+            </tbody>
+          </table>
+        </div>
       </div>
     );
   }
 }
 
 export default connector(Breakpoints);
+
+import { useState } from "react";
+import {
+  Combobox,
+  ComboboxInput,
+  ComboboxOption,
+  ComboboxOptions,
+} from "@headlessui/react";
+import { fuzzyFilter } from "@/util/fuzzy.util";
+import { CheckIcon, PlusIcon, XIcon } from "lucide-react";
+import { twJoin } from "tailwind-merge";
+import MySwitch from "@/components/button/MySwitch";
+
+interface ComboProps {
+  algoNames: string[];
+  algoName: string;
+  onChange: (value: string) => void;
+}
+
+function MyCombobox({ algoNames, algoName, onChange }: ComboProps) {
+  // const [selectedPerson, setSelectedPerson] = useState(people[0])
+  const [query, setQuery] = useState("");
+
+  // const deferredQuery = useDeferredValue(query);
+
+  const filtered = useMemo(
+    () =>
+      query === ""
+        ? algoNames
+        : fuzzyFilter(algoNames, query.replace(" ", ""), 0.2),
+    [query, algoNames],
+  );
+
+  return (
+    <Combobox
+      immediate
+      as="div"
+      className="relative"
+      virtual={{ options: filtered }}
+      value={algoName}
+      onChange={value => onChange(value || "")}
+    >
+      <ComboboxInput
+        className="w-full p-2 border rounded-lg focus:border focus:border-blue-300 focus:outline-none"
+        onChange={event => setQuery(event.target.value)}
+      />
+
+      
+      {
+      <ComboboxOptions
+        transition
+        anchor="bottom"
+        className="z-[1] w-[var(--input-width)] origin-top border transition duration-200 ease-out empty:invisible data-[closed]:scale-95 data-[closed]:opacity-0 h-32 overflow-scroll bg-white rounded-lg"
+      >
+        {({ option: name }) => (
+          <ComboboxOption key={name} value={name} as={React.Fragment}>
+            {({ focus }) => (
+              <li
+              className={twJoin(
+                focus ? "bg-blue-200" : "bg-white",
+                "p-2 cursor-pointer",
+                "w-full",
+              )}
+              >
+                <CheckIcon className="hidden ui-selected:block" />
+                {name}
+              </li>
+            )}
+          </ComboboxOption>
+        )}
+        </ComboboxOptions>
+      }
+    </Combobox>
+  );
+}

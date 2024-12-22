@@ -1,17 +1,16 @@
 import React from "react";
-import { Typography, Paper } from "@mui/material";
-import AlgoViewer from "./AlgoViewer";
-import "../styles/SpecViewer.css";
+import AlgoViewer from "./algo/AlgoViewer";
 import Graphviz from "./Graphviz";
 
 import { connect, ConnectedProps } from "react-redux";
-import { ReduxState, Dispatch } from "../store";
+import { ReduxState, Dispatch } from "@/store";
 import {
   Breakpoint,
   BreakpointType,
   addBreak,
   rmBreak,
-} from "../store/reducers/Breakpoint";
+} from "@/store/reducers/Breakpoint";
+import SpecViewerMenu from "./SpecViewerMenu";
 
 // connect redux store
 const mapStateToProps = (st: ReduxState) => ({
@@ -50,7 +49,7 @@ class SpecViewer extends React.Component<SpecViewerProps> {
             bp.steps.length === steps.length &&
             bp.steps.every((s, idx) => s === steps[idx])
           );
-        } else false;
+        } else return false;
       });
 
       // remove breakpoints
@@ -83,7 +82,7 @@ class SpecViewer extends React.Component<SpecViewerProps> {
   }
 
   renderDefaultViewer() {
-    return <>Please write JavaScript code and press the run button.</>;
+    return <p className="px-4">Please write JavaScript code and press the run button.</p>;
   }
 
   render() {
@@ -96,17 +95,23 @@ class SpecViewer extends React.Component<SpecViewerProps> {
     }
 
     return (
-      <Paper className="spec-viewer-container" variant="outlined">
-        <Typography variant="h6">ECMAScript Specification</Typography>
-        {viewType === SpecViewType.ALGORITHM
-          ? this.renderAlgoViewer()
-          : viewType === SpecViewType.GRAPH
-            ? this.renderGraphViewer()
-            : this.renderDefaultViewer()}
-      </Paper>
+      <Card>
+      <CardHeader title="ECMAScript Specification">
+      </CardHeader>
+        <div className="size-full overflow-hidden">
+          {viewType === SpecViewType.ALGORITHM
+            ? this.renderAlgoViewer()
+            : viewType === SpecViewType.GRAPH
+              ? this.renderGraphViewer()
+              : this.renderDefaultViewer()}
+        </div>
+      </Card>
     );
   }
 }
+
+import Card from "@/components/layout/Card";
+import CardHeader from "@/components/layout/CardHeader";
 
 // view type of spec
 enum SpecViewType {

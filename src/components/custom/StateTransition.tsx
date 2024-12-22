@@ -42,9 +42,9 @@ interface Props {
 
 const StateTransition = ({ state }: Props) => {
   const variants = {
-    initial: { opacity: 0, y: 16 },
-    animate: { opacity: 1, y: 0 },
-    exit: { opacity: 0, y: 16 },
+    initial: { opacity: 0, y: 16, scale: 0.5 },
+    animate: { opacity: 1, y: 0, scale: 1 },
+    exit: { opacity: 0, y: 16, scale: 0.5 },
   };
 
   return (
@@ -59,7 +59,7 @@ const StateTransition = ({ state }: Props) => {
           exit={variants.exit}
           transition={{
             // bounce: 0,
-            duration: 0.1,
+            duration: 0.125,
           }}
         >
           {parsingState[state]}

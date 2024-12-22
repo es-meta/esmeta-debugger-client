@@ -11,7 +11,7 @@ interface Props {
   children: ReactNode;
 }
 
-const ToolButton = forwardRef(function (
+const ActionButton = forwardRef(function (
   { children, disabled, onClick, position = "single" }: Props,
   ref?: React.ForwardedRef<HTMLButtonElement> | undefined,
 ) {
@@ -40,4 +40,4 @@ const ToolButton = forwardRef(function (
   );
 });
 
-export default ToolButton;
+export default ActionButton;

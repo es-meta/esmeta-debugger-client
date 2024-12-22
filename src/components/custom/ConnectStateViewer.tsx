@@ -18,7 +18,7 @@ const connectState = {
       <span>
         <Loader2Icon className="animate-spin" />
       </span>
-      Initializing...
+      Initalzing…
     </div>
   ),
   connected: (

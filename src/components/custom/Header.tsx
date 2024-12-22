@@ -1,8 +1,6 @@
-import { ChevronRight, GithubIcon } from "lucide-react";
-
+import { ChevronRight } from "lucide-react";
+import { GithubIcon } from "lucide-react";
 import { Button } from "@headlessui/react";
-import StateTransition from "./StateTransition";
-// import { Separator } from "@radix-ui/react-separator";
 
 export function ButtonIcon() {
   return (
@@ -36,6 +34,17 @@ function Header() {
           <ChevronRight />
           <GithubIcon />
         </Button> */}
+
+      <div className="flex flex-row gap-8">
+      <div>
+        <GithubIcon style={{ fontSize: 24 }} />
+        ESMeta
+      </div>
+      <div>
+        <GithubIcon style={{ fontSize: 24 }} />
+        ESMeta Debugger
+      </div>
+    </div>
       </div>
     </nav>
   );

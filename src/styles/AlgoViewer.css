@@ -1,10 +1,11 @@
 .algo-container {
-  border: 1px solid #ccc;
-  overflow: auto;
+  border-top: 1px solid #ccc;
+  overflow: hidden;
   padding: 16px;
   position: relative;
-  max-height: 80vh;
-  min-height: 80vh;
+  height: 100%;
+  /* max-height: 80vh; */
+  /* min-height: 80vh; */
 
   /* ecmascript spec font */
   font-family: Cambria, Palatino Linotype, Palatino, Liberation Serif, serif;
