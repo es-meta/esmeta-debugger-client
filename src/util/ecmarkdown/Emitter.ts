@@ -12,6 +12,8 @@ import type {
   TildeNode,
   PipeNode,
 } from "ecmarkdown";
+// XXX check if this is the correct import
+import { DoubleBracketsNode } from "ecmarkdown/dist/node-types";
 
 export class Emitter {
   emit(node: Node[]) {
@@ -43,6 +45,8 @@ export class Emitter {
       case "tag":
       case "opaqueTag":
         return this.emitTag(node);
+      case "double-brackets":
+        return this.emitFields(node);
       default:
         throw new Error("Can't emit " + node.name);
     }
@@ -53,8 +57,12 @@ export class Emitter {
   }
 
   emitUnderscore(node: UnderscoreNode) {
-    return this.wrapFragment("var", node.contents);
+    return e('var', { key: uuid() }, node.contents)
   }
+
+  emitFields(node: DoubleBracketsNode) {
+    return e("var", { key: uuid(), className: "field" }, `[[${node.contents}]]`);
+  };
 
   emitTag(tag: OpaqueTagNode | CommentNode | TagNode) {
     if (tag.name === "tag") {

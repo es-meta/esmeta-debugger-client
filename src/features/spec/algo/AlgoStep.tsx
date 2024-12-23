@@ -1,7 +1,10 @@
 import React, { useCallback, useMemo } from "react";
 import { v4 as uuid } from "uuid";
-import { Emitter, FragmentNode } from "@/util/ecmarkdown";
-import type { ListNode, OrderedListNode } from "ecmarkdown";
+import {
+  Emitter,
+  // FragmentNode
+} from "@/util/ecmarkdown";
+import type { ListNode, OrderedListNode, FragmentNode, } from "ecmarkdown";
 import { twJoin } from "tailwind-merge";
 import "@/styles/AlgoViewer.css";
 

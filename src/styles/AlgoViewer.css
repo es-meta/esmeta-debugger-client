@@ -41,7 +41,11 @@
 
 .algo-step var {
   color: #2aa198;
-  transition: background-color 0.25s ease;
+}
+
+.algo-step var.field {
+  color: #000000;
+  font-style: normal;
 }
 
 .algo-step code {

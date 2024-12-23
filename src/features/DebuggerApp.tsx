@@ -111,9 +111,7 @@ const DebuggerApp = ({
         cols={{ lg: 6, md: 4, sm: 2, xs: 1, xxs: 1 }}
         draggableHandle=".drag-handle"
       >
-        <div key="jsedi" className="relative">
-          <JSEditor />
-        </div>
+        
         <div key="specv" className="relative">
           <SpecViewer />
         </div>
@@ -128,6 +126,9 @@ const DebuggerApp = ({
         </div>
         <div key="break" className="relative">
           <ConnectedBPViewer />
+        </div>
+        <div key="jsedi" className="relative">
+          <JSEditor />
         </div>
       </ResponsiveGridLayout>
       {/* </div> */}

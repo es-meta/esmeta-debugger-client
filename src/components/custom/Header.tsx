@@ -1,3 +1,4 @@
+import PlainLabel from "@/features/modal/PlainLabel";
 import { GithubIcon } from "lucide-react";
 
 function Header() {
@@ -34,18 +35,16 @@ function Left() {
 function Right() {
   return (
     <div className="flex flex-row gap-8">
-      <div className="flex flex-row gap-1 items-center">
-        <span className="bg-black text-white rounded-full aspect-square items-center justify-center inline-flex size-6 overflow-hidden">
-          <GithubIcon size={18} />
-        </span>
-        ESMeta
-      </div>
-      <div className="flex flex-row gap-1 items-center">
-        <span className="bg-black text-white rounded-full aspect-square items-center justify-center inline-flex size-6 overflow-hidden">
-          <GithubIcon size={18} />
-        </span>
-        ESMeta Debugger
-      </div>
+        <PlainLabel>
+
+          <GithubIcon />
+
+          ESMeta
+          </PlainLabel>
+      <PlainLabel>
+          <GithubIcon />
+          ESMeta Debugger
+          </PlainLabel>
     </div>
   );
 }
