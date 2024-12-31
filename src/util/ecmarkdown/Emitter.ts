@@ -57,12 +57,16 @@ export class Emitter {
   }
 
   emitUnderscore(node: UnderscoreNode) {
-    return e('var', { key: uuid() }, node.contents)
+    return e("var", { key: uuid() }, node.contents);
   }
 
   emitFields(node: DoubleBracketsNode) {
-    return e("var", { key: uuid(), className: "field" }, `[[${node.contents}]]`);
-  };
+    return e(
+      "var",
+      { key: uuid(), className: "field" },
+      `[[${node.contents}]]`,
+    );
+  }
 
   emitTag(tag: OpaqueTagNode | CommentNode | TagNode) {
     if (tag.name === "tag") {
