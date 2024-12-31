@@ -1,3 +1,5 @@
+import { FALLBACK_CODE, QUERY_PROG } from "@/constants/constant";
+import { getSearchQuery } from "@/util/query.util";
 import produce from "immer";
 
 // redux actions
@@ -40,32 +42,7 @@ type JSState = {
   end: number;
 };
 const initialState: JSState = {
-  code: `var x = 1;
-var y = 2;
-var z = x + y;
-var w = z + x;
-
-function f () {
-  let a = 42;
-  g(a);
-  return 0;
-}
-
-function g(a) {
-  a = 1;
-  a = 1;
-  a = 1;
-  a = 1;
-  a = 1;
-  a = 1;
-  a = 1;
-  a = 1;
-  a = 1;
-  a = 1;
-  a = 1;
-}
-
-f();`,
+  code: getSearchQuery(QUERY_PROG) || FALLBACK_CODE ,
   start: -1,
   end: -1,
 };

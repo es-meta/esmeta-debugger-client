@@ -1,26 +1,29 @@
 import { useCallback, useEffect, useState } from "react";
 import "@/styles/JSEditor.css";
-
-import { AppState } from "@/store/reducers/AppState";
 import { CopyIcon } from "lucide-react";
-
 import Code from "./Code";
-
 import StateTransition from "@/components/custom/StateTransition";
-import { connector, type JSEditorProps } from "./JSEditor.redux";
 import Card from "@/components/layout/Card";
-import CardHeader from "@/components/layout/CardHeader";
+import CardHeader from "@/components/layout/CardHeader"
 
-export default connector(function JSEditor({
-  appState,
-  js: { code, start, end },
-  edit,
-}: JSEditorProps) {
+import { useDispatch, useSelector } from "react-redux";
+import { ReduxState } from "@/store";
+import { edit } from "@/store/reducers/JS";
+import { AppState } from "@/store/reducers/AppState";
+
+export default function JSEditor() {
   // size = 14;
+  const dispatch = useDispatch();
+  const editDispatch = useCallback((code: string) => dispatch(edit(code)), [dispatch]);
 
-  const onCodeChange = useCallback(
+  const { appState, js: { code, start, end} } = useSelector((state: ReduxState) => ({
+  js: state.js,
+  appState: state.appState.state,
+  }));
+  
+  const handleCodeChange = useCallback(
     (code: string) => {
-      if (appState === AppState.JS_INPUT) edit(code);
+      if (appState === AppState.JS_INPUT) editDispatch(code);
     },
     [appState, edit],
   );
@@ -45,7 +48,7 @@ export default connector(function JSEditor({
       <div className="overflow-hidden size-full border-t rounded flex flex-col">
         <Code
           code={code}
-          onChange={onCodeChange}
+          onChange={handleCodeChange}
           start={start}
           end={end}
           readOnly={appState !== AppState.JS_INPUT}
@@ -53,4 +56,4 @@ export default connector(function JSEditor({
       </div>
     </Card>
   );
-});
+};
