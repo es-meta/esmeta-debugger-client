@@ -9,86 +9,44 @@ import {
   UndoDotIcon,
   UndoIcon,
 } from "lucide-react";
+import {
+  run,
+  stop,
+  specStep,
+  specStepOut,
+  specStepOver,
+  specStepBack,
+  specStepBackOver,
+  jsStep,
+  jsStepOut,
+  jsStepOver,
+  specContinue,
+  DebuggerAction,
+} from "@/store/reducers/Debugger";
 
 import ActionButton from "../../components/button/ActionButton";
 import CollapsableButtonGroup from "../../components/button/CollapsableButtonGroup";
 import Settings from "../modal/Settings";
-import LayoutSettings from "../modal/LayoutSettings";
 
-import { connector, type ToolbarProps } from "./Toolbar.redux";
+export default function Toolbar() {
+  const dispatch = useDispatch<Dispatch<DebuggerAction>>();
+  const { disableRun, disableGoingBackward, disableGoingForward } = useSelector(
+    (st: ReduxState) => ({
+      disableRun: !(st.appState.state === AppState.JS_INPUT),
+      disableGoingForward: !(
+        st.appState.state === AppState.DEBUG_READY ||
+        st.appState.state === AppState.DEBUG_READY_AT_FRONT
+      ),
+      disableGoingBackward: !(
+        st.appState.state === AppState.DEBUG_READY ||
+        st.appState.state === AppState.TERMINATED
+      ),
+    }),
+  );
 
-export default connector(function Toolbar(props: ToolbarProps) {
-  const {
-    specContinue,
-    disableRun,
-    disableDebuggerBtn,
-    disableContinue,
-    run,
-    stop,
-    specStep,
-    specStepOver,
-    specStepOut,
-    specStepBack,
-    specStepBackOver,
-    jsStep,
-    jsStepOver,
-    jsStepOut,
-  } = props;
-
-
-  const handleKeyPress = useCallback((event: KeyboardEvent) => {
-    /*
-      prevent handleKeyPress called while adding breakpoints
-     */
-    const focusedElement = document.activeElement;
-    if (
-      focusedElement &&
-      (focusedElement.tagName === "INPUT" ||
-        focusedElement.tagName === "TEXTAREA")
-    ) {
-      return;
-    }
-
-    switch (event.key) {
-      case "r":
-        run();
-        break;
-      case "q":
-        stop();
-        break;
-      case "s":
-        specStep();
-        break;
-      case "o":
-        specStepOver();
-        break;
-      case "u":
-        specStepOut();
-        break;
-      case "b":
-        specStepBack();
-        break;
-      case 'k':
-        specStepBackOver();
-        break;
-      case "j":
-        jsStep();
-        break;
-      case "v":
-        jsStepOver();
-        break;
-      case "t":
-        jsStepOut();
-        break;
-      case "c":
-        specContinue();
-        break;
-      case "Escape":
-        break;
-      default:
-        console.log(`other: ${event.key}`);
-    }
-  }, []);
+  const handleKeyPress = useCallback(handleKeyPressBuilder(dispatch), [
+    dispatch,
+  ]);
 
   useEffect(() => {
     document.addEventListener("keydown", handleKeyPress);
@@ -106,7 +64,7 @@ export default connector(function Toolbar(props: ToolbarProps) {
           <ActionButton
             position="left"
             disabled={disableRun}
-            onClick={() => run()}
+            onClick={() => dispatch(run())}
           >
             <PlayIcon />
             <span>
@@ -117,8 +75,8 @@ export default connector(function Toolbar(props: ToolbarProps) {
 
           <ActionButton
             position="center"
-            disabled={disableDebuggerBtn}
-            onClick={() => specContinue()}
+            disabled={disableGoingForward}
+            onClick={() => dispatch(specContinue())}
           >
             <StepForwardIcon />
             <span>
@@ -129,8 +87,8 @@ export default connector(function Toolbar(props: ToolbarProps) {
 
           <ActionButton
             position="right"
-            disabled={disableContinue}
-            onClick={() => stop()}
+            disabled={!disableRun}
+            onClick={() => dispatch(stop())}
           >
             <SquareIcon />
             <span>
@@ -147,8 +105,8 @@ export default connector(function Toolbar(props: ToolbarProps) {
         <CollapsableButtonGroup>
           <ActionButton
             position="left"
-            disabled={disableDebuggerBtn}
-            onClick={() => specStep()}
+            disabled={disableGoingForward}
+            onClick={() => dispatch(specStep())}
           >
             <ArrowDownToDotIcon />
             <span>
@@ -158,8 +116,8 @@ export default connector(function Toolbar(props: ToolbarProps) {
           </ActionButton>
           <ActionButton
             position="center"
-            disabled={disableDebuggerBtn}
-            onClick={() => specStepOver()}
+            disabled={disableGoingForward}
+            onClick={() => dispatch(specStepOver())}
           >
             <RedoDotIcon />
             <span>
@@ -170,8 +128,8 @@ export default connector(function Toolbar(props: ToolbarProps) {
           </ActionButton>
           <ActionButton
             position="center"
-            disabled={disableDebuggerBtn}
-            onClick={() => specStepOut()}
+            disabled={disableGoingForward}
+            onClick={() => dispatch(specStepOut())}
           >
             <ArrowUpFromDotIcon />
             <span>
@@ -182,8 +140,8 @@ export default connector(function Toolbar(props: ToolbarProps) {
 
           <ActionButton
             position="center"
-            disabled={disableContinue}
-            onClick={() => specStepBack()}
+            disabled={disableGoingBackward}
+            onClick={() => dispatch(specStepBack())}
           >
             <UndoIcon />
             <span>
@@ -195,8 +153,8 @@ export default connector(function Toolbar(props: ToolbarProps) {
 
           <ActionButton
             position="right"
-            disabled={disableContinue}
-            onClick={() => specStepBackOver()}
+            disabled={disableGoingBackward}
+            onClick={() => dispatch(specStepBackOver())}
           >
             <UndoDotIcon />
             <span>
@@ -213,8 +171,8 @@ export default connector(function Toolbar(props: ToolbarProps) {
         <CollapsableButtonGroup>
           <ActionButton
             position="left"
-            disabled={disableDebuggerBtn}
-            onClick={() => jsStep()}
+            disabled={disableGoingForward}
+            onClick={() => dispatch(jsStep())}
           >
             <ArrowDownToDotIcon />
             <span>
@@ -223,8 +181,8 @@ export default connector(function Toolbar(props: ToolbarProps) {
           </ActionButton>
           <ActionButton
             position="center"
-            disabled={disableDebuggerBtn}
-            onClick={() => jsStepOver()}
+            disabled={disableGoingForward}
+            onClick={() => dispatch(jsStepOver())}
           >
             <RedoDotIcon />
             <span>
@@ -235,8 +193,8 @@ export default connector(function Toolbar(props: ToolbarProps) {
 
           <ActionButton
             position="right"
-            disabled={disableDebuggerBtn}
-            onClick={() => jsStepOut()}
+            disabled={disableGoingForward}
+            onClick={() => dispatch(jsStepOut())}
           >
             <ArrowUpFromDotIcon />
             <span>
@@ -250,10 +208,16 @@ export default connector(function Toolbar(props: ToolbarProps) {
           &nbsp;
         </div>
 
-        <LayoutSettings />
-
+        <div className="w-16 h-4">{/* <ConnectStateViewer /> */}</div>
         <Settings />
       </div>
     </aside>
   );
-});
+}
+
+import ConnectStateViewer from "@/components/custom/ConnectStateViewer";
+import { AppState } from "@/store/reducers/AppState";
+import { useDispatch, useSelector } from "react-redux";
+import { ReduxState } from "@/store";
+import { Dispatch } from "redux";
+import { handleKeyPressBuilder } from "./Toolbar.util";
