@@ -1,75 +1,56 @@
-import { useEffect, useMemo, useState } from "react";
-import { graphviz, GraphvizOptions } from "d3-graphviz";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { type Graphviz, graphviz, GraphvizOptions } from "d3-graphviz";
 import { twJoin } from "tailwind-merge";
-import { LoaderIcon } from "lucide-react";
+import { Loader2Icon } from "lucide-react";
+import { useSelector } from "react-redux";
+import { ReduxState } from "@/store";
 
-interface IGraphvizProps {
-  /**
-   * A string containing a graph representation using the Graphviz DOT language.
-   * @see https://graphviz.org/doc/info/lang.html
-   */
+interface Props {
   dot: string;
-  /**
-   * Options to pass to the Graphviz renderer.
-   */
-  options?: GraphvizOptions;
-  /**
-   * The classname to attach to this component for styling purposes.
-   */
-  className?: string;
 }
 
 const defaultOptions: GraphvizOptions = {
-  fit: true,
-  zoom: false,
+  fit: false,
+  zoom: true,
 };
 
-let counter = 0;
+export default function Graphviz({ dot }: Props) {
+  const [completed, setCompleted] = useState<string | null>(null);
+  const ref = useRef<HTMLDivElement>(null);
 
-const getId = () => `graphviz${counter++}`;
-
-export default function Graphviz({ dot, className, options = {} }: IGraphvizProps) {
-  const id = useMemo(getId, []);
-
-  const [lastCompleted, setLastCompleted] = useState("");
-  // const notify = useCallback(, [dot]);
-
-  // useEffect(() => {
-  //   console.log('lastCompleted', lastCompleted);
-  //   console.log('dot', dot);
-  //   console.log('lastCompleted === dot', lastCompleted === dot);
-  //   setDeferred(lastCompleted === dot);
-  // }, [lastCompleted, dot]);
+  const notify = useCallback(() => {
+    setCompleted(dot);
+  }, [dot]);
 
   useEffect(() => {
-    graphviz(`#${id}`, {
-      ...defaultOptions,
-      ...options,
-    }).renderDot(dot, () => {
-      console.log("rendered");
-      setTimeout(() => {
-        setLastCompleted(dot);
-      }, 0);
-    });
-  }, [dot, options]);
+    graphviz(ref.current, defaultOptions).renderDot(dot, notify);
+  }, [dot]);
+
+  const busy = useSelector((st: ReduxState) => st.appState.busy);
+
+  const isLoading = completed !== dot || busy;
 
   return (
     <div className="relative [&>&>svg]:size-full size-full">
+      {isLoading ? (
+        <div
+          className={twJoin(
+            "absolute",
+            "top-1/2 left-1/2",
+            "-translate-x-1/2",
+            "-translate-y-1/2",
+          )}
+        >
+          <Loader2Icon className="animate-spin text-black z-50" />
+        </div>
+      ) : null}
       <div
+        ref={ref}
         className={twJoin(
-          "absolute",
-          "top-1/2",
-          "left-1/2",
-          "transform",
-          "-translate-x-1/2",
-          "-translate-y-1/2",
+          "size-full overflow-hidden [&>svg]:size-full transition-opacity duration-100",
+          isLoading && "opacity-90",
         )}
-      >
-        <LoaderIcon
-          className={lastCompleted === dot ? "hidden" : "animate-spin"}
-        />
-      </div>
-      <div className={className} id={id} />
+      />
     </div>
   );
-};
+}
