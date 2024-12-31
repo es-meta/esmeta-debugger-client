@@ -42,7 +42,7 @@ type JSState = {
   end: number;
 };
 const initialState: JSState = {
-  code: getSearchQuery(QUERY_PROG) || FALLBACK_CODE ,
+  code: getSearchQuery(QUERY_PROG) || FALLBACK_CODE,
   start: -1,
   end: -1,
 };

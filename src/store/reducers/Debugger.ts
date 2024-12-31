@@ -62,13 +62,13 @@ export type DebuggerAction =
     }
   | {
       type: DebuggerActionType.SPEC_STEP_OUT;
-  }
+    }
   | {
-    type: DebuggerActionType.SPEC_STEP_BACK;
-  }
+      type: DebuggerActionType.SPEC_STEP_BACK;
+    }
   | {
-    type: DebuggerActionType.SPEC_STEP_BACK_OVER;
-  }
+      type: DebuggerActionType.SPEC_STEP_BACK_OVER;
+    }
   | {
       type: DebuggerActionType.JS_STEP;
     }

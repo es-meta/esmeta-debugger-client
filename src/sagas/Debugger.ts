@@ -29,7 +29,7 @@ function* runSaga() {
       yield call(() => doAPIPostRequest("exec/run", [code, breakpoints]));
       yield put({ type: AppStateActionType.RECIEVE });
       // move app state to DEBUG_READY
-      yield put(move(AppState.DEBUG_READY));
+      yield put(move(AppState.DEBUG_READY_AT_FRONT));
       // update heap, call stack
       yield put(updateHeapRequest());
       yield put(updateCallStackRequest());
@@ -58,6 +58,7 @@ enum StepResult {
   BREAKED,
   TERMINATED,
   SUCCEED,
+  REACHEDFRONT,
 }
 
 // step body saga
@@ -80,6 +81,10 @@ function mkStepSaga(endpoint: Route) {
         case StepResult.BREAKED:
           toast.info("Breaked");
           yield put(move(AppState.DEBUG_READY));
+          break;
+        case StepResult.REACHEDFRONT:
+          toast.info("Debugger is at first step");
+          yield put(move(AppState.DEBUG_READY_AT_FRONT));
           break;
       }
 
