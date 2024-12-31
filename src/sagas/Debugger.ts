@@ -68,10 +68,20 @@ function mkStepSaga(endpoint: Route) {
       yield put({ type: AppStateActionType.SEND });
 
       const res: StepResult = yield call(() => doAPIPostRequest(endpoint));
-      if (res === StepResult.TERMINATED) {
-        toast.success("Terminated");
-        yield put(move(AppState.TERMINATED));
-      } else if (res === StepResult.BREAKED) toast.info("Breaked");
+      switch (res) {
+        case StepResult.TERMINATED:
+          toast.success("Terminated");
+          yield put(move(AppState.TERMINATED));
+          break;
+        case StepResult.SUCCEED:
+          // toast.success("Succeed");
+          yield put(move(AppState.DEBUG_READY));
+          break;
+        case StepResult.BREAKED:
+          toast.info("Breaked");
+          yield put(move(AppState.DEBUG_READY));
+          break;
+      }
 
       // update heap, call stack
       yield put(updateHeapRequest());
@@ -105,6 +115,20 @@ function* specStepOutSaga() {
   yield takeLatest(
     DebuggerActionType.SPEC_STEP_OUT,
     mkStepSaga("exec/specStepOut"),
+  );
+}
+// spec step back saga
+function* specStepBackSaga() {
+  yield takeLatest(
+    DebuggerActionType.SPEC_STEP_BACK,
+    mkStepSaga("exec/specStepBack"),
+  );
+}
+// spec step back over saga
+function* specStepBackOverSaga() {
+  yield takeLatest(
+    DebuggerActionType.SPEC_STEP_BACK_OVER,
+    mkStepSaga("exec/specStepBackOver"),
   );
 }
 // spec continue saga
@@ -144,6 +168,8 @@ export default function* debuggerSaga() {
     specStepSaga(),
     specStepOverSaga(),
     specStepOutSaga(),
+    specStepBackSaga(),
+    specStepBackOverSaga(),
     jsStepSaga(),
     jsStepOverSaga(),
     jsStepOutSaga(),

@@ -7,6 +7,8 @@ export enum DebuggerActionType {
   SPEC_STEP = "DebuggerAction/STEP",
   SPEC_STEP_OUT = "DebuggerAction/STEP_OUT",
   SPEC_STEP_OVER = "DebuggerAction/STEP_OVER",
+  SPEC_STEP_BACK = "DebuggerAction/STEP_BACK",
+  SPEC_STEP_BACK_OVER = "DebuggerAction/STEP_BACK_OVER",
   JS_STEP = "DebuggerAction/JS_STEP",
   JS_STEP_OUT = "DebuggerAction/JS_STEP_OUT",
   JS_STEP_OVER = "DebuggerAction/JS_STEP_OVER",
@@ -26,6 +28,12 @@ export const specStepOver = (): DebuggerAction => ({
 });
 export const specStepOut = (): DebuggerAction => ({
   type: DebuggerActionType.SPEC_STEP_OUT,
+});
+export const specStepBack = (): DebuggerAction => ({
+  type: DebuggerActionType.SPEC_STEP_BACK,
+});
+export const specStepBackOver = (): DebuggerAction => ({
+  type: DebuggerActionType.SPEC_STEP_BACK_OVER,
 });
 export const jsStep = (): DebuggerAction => ({
   type: DebuggerActionType.JS_STEP,
@@ -54,7 +62,13 @@ export type DebuggerAction =
     }
   | {
       type: DebuggerActionType.SPEC_STEP_OUT;
-    }
+  }
+  | {
+    type: DebuggerActionType.SPEC_STEP_BACK;
+  }
+  | {
+    type: DebuggerActionType.SPEC_STEP_BACK_OVER;
+  }
   | {
       type: DebuggerActionType.JS_STEP;
     }

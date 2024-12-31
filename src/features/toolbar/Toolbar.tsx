@@ -18,6 +18,24 @@ import LayoutSettings from "../modal/LayoutSettings";
 import { connector, type ToolbarProps } from "./Toolbar.redux";
 
 export default connector(function Toolbar(props: ToolbarProps) {
+  const {
+    specContinue,
+    disableRun,
+    disableDebuggerBtn,
+    disableContinue,
+    run,
+    stop,
+    specStep,
+    specStepOver,
+    specStepOut,
+    specStepBack,
+    specStepBackOver,
+    jsStep,
+    jsStepOver,
+    jsStepOut,
+  } = props;
+
+
   const handleKeyPress = useCallback((event: KeyboardEvent) => {
     /*
       prevent handleKeyPress called while adding breakpoints
@@ -48,7 +66,10 @@ export default connector(function Toolbar(props: ToolbarProps) {
         specStepOut();
         break;
       case "b":
-        alert("not implemented");
+        specStepBack();
+        break;
+      case 'k':
+        specStepBackOver();
         break;
       case "j":
         jsStep();
@@ -75,21 +96,6 @@ export default connector(function Toolbar(props: ToolbarProps) {
       document.removeEventListener("keydown", handleKeyPress);
     };
   }, [handleKeyPress]);
-
-  const {
-    specContinue,
-    disableRun,
-    disableDebuggerBtn,
-    disableContinue,
-    run,
-    stop,
-    specStep,
-    specStepOver,
-    specStepOut,
-    jsStep,
-    jsStepOver,
-    jsStepOut,
-  } = props;
 
   const emphasize = "text-es";
 
@@ -176,8 +182,8 @@ export default connector(function Toolbar(props: ToolbarProps) {
 
           <ActionButton
             position="center"
-            disabled={disableDebuggerBtn}
-            onClick={() => alert("not implemented")}
+            disabled={disableContinue}
+            onClick={() => specStepBack()}
           >
             <UndoIcon />
             <span>
@@ -189,8 +195,8 @@ export default connector(function Toolbar(props: ToolbarProps) {
 
           <ActionButton
             position="right"
-            disabled={disableDebuggerBtn}
-            onClick={() => alert("not implemented")}
+            disabled={disableContinue}
+            onClick={() => specStepBackOver()}
           >
             <UndoDotIcon />
             <span>

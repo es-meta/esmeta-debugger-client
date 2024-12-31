@@ -8,6 +8,8 @@ export const routes = [
   "exec/specStep",
   "exec/specStepOver",
   "exec/specStepOut",
+  "exec/specStepBack",
+  "exec/specStepBackOver",
   "exec/specContinue",
   "exec/esStep",
   "exec/esStepOver",
