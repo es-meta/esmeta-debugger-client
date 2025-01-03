@@ -22,31 +22,24 @@ import {
   jsStepOver,
   specContinue,
   DebuggerAction,
+  resumeFromIter,
+  specStepBackOut,
 } from "@/store/reducers/Debugger";
 
-import ActionButton from "../../components/button/ActionButton";
-import CollapsableButtonGroup from "../../components/button/CollapsableButtonGroup";
+import ToolbarButton from "@/features/toolbar/ToolbarButton";
+import ToolbarButtonGroup from "@/features/toolbar/ToolbarButtonGroup";
 import Settings from "../modal/Settings";
 
 export default function Toolbar() {
   const dispatch = useDispatch<Dispatch<DebuggerAction>>();
-  const { disableRun, disableGoingBackward, disableGoingForward } = useSelector(
-    (st: ReduxState) => ({
-      disableRun: !(st.appState.state === AppState.JS_INPUT),
-      disableGoingForward: !(
-        st.appState.state === AppState.DEBUG_READY ||
-        st.appState.state === AppState.DEBUG_READY_AT_FRONT
-      ),
-      disableGoingBackward: !(
-        st.appState.state === AppState.DEBUG_READY ||
-        st.appState.state === AppState.TERMINATED
-      ),
-    }),
-  );
+  const selected = useSelector(selector);
+  const { disableRun, disableResume, disableQuit, disableGoingBackward, disableGoingForward } =
+    selected;
 
-  const handleKeyPress = useCallback(handleKeyPressBuilder(dispatch), [
-    dispatch,
-  ]);
+  const handleKeyPress = useCallback(
+    handleKeyPressBuilder(dispatch, selected),
+    [dispatch, selected],
+  );
 
   useEffect(() => {
     document.addEventListener("keydown", handleKeyPress);
@@ -55,169 +48,204 @@ export default function Toolbar() {
     };
   }, [handleKeyPress]);
 
-  const emphasize = "text-es";
-
   return (
     <aside className="sticky top-0 w-full backdrop-blur-sm z-[2]">
-      <div className="bg-neutral-100 size-full flex-row bg-opacity-75 flex items-center min-h-full space-x-0 flex-wrap p-2 gap-y-2 gap-x-1 justify-start z-[1001]">
-        <CollapsableButtonGroup>
-          <ActionButton
+      <div className="bg-neutral-100 dark:bg-neutral-800 size-full flex-row bg-opacity-75 flex items-center min-h-full space-x-0 flex-wrap p-2 gap-y-2 gap-x-1 justify-start z-[1001]">
+        <ToolbarButtonGroup label="Execution">
+          <ToolbarButton
             position="left"
             disabled={disableRun}
             onClick={() => dispatch(run())}
-          >
-            <PlayIcon />
-            <span>
-              <span className={emphasize}>R</span>
-              <span>un</span>
-            </span>
-          </ActionButton>
+            icon={<PlayIcon />}
+            label={
+              <span>
+                <b>R</b>un
+              </span>
+            }
+          />
 
-          <ActionButton
+          {GIVEN_SETTINGS.origin.type === 'visualizer' && (
+            <ToolbarButton
+              bold
+              position="center"
+              disabled={disableResume}
+              onClick={() => dispatch(resumeFromIter())}
+              icon={<PlayIcon />}
+              label={
+                <span>
+                  R<b>e</b>sume&nbsp;from&nbsp;Visualizer
+                </span>
+              }
+            />
+          )}
+
+          <ToolbarButton
             position="center"
             disabled={disableGoingForward}
             onClick={() => dispatch(specContinue())}
-          >
-            <StepForwardIcon />
-            <span>
-              <span className={emphasize}>C</span>
-              ontinue
-            </span>
-          </ActionButton>
+            icon={<StepForwardIcon />}
+            label={
+              <span>
+                <b>C</b>ontinue
+              </span>
+            }
+          />
 
-          <ActionButton
+          <ToolbarButton
             position="right"
-            disabled={!disableRun}
+            disabled={disableQuit}
             onClick={() => dispatch(stop())}
-          >
-            <SquareIcon />
-            <span>
-              <span className={emphasize}>Q</span>
-              <span>uit</span>
-            </span>
-          </ActionButton>
-        </CollapsableButtonGroup>
+            icon={<SquareIcon />}
+            label={
+              <span>
+                <b>Q</b>uit
+              </span>
+            }
+          />
+        </ToolbarButtonGroup>
 
-        <div className="h-full min-w-[1px] max-w-[1px] bg-neutral-400 block">
-          &nbsp;
-        </div>
+        <Seperator />
 
-        <CollapsableButtonGroup>
-          <ActionButton
+        <ToolbarButtonGroup label="Spec">
+          <ToolbarButton
             position="left"
             disabled={disableGoingForward}
             onClick={() => dispatch(specStep())}
-          >
-            <ArrowDownToDotIcon />
-            <span>
-              <span className={emphasize}>S</span>
-              <span>tep</span>
-            </span>
-          </ActionButton>
-          <ActionButton
+            icon={<ArrowDownToDotIcon />}
+            label={
+              <span>
+                <b>S</b>tep
+              </span>
+            }
+          />
+
+          <ToolbarButton
             position="center"
             disabled={disableGoingForward}
             onClick={() => dispatch(specStepOver())}
-          >
-            <RedoDotIcon />
-            <span>
-              Step&nbsp;
-              <span className={emphasize}>O</span>
-              ver
-            </span>
-          </ActionButton>
-          <ActionButton
-            position="center"
+            icon={<RedoDotIcon />}
+            label={
+              <span>
+                Step&nbsp;<b>O</b>ver
+              </span>
+            }
+          />
+
+          <ToolbarButton
+            position="right"
             disabled={disableGoingForward}
             onClick={() => dispatch(specStepOut())}
-          >
-            <ArrowUpFromDotIcon />
-            <span>
-              Step&nbsp;O
-              <span className={emphasize}>u</span>t
-            </span>
-          </ActionButton>
+            icon={<ArrowUpFromDotIcon />}
+            label={
+              <span>
+                Step&nbsp;O<b>u</b>t
+              </span>
+            }
+          />
+        </ToolbarButtonGroup>
 
-          <ActionButton
-            position="center"
+        <Seperator />
+
+        <ToolbarButtonGroup label="Backward">
+          <ToolbarButton
+            position="left"
             disabled={disableGoingBackward}
             onClick={() => dispatch(specStepBack())}
-          >
-            <UndoIcon />
-            <span>
-              Step&nbsp;
-              <span className={emphasize}>B</span>
-              ack
-            </span>
-          </ActionButton>
+            icon={<UndoIcon />}
+            label={
+              <span>
+                Step&nbsp;<b>B</b>ack
+              </span>
+            }
+          />
 
-          <ActionButton
-            position="right"
+          <ToolbarButton
+            position="center"
             disabled={disableGoingBackward}
             onClick={() => dispatch(specStepBackOver())}
-          >
-            <UndoDotIcon />
-            <span>
-              Step&nbsp;Over&nbsp;Bac
-              <span className={emphasize}>k</span>
-            </span>
-          </ActionButton>
-        </CollapsableButtonGroup>
+            icon={<UndoDotIcon />}
+            label={
+              <span>
+                Step&nbsp;B<b>a</b>ck&nbsp;Over
+              </span>
+            }
+          />
 
-        <div className="h-full min-w-[1px] max-w-[1px] bg-neutral-400 block">
-          &nbsp;
-        </div>
+          <ToolbarButton
+            position="right"
+            disabled={disableGoingBackward}
+            onClick={() => dispatch(specStepBackOut())}
+            icon={<ArrowUpFromDotIcon />}
+            label={
+              <span>
+                Step&nbsp;Bac<b>k</b>&nbsp;Out
+              </span>
+            }
+          />
+        </ToolbarButtonGroup>
 
-        <CollapsableButtonGroup>
-          <ActionButton
+        <Seperator />
+
+        <ToolbarButtonGroup label="JS">
+          <ToolbarButton
             position="left"
             disabled={disableGoingForward}
             onClick={() => dispatch(jsStep())}
-          >
-            <ArrowDownToDotIcon />
-            <span>
-              <span className={emphasize}>J</span>S Step
-            </span>
-          </ActionButton>
-          <ActionButton
+            icon={<ArrowDownToDotIcon />}
+            label={
+              <span>
+                <b>J</b>S&nbsp;Step
+              </span>
+            }
+          />
+
+          <ToolbarButton
             position="center"
             disabled={disableGoingForward}
             onClick={() => dispatch(jsStepOver())}
-          >
-            <RedoDotIcon />
-            <span>
-              JS Step O<span className={emphasize}>v</span>
-              er
-            </span>
-          </ActionButton>
+            icon={<RedoDotIcon />}
+            label={
+              <span>
+                JS&nbsp;Step&nbsp;O<b>v</b>er
+              </span>
+            }
+          />
 
-          <ActionButton
+          <ToolbarButton
             position="right"
             disabled={disableGoingForward}
             onClick={() => dispatch(jsStepOut())}
-          >
-            <ArrowUpFromDotIcon />
-            <span>
-              JS Step Ou
-              <span className={emphasize}>t</span>
-            </span>
-          </ActionButton>
-        </CollapsableButtonGroup>
+            icon={<ArrowUpFromDotIcon />}
+            label={
+              <span>
+                JS Step&nbsp;Ou<b>t</b>
+              </span>
+            }
+          />
+        </ToolbarButtonGroup>
 
-        <div className="h-full min-w-[1px] max-w-[1px] bg-neutral-400 block">
-          &nbsp;
-        </div>
+        <Seperator />
 
-        <div className="w-16 h-4">{/* <ConnectStateViewer /> */}</div>
+        <ConnectStateViewer />
         <Settings />
+        <SpecVersionView />
       </div>
     </aside>
   );
 }
 
 import ConnectStateViewer from "@/components/custom/ConnectStateViewer";
-import { AppState } from "@/store/reducers/AppState";
 import { useDispatch, useSelector } from "react-redux";
-import { ReduxState } from "@/store";
 import { Dispatch } from "redux";
 import { handleKeyPressBuilder } from "./Toolbar.util";
+import { selector } from "./Toolbar.redux";
+import { GIVEN_SETTINGS } from "@/constants/settings";
+import SpecVersionView from "../spec/SpecVersionView";
+
+function Seperator() {
+  return (
+    <div className="h-full min-w-[1px] max-w-[1px] bg-neutral-400 block">
+      &nbsp;
+    </div>
+  );
+}
