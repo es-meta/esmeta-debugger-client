@@ -1,8 +1,13 @@
 import { toast } from "react-toastify";
-import { Route } from "./route.type";
+import type { Route } from "@/types/route.type";
+import { GIVEN_SETTINGS } from "@/constants/settings";
 
 // Create worker instance
-const worker = new Worker(new URL("./api.worker.ts", import.meta.url));
+const workerPromise = new Promise<Worker>(resolve => {
+  const w = new Worker(new URL("./api.worker.ts", import.meta.url));
+  w.postMessage({ type: "META", value: GIVEN_SETTINGS.api });
+  resolve(w);
+});
 
 // Request counter for unique IDs
 // XXX if need better atomics const ta = new Uint8Array(new SharedArrayBuffer(1));
@@ -10,11 +15,12 @@ var counter = 0;
 export const workingset = new Set();
 
 // Helper function to handle worker communication
-const createWorkerRequest = (
+const createWorkerRequest = async (
   type: string,
   endpoint: Route,
   data?: unknown,
 ): Promise<unknown> => {
+  const worker = await workerPromise;
   return new Promise((resolve, reject) => {
     const id = counter++;
     workingset.add(id);

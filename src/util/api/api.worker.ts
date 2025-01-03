@@ -1,7 +1,12 @@
 /// <reference lib="webworker" />
-// import { toast } from "react-toastify";
 
-const API_HOST = "http://localhost:8080";
+// const API_HOST = "http://localhost:8080";
+
+let API_HOST: string = 'http://localhost:8080';
+
+import type { HTTPMethod } from "./worker/schema.types";
+
+const z = import("./worker/schema.types").then((z) => z);
 
 // json header
 const mkJSONHeader = (): Record<string, string> => {
@@ -45,16 +50,6 @@ const mkURL = (
   }
   return url;
 };
-
-// HTTP methods
-type HTTPMethod =
-  | "DELETE"
-  | "GET"
-  | "HEAD"
-  | "PATCH"
-  | "POST"
-  | "PUT"
-  | "OPTIONS";
 
 // raw GET request
 const doGetRequest = async (
@@ -100,6 +95,10 @@ self.onmessage = async (e: MessageEvent) => {
   try {
     let result;
     switch (type) {
+      case "META":
+        // TODO
+        //  console.log((await z).number().parse(1));
+        break;
       case "GET":
         result = await doGetRequest(API_HOST, endpoint, data);
         break;
