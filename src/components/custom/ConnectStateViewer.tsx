@@ -1,16 +1,14 @@
 import { motion, AnimatePresence } from "motion/react";
-
-import {
-  CheckIcon,
-  BanIcon,
-  Loader2Icon,
-  TriangleAlertIcon,
-} from "lucide-react";
+import { Loader2Icon } from "lucide-react";
 import {
   CircleCheckBigIcon,
   LoaderPinwheelIcon,
   CircleAlertIcon,
 } from "lucide-react";
+import { useMemo } from "react";
+import { useSelector } from "react-redux";
+import { ReduxState } from "@/store";
+import { AppState } from "@/store/reducers/AppState";
 
 const connectState = {
   init: (
@@ -18,7 +16,7 @@ const connectState = {
       <span>
         <Loader2Icon className="animate-spin" />
       </span>
-      Initalzing…
+      Connecting
     </div>
   ),
   connected: (
@@ -36,24 +34,37 @@ const connectState = {
   not_connected: (
     <div className="flex  flex-row gap-1 items-center text-red-500 rounded-lg text-xs font-800">
       <CircleAlertIcon size={18} />
-      Not Connected
+      Lost
     </div>
   ),
 } as const;
 
-interface Props {
-  state: keyof typeof connectState;
+function matchAppstate(st: ReduxState) {
+  const x = st.appState.busy;
+  const isInit = st.appState.state === AppState.INIT;
+  if (x === 0) {
+    return "connected";
+  }
+  if (x > 0) {
+    return isInit ? "init" : "busy";
+  }
+  return "not_connected";
 }
 
-const ConnectStateViewer = ({ state }: Props) => {
-  const variants = {
-    initial: { opacity: 0, y: 8 },
-    animate: { opacity: 1, y: 0 },
-    exit: { opacity: 0, y: 8 },
-  };
+export default function ConnectStateViewer() {
+  const state = useSelector(matchAppstate);
+
+  const variants = useMemo(
+    () => ({
+      initial: { opacity: 0, y: 8 },
+      animate: { opacity: 1, y: 0 },
+      exit: { opacity: 0, y: 8 },
+    }),
+    [],
+  );
 
   return (
-    <div className="relative w-full h-full">
+    <div className="relative w-28 h-4">
       <div className="relative min-h-full max-h-full">&nbsp;</div>
       <AnimatePresence initial={false}>
         <motion.div
@@ -72,6 +83,4 @@ const ConnectStateViewer = ({ state }: Props) => {
       </AnimatePresence>
     </div>
   );
-};
-
-export default ConnectStateViewer;
+}
