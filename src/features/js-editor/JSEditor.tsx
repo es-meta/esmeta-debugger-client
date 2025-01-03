@@ -1,10 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import "@/styles/JSEditor.css";
-import { CopyIcon } from "lucide-react";
-import Code from "./Code";
-import StateTransition from "@/components/custom/StateTransition";
+import MonacoEditor from "./MonacoEditor";
 import Card from "@/components/layout/Card";
-import CardHeader from "@/components/layout/CardHeader"
+import CardHeader from "@/components/layout/CardHeader";
 
 import { useDispatch, useSelector } from "react-redux";
 import { ReduxState } from "@/store";
@@ -14,13 +12,19 @@ import { AppState } from "@/store/reducers/AppState";
 export default function JSEditor() {
   // size = 14;
   const dispatch = useDispatch();
-  const editDispatch = useCallback((code: string) => dispatch(edit(code)), [dispatch]);
+  const editDispatch = useCallback(
+    (code: string) => dispatch(edit(code)),
+    [dispatch],
+  );
 
-  const { appState, js: { code, start, end} } = useSelector((state: ReduxState) => ({
-  js: state.js,
-  appState: state.appState.state,
+  const {
+    appState,
+    js: { code, start, end },
+  } = useSelector((state: ReduxState) => ({
+    js: state.js,
+    appState: state.appState.state,
   }));
-  
+
   const handleCodeChange = useCallback(
     (code: string) => {
       if (appState === AppState.JS_INPUT) editDispatch(code);
@@ -37,16 +41,16 @@ export default function JSEditor() {
   return (
     <Card>
       <CardHeader title="JavaScript&nbsp;Editor">
-        <div className="flex flex-row px-4 justify-between">
+        {/* <div className="flex flex-row px-4 justify-between">
           <StateTransition state={toggle ? "astReady" : "loading"} />
           <div className="flex flex-row gap-2">
             <CopyIcon />
           </div>
-        </div>
+        </div> */}
       </CardHeader>
 
       <div className="overflow-hidden size-full border-t rounded flex flex-col">
-        <Code
+        <MonacoEditor
           code={code}
           onChange={handleCodeChange}
           start={start}
@@ -56,4 +60,4 @@ export default function JSEditor() {
       </div>
     </Card>
   );
-};
+}

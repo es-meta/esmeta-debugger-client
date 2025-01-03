@@ -13,19 +13,21 @@ interface Props {
   readOnly?: boolean;
 }
 
-function Loading() {
-  return <LoaderIcon className="animate-spin text-blue-500" size={32} />;
-}
-
-export default function Code({ code, onChange, start, end, readOnly }: Props) {
+export default function MonacoEditor({
+  code,
+  onChange,
+  start,
+  end,
+  readOnly,
+}: Props) {
   const monacoRef = useRef<typeof monaco_editor | null>(null);
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
   const decorations = useRef<editor.IEditorDecorationsCollection | null>(null);
 
   const monacoDidMount = useCallback(
     (mountedEditor: editor.IStandaloneCodeEditor, monaco: Monaco) => {
+      // TODO add basic definitions
       // var coreDefsName = 'lib.es5.d.ts';
-
       // // Import the text of your chosen def file.  This will depend on your bundler.
       // var coreDefs = ('./' + coreDefsName);
 
@@ -42,7 +44,6 @@ export default function Code({ code, onChange, start, end, readOnly }: Props) {
       monacoRef.current = monaco;
       editorRef.current = mountedEditor;
       decorations.current = mountedEditor.createDecorationsCollection();
-      console.info("decorations is " + decorations.current);
     },
     [],
   );
@@ -90,6 +91,10 @@ export default function Code({ code, onChange, start, end, readOnly }: Props) {
       options={options}
     />
   );
+}
+
+function Loading() {
+  return <LoaderIcon className="animate-spin text-blue-500" size={32} />;
 }
 
 const options: editor.IStandaloneEditorConstructionOptions = {
