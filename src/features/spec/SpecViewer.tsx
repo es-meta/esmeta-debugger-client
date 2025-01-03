@@ -1,9 +1,12 @@
+import { useSelector } from "react-redux";
 import AlgoViewer from "./algo/AlgoViewer";
 import Graphviz from "./Graphviz";
 import Card from "@/components/layout/Card";
 import CardHeader from "@/components/layout/CardHeader";
-
-import { connector, type SpecViewerProps } from "./SpecViewer.redux";
+import { ReduxState } from "@/store";
+// import { LinkIcon, LockIcon, LockOpenIcon } from "lucide-react";
+import { useState } from "react";
+import SpecVersionView from "./SpecVersionView";
 
 // view type of spec
 enum SpecViewType {
@@ -12,8 +15,17 @@ enum SpecViewType {
   DEFAULT,
 }
 
-export default connector(function SpecViewer(props: SpecViewerProps) {
+const selector = (st: ReduxState) => ({
+  spec: st.spec,
+  irState: st.irState,
+  breakpoints: st.breakpoint.items,
+});
+
+export default function SpecViewer() {
+  // TODO optimize
+  const props = useSelector(selector);
   const algo = props.spec.algorithm;
+  const [locked, setLocked] = useState(false);
 
   const viewType: SpecViewType =
     algo.fid === -1
@@ -24,16 +36,23 @@ export default connector(function SpecViewer(props: SpecViewerProps) {
 
   return (
     <Card>
-      <CardHeader title="ECMAScript Specification"></CardHeader>
+      <CardHeader title="ECMAScript Specification">
+        {/* <a href="https://tc39.es/ecma262/" target="_blank" rel="noreferrer">
+          <LinkIcon />
+        </a>
+        <button
+          className="hover:scale-95 active:scale-90 transition-transform"
+          onClick={() => setLocked(!locked)}
+        >
+          {locked ? <LockIcon /> : <LockOpenIcon />}
+        </button> */}
+        {/* <SpecVersionView /> */}
+      </CardHeader>
       <div className="size-full overflow-y-scroll">
         {viewType === SpecViewType.ALGORITHM ? (
           <AlgoViewer {...props} />
         ) : viewType === SpecViewType.GRAPH ? (
-          <Graphviz
-            className="graphviz-container"
-            dot={props.spec.algorithm.dot}
-            options={{}}
-          />
+          <Graphviz dot={props.spec.algorithm.dot} />
         ) : (
           <p className="px-4">
             Please write JavaScript code and press the run button.
@@ -42,4 +61,4 @@ export default connector(function SpecViewer(props: SpecViewerProps) {
       </div>
     </Card>
   );
-});
+}

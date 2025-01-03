@@ -4,9 +4,9 @@ import { Algorithm } from "@/store/reducers/Spec";
 import { AlgoStepList } from "./AlgoStep";
 import "@/styles/AlgoViewer.css";
 import { BreakpointType } from "@/store/reducers/Breakpoint";
-import { SpecViewerProps } from "../SpecViewer.redux";
+import { SpecViewerProps, connector } from "../SpecViewer.redux";
 
-export default function AlgoViewer(props: SpecViewerProps) {
+export default connector(function AlgoViewer(props: SpecViewerProps) {
   const { irState, spec, breakpoints, rmBreak, addBreak } = props;
 
   const context = irState.callStack[irState.contextIdx];
@@ -85,16 +85,12 @@ export default function AlgoViewer(props: SpecViewerProps) {
       />
     </div>
   );
-}
+});
 
 function AlgoViewerHeader({ algorithm }: { algorithm: Algorithm }) {
   return (
     <div className="font-600 text-lg bg-white">
       <b>{algorithm.name}</b>
-      &nbsp;
-      <span className="font-mono text-blue-500 underline">
-        to ecma 262 spec {"->"}
-      </span>
       <span className="algo-parameters">
         (
         {algorithm.params

@@ -4,7 +4,7 @@ import {
   Emitter,
   // FragmentNode
 } from "@/util/ecmarkdown";
-import type { ListNode, OrderedListNode, FragmentNode, } from "ecmarkdown";
+import type { ListNode, OrderedListNode, FragmentNode } from "ecmarkdown";
 import { twJoin } from "tailwind-merge";
 import "@/styles/AlgoViewer.css";
 
@@ -139,7 +139,7 @@ const AlgoStepCore = React.memo(
       <li
         className={twJoin(
           className,
-          "hover:scale-[0.98] hover:bg-neutral-100 active:scale-[0.94] transition-all cursor-pointer",
+          "hover:scale-[1.015625] hover:bg-neutral-100 active:scale-95 transition-all cursor-pointer",
           "text-black",
         )}
         onClick={handleClick}

@@ -1,15 +1,23 @@
 import StateViewerItem from "./StateViewerItem";
-import { connector, type StateViewerProps } from "./StateViewer.redux";
 
 import CallStackViewer from "./callstack/CallStackViewer";
 import HeapViewer from "./heap/HeapViewer";
 import Breakpoints from "./breakpoint/Breakpoints";
 import SpecEnvViewer from "./env/SpecEnvViewer";
+import { AppState } from "@/store/reducers/AppState";
+import { ReduxState } from "@/store";
+import { useSelector } from "react-redux";
 
-export const ConnectedCallStackViewer = connector(function StateViewer(
-  props: StateViewerProps,
-) {
-  const { disableStateViewer } = props;
+const selector = (st: ReduxState) => ({
+  disableStateViewer: !(
+    st.appState.state === AppState.DEBUG_READY_AT_FRONT ||
+    st.appState.state === AppState.DEBUG_READY ||
+    st.appState.state === AppState.TERMINATED
+  ),
+});
+
+export function ConnectedCallStackViewer() {
+  const { disableStateViewer } = useSelector(selector);
 
   return (
     <StateViewerItem
@@ -18,12 +26,10 @@ export const ConnectedCallStackViewer = connector(function StateViewer(
       body={<CallStackViewer />}
     />
   );
-});
+}
 
-export const ConnectedEnvViewer = connector(function StateViewer(
-  props: StateViewerProps,
-) {
-  const { disableStateViewer } = props;
+export function ConnectedEnvViewer() {
+  const { disableStateViewer } = useSelector(selector);
 
   return (
     <StateViewerItem
@@ -32,12 +38,10 @@ export const ConnectedEnvViewer = connector(function StateViewer(
       body={<SpecEnvViewer />}
     />
   );
-});
+}
 
-export const ConnectedHeapViewer = connector(function StateViewer(
-  props: StateViewerProps,
-) {
-  const { disableStateViewer } = props;
+export function ConnectedHeapViewer() {
+  const { disableStateViewer } = useSelector(selector);
 
   return (
     <StateViewerItem
@@ -46,12 +50,10 @@ export const ConnectedHeapViewer = connector(function StateViewer(
       body={<HeapViewer />}
     />
   );
-});
+}
 
-export const ConnectedBPViewer = connector(function StateViewer(
-  props: StateViewerProps,
-) {
-  const { disableStateViewer } = props;
+export function ConnectedBPViewer() {
+  const { disableStateViewer } = useSelector(selector);
 
   return (
     <StateViewerItem
@@ -60,4 +62,4 @@ export const ConnectedBPViewer = connector(function StateViewer(
       body={<Breakpoints />}
     />
   );
-});
+}
