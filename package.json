@@ -1,5 +1,6 @@
 {
   "name": "esmeta-debugger-client",
+  "//": "Please also update the version in constant.ts",
   "version": "0.1.0",
   "type": "module",
   "private": true,
@@ -23,7 +24,8 @@
     "tailwind-merge": "^2.5.5",
     "tailwind-styled-components": "^2.2.0",
     "uuid": "^11.0.3",
-    "web-vitals": "^4.2.4"
+    "web-vitals": "^4.2.4",
+    "zod": "^3.24.1"
   },
   "scripts": {
     "start": "vite build && vite preview",
