@@ -1,61 +1,53 @@
-import { Dialog, Transition, TransitionChild } from "@headlessui/react";
-import { SettingsIcon } from "lucide-react";
-import { Fragment, useState } from "react";
-import ConnectStateViewer from "@/components/custom/ConnectStateViewer";
-
-import { connect, ConnectedProps } from "react-redux";
-import { ReduxState, Dispatch } from "@/store";
-
-import { AppState } from "@/store/reducers/AppState";
 import {
-  run,
-  stop,
-  specStep,
-  specStepOut,
-  specStepOver,
-  jsStep,
-  jsStepOut,
-  jsStepOver,
-  specContinue,
-} from "@/store/reducers/Debugger";
+  Dialog,
+  DialogPanel,
+  DialogTitle,
+  Transition,
+  TransitionChild,
+} from "@headlessui/react";
+import { Fragment, useCallback, useState } from "react";
+import { GlobeIcon, MonitorIcon, PlugIcon } from "lucide-react";
 
-// connect redux store
-const mapStateToProps = (st: ReduxState) => ({
-  isInit: st.appState.state === AppState.INIT,
-  disableRun: st.appState.state !== AppState.JS_INPUT,
-  disableDebuggerBtn: st.appState.state !== AppState.DEBUG_READY,
-  busy: st.appState.busy > 0,
-  busyCount: st.appState.busy,
-});
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  run: () => dispatch(run()),
-  stop: () => dispatch(stop()),
-  specStep: () => dispatch(specStep()),
-  specStepOut: () => dispatch(specStepOut()),
-  specStepOver: () => dispatch(specStepOver()),
-  jsStep: () => dispatch(jsStep()),
-  jsStepOut: () => dispatch(jsStepOut()),
-  jsStepOver: () => dispatch(jsStepOver()),
-  specContinue: () => dispatch(specContinue()),
-});
-const connector = connect(mapStateToProps, mapDispatchToProps);
-type ToolbarProps = ConnectedProps<typeof connector>;
+import PlainLabel from "../../components/label/PlainLabel";
+import SettingPanel from "./SettingPanel";
+import RadioGroupExample from "./settings/RadioGroup";
+import SaveButton, { opts } from "./settings/SaveButton";
+import { GIVEN_SETTINGS, QUERY_API } from "@/constants/settings";
+import { buildSearchParams, getNewLocationWithQuery, getSearchQuery, setLocalStorage } from "@/util/query.util";
 
-import { GitBranchIcon, PlugIcon } from "lucide-react";
-
-import PlainLabel from "./PlainLabel";
-
-export default connector(function Settings(props: ToolbarProps) {
+export default function Settings() {
   let [isOpen, setIsOpen] = useState(false);
 
-  function closeModal() {
+  const [selected, setSelected] = useState<Plan>(GIVEN_SETTINGS.api.type === "browser" ? plans[1] : plans[0]);
+  const [url, setUrl] = useState(GIVEN_SETTINGS.api.type === "http" ? GIVEN_SETTINGS.api.url : "");
+  const [saveOption, setSaveOption] = useState(opts[0]);
+
+  const closeModalWithReset = useCallback(() => {
     setIsOpen(false);
-  }
+    const to = setTimeout(() => setSelected(GIVEN_SETTINGS.api.type === "browser" ? plans[1] : plans[0]), 0);
+    return () => clearTimeout(to);
+  }, []);
+
+  const saveToLocal = useCallback((to: 'params' | 'storage') => {
+    const set = selected.id === "browser" ? "browser" : url;
+    switch (to) {
+      case 'params':
+        window.location.search = buildSearchParams(QUERY_API, set);
+        break;
+      case 'storage':
+        setLocalStorage(QUERY_API, set);
+        window.location.reload();
+        break;
+    }
+  }, [selected.id, url]);
 
   function openModal() {
     setIsOpen(true);
   }
 
+  const API = GIVEN_SETTINGS.api;
+
+  
   return (
     <>
       <div
@@ -68,33 +60,22 @@ export default connector(function Settings(props: ToolbarProps) {
           onClick={openModal}
           className="flex flex-row rounded-md text-sm font-medium text-white transition-all items-center justify-between hover:bg-neutral-500/25 bg-neutral-500/0 focus:outline-none focus-visible:ring-1 focus-visible:ring-neutral-300/75"
         >
-          <div className="w-28 h-8 flex flex-row">
-            <ConnectStateViewer
-              state={props.isInit ? "init" : props.busy ? "busy" : "connected"}
-            />
-          </div>
+          <div className="h-8 flex flex-row"></div>
 
           <PlainLabel>
-            <PlugIcon />
-            localhost:8080
+            {API.type === "http" ? <>
+              <PlugIcon />
+              {API.url}  
+            </> : <>
+              <GlobeIcon />
+              Browser
+              </>}
           </PlainLabel>
-
-          <PlainLabel>
-            <GitBranchIcon />
-            J8AZ1M2
-          </PlainLabel>
-
-          <div className="pr-2 text-black">
-            <SettingsIcon
-              size={18}
-              className="group-hover:rotate-45 group-active:rotate-90 transition-transform"
-            />
-          </div>
         </button>
       </div>
 
       <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={closeModal}>
+        <Dialog as="div" className="relative z-10" onClose={closeModalWithReset}>
           <TransitionChild
             as={Fragment}
             enter="ease-out duration-200"
@@ -118,63 +99,31 @@ export default connector(function Settings(props: ToolbarProps) {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                  <Dialog.Title
-                    as="h3"
-                    className="text-lg font-medium leading-6 text-gray-900"
-                  >
-                    Payment successful
-                  </Dialog.Title>
-                  <div className="mt-2">
-                    <p className="text-sm text-gray-500">
-                      Your payment has been successfully submitted. We’ve sent
-                      you an email with all of the details of your order.
-                      Settings
-                      <br />
-                      <br />
-                      use browser-side esmeta
-                      <br />
-                      pre-compute ast performance optimized for browser-side
-                      environments
-                      <br />
-                      Window size
-                    </p>
-                  </div>
+                <DialogPanel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all space-y-4">
+                <DialogTitle as="h3" className="text-xl font-700 leading-6 text-gray-900">
+                    ESMeta Debugger Settings
+                    </DialogTitle>
 
-                  <div className="mt-4">
-                    <button
-                      type="button"
-                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                      onClick={closeModal}
-                    >
-                      Got it, thanks!
-                    </button>
+                    <h4 className="mt-4 text-lg font-700">Connection Mode</h4>
+                    <RadioGroupExample selected={selected} setSelected={setSelected}
+                    options={plans} getId={p => p.id} getIcon={p => p.icon} getLabel={p => p.name} getDescription={p => p.description} />
+                    <h4 className="mt-4 text-lg font-700">API Address</h4>
+                    <input
+                      type="text"
+                      className="border border-gray-300 rounded-md w-full p-2"
+                      placeholder="http://localhost:8080"
+                      disabled={selected.id === "browser"}
+                      value={url}
+                      onChange={e => setUrl(e.target.value)}
+                    />
 
-                    <button
-                      type="button"
-                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                      onClick={closeModal}
-                    >
-                      Got it, thanks!
-                    </button>
-
-                    <button
-                      type="button"
-                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                      onClick={closeModal}
-                    >
-                      Got it, thanks!
-                    </button>
-
-                    <button
-                      type="button"
-                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                      onClick={closeModal}
-                    >
-                      Got it, thanks!
-                    </button>
-                  </div>
-                </Dialog.Panel>
+                  <div className="flex justify-end mt-4 gap-2">
+                      <button className="h-8 px-3 text-xs rounded-lg bg-es-100 font-500 hover:bg-es-200 active:scale-95 transition-all">
+                        Cancel
+                      </button>
+                      <SaveButton value={saveOption} setValue={setSaveOption} save={saveToLocal} />
+                    </div>
+                </DialogPanel>
               </TransitionChild>
             </div>
           </div>
@@ -182,4 +131,32 @@ export default connector(function Settings(props: ToolbarProps) {
       </Transition>
     </>
   );
-});
+}
+
+
+interface Plan {
+  id: string;
+  name: string;
+  description: React.ReactElement<HTMLParagraphElement>;
+  icon: React.ReactElement;
+}
+
+const plans: Plan[] = [
+  {
+    id: "http",
+    name: "Connect to ESMeta API Server",
+    description: (
+      <p className="inline">
+        Install ESMeta and run{" "}
+        <code className="inline rounded">esmeta web</code>
+      </p>
+    ),
+    icon: <MonitorIcon />,
+  },
+  {
+    id: "browser",
+    name: "Run ESMeta on Web Browser",
+    description: <p className="inline">No configuration needed.</p>,
+    icon: <GlobeIcon />,
+  },
+];
