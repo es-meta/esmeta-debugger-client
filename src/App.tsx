@@ -1,43 +1,35 @@
-import React, { useEffect, useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
+import { useEffect } from "react";
+import { toast, ToastContainer, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "@/styles/ReactToastify.css";
 
 import Header from "@/components/custom/Header";
-import DebuggerApp from "@/features/DebuggerApp";
+import DebuggerApp from "@/features/debugger-app/DebuggerApp";
 import { IS_DEBUG } from "./constants/constant";
 import CookiePopup from "./CookiePopup";
 
-const App = () => {
+export default function App() {
+  useAppInitializer();
+
   return (
-    <div className="min-h-dvh bg-neutral-100 pb-16">
-      <ToastContainer autoClose={3000} hideProgressBar={true} />
+    <div className="min-h-dvh bg-neutral-100 dark:bg-neutral-800 pb-16">
+      <ToastContainer autoClose={3000} transition={Slide} />
       <Header />
-      <WarnDebugMode />
       <DebuggerApp />
     </div>
   );
-};
+}
 
-export default App;
-
-function WarnDebugMode() {
-  useEffect(() => {
-    toast.info(
-      <p>
-        {`This app use cookies to enhace user experience.`}
-        <CookiePopup />{" "}
-      </p>,
-      {
-        autoClose: false,
-      },
-    );
+function useAppInitializer() {
+  return useEffect(() => {
+    toast.info(<CookiePopup />, { autoClose: false });
 
     if (IS_DEBUG)
       toast.warn(
-        `Warning: This app is running in development mode,
-      which can cause weird behaviors. Please use 'npm start'.`,
+        <p>
+          This app is running in development mode. Please use{" "}
+          <code>npm start</code> instead.
+        </p>,
       );
-  });
-
-  return null;
+  }, []);
 }
