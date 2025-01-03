@@ -6,10 +6,12 @@ import {
   SpecActionType,
   updateAlgoSuccess,
   updateAlgoListSuccess,
+  SpecVersion,
+  updateVersionSuccess,
 } from "../store/reducers/Spec";
 import { updateRange } from "../store/reducers/JS";
 import { AppState, AppStateActionType, move } from "../store/reducers/AppState";
-import { doAPIGetRequest } from "../util/api";
+import { doAPIGetRequest } from "../util/api/api";
 
 // get algorithm by cid
 function* updateByCidSaga() {
@@ -75,7 +77,26 @@ function* updateAlgoListSaga() {
   );
 }
 
+// update algorithm list
+function* updateVersionInfo() {
+  function* _updateVersionInfo() {
+      try {
+        yield put({ type: AppStateActionType.SEND });
+        const raw: SpecVersion = yield call(() =>
+          doAPIGetRequest(`spec/version`),
+        );
+        yield put({ type: AppStateActionType.RECIEVE });
+        yield put(updateVersionSuccess(raw));
+      } catch (e: unknown) {
+        // show error toast
+        toast.error((e as Error).message);
+        console.error(e);
+      }
+  }
+  yield takeLatest(SpecActionType.UPDATE_VERSION_REQUEST, _updateVersionInfo);
+}
+
 // spec sagas
 export default function* specSaga() {
-  yield all([updateByCidSaga(), updateAlgoListSaga()]);
+  yield all([updateByCidSaga(), updateAlgoListSaga(), updateVersionInfo()]);
 }

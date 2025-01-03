@@ -3,12 +3,14 @@
 // redux actions
 export enum DebuggerActionType {
   RUN = "DebuggerAction/RUN",
+  RESUME_FROM_ITER = "DebuggerAction/RESUME_FROM_ITER",
   STOP = "DebuggerAction/STOP",
   SPEC_STEP = "DebuggerAction/STEP",
   SPEC_STEP_OUT = "DebuggerAction/STEP_OUT",
   SPEC_STEP_OVER = "DebuggerAction/STEP_OVER",
   SPEC_STEP_BACK = "DebuggerAction/STEP_BACK",
   SPEC_STEP_BACK_OVER = "DebuggerAction/STEP_BACK_OVER",
+  SPEC_STEP_BACK_OUT = "DebuggerAction/STEP_BACK_OUT",
   JS_STEP = "DebuggerAction/JS_STEP",
   JS_STEP_OUT = "DebuggerAction/JS_STEP_OUT",
   JS_STEP_OVER = "DebuggerAction/JS_STEP_OVER",
@@ -16,6 +18,9 @@ export enum DebuggerActionType {
 }
 export const run = (): DebuggerAction => ({
   type: DebuggerActionType.RUN,
+});
+export const resumeFromIter = (): DebuggerAction => ({
+  type: DebuggerActionType.RESUME_FROM_ITER,
 });
 export const stop = (): DebuggerAction => ({
   type: DebuggerActionType.STOP,
@@ -35,6 +40,9 @@ export const specStepBack = (): DebuggerAction => ({
 export const specStepBackOver = (): DebuggerAction => ({
   type: DebuggerActionType.SPEC_STEP_BACK_OVER,
 });
+export const specStepBackOut = (): DebuggerAction => ({
+  type: DebuggerActionType.SPEC_STEP_BACK_OUT,
+});
 export const jsStep = (): DebuggerAction => ({
   type: DebuggerActionType.JS_STEP,
 });
@@ -50,6 +58,9 @@ export const specContinue = (): DebuggerAction => ({
 export type DebuggerAction =
   | {
       type: DebuggerActionType.RUN;
+    }
+  | {
+      type: DebuggerActionType.RESUME_FROM_ITER;
     }
   | {
       type: DebuggerActionType.STOP;
@@ -68,6 +79,9 @@ export type DebuggerAction =
     }
   | {
       type: DebuggerActionType.SPEC_STEP_BACK_OVER;
+    }
+  | {
+      type: DebuggerActionType.SPEC_STEP_BACK_OUT;
     }
   | {
       type: DebuggerActionType.JS_STEP;

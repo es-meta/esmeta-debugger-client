@@ -12,8 +12,9 @@ import {
 } from "../store/reducers/IrState";
 import { clearJS } from "../store/reducers/JS";
 import { clearAlgo } from "../store/reducers/Spec";
-import { doAPIPostRequest } from "../util/api";
-import { Route } from "@/util/route.type";
+import { doAPIPostRequest } from "../util/api/api";
+import { Route } from "@/types/route.type";
+import { GIVEN_SETTINGS } from "@/constants/settings";
 
 // run debugger saga
 function* runSaga() {
@@ -40,6 +41,44 @@ function* runSaga() {
     }
   }
   yield takeLatest(DebuggerActionType.RUN, _runSaga);
+}
+
+// resume from iter debugger saga
+function* resumeFromIterSaga() {
+  function* _resumeFromIterSaga() {
+    try {
+      // get code, breakpoints
+      const state: ReduxState = yield select();
+      const code = state.js.code;
+      const breakpoints = state.breakpoint.items.map(_ => serialize(_));
+
+      const iter =
+        GIVEN_SETTINGS.origin.type === "visualizer"
+          ? GIVEN_SETTINGS.origin.iter
+          : null;
+
+      if (iter === null) {
+        throw new Error("No iter given");
+      }
+
+      // run server debugger with js code and breakpoints
+      yield put({ type: AppStateActionType.SEND });
+      yield call(() =>
+        doAPIPostRequest("exec/resumeFromIter", [code, breakpoints, iter]),
+      );
+      yield put({ type: AppStateActionType.RECIEVE });
+      // move app state to DEBUG_READY
+      yield put(move(AppState.DEBUG_READY));
+      // update heap, call stack
+      yield put(updateHeapRequest());
+      yield put(updateCallStackRequest());
+    } catch (e: unknown) {
+      // show error toast
+      // toast.error((e as Error).message);
+      console.error(e);
+    }
+  }
+  yield takeLatest(DebuggerActionType.RESUME_FROM_ITER, _resumeFromIterSaga);
 }
 
 // stop debugger saga
@@ -136,6 +175,13 @@ function* specStepBackOverSaga() {
     mkStepSaga("exec/specStepBackOver"),
   );
 }
+// spec step back out saga
+function* specStepBackOutSaga() {
+  yield takeLatest(
+    DebuggerActionType.SPEC_STEP_BACK_OUT,
+    mkStepSaga("exec/specStepBackOut"),
+  );
+}
 // spec continue saga
 function* specContinueSaga() {
   yield takeLatest(
@@ -169,12 +215,14 @@ function* jsStepOutSaga() {
 export default function* debuggerSaga() {
   yield all([
     runSaga(),
+    resumeFromIterSaga(),
     stopSaga(),
     specStepSaga(),
     specStepOverSaga(),
     specStepOutSaga(),
     specStepBackSaga(),
     specStepBackOverSaga(),
+    specStepBackOutSaga(),
     jsStepSaga(),
     jsStepOverSaga(),
     jsStepOutSaga(),

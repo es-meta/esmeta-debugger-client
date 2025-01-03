@@ -1,5 +1,4 @@
-import { FALLBACK_CODE, QUERY_PROG } from "@/constants/constant";
-import { getSearchQuery } from "@/util/query.util";
+import { GIVEN_SETTINGS } from "@/constants/settings";
 import produce from "immer";
 
 // redux actions
@@ -42,7 +41,7 @@ type JSState = {
   end: number;
 };
 const initialState: JSState = {
-  code: getSearchQuery(QUERY_PROG) || FALLBACK_CODE,
+  code: GIVEN_SETTINGS.code,
   start: -1,
   end: -1,
 };

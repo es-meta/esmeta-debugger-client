@@ -46,7 +46,7 @@ type AppStateState = {
 
 const initialState: AppStateState = { state: AppState.INIT, busy: -0 };
 
-import { workingset } from "@/util/api";
+import { workingset } from "@/util/api/api";
 
 // reducer
 export default function reducer(state = initialState, action: AppStateAction) {

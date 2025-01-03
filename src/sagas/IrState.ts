@@ -12,7 +12,7 @@ import {
   updateCallStackSuccess,
 } from "../store/reducers/IrState";
 import { updateAlgoByCidRequset } from "../store/reducers/Spec";
-import { doAPIGetRequest } from "../util/api";
+import { doAPIGetRequest } from "../util/api/api";
 import { AppStateActionType } from "@/store/reducers/AppState";
 
 // heap saga
