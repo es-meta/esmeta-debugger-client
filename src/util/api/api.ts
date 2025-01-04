@@ -4,10 +4,15 @@ import { GIVEN_SETTINGS } from "@/constants/settings";
 
 // Create worker instance
 const workerPromise = new Promise<Worker>(resolve => {
-  const w = new Worker(new URL("./api.worker.ts", import.meta.url));
-  w.postMessage({ type: "META", value: GIVEN_SETTINGS.api });
-  resolve(w);
-});
+  const GIVEN_API = GIVEN_SETTINGS.api;
+  if (GIVEN_API.type === 'browser') {
+    resolve(new Worker(new URL("./esmeta.worker.ts", import.meta.url)));
+  } else {
+    const w = new Worker(new URL("./http.worker.ts", import.meta.url));
+    w.postMessage({ type: "META", value: GIVEN_API.url });
+    resolve(w);
+  }
+})
 
 // Request counter for unique IDs
 // XXX if need better atomics const ta = new Uint8Array(new SharedArrayBuffer(1));

@@ -6,7 +6,6 @@ let API_HOST: string = 'http://localhost:8080';
 
 import type { HTTPMethod } from "./worker/schema.types";
 
-const z = import("./worker/schema.types").then((z) => z);
 
 // json header
 const mkJSONHeader = (): Record<string, string> => {
@@ -96,8 +95,8 @@ self.onmessage = async (e: MessageEvent) => {
     let result;
     switch (type) {
       case "META":
-        // TODO
-        //  console.log((await z).number().parse(1));
+        API_HOST = data;
+        result = API_HOST;
         break;
       case "GET":
         result = await doGetRequest(API_HOST, endpoint, data);
