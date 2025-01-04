@@ -9,7 +9,7 @@ const workerPromise = new Promise<Worker>(resolve => {
     resolve(new Worker(new URL("./esmeta.worker.ts", import.meta.url)));
   } else {
     const w = new Worker(new URL("./http.worker.ts", import.meta.url));
-    w.postMessage({ type: "META", value: GIVEN_API.url });
+    w.postMessage({ type: "META", data: GIVEN_API.url });
     resolve(w);
   }
 })
