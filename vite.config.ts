@@ -25,7 +25,7 @@ export default defineConfig({
 	resolve: {
 		alias: {
       "@": path.resolve(__dirname, "./src"),
-      "@scala": path.resolve(__dirname, "./scalajs"),
+      "@esmeta": path.resolve(__dirname, "./scalajs/target/scala-3.3.3/esmeta-worker-opt"),
 		},
 	},
 });

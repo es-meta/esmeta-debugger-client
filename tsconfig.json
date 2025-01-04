@@ -21,7 +21,7 @@
     "jsx": "react-jsx",
     "paths": {
 			"@/*": ["./src/*"],
-			"@scala/*": ["./scalajs/*"]
+			"@esmeta/*": ["./scalajs/target/scala-3.3.3/esmeta-worker-opt/*"]
 		}
   },
   "include": [
