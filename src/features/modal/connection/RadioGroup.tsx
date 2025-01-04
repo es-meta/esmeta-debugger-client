@@ -1,5 +1,5 @@
 import { Radio, RadioGroup } from "@headlessui/react";
-import { CheckCircle2Icon, } from "lucide-react";
+import { CheckCircle2Icon } from "lucide-react";
 import React, { type SetStateAction, type Dispatch } from "react";
 
 interface Props<T> {
@@ -13,12 +13,14 @@ interface Props<T> {
 }
 
 export default function RadioGroupExample<T>({
-  selected, options, setSelected,
+  selected,
+  options,
+  setSelected,
   getId,
   getIcon,
   getLabel,
-  getDescription, }: Props<T>) {
-  
+  getDescription,
+}: Props<T>) {
   return (
     <div className="w-full">
       <div className="mx-auto w-full max-w-md">

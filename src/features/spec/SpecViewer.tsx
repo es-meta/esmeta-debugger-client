@@ -36,18 +36,7 @@ export default function SpecViewer() {
 
   return (
     <Card>
-      <CardHeader title="ECMAScript Specification">
-        {/* <a href="https://tc39.es/ecma262/" target="_blank" rel="noreferrer">
-          <LinkIcon />
-        </a>
-        <button
-          className="hover:scale-95 active:scale-90 transition-transform"
-          onClick={() => setLocked(!locked)}
-        >
-          {locked ? <LockIcon /> : <LockOpenIcon />}
-        </button> */}
-        {/* <SpecVersionView /> */}
-      </CardHeader>
+      <CardHeader title="ECMAScript Specification"></CardHeader>
       <div className="size-full overflow-y-scroll">
         {viewType === SpecViewType.ALGORITHM ? (
           <AlgoViewer {...props} />

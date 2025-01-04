@@ -4,6 +4,7 @@ import { v4 as uuid } from "uuid";
 
 import { Environment } from "@/store/reducers/IrState";
 import { connector, type SpecEnvViewerProps } from "./SpecEnvViewer.radix";
+import StateViewerItem from "../StateViewerItem";
 
 export default connector(function SpecEnvViewer(props: SpecEnvViewerProps) {
   const { callStack, contextIdx } = props.irState;
@@ -17,6 +18,7 @@ export default connector(function SpecEnvViewer(props: SpecEnvViewerProps) {
   );
 
   return (
+    <StateViewerItem header="Environment">
     <table className="w-full border-y border-y-neutral-300">
       <thead>
         <tr>
@@ -39,6 +41,7 @@ export default connector(function SpecEnvViewer(props: SpecEnvViewerProps) {
           </tr>
         ))}
       </tbody>
-    </table>
+      </table>
+    </StateViewerItem>
   );
 });

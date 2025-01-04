@@ -6,7 +6,11 @@ export function getSearchQuery(name: string): string | null {
 
 export function buildSearchParams(name: string, value: string | null): string {
   const search = new URLSearchParams(location.search);
-  if (value === null){ search.delete(name)} else {search.set(name, value);}
+  if (value === null) {
+    search.delete(name);
+  } else {
+    search.set(name, value);
+  }
   return `?${search.toString()}`;
 }
 

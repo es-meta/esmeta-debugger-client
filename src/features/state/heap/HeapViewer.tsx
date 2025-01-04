@@ -4,6 +4,7 @@ import MyCombobox from "@/components/combobox/MyCombobox";
 import { CopyIcon } from "lucide-react";
 
 import { connector, type HeapViewerProps } from "./HeapViewer.redux";
+import StateViewerItem from "../StateViewerItem";
 
 export default connector(function HeapViewer({ heap }: HeapViewerProps) {
   const [addr, setAddr] = useState("");
@@ -24,15 +25,17 @@ export default connector(function HeapViewer({ heap }: HeapViewerProps) {
   }, [obj]);
 
   return (
-    <div className="w-full">
-      <div className="flex flex-row items-center w-full">
-        <MyCombobox values={addrs} value={addr} onChange={setAddr} />
-        <button onClick={handleCopy}>
-          <CopyIcon />
-        </button>
-      </div>
+    <StateViewerItem header="Heap Viewer">
+      <div className="w-full">
+        <div className="flex flex-row items-center w-full">
+          <MyCombobox values={addrs} value={addr} onChange={setAddr} />
+          <button onClick={handleCopy}>
+            <CopyIcon />
+          </button>
+        </div>
 
-      <pre className="p-4 bg-neutral-200">{obj || "NOT FOUND"}</pre>
-    </div>
+        <pre className="p-4 bg-neutral-200">{obj || "NOT FOUND"}</pre>
+      </div>
+    </StateViewerItem>
   );
 });

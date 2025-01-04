@@ -5,16 +5,16 @@ import {
   ListboxOptions,
 } from "@headlessui/react";
 import { CheckIcon, ChevronDownIcon } from "lucide-react";
-import { Dispatch, SetStateAction, useCallback, } from "react";
+import { Dispatch, SetStateAction, useCallback } from "react";
 
 interface SaveOption {
-  id: 'params' | 'storage' ;
+  id: "params" | "storage";
   name: string;
 }
 
 export const opts: SaveOption[] = [
-  { id: 'params', name: "Save for this Tab (Requires Refresh)" },
-  { id: 'storage', name: "Save for This Browser (Requires Refresh)" },
+  { id: "params", name: "Save for this Tab (Requires Refresh)" },
+  { id: "storage", name: "Save for This Browser (Requires Refresh)" },
 ];
 
 interface Props {
@@ -56,11 +56,10 @@ function Example({ value, setValue }: Props) {
 interface MainProps {
   value: SaveOption;
   setValue: Dispatch<SetStateAction<SaveOption>>;
-  save: (to : 'params' | 'storage') => void;
+  save: (to: "params" | "storage") => void;
 }
 
 export default function SaveButton({ value, setValue, save }: MainProps) {
-  
   const handleClick = useCallback(() => {
     save(value.id);
   }, [save, value.id]);
@@ -69,7 +68,8 @@ export default function SaveButton({ value, setValue, save }: MainProps) {
     <div className="flex gap-[1px]">
       <button
         className="h-8 px-3 text-xs rounded-l-lg bg-es-100 font-500 hover:bg-es-200 active:scale-95 transition-all"
-        onClick={handleClick}>
+        onClick={handleClick}
+      >
         {value.name}
       </button>
       <Example value={value} setValue={setValue} />

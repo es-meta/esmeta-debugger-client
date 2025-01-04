@@ -2,10 +2,9 @@
 
 // const API_HOST = "http://localhost:8080";
 
-let API_HOST: string = 'http://localhost:8080';
+let API_HOST: string = "http://localhost:8080";
 
 import type { HTTPMethod } from "./worker/schema.types";
-
 
 // json header
 const mkJSONHeader = (): Record<string, string> => {

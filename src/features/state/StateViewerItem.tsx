@@ -1,28 +1,38 @@
-import type { ReactElement } from "react";
+import type { ReactNode } from "react";
 import Card from "@/components/layout/Card";
 import CardHeader from "@/components/layout/CardHeader";
-import { twJoin } from "tailwind-merge";
+import { ReduxState } from "@/store";
+import { AppState } from "@/store/reducers/AppState";
+import { useSelector } from "react-redux";
 
 // State viewer item
 interface StateViewerItemProps {
-  disabled: boolean;
   header: string;
-  body: ReactElement;
+  children?: ReactNode;
 }
 
+const selector = (st: ReduxState) => ({
+  disabled: !(
+    st.appState.state === AppState.DEBUG_READY_AT_FRONT ||
+    st.appState.state === AppState.DEBUG_READY ||
+    st.appState.state === AppState.TERMINATED
+  ),
+});
+
 export default function StateViewerItem(props: StateViewerItemProps) {
-  const { disabled, header, body } = props;
+  const { header, children } = props;
+  const { disabled } = useSelector(selector);
+
   return (
     <Card>
       <CardHeader title={header} />
-      <div className={twJoin("relative size-full overflow-y-scroll")}>
-        {body}
-      </div>
-      {disabled && (
-        <div className="absolute top-8 left-0 right-0 bottom-0 bg-white bg-opacity-90 z-1 flex flex-col items-center justify-center">
+      <div className="relative size-full overflow-y-scroll">
+        {disabled ? (
           <p className="text-neutral-600">Disabled. Start debugger to use.</p>
-        </div>
-      )}
+        ) : (
+          children
+        )}
+      </div>
     </Card>
   );
 }

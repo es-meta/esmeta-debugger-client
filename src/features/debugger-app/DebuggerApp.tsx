@@ -1,12 +1,10 @@
 // layouts
 import SpecViewer from "@/features/spec/SpecViewer";
 import Toolbar from "@/features/toolbar/Toolbar";
-import {
-  ConnectedBPViewer,
-  ConnectedCallStackViewer,
-  ConnectedEnvViewer,
-  ConnectedHeapViewer,
-} from "@/features/state/StateViewer";
+import CallStackViewer from "@/features/state/callstack/CallStackViewer";
+import SpecEnvViewer from "@/features/state/env/SpecEnvViewer";
+import HeapViewer from "@/features/state/heap/HeapViewer";
+import Breakpoints from "@/features/state/breakpoint/Breakpoints";
 import JSEditor from "@/features/js-editor/JSEditor";
 import { layouts } from "./DebuggerApp.layout";
 import { Responsive, WidthProvider } from "react-grid-layout";
@@ -23,7 +21,10 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ReduxState } from "@/store";
 import { AppState } from "@/store/reducers/AppState";
-import { updateAlgoListRequest, updateVersionRequest } from "@/store/reducers/Spec";
+import {
+  updateAlgoListRequest,
+  updateVersionRequest,
+} from "@/store/reducers/Spec";
 
 // App component
 export default function DebuggerApp() {
@@ -43,16 +44,16 @@ export default function DebuggerApp() {
           <SpecViewer />
         </div>
         <div key="calls" className="relative">
-          <ConnectedCallStackViewer />
+          <CallStackViewer />
         </div>
         <div key="envir" className="relative">
-          <ConnectedEnvViewer />
+          <SpecEnvViewer />
         </div>
         <div key="heapv" className="relative">
-          <ConnectedHeapViewer />
+          <HeapViewer />
         </div>
         <div key="break" className="relative">
-          <ConnectedBPViewer />
+          <Breakpoints />
         </div>
         <div key="jsedi" className="relative">
           <JSEditor />

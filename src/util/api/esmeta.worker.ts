@@ -1,19 +1,19 @@
 /// <reference lib="webworker" />
 
 // import type { ApiMessageData } from './message.type';
-import type { ScalaJSDebuggerService } from './esmeta.type';
+import type { ScalaJSDebuggerService } from "./esmeta.type";
 
 //////////////////////// import from Scala.js /////////////////////////
 
 let ESMetaDebugger: Promise<ScalaJSDebuggerService> = (async () => {
-  const module = await import('@esmeta/main.mjs');
-  const mokcing = (await (await module.DebuggerServiceFactory).build(""));
+  const module = await import("@esmeta/main.mjs");
+  const mokcing = await (await module.DebuggerServiceFactory).build("");
   return mokcing;
 })();
 
 ////////////////////////////////////////////////////////////////////////
 
-const apiError =(s : string) => new Error(`Unknown API endpoint ${s}`);
+const apiError = (s: string) => new Error(`Unknown API endpoint ${s}`);
 
 // HTTP methods
 type HTTPMethod =
@@ -30,32 +30,34 @@ const doGetRequest = async (
   endpoint: Route,
   queryObj?: { [key: string]: unknown },
 ): Promise<unknown> => {
-
   switch (endpoint) {
-    case 'spec/func':
+    case "spec/func":
       return JSON.parse((await ESMetaDebugger).spec_func());
-    
-    case 'spec/version':
-      return JSON.parse((await ESMetaDebugger).spec_version());
-    
-    case 'state/heap':
-      return JSON.parse((await ESMetaDebugger).state_heap());
-    
-    case 'state/callStack':
-      return JSON.parse((await ESMetaDebugger).state_callStack());
-    
-    default:
 
-      if (endpoint.startsWith('state/context/')) {
+    case "spec/version":
+      return JSON.parse((await ESMetaDebugger).spec_version());
+
+    case "state/heap":
+      return JSON.parse((await ESMetaDebugger).state_heap());
+
+    case "state/callStack":
+      return JSON.parse((await ESMetaDebugger).state_callStack());
+
+    default:
+      if (endpoint.startsWith("state/context/")) {
         // @ts-expect-error TODO type definition
-        return JSON.parse((await ESMetaDebugger).state_context(Number(endpoint.split('/').at(2))));
+        return JSON.parse(
+          (await ESMetaDebugger).state_context(
+            Number(endpoint.split("/").at(2)),
+          ),
+        );
       }
 
       throw apiError(endpoint);
   }
 };
 
-import { Route } from '@/types/route.type';
+import { Route } from "@/types/route.type";
 
 // raw POST-like request
 const doWriteRequest = async (
@@ -63,88 +65,101 @@ const doWriteRequest = async (
   endpoint: Route,
   bodyObj?: string,
 ): Promise<unknown> => {
-
   switch (endpoint) {
-      
-    case 'breakpoint':
-      console.log('got breakpoint request')
+    case "breakpoint":
+      console.log("got breakpoint request");
       switch (method) {
-        case 'POST':
+        case "POST":
           // @ts-expect-error TODO type definition
-          return JSON.parse((await ESMetaDebugger).breakpoint_add( bodyObj !== undefined ? JSON.stringify(bodyObj) : undefined));
-        case 'DELETE':
+          return JSON.parse(
+            (await ESMetaDebugger).breakpoint_add(
+              bodyObj !== undefined ? JSON.stringify(bodyObj) : undefined,
+            ),
+          );
+        case "DELETE":
           // @ts-expect-error TODO type definition
-          return JSON.parse((await ESMetaDebugger).breakpoint_remove( bodyObj !== undefined ? JSON.stringify(bodyObj) : undefined));
-        case 'PUT':
+          return JSON.parse(
+            (await ESMetaDebugger).breakpoint_remove(
+              bodyObj !== undefined ? JSON.stringify(bodyObj) : undefined,
+            ),
+          );
+        case "PUT":
           // @ts-expect-error TODO type definition
-          return JSON.parse((await ESMetaDebugger).breakpoint_toggle( bodyObj !== undefined ? JSON.stringify(bodyObj) : undefined));
+          return JSON.parse(
+            (await ESMetaDebugger).breakpoint_toggle(
+              bodyObj !== undefined ? JSON.stringify(bodyObj) : undefined,
+            ),
+          );
         default:
           throw apiError(endpoint);
       }
-  
 
-    case 'exec/run':
+    case "exec/run":
       // @ts-expect-error TODO type definition
-      return JSON.parse((await ESMetaDebugger).exec_run( bodyObj !== undefined ? JSON.stringify(bodyObj) : undefined));
-    
-    case 'exec/specStep':
+      return JSON.parse(
+        (await ESMetaDebugger).exec_run(
+          bodyObj !== undefined ? JSON.stringify(bodyObj) : undefined,
+        ),
+      );
+
+    case "exec/specStep":
       return JSON.parse((await ESMetaDebugger).exec_step());
-    case 'exec/specStepOver':
+    case "exec/specStepOver":
       return JSON.parse((await ESMetaDebugger).exec_stepOver());
 
-    case 'exec/specStepOut':
+    case "exec/specStepOut":
       return JSON.parse((await ESMetaDebugger).exec_stepOut());
 
-    case 'exec/specContinue':
+    case "exec/specContinue":
       return JSON.parse((await ESMetaDebugger).exec_continue());
-    
-    case 'exec/specStepBack':
+
+    case "exec/specStepBack":
       return JSON.parse((await ESMetaDebugger).exec_stepBack());
-    
-    case 'exec/specStepBackOut':
+
+    case "exec/specStepBackOut":
       return JSON.parse((await ESMetaDebugger).exec_stepBackOut());
-    
-    case 'exec/specStepBackOver':
+
+    case "exec/specStepBackOver":
       return JSON.parse((await ESMetaDebugger).exec_stepBackOver());
 
-      
-    case 'exec/esStep':
+    case "exec/esStep":
       return JSON.parse((await ESMetaDebugger).exec_esStep());
-    case 'exec/esStepOver':
+    case "exec/esStepOver":
       return JSON.parse((await ESMetaDebugger).exec_esStepOver());
-      
-    case 'exec/esStepOut':
+
+    case "exec/esStepOut":
       return JSON.parse((await ESMetaDebugger).exec_esStepOut());
 
     default:
       throw apiError(endpoint);
-    }
-
+  }
 };
 
 self.onmessage = async (e: MessageEvent<any>) => {
   const { id, type, endpoint, data } = e.data;
-  
+
   try {
     let result;
     switch (type) {
-      case 'GET':
-        result = await doGetRequest( endpoint, data);
+      case "GET":
+        result = await doGetRequest(endpoint, data);
         break;
-      case 'POST': case 'PUT': case 'DELETE':
+      case "POST":
+      case "PUT":
+      case "DELETE":
         result = await doWriteRequest(type, endpoint, data);
         break;
       default:
         throw new Error(`Unsupported request type: ${type}`);
     }
-    
+
     self.postMessage({ id, success: true, data: result });
   } catch (error) {
-    console.error('error', error);
-    self.postMessage({ 
-      id, 
-      success: false, 
-      error: (error as Error).message 
+    console.error("error", error);
+    self.postMessage({
+      id,
+      success: false,
+      error: (error as Error).message,
     });
   }
 };

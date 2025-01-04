@@ -4,7 +4,9 @@ import { AppState } from "@/store/reducers/AppState";
 
 export const selector = (st: ReduxState) => ({
   disableRun: !(st.appState.state === AppState.JS_INPUT),
-  disableResume: !(st.appState.state === AppState.JS_INPUT) && GIVEN_SETTINGS.origin.iter !== null,
+  disableResume:
+    !(st.appState.state === AppState.JS_INPUT) &&
+    GIVEN_SETTINGS.origin.iter !== null,
   disableQuit:
     st.appState.state === AppState.INIT ||
     st.appState.state === AppState.JS_INPUT,

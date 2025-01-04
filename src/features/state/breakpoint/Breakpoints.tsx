@@ -9,6 +9,7 @@ import { BreakpointType } from "@/store/reducers/Breakpoint";
 import { connector, type BreakpointsProps } from "./Breakpoints.redux";
 import BreakpointItem from "./BreakpointItem";
 import { PlusIcon } from "lucide-react";
+import StateViewerItem from "../StateViewerItem";
 
 // TODO add util buttons
 // delete all
@@ -43,7 +44,7 @@ export default connector(function Breakpoints(props: BreakpointsProps) {
   // }, [onAddClick]);
 
   return (
-    <div>
+    <StateViewerItem header="Breakpoints">
       <div className="flex flex-row items-center w-full">
         <MyCombobox
           value={algoName}
@@ -74,6 +75,6 @@ export default connector(function Breakpoints(props: BreakpointsProps) {
           ))}
         </tbody>
       </table>
-    </div>
+    </StateViewerItem>
   );
 });

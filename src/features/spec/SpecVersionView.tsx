@@ -5,7 +5,13 @@ import {
   Transition,
   TransitionChild,
 } from "@headlessui/react";
-import { GitCommitIcon, GitCommitVerticalIcon, InfoIcon, SettingsIcon, TagIcon } from "lucide-react";
+import {
+  GitCommitIcon,
+  GitCommitVerticalIcon,
+  InfoIcon,
+  SettingsIcon,
+  TagIcon,
+} from "lucide-react";
 import { Fragment, useCallback, useState } from "react";
 import { GitBranchIcon, PlugIcon } from "lucide-react";
 
@@ -19,12 +25,10 @@ import { CLIENT_VERSION } from "@/constants/constant";
 export default function SpecVersionView() {
   let [isOpen, setIsOpen] = useState(false);
 
-  const { version, isInit } = useSelector(
-    (state: ReduxState) => ({
-      version: state.spec.version,
-      isInit: state.appState.state === AppState.INIT,
-    })
-  );
+  const { version, isInit } = useSelector((state: ReduxState) => ({
+    version: state.spec.version,
+    isInit: state.appState.state === AppState.INIT,
+  }));
 
   const versionString = versionStringBuilder(version, isInit);
 
@@ -54,7 +58,6 @@ export default function SpecVersionView() {
             <GitBranchIcon />
             {versionString}
           </PlainLabel>
-
         </button>
       </div>
 
@@ -84,22 +87,26 @@ export default function SpecVersionView() {
                 leaveTo="opacity-0 scale-95"
               >
                 <DialogPanel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all space-y-3">
-                  <DialogTitle as="h3" className="text-xl font-700 leading-6 text-gray-900">
+                  <DialogTitle
+                    as="h3"
+                    className="text-xl font-700 leading-6 text-gray-900"
+                  >
                     Versions
                   </DialogTitle>
 
-                  <h4 className="mt-4 text-lg font-700">ECMA-262 (Specification) Version</h4>
+                  <h4 className="mt-4 text-lg font-700">
+                    ECMA-262 (Specification) Version
+                  </h4>
                   {/* <RadioGroupExample /> */}
 
-                  
                   <div className="flex flex-col gap-1">
-                  <PlainLabel>
-                    <TagIcon />
-                    {version.tag || 'unknown tag'}
-                  </PlainLabel>
-                  <PlainLabel>
-                    <GitCommitIcon />
-                    {version.hash || 'unknown commit hash'}
+                    <PlainLabel>
+                      <TagIcon />
+                      {version.tag || "unknown tag"}
+                    </PlainLabel>
+                    <PlainLabel>
+                      <GitCommitIcon />
+                      {version.hash || "unknown commit hash"}
                     </PlainLabel>
                   </div>
 
@@ -108,12 +115,13 @@ export default function SpecVersionView() {
                     <InfoIcon />
                     to be implemented
                   </PlainLabel>
-                  <h4 className="mt-4 text-lg font-700">ESMeta Debugger Client Version</h4>
+                  <h4 className="mt-4 text-lg font-700">
+                    ESMeta Debugger Client Version
+                  </h4>
                   <PlainLabel>
                     <InfoIcon />
                     {CLIENT_VERSION}
                   </PlainLabel>
-
                 </DialogPanel>
               </TransitionChild>
             </div>

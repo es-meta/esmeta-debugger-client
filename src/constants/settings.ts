@@ -35,31 +35,40 @@ const GIVEN_CODE = getSearchQuery(QUERY_PROG) || FALLBACK_CODE;
 /////// api endpoint ///////
 export const QUERY_API = "api";
 const FALLBACK_API_URl = "http://localhost:8080";
-const GIVEN_API: {
-  type: "browser";
-} | {
-  type: "http";
-  url: string;
-  error: boolean;
-  rawUrl: string | null;
-} = (() => {
-    // should allow empty string
-    let api = getSearchQuery(QUERY_API)
-
-    if (api === null) {
-      api = getLocalStorage(QUERY_API);
+const GIVEN_API:
+  | {
+      type: "browser";
     }
+  | {
+      type: "http";
+      url: string;
+      error: boolean;
+      rawUrl: string | null;
+    } = (() => {
+  // should allow empty string
+  let api = getSearchQuery(QUERY_API);
+
+  if (api === null) {
+    api = getLocalStorage(QUERY_API);
+  }
 
   if (api === "browser") {
     return { type: "browser" };
   } else {
     try {
-      console.warn(api)
+      console.warn(api);
       if (api === null) throw new Error("API URL is not set");
       new URL(api);
-      return { type: "http", url: api || FALLBACK_API_URl, error: false, rawUrl: api };
+      return {
+        type: "http",
+        url: api || FALLBACK_API_URl,
+        error: false,
+        rawUrl: api,
+      };
     } catch {
-      console.error(`Invalid API URL: ${api}. Using fallback URL: ${FALLBACK_API_URl}`);
+      console.error(
+        `Invalid API URL: ${api}. Using fallback URL: ${FALLBACK_API_URl}`,
+      );
       return { type: "http", url: FALLBACK_API_URl, error: true, rawUrl: api };
     }
   }
@@ -68,17 +77,17 @@ const GIVEN_API: {
 /////// given origin ///////
 const GIVEN_ORIGIN:
   | { type: "visualizer"; iter: number }
-  | { type: "none"; iter: null } = ((() => { 
-    const iter = Number(getSearchQuery("iter") || undefined);
+  | { type: "none"; iter: null } = (() => {
+  const iter = Number(getSearchQuery("iter") || undefined);
 
-    if (Number.isNaN(iter)) {
-      return { type: "none", iter: null };
-    } else {
-      return { type: "visualizer", iter };
-    }
-  })());
+  if (Number.isNaN(iter)) {
+    return { type: "none", iter: null };
+  } else {
+    return { type: "visualizer", iter };
+  }
+})();
 
-// TODO use appstate 
+// TODO use appstate
 /////// settings ///////
 export const GIVEN_SETTINGS = Object.freeze({
   code: GIVEN_CODE,

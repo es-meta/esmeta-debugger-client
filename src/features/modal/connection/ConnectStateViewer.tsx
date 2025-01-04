@@ -1,5 +1,11 @@
 import { motion, AnimatePresence } from "motion/react";
-import { CheckIcon, CogIcon, GlobeIcon, Loader2Icon, PlugIcon } from "lucide-react";
+import {
+  CheckIcon,
+  CogIcon,
+  GlobeIcon,
+  Loader2Icon,
+  PlugIcon,
+} from "lucide-react";
 import {
   CircleCheckBigIcon,
   LoaderPinwheelIcon,
@@ -18,49 +24,80 @@ interface Props {
   text: string;
 }
 
-function Single({ className, icon, text } : Props) {
+function Single({ className, icon, text }: Props) {
   return (
-    <div className={twJoin(
-      "flex flex-row justify-start gap-1 [&>svg]:size-5 items-center rounded-lg text-xs uppercase font-800",
-      className
-    )}>
+    <div
+      className={twJoin(
+        "flex flex-row justify-start gap-1 [&>svg]:size-5 items-center rounded-lg text-xs uppercase font-800",
+        className,
+      )}
+    >
       {icon}
-      <span className="w-11 truncate text-left">
-        {text}
-      </span>
+      <span className="w-11 truncate text-left">{text}</span>
     </div>
   );
 }
 
 const GIVEN_API = GIVEN_SETTINGS.api;
 
-const connectState = GIVEN_API.type === "http" ? ({
-  init: (
-    <Single className="text-yellow-500" icon={<Loader2Icon className="animate-spin" />} text="Lost" />
-  ),
-  connected: (
-    <Single className="text-green-500" icon={<PlugIcon />} text="Ready" />
-  ),
-  busy: (
-    <Single className="text-blue-500" icon={<LoaderPinwheelIcon className="animate-spin" />} text="Busy" />
-  ),
-  not_connected: (
-    <Single className="text-red-500" icon={<CircleAlertIcon />} text="Lost" />
-  ),
-} as const) : ({
-  init: (
-      <Single className="text-yellow-500" icon={<CogIcon className="animate-spin" />} text="Build" />
-  ),
-  connected: (
-    <Single className="text-green-500" icon={<CheckIcon />} text="Ready" />
-  ),
-  busy: (
-    <Single className="text-blue-500" icon={<LoaderPinwheelIcon className="animate-spin" />} text="Busy" />
-  ),
-  not_connected: (
-    <Single className="text-red-500" icon={<CircleAlertIcon />} text="Lost" />
-  ),
-} as const);
+const connectState =
+  GIVEN_API.type === "http"
+    ? ({
+        init: (
+          <Single
+            className="text-yellow-500"
+            icon={<Loader2Icon className="animate-spin" />}
+            text="Lost"
+          />
+        ),
+        connected: (
+          <Single className="text-green-500" icon={<PlugIcon />} text="Ready" />
+        ),
+        busy: (
+          <Single
+            className="text-blue-500"
+            icon={<LoaderPinwheelIcon className="animate-spin" />}
+            text="Busy"
+          />
+        ),
+        not_connected: (
+          <Single
+            className="text-red-500"
+            icon={<CircleAlertIcon />}
+            text="Lost"
+          />
+        ),
+      } as const)
+    : ({
+        init: (
+          <Single
+            className="text-yellow-500"
+            icon={<CogIcon className="animate-spin" />}
+            text="Build"
+          />
+        ),
+        connected: (
+          <Single
+            className="text-green-500"
+            icon={<CheckIcon />}
+            text="Ready"
+          />
+        ),
+        busy: (
+          <Single
+            className="text-blue-500"
+            icon={<LoaderPinwheelIcon className="animate-spin" />}
+            text="Busy"
+          />
+        ),
+        not_connected: (
+          <Single
+            className="text-red-500"
+            icon={<CircleAlertIcon />}
+            text="Lost"
+          />
+        ),
+      } as const);
 
 function matchAppstate(st: ReduxState) {
   const x = st.appState.busy;
@@ -74,11 +111,11 @@ function matchAppstate(st: ReduxState) {
   return "not_connected";
 }
 
-const variants = ({
+const variants = {
   initial: { opacity: 0, y: 8 },
   animate: { opacity: 1, y: 0 },
   exit: { opacity: 0, y: 8 },
-});
+};
 
 export default function ConnectStateViewer() {
   const state = useSelector(matchAppstate);

@@ -56,12 +56,12 @@ export const handleKeyPressBuilder = (dispatch: Dispatch, cond: Selected) =>
         focusedElement.tagName === "TEXTAREA")
     )
       return;
-    
-    if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
+
+    const isComplex = (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey);
 
     const action = map(event.key, cond);
 
-    if (action) {
+    if (action && !isComplex) {
       dispatch(action);
       return;
     } else {
