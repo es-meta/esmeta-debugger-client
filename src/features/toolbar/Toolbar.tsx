@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   ArrowDownToDotIcon,
   ArrowUpFromDotIcon,
@@ -6,12 +6,16 @@ import {
   RedoDotIcon,
   SquareIcon,
   StepForwardIcon,
+  StepBackIcon,
   UndoDotIcon,
   UndoIcon,
+  NavigationIcon,
+  NavigationOffIcon,
 } from "lucide-react";
 import {
   run,
   stop,
+  stepWithoutBreak as runStepWithoutBreak,
   specStep,
   specStepOut,
   specStepOver,
@@ -24,6 +28,7 @@ import {
   DebuggerAction,
   resumeFromIter,
   specStepBackOut,
+  specRewind,
 } from "@/store/reducers/Debugger";
 
 import ToolbarButton from "@/features/toolbar/ToolbarButton";
@@ -31,10 +36,21 @@ import ToolbarButtonGroup from "@/features/toolbar/ToolbarButtonGroup";
 import Settings from "../modal/Settings";
 
 export default function Toolbar() {
+  const [stepWithoutBreak, setStepWithoutBreak] = useState<boolean>(false);
+  const toggleStepWithoutBreak = () => {
+    setStepWithoutBreak(!stepWithoutBreak);
+    dispatch(runStepWithoutBreak());
+  };
+
   const dispatch = useDispatch<Dispatch<DebuggerAction>>();
   const selected = useSelector(selector);
-  const { disableRun, disableResume, disableQuit, disableGoingBackward, disableGoingForward } =
-    selected;
+  const {
+    disableRun,
+    disableResume,
+    disableQuit,
+    disableGoingBackward,
+    disableGoingForward,
+  } = selected;
 
   const handleKeyPress = useCallback(
     handleKeyPressBuilder(dispatch, selected),
@@ -64,7 +80,7 @@ export default function Toolbar() {
             }
           />
 
-          {GIVEN_SETTINGS.origin.type === 'visualizer' && (
+          {GIVEN_SETTINGS.origin.type === "visualizer" && (
             <ToolbarButton
               bold
               position="center"
@@ -80,18 +96,6 @@ export default function Toolbar() {
           )}
 
           <ToolbarButton
-            position="center"
-            disabled={disableGoingForward}
-            onClick={() => dispatch(specContinue())}
-            icon={<StepForwardIcon />}
-            label={
-              <span>
-                <b>C</b>ontinue
-              </span>
-            }
-          />
-
-          <ToolbarButton
             position="right"
             disabled={disableQuit}
             onClick={() => dispatch(stop())}
@@ -101,6 +105,19 @@ export default function Toolbar() {
                 <b>Q</b>uit
               </span>
             }
+          />
+
+          <ToolbarButton
+            position="right"
+            disabled={disableGoingForward}
+            onClick={toggleStepWithoutBreak}
+            className={
+              stepWithoutBreak
+                ? "bg-blue-600 hover:bg-blue-500 text-white hover:text-white"
+                : ""
+            }
+            icon={stepWithoutBreak ? <NavigationIcon /> : <NavigationOffIcon />}
+            label={<span>step without break</span>}
           />
         </ToolbarButtonGroup>
 
@@ -132,13 +149,25 @@ export default function Toolbar() {
           />
 
           <ToolbarButton
-            position="right"
+            position="center"
             disabled={disableGoingForward}
             onClick={() => dispatch(specStepOut())}
             icon={<ArrowUpFromDotIcon />}
             label={
               <span>
                 Step&nbsp;O<b>u</b>t
+              </span>
+            }
+          />
+
+          <ToolbarButton
+            position="right"
+            disabled={disableGoingForward}
+            onClick={() => dispatch(specContinue())}
+            icon={<StepForwardIcon />}
+            label={
+              <span>
+                <b>C</b>ontinue
               </span>
             }
           />
@@ -172,13 +201,25 @@ export default function Toolbar() {
           />
 
           <ToolbarButton
-            position="right"
+            position="center"
             disabled={disableGoingBackward}
             onClick={() => dispatch(specStepBackOut())}
             icon={<ArrowUpFromDotIcon />}
             label={
               <span>
                 Step&nbsp;Bac<b>k</b>&nbsp;Out
+              </span>
+            }
+          />
+
+          <ToolbarButton
+            position="right"
+            disabled={disableGoingBackward}
+            onClick={() => dispatch(specRewind())}
+            icon={<StepBackIcon />}
+            label={
+              <span>
+                Re<b>w</b>ind
               </span>
             }
           />

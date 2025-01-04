@@ -1,4 +1,4 @@
-import { call, put, take, select, takeLatest, all } from "redux-saga/effects";
+import { call, put, select, takeLatest, all } from "redux-saga/effects";
 import { toast } from "react-toastify";
 
 import { ReduxState } from "../store";
@@ -41,6 +41,13 @@ function* runSaga() {
     }
   }
   yield takeLatest(DebuggerActionType.RUN, _runSaga);
+}
+
+function* stepWithOutBreakSaga() {
+  yield takeLatest(
+    DebuggerActionType.STEP_WITHOUT_BREAK,
+    mkStepSaga("exec/ignoreFlag"),
+  );
 }
 
 // resume from iter debugger saga
@@ -190,6 +197,14 @@ function* specContinueSaga() {
   );
 }
 
+// spec rewind saga
+function* specRewindSaga() {
+  yield takeLatest(
+    DebuggerActionType.SPEC_REWIND,
+    mkStepSaga("exec/specRewind"),
+  );
+}
+
 // js step saga
 function* jsStepSaga() {
   yield takeLatest(DebuggerActionType.JS_STEP, mkStepSaga("exec/esStep"));
@@ -216,6 +231,7 @@ export default function* debuggerSaga() {
   yield all([
     runSaga(),
     resumeFromIterSaga(),
+    stepWithOutBreakSaga(),
     stopSaga(),
     specStepSaga(),
     specStepOverSaga(),
@@ -227,5 +243,6 @@ export default function* debuggerSaga() {
     jsStepOverSaga(),
     jsStepOutSaga(),
     specContinueSaga(),
+    specRewindSaga(),
   ]);
 }

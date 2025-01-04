@@ -4,6 +4,7 @@
 export enum DebuggerActionType {
   RUN = "DebuggerAction/RUN",
   RESUME_FROM_ITER = "DebuggerAction/RESUME_FROM_ITER",
+  STEP_WITHOUT_BREAK = "DebuggerAction/STEP_WITHOUT_BREAK",
   STOP = "DebuggerAction/STOP",
   SPEC_STEP = "DebuggerAction/STEP",
   SPEC_STEP_OUT = "DebuggerAction/STEP_OUT",
@@ -15,12 +16,16 @@ export enum DebuggerActionType {
   JS_STEP_OUT = "DebuggerAction/JS_STEP_OUT",
   JS_STEP_OVER = "DebuggerAction/JS_STEP_OVER",
   SPEC_CONTINUE = "DebuggerAction/SPEC_CONTINUE",
+  SPEC_REWIND = "DebuggerAction/SPEC_REWIND",
 }
 export const run = (): DebuggerAction => ({
   type: DebuggerActionType.RUN,
 });
 export const resumeFromIter = (): DebuggerAction => ({
   type: DebuggerActionType.RESUME_FROM_ITER,
+});
+export const stepWithoutBreak = (): DebuggerAction => ({
+  type: DebuggerActionType.STEP_WITHOUT_BREAK,
 });
 export const stop = (): DebuggerAction => ({
   type: DebuggerActionType.STOP,
@@ -55,12 +60,18 @@ export const jsStepOut = (): DebuggerAction => ({
 export const specContinue = (): DebuggerAction => ({
   type: DebuggerActionType.SPEC_CONTINUE,
 });
+export const specRewind = (): DebuggerAction => ({
+  type: DebuggerActionType.SPEC_REWIND,
+});
 export type DebuggerAction =
   | {
       type: DebuggerActionType.RUN;
     }
   | {
       type: DebuggerActionType.RESUME_FROM_ITER;
+    }
+  | {
+      type: DebuggerActionType.STEP_WITHOUT_BREAK;
     }
   | {
       type: DebuggerActionType.STOP;
@@ -94,6 +105,9 @@ export type DebuggerAction =
     }
   | {
       type: DebuggerActionType.SPEC_CONTINUE;
+    }
+  | {
+      type: DebuggerActionType.SPEC_REWIND;
     };
 
 // redux state

@@ -10,12 +10,21 @@ interface Props {
   icon: ReactElement<SVGElement>;
   label: ReactNode;
   onClick?: () => void;
+  className?: string;
   // children: ReactNode;
   bold?: boolean;
 }
 
 const ToolbarButton = forwardRef(function (
-  { icon, label, disabled, onClick, position = "single", bold = false }: Props,
+  {
+    icon,
+    label,
+    disabled,
+    onClick,
+    position = "single",
+    className = "",
+    bold = false,
+  }: Props,
   ref?: React.ForwardedRef<HTMLButtonElement> | undefined,
 ) {
   return (
@@ -44,6 +53,8 @@ const ToolbarButton = forwardRef(function (
           `md:bg-gradient-to-r md:from-es-100 md:to-es-200 md:border-es-200 md:hover:bg-es-300 
         bg-gradient-to-r from-es-100 to-es-200 border-es-200 hover:bg-es-300
         z-[1]`,
+
+        className,
       )}
       disabled={disabled}
       onClick={onClick}
