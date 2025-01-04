@@ -1,7 +1,7 @@
 package worker
 
 import esmeta.cfg.CFG
-import esmeta.es.Initialize
+import esmeta.es.{Ast, Initialize}
 import esmeta.web.Debugger
 
 import io.circe.*, io.circe.syntax.*, io.circe.parser.*
@@ -16,12 +16,19 @@ import esmeta.spec.util.JsonProtocol.given
 class DebuggerService(cfg: CFG, irFuncToCode: Map[String, Option[String]]) {
 
     var _debugger: Option[Debugger] = None
+    var _lastParsed: Option[(String, Ast)] = None
 
     def debugger: Debugger = _debugger.get
 
     private def initDebugger(cfg: CFG, sourceText: String): Unit =
-      val cachedAst = cfg.scriptParser.from(sourceText)
-      _debugger = Some(Debugger(cfg.init.from(sourceText, cachedAst, None)))
+      val ast = _lastParsed match
+        case Some(oldText, ast) if oldText == sourceText =>
+          ast
+        case _ =>
+          val ast = cfg.scriptParser.from(sourceText)
+          _lastParsed = Some((sourceText, ast))
+          ast
+      _debugger = Some(Debugger(cfg.init.from(sourceText, ast, None)))
 
     initDebugger(cfg, "")
 

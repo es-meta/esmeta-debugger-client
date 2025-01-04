@@ -48,11 +48,9 @@ private def fetchDump(base : String, urn: String): Future[String] = {
 
 def fetchJsonString(base : String) = {
 
-  println("[1/6] Fetching JSON files")
-
   val specFuture = fetchDump(base, "/dump/spec.json")
   val grammarFuture = fetchDump(base, "/dump/grammar.json")
-  val algoFuture = fetchDump(base, "/dump/algorithms.json")
+  // val algoFuture = fetchDump(base, "/dump/algorithms.json")
   val tyModelFuture = fetchDump(base, "/dump/tyModel.decls.json")
   val tablesFuture = fetchDump(base, "/dump/spec.tables.json")
   val versionFuture = fetchDump(base, "/dump/spec.version.json")
@@ -62,15 +60,13 @@ def fetchJsonString(base : String) = {
   val ret = (for {
     spec <- specFuture
     grammar <- grammarFuture
-    algo <- algoFuture
+    // algo <- algoFuture
     tyModel <- tyModelFuture
     tables <- tablesFuture
     version <- versionFuture
     funcs <- funcsFuture
     irFuncToCode <- irFuncToCodeFuture
-  } yield (spec, grammar, algo, tyModel, tables, version, funcs, irFuncToCode))
-
-  println("Fetching JSON files ... done")
+  } yield (spec, grammar, "", tyModel, tables, version, funcs, irFuncToCode))
 
   ret
 }
@@ -78,7 +74,6 @@ def fetchJsonString(base : String) = {
 
 
 private def decodeWithMeasure[T](tag: String)(json: String)(using Decoder[T]): Future[T] = Future {
-  println(s"${tag} Decoding ...")
   val start = System.currentTimeMillis()
   val result = decode[T](json).getOrElse(throw new Exception("Failed to decode"))
   val end = System.currentTimeMillis()
@@ -115,21 +110,9 @@ object DebuggerServiceFactory {
     base : String
     ): js.Promise[DebuggerService] = {
     fetchJsonString(base: String).flatMap { 
-        case (specStr, grammarStr, algoStr, tyModelStr, tablesStr, versionStr, funcsStr, irFuncToCodeStr) => withMeasure("build") {
+        case (specStr, grammarStr, _, tyModelStr, tablesStr, versionStr, funcsStr, irFuncToCodeStr) => withMeasure("build") {
 
-        val  funcsFuture = Future {
-            println(s"${"funcs"} Decoding ...")
-            val start = System.currentTimeMillis()
-            val result = decode[List[Func]](funcsStr) match {
-              case Left(err) => throw new Exception(s"Failed to decode: ${err}")
-              case Right(funcs) => funcs
-            }
-            val end = System.currentTimeMillis()
-            println(s"${"funcs"} Decoded successfully, Time taken: ${end - start} ms")
-            result
-          }
-        // val funcsNewFuture = fetchAllFuncs(base)
-        // val  algoFuture = decodeWithMeasure[List[Algorithm]]("Algorithms")(algoStr)
+        val  funcsFuture = decodeWithMeasure[List[Func]]("Funcs")(funcsStr)
         val  versionFuture =  decodeWithMeasure[Spec.Version]("Version")(versionStr)
         val  grammarFuture = decodeWithMeasure[Grammar]("Grammar")(grammarStr)
         val  tablesFuture = decodeWithMeasure[Map[String, Table]]("Tables")(tablesStr)
@@ -138,7 +121,6 @@ object DebuggerServiceFactory {
 
         for {
           funcs <- funcsFuture
-          // funcsNew <- funcsNewFuture
           algo <- Future(Nil) // algoFuture
           version <- versionFuture
           grammar <- grammarFuture
@@ -147,10 +129,6 @@ object DebuggerServiceFactory {
           irFuncToCode <- irFuncToCodeFuture
           spec = Spec(Some(version), grammar, algo, tables, tyModel)
         } yield  {
-
-          // funcsNew.foreach { f =>
-          //   f.algo = algo.find(_.name == f.name)
-          // }
 
           class IllegalFinder(f: Func) extends UnitWalker {
 
@@ -170,23 +148,9 @@ object DebuggerServiceFactory {
             _ => println(s"ESParser created successfully")
           }
 
-            val (cfg) = benchmark { CFGBuilder.apply(Program.apply(funcs, spec)) }{ t =>
+          val cfg = benchmark { CFGBuilder.apply(Program.apply(funcs, spec)) }{ t =>
             println(s"CFG created successfully, time taken: ${t}ms")
           }
-
-          val (ast) = benchmark { esParser.from(targetJSScript ) }  {
-            t => println(s"[Test] Ast Parsed successfully, Time taken: ${t} ms") 
-          }
-
-          // println(cfg.fnameMap.get("RunJobs").getOrElse(throw new Exception("Function not found")))
-
-          val initial = benchmark{cfg.init.from(targetJSScript, ast , None )} {
-            t => println(s"Initial state created successfully, Time taken: ${t} ms")
-          }
-
-          // val debugger = benchmark { Debugger(initial)} {
-          //   t => println(s"Debugger created successfully, Time taken: ${t} ms")
-          // }
 
           val service = benchmark { DebuggerService(cfg, irFuncToCode)} {
             t => println(s"Mocking Interface created successfully, Time taken: ${t} ms")
@@ -202,33 +166,3 @@ object DebuggerServiceFactory {
   @JSExport
   def run(base : String): Unit = build(base)
 }
-
-
-val targetJSScript = """
-var x = 1;
-var y = 2;
-var z = x + y;
-var w = z + x;
-
-function f () {
-  let a = 42;
-  g(a);
-  return 0;
-}
-
-function g(a) {
-  a = 1;
-  a = 1;
-  a = 1;
-  a = 1;
-  a = 1;
-  a = 1;
-  a = 1;
-  a = 1;
-  a = 1;
-  a = 1;
-  a = 1;
-}
-
-f();
-""";
