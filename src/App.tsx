@@ -8,6 +8,7 @@ import DebuggerApp from "@/features/debugger-app/DebuggerApp";
 import { IS_DEBUG } from "./constants/constant";
 import CookiePopup from "./CookiePopup";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ export default function App() {
         <Header />
         <DebuggerApp />
       </div>
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
 }
