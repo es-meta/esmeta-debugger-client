@@ -33,7 +33,7 @@ import {
 
 import ToolbarButton from "@/features/toolbar/ToolbarButton";
 import ToolbarButtonGroup from "@/features/toolbar/ToolbarButtonGroup";
-import Settings from "../modal/Settings";
+import ConnectionSettings from "../modal/connection/ConnectionSettings";
 
 export default function Toolbar() {
   const [stepWithoutBreak, setStepWithoutBreak] = useState<boolean>(false);
@@ -267,15 +267,13 @@ export default function Toolbar() {
 
         <Seperator />
 
-        <ConnectStateViewer />
-        <Settings />
+        <ConnectionSettings />
         <SpecVersionView />
       </div>
     </aside>
   );
 }
 
-import ConnectStateViewer from "@/components/custom/ConnectStateViewer";
 import { useDispatch, useSelector } from "react-redux";
 import { Dispatch } from "redux";
 import { handleKeyPressBuilder } from "./Toolbar.util";

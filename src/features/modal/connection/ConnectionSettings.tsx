@@ -6,16 +6,15 @@ import {
   TransitionChild,
 } from "@headlessui/react";
 import { Fragment, useCallback, useState } from "react";
-import { GlobeIcon, MonitorIcon, PlugIcon } from "lucide-react";
+import { GlobeIcon, MonitorIcon } from "lucide-react";
 
-import PlainLabel from "../../components/label/PlainLabel";
-import SettingPanel from "./SettingPanel";
-import RadioGroupExample from "./settings/RadioGroup";
-import SaveButton, { opts } from "./settings/SaveButton";
+import RadioGroupExample from "./RadioGroup";
+import SaveButton, { opts } from "./SaveButton";
 import { GIVEN_SETTINGS, QUERY_API } from "@/constants/settings";
-import { buildSearchParams, getNewLocationWithQuery, getSearchQuery, setLocalStorage } from "@/util/query.util";
+import { buildSearchParams, setLocalStorage } from "@/util/query.util";
+import ConnectStateViewer from "@/features/modal/connection/ConnectStateViewer";
 
-export default function Settings() {
+export default function ConnectionSettings() {
   let [isOpen, setIsOpen] = useState(false);
 
   const [selected, setSelected] = useState<Plan>(GIVEN_SETTINGS.api.type === "browser" ? plans[1] : plans[0]);
@@ -36,7 +35,8 @@ export default function Settings() {
         break;
       case 'storage':
         setLocalStorage(QUERY_API, set);
-        window.location.reload();
+        window.location.search = buildSearchParams(QUERY_API, null);
+        // window.location.reload();
         break;
     }
   }, [selected.id, url]);
@@ -44,8 +44,6 @@ export default function Settings() {
   function openModal() {
     setIsOpen(true);
   }
-
-  const API = GIVEN_SETTINGS.api;
 
   
   return (
@@ -60,17 +58,7 @@ export default function Settings() {
           onClick={openModal}
           className="flex flex-row rounded-md text-sm font-medium text-white transition-all items-center justify-between hover:bg-neutral-500/25 bg-neutral-500/0 focus:outline-none focus-visible:ring-1 focus-visible:ring-neutral-300/75"
         >
-          <div className="h-8 flex flex-row"></div>
-
-          <PlainLabel>
-            {API.type === "http" ? <>
-              <PlugIcon />
-              {API.url}  
-            </> : <>
-              <GlobeIcon />
-              Browser
-              </>}
-          </PlainLabel>
+          <ConnectStateViewer />
         </button>
       </div>
 
@@ -132,7 +120,6 @@ export default function Settings() {
     </>
   );
 }
-
 
 interface Plan {
   id: string;
