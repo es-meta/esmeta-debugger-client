@@ -105,38 +105,15 @@ import esmeta.ir.*
 import esmeta.ir.Expr
 import esmeta.ir.util.UnitWalker
 
-@JSExportTopLevel("ESMetaSpec")
-object ESMetaSpec {
-
-
-  // @JSExportTopLevel("grammars")
-
+@JSExportTopLevel("DebuggerServiceFactory")
+object DebuggerServiceFactory {
 
   @JSExport
   def build(
     base : String
-    ): js.Promise[MockingInterface] = {
+    ): js.Promise[DebuggerService] = {
     fetchJsonString(base: String).flatMap { 
         case (specStr, grammarStr, algoStr, tyModelStr, tablesStr, versionStr, funcsStr) => withMeasure("build") {
-
-
-        // val inspect = new UnitWalker {
-        //   override def walk(expr: Expr): Unit =
-        //     print(expr.toString(true, true))
-        //     expr match
-        //       case ERef(ref) => println(" : ERef")
-        //       case EBool(b) => println(" : EBool")
-        //       case _ => println(" : Other")
-        //     super.walk(expr)
-        // }
-
-        // val x = decode[Expr]("""
-        // "(+ (+ false true) (+ true undefined ))"
-        // """).getOrElse(throw new Exception("Failed to decode"))
-        // inspect.walk(x)
-
-
-          
 
         val  funcsFuture = Future {
             println(s"${"funcs"} Decoding ...")
@@ -207,11 +184,11 @@ object ESMetaSpec {
           //   t => println(s"Debugger created successfully, Time taken: ${t} ms")
           // }
 
-          val mock = benchmark { MockingInterface(cfg)} {
+          val service = benchmark { DebuggerService(cfg)} {
             t => println(s"Mocking Interface created successfully, Time taken: ${t} ms")
           }
 
-          mock
+          service
         }
 
       }
@@ -221,9 +198,6 @@ object ESMetaSpec {
   @JSExport
   def run(base : String): Unit = build(base)
 }
-
-
-
 
 
 val targetJSScript = """

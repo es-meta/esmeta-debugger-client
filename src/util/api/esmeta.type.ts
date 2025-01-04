@@ -1,4 +1,4 @@
-export interface Mocking {
+export interface ScalaJSDebuggerService {
   spec_func: () => string;
   state_heap: () => string;
   state_callStack: () => string;

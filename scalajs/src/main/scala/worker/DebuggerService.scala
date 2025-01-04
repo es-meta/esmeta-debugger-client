@@ -13,7 +13,7 @@ import scala.scalajs.js.annotation.*
 import esmeta.spec.util.JsonProtocol.given
 
 @JSExportAll
-class MockingInterface(cfg: CFG) {
+class DebuggerService(cfg: CFG) {
 
     var _debugger: Option[Debugger] = None
 

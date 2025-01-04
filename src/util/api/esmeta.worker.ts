@@ -1,14 +1,13 @@
 /// <reference lib="webworker" />
 
 // import type { ApiMessageData } from './message.type';
-import type { Mocking } from './esmeta.type';
+import type { ScalaJSDebuggerService } from './esmeta.type';
 
 //////////////////////// import from Scala.js /////////////////////////
 
-let ESMetaDebugger: Promise<Mocking> = (async () => {
-  const module = await import('@scala/target/scala-3.3.3/esmeta-worker-opt/main.mjs');
-  const mokcing = (await (await module.ESMetaSpec).build(""));
-  console.log('ESMetaDebugger', mokcing);
+let ESMetaDebugger: Promise<ScalaJSDebuggerService> = (async () => {
+  const module = await import('@esmeta/main.mjs');
+  const mokcing = (await (await module.DebuggerServiceFactory).build(""));
   return mokcing;
 })();
 
