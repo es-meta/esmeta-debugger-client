@@ -23,4 +23,5 @@ export default [
     },
   },
   prettier, // Apply prettier config last
+  // TODO add tanstack eslint config when it supports flat config
 ];
