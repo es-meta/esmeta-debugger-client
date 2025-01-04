@@ -29,7 +29,11 @@ lazy val worker = (project in file("."))
   .settings(
     name := "esmeta-worker",
       scalaVersion := "3.3.3",
-      scalacOptions ++= Seq("-encoding", "utf-8", "-deprecation", "-feature"),
+      scalacOptions ++= Seq("-encoding", "utf-8", "-deprecation", "-feature",
+      // disable import suggestions related bug: https://github.com/scala/scala3/issues/12876
+       "-Ximport-suggestion-timeout",
+       "0",
+       ),
 
       // if  we are creating a library, false
       scalaJSUseMainModuleInitializer := false,
@@ -37,7 +41,7 @@ lazy val worker = (project in file("."))
       scalaJSLinkerConfig ~= {
       
         _.withModuleKind(ModuleKind.ESModule)
-          .withModuleSplitStyle(ModuleSplitStyle.SmallModulesFor(List("example")))
+          // .withModuleSplitStyle(ModuleSplitStyle.SmallestModules)
           .withOutputPatterns(OutputPatterns.fromJSFile("%s.mjs"))
           // .withESVersion(ESVersion.ES2015)
 

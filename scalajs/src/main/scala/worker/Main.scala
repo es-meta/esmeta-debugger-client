@@ -39,7 +39,7 @@ import scala.scalajs.js.annotation.*
 
 
 
-@main
+// @main
 def main(): Unit = {
   // HelloWorld.sayHello()
 //   dom.document.querySelector("#app").innerHTML = s"""

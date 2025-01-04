@@ -10,16 +10,23 @@ import io.circe.generic.semiauto.*
 import scala.scalajs.js
 import scala.scalajs.js.annotation.*
 
-@JSExportAll
-class MockingInterface(var debugger: Debugger, cfg: CFG) {
+import esmeta.spec.util.JsonProtocol.given
 
-  private def initDebugger(cfg: CFG, sourceText: String): Unit =
-    val cachedAst = cfg.scriptParser.from(sourceText)
-    debugger = Debugger(Initialize(cfg, sourceText, Some(cachedAst)))
+@JSExportAll
+class MockingInterface(cfg: CFG) {
+
+    var _debugger: Option[Debugger] = None
+
+    def debugger: Debugger = _debugger.get
+
+    private def initDebugger(cfg: CFG, sourceText: String): Unit =
+      val cachedAst = cfg.scriptParser.from(sourceText)
+      _debugger = Some(Debugger(cfg.init.from(sourceText, cachedAst, None)))
+
+    initDebugger(cfg, "")
 
   /** conversion for HTTP response */
-  given Conversion[Debugger#StepResult, String] = _.ordinal.toString
-
+    given Conversion[Debugger#StepResult, String] = _.ordinal.toString
 
     def state_heap(): String = {
       debugger.heapInfo.asJson.noSpaces
@@ -29,7 +36,7 @@ class MockingInterface(var debugger: Debugger, cfg: CFG) {
     }
     def state_callStack(): String = {
       debugger.callStackInfo.asJson.noSpaces
-  }
+    }
 
     def spec_func(): String = {
       cfg.fnameMap
@@ -38,6 +45,12 @@ class MockingInterface(var debugger: Debugger, cfg: CFG) {
         .asJson
         .noSpaces
     }
+
+    def spec_version(): String = {
+      println(cfg.spec.version.asJson.noSpaces)
+      cfg.spec.version.asJson.noSpaces
+    }
+
 
 
     def exec_run(raw: String) = {
@@ -59,6 +72,15 @@ class MockingInterface(var debugger: Debugger, cfg: CFG) {
     def exec_stepOut(): String = {
       debugger.specStepOut
     }
+    def exec_stepBack(): String = {
+      debugger.specStepBack
+    }
+    def exec_stepBackOver(): String = {
+      debugger.specStepBackOver
+    }
+    def exec_stepBackOut(): String = {
+      debugger.specStepBackOut
+    }
     def exec_continue(): String = {
       debugger.continue
     }
@@ -74,8 +96,6 @@ class MockingInterface(var debugger: Debugger, cfg: CFG) {
     def exec_esStepOut(): String = {
       debugger.esStepOut
     }
-
-
 
     def breakpoint_add(raw: String): String = {
       decode[(Boolean, Int, List[Int], Boolean)](raw) match

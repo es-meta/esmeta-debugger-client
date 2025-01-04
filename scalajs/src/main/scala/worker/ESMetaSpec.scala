@@ -5,11 +5,19 @@ import esmeta.cfgBuilder.CFGBuilder
 import esmeta.es.{Syntactic, Lexical, Initialize}
 import esmeta.ir.*
 import esmeta.ir.util.JsonProtocol.given
+
+
 import esmeta.parser.{AstFrom, ESParser}
 import esmeta.spec.*
 import esmeta.spec.util.JsonProtocol.given
+
+
+
+import esmeta.lang.Type
+import esmeta.lang.util.JsonProtocol.given
+
 import esmeta.ty.*
-import esmeta.ty.util.JsonProtocol.given
+
 import esmeta.util.BaseUtils.debug
 import esmeta.web.{Debugger}
 
@@ -40,7 +48,7 @@ private def fetchDump(base : String, urn: String): Future[String] = {
 
 def fetchJsonString(base : String) = {
 
-  println("Fetching JSON files")
+  println("[1/6] Fetching JSON files")
 
   val specFuture = fetchDump(base, "/dump/spec.json")
   val grammarFuture = fetchDump(base, "/dump/grammar.json")
@@ -107,25 +115,25 @@ object ESMetaSpec {
   @JSExport
   def build(
     base : String
-    ) = {
+    ): js.Promise[MockingInterface] = {
     fetchJsonString(base: String).flatMap { 
         case (specStr, grammarStr, algoStr, tyModelStr, tablesStr, versionStr, funcsStr) => withMeasure("build") {
 
 
-        val inspect = new UnitWalker {
-          override def walk(expr: Expr): Unit =
-            print(expr.toString(true, true))
-            expr match
-              case ERef(ref) => println(" : ERef")
-              case EBool(b) => println(" : EBool")
-              case _ => println(" : Other")
-            super.walk(expr)
-        }
+        // val inspect = new UnitWalker {
+        //   override def walk(expr: Expr): Unit =
+        //     print(expr.toString(true, true))
+        //     expr match
+        //       case ERef(ref) => println(" : ERef")
+        //       case EBool(b) => println(" : EBool")
+        //       case _ => println(" : Other")
+        //     super.walk(expr)
+        // }
 
-        val x = decode[Expr]("""
-        "(+ (+ false true) (+ true undefined ))"
-        """).getOrElse(throw new Exception("Failed to decode"))
-        inspect.walk(x)
+        // val x = decode[Expr]("""
+        // "(+ (+ false true) (+ true undefined ))"
+        // """).getOrElse(throw new Exception("Failed to decode"))
+        // inspect.walk(x)
 
 
           
@@ -146,7 +154,7 @@ object ESMetaSpec {
         val  versionFuture =  decodeWithMeasure[Spec.Version]("Version")(versionStr)
         val  grammarFuture = decodeWithMeasure[Grammar]("Grammar")(grammarStr)
         val  tablesFuture = decodeWithMeasure[Map[String, Table]]("Tables")(tablesStr)
-        val  tyModelFuture = decodeWithMeasure[List[TyDecl]]("TyModel")(tyModelStr)
+        val  tyModelFuture = decodeWithMeasure[TyModel]("TyModel")(tyModelStr)
 
         for {
           funcs <- funcsFuture
@@ -156,7 +164,7 @@ object ESMetaSpec {
           grammar <- grammarFuture
           tables <- tablesFuture
           tyModel <- tyModelFuture
-          spec = Spec(Some(version), grammar, algo, tables, TyModel{tyModel})
+          spec = Spec(Some(version), grammar, algo, tables, tyModel)
         } yield  {
 
           // funcsNew.foreach { f =>
@@ -191,15 +199,15 @@ object ESMetaSpec {
 
           // println(cfg.fnameMap.get("RunJobs").getOrElse(throw new Exception("Function not found")))
 
-          val initial = benchmark{Initialize.apply(cfg, targetJSScript, Some(ast))} {
+          val initial = benchmark{cfg.init.from(targetJSScript, ast , None )} {
             t => println(s"Initial state created successfully, Time taken: ${t} ms")
           }
 
-          val debugger = benchmark { Debugger(initial)} {
-            t => println(s"Debugger created successfully, Time taken: ${t} ms")
-          }
+          // val debugger = benchmark { Debugger(initial)} {
+          //   t => println(s"Debugger created successfully, Time taken: ${t} ms")
+          // }
 
-          val mock = benchmark { MockingInterface(debugger, cfg)} {
+          val mock = benchmark { MockingInterface(cfg)} {
             t => println(s"Mocking Interface created successfully, Time taken: ${t} ms")
           }
 
