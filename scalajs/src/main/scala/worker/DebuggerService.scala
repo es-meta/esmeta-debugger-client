@@ -13,7 +13,7 @@ import scala.scalajs.js.annotation.*
 import esmeta.spec.util.JsonProtocol.given
 
 @JSExportAll
-class DebuggerService(cfg: CFG) {
+class DebuggerService(cfg: CFG, irFuncToCode: Map[String, Option[String]]) {
 
     var _debugger: Option[Debugger] = None
 
@@ -32,7 +32,7 @@ class DebuggerService(cfg: CFG) {
       debugger.heapInfo.asJson.noSpaces
     }
     def state_context(cid: Int): String = {
-      debugger.ctxtInfo(cid).asJson.noSpaces
+      debugger.ctxtInfo(cid, Some(irFuncToCode)).asJson.noSpaces
     }
     def state_callStack(): String = {
       debugger.callStackInfo.asJson.noSpaces

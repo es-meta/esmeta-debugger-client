@@ -57,6 +57,7 @@ def fetchJsonString(base : String) = {
   val tablesFuture = fetchDump(base, "/dump/spec.tables.json")
   val versionFuture = fetchDump(base, "/dump/spec.version.json")
   val funcsFuture = fetchDump(base, "/dump/funcs.json")
+  val irFuncToCodeFuture = fetchDump(base, "/dump/irFuncToCode.json")
 
   val ret = (for {
     spec <- specFuture
@@ -66,7 +67,8 @@ def fetchJsonString(base : String) = {
     tables <- tablesFuture
     version <- versionFuture
     funcs <- funcsFuture
-  } yield (spec, grammar, algo, tyModel, tables, version, funcs))
+    irFuncToCode <- irFuncToCodeFuture
+  } yield (spec, grammar, algo, tyModel, tables, version, funcs, irFuncToCode))
 
   println("Fetching JSON files ... done")
 
@@ -113,7 +115,7 @@ object DebuggerServiceFactory {
     base : String
     ): js.Promise[DebuggerService] = {
     fetchJsonString(base: String).flatMap { 
-        case (specStr, grammarStr, algoStr, tyModelStr, tablesStr, versionStr, funcsStr) => withMeasure("build") {
+        case (specStr, grammarStr, algoStr, tyModelStr, tablesStr, versionStr, funcsStr, irFuncToCodeStr) => withMeasure("build") {
 
         val  funcsFuture = Future {
             println(s"${"funcs"} Decoding ...")
@@ -132,6 +134,7 @@ object DebuggerServiceFactory {
         val  grammarFuture = decodeWithMeasure[Grammar]("Grammar")(grammarStr)
         val  tablesFuture = decodeWithMeasure[Map[String, Table]]("Tables")(tablesStr)
         val  tyModelFuture = decodeWithMeasure[TyModel]("TyModel")(tyModelStr)
+        val  irFuncToCodeFuture = decodeWithMeasure[Map[String, Option[String]]]("irFuncToCode")(irFuncToCodeStr)
 
         for {
           funcs <- funcsFuture
@@ -141,6 +144,7 @@ object DebuggerServiceFactory {
           grammar <- grammarFuture
           tables <- tablesFuture
           tyModel <- tyModelFuture
+          irFuncToCode <- irFuncToCodeFuture
           spec = Spec(Some(version), grammar, algo, tables, tyModel)
         } yield  {
 
@@ -184,7 +188,7 @@ object DebuggerServiceFactory {
           //   t => println(s"Debugger created successfully, Time taken: ${t} ms")
           // }
 
-          val service = benchmark { DebuggerService(cfg)} {
+          val service = benchmark { DebuggerService(cfg, irFuncToCode)} {
             t => println(s"Mocking Interface created successfully, Time taken: ${t} ms")
           }
 
