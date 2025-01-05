@@ -10,6 +10,7 @@ export const routes = [
   "exec/run",
   "exec/resumeFromIter",
   "exec/ignoreFlag",
+  "exec/backToProvenance",
   "exec/specStep",
   "exec/specStepOver",
   "exec/specStepOut",

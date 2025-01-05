@@ -5,6 +5,7 @@ export enum DebuggerActionType {
   RUN = "DebuggerAction/RUN",
   RESUME_FROM_ITER = "DebuggerAction/RESUME_FROM_ITER",
   STEP_WITHOUT_BREAK = "DebuggerAction/STEP_WITHOUT_BREAK",
+  BACK_TO_PROVENANCE = "DebuggerAction/BACK_TO_PROVENANCE",
   STOP = "DebuggerAction/STOP",
   SPEC_STEP = "DebuggerAction/STEP",
   SPEC_STEP_OUT = "DebuggerAction/STEP_OUT",
@@ -26,6 +27,9 @@ export const resumeFromIter = (): DebuggerAction => ({
 });
 export const stepWithoutBreak = (): DebuggerAction => ({
   type: DebuggerActionType.STEP_WITHOUT_BREAK,
+});
+export const backToProvenance = (): DebuggerAction => ({
+  type: DebuggerActionType.BACK_TO_PROVENANCE,
 });
 export const stop = (): DebuggerAction => ({
   type: DebuggerActionType.STOP,
@@ -72,6 +76,9 @@ export type DebuggerAction =
     }
   | {
       type: DebuggerActionType.STEP_WITHOUT_BREAK;
+    }
+  | {
+      type: DebuggerActionType.BACK_TO_PROVENANCE;
     }
   | {
       type: DebuggerActionType.STOP;

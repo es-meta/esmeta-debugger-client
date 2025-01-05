@@ -9,6 +9,7 @@ import {
   clearIrState,
   updateHeapRequest,
   updateCallStackRequest,
+  Environment,
 } from "../store/reducers/IrState";
 import { clearJS } from "../store/reducers/JS";
 import { clearAlgo } from "../store/reducers/Spec";
@@ -47,6 +48,29 @@ function* stepWithOutBreakSaga() {
   yield takeLatest(
     DebuggerActionType.STEP_WITHOUT_BREAK,
     mkStepSaga("exec/ignoreFlag"),
+  );
+}
+
+function* backToProvenanceSaga() {
+  function* _backToProvenanceSaga() {
+    try {
+      const { irState }: ReduxState = yield select();
+      const { callStack, contextIdx } = irState;
+      const env: Environment =
+        callStack.length > 0 ? callStack[contextIdx].env : [];
+      const provenanceAddr = env.filter(e => e[0] === "return")[0][1];
+
+      yield call(mkStepSaga("exec/backToProvenance", provenanceAddr));
+    } catch (e: unknown) {
+      // show error toast
+      // toast.error((e as Error).message);
+      console.error(e);
+    }
+  }
+
+  yield takeLatest(
+    DebuggerActionType.BACK_TO_PROVENANCE,
+    _backToProvenanceSaga,
   );
 }
 
@@ -108,13 +132,15 @@ enum StepResult {
 }
 
 // step body saga
-function mkStepSaga(endpoint: Route) {
+function mkStepSaga(endpoint: Route, bodyObj?: unknown) {
   function* _stepBodySaga() {
     try {
       // TODO
       yield put({ type: AppStateActionType.SEND });
 
-      const res: StepResult = yield call(() => doAPIPostRequest(endpoint));
+      const res: StepResult = yield call(() =>
+        doAPIPostRequest(endpoint, bodyObj),
+      );
       switch (res) {
         case StepResult.TERMINATED:
           toast.success("Terminated");
@@ -233,6 +259,7 @@ export default function* debuggerSaga() {
     resumeFromIterSaga(),
     stepWithOutBreakSaga(),
     stopSaga(),
+    backToProvenanceSaga(),
     specStepSaga(),
     specStepOverSaga(),
     specStepOutSaga(),
