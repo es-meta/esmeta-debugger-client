@@ -79,6 +79,7 @@ function ContextViewer(props: SpecViewerProps & { context: Context }) {
         listNode={parsed.contents}
         steps={empty}
         currentSteps={currentSteps}
+        isExit={context.isExit}
         breakedStepsList={breakedStepsList}
         visitedStepList={context.visited}
         onPrefixClick={handlePrefixClick}

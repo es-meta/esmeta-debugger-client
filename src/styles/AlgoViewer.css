@@ -35,6 +35,10 @@
   background-color: #E9FBE9;
 }
 
+.algo-step.exit-highlight {
+  background-color: #FDE9E9;
+}
+
 .algo-step emu-val {
   font-weight: bold;
 }

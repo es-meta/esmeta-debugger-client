@@ -49,6 +49,7 @@ export type Context = {
   fid: number;
   name: string;
   steps: number[];
+  isExit: boolean;
   env: Environment;
   algo: Algorithm;
   visited: number[][];
@@ -79,6 +80,7 @@ export default function reducer(state = initialState, action: IrStateAction) {
       });
     case IrStateActionType.UPDATE_CALL_STACK_SUCCESS:
       return produce(state, draft => {
+        console.dir(action.callStack, { depth: null, colors: true });
         draft.callStack = action.callStack;
       });
     case IrStateActionType.CLEAR:

@@ -40,15 +40,16 @@ function* updateCallStackSaga() {
         number,
         string,
         number[],
-        unknown,
+        boolean,
         Environment,
         number[][],
       ][] = yield call(() => doAPIGetRequest("state/callStack"));
       const callStack: CallStack = raw.map(
-        ([fid, name, steps, _, env, visited]) => ({
+        ([fid, name, steps, isExit, env, visited]) => ({
           fid,
           name,
           steps,
+          isExit,
           env,
           algo: null as unknown as Algorithm,
           visited,

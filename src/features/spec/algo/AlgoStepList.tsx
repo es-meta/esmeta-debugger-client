@@ -34,6 +34,7 @@ interface AlgoStepProps {
   sublist: ListNode | null;
   steps: number[];
   currentSteps: number[];
+  isExit: boolean;
   breakedStepsList: number[][];
   visitedStepList: number[][];
   onPrefixClick: (steps: number[]) => void;
@@ -44,6 +45,7 @@ export default function AlgoStepList(props: {
   listNode: OrderedListNode;
   steps: number[];
   currentSteps: number[];
+  isExit: boolean;
   breakedStepsList: number[][];
   visitedStepList: number[][];
   onPrefixClick: (steps: number[]) => void;
@@ -70,6 +72,7 @@ export default function AlgoStepList(props: {
             contents={listItemNode.contents}
             sublist={listItemNode.sublist}
             steps={props.steps.concat([idx + 1])}
+            isExit={props.isExit}
             currentSteps={props.currentSteps}
             breakedStepsList={props.breakedStepsList}
             visitedStepList={props.visitedStepList}
@@ -84,7 +87,7 @@ export default function AlgoStepList(props: {
 
 // algorithm steps
 function AlgoStep(props: AlgoStepProps) {
-  const { steps, currentSteps } = props;
+  const { steps, currentSteps, isExit } = props;
   const { contents, breakedStepsList, onPrefixClick } = props;
   const { sublist } = props;
   const { level } = props;
@@ -97,8 +100,8 @@ function AlgoStep(props: AlgoStepProps) {
     const visited = props.visitedStepList.some(visitedSteps =>
       isSameStep(visitedSteps, steps),
     );
-    console.log("visitiedSteps", visited, props.visitedStepList);
-    if (highlight) className += " highlight ";
+    if (highlight && isExit) className += " exit-highlight";
+    else if (highlight) className += " highlight";
     if (visited) className += " bg-neutral-100 ";
     return className;
   }, [steps, currentSteps, props.visitedStepList]);
@@ -123,6 +126,7 @@ function AlgoStep(props: AlgoStepProps) {
         <AlgoStepList
           listNode={sublist}
           steps={steps}
+          isExit={isExit}
           currentSteps={currentSteps}
           breakedStepsList={breakedStepsList}
           visitedStepList={props.visitedStepList}
