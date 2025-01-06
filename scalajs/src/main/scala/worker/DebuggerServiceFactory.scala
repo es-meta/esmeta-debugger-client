@@ -46,36 +46,9 @@ private def fetchDump(base : String, urn: String): Future[String] = {
   }
 }
 
-def fetchJsonString(base : String) = {
-
-  val specFuture = fetchDump(base, "/dump/spec.json")
-  val grammarFuture = fetchDump(base, "/dump/grammar.json")
-  // val algoFuture = fetchDump(base, "/dump/algorithms.json")
-  val tyModelFuture = fetchDump(base, "/dump/tyModel.decls.json")
-  val tablesFuture = fetchDump(base, "/dump/spec.tables.json")
-  val versionFuture = fetchDump(base, "/dump/spec.version.json")
-  val funcsFuture = fetchDump(base, "/dump/funcs.json")
-  val irFuncToCodeFuture = fetchDump(base, "/dump/irFuncToCode.json")
-
-  val ret = (for {
-    spec <- specFuture
-    grammar <- grammarFuture
-    // algo <- algoFuture
-    tyModel <- tyModelFuture
-    tables <- tablesFuture
-    version <- versionFuture
-    funcs <- funcsFuture
-    irFuncToCode <- irFuncToCodeFuture
-  } yield (spec, grammar, "", tyModel, tables, version, funcs, irFuncToCode))
-
-  ret
-}
-
-
-
 private def decodeWithMeasure[T](tag: String)(json: String)(using Decoder[T]): Future[T] = Future {
   val start = System.currentTimeMillis()
-  val result = decode[T](json).getOrElse(throw new Exception("Failed to decode"))
+  val result = decode[T](json).getOrElse(throw new Exception(s"Failed to decode ${tag}"))
   val end = System.currentTimeMillis()
   println(s"${tag} Decoded successfully, Time taken: ${end - start} ms")
   result
@@ -98,6 +71,17 @@ inline def benchmark[T](f : => T)(log: Long => Unit): (T) = {
   result
 }
 
+
+private def measureFutureTime[T](future: Future[T]): Future[T] = {
+  val startTime = System.nanoTime()
+  future.map { result =>
+    val endTime = System.nanoTime()
+    val duration = endTime - startTime
+    println(s"Time taken for total build: ${duration / 1000000} ms")
+    (result)
+  }
+}
+
 import esmeta.ir.*
 import esmeta.ir.Expr
 import esmeta.ir.util.UnitWalker
@@ -108,20 +92,19 @@ object DebuggerServiceFactory {
   @JSExport
   def build(
     base : String
-    ): js.Promise[DebuggerService] = {
-    fetchJsonString(base: String).flatMap { 
-        case (specStr, grammarStr, _, tyModelStr, tablesStr, versionStr, funcsStr, irFuncToCodeStr) => withMeasure("build") {
+    ): js.Promise[DebuggerService] = measureFutureTime { withMeasure("build") {
 
-        val  funcsFuture = decodeWithMeasure[List[Func]]("Funcs")(funcsStr)
-        val  versionFuture =  decodeWithMeasure[Spec.Version]("Version")(versionStr)
-        val  grammarFuture = decodeWithMeasure[Grammar]("Grammar")(grammarStr)
-        val  tablesFuture = decodeWithMeasure[Map[String, Table]]("Tables")(tablesStr)
-        val  tyModelFuture = decodeWithMeasure[TyModel]("TyModel")(tyModelStr)
-        val  irFuncToCodeFuture = decodeWithMeasure[Map[String, Option[String]]]("irFuncToCode")(irFuncToCodeStr)
+        val  funcsFuture = fetchDump(base, "/dump/funcs.json").flatMap(decodeWithMeasure[List[Func]]("Funcs")(_))
+        val  versionFuture =  fetchDump(base, "/dump/spec.version.json").flatMap(decodeWithMeasure[Spec.Version]("Version")(_))
+        val  grammarFuture = fetchDump(base, "/dump/grammar.json").flatMap(decodeWithMeasure[Grammar]("Grammar")(_))
+        val  tablesFuture = fetchDump(base, "/dump/spec.tables.json").flatMap(decodeWithMeasure[Map[String, Table]]("Tables")(_))
+        val  tyModelFuture = fetchDump(base, "/dump/tyModel.decls.json").flatMap(decodeWithMeasure[TyModel]("TyModel")(_))
+        val  irFuncToCodeFuture = fetchDump(base, "/dump/irFuncToCode.json").flatMap(decodeWithMeasure[Map[String, Option[String]]]("irFuncToCode")(_))
+        val algoFuture = Future(Nil) // not needed for now
 
         for {
           funcs <- funcsFuture
-          algo <- Future(Nil) // algoFuture
+          algo <- algoFuture
           version <- versionFuture
           grammar <- grammarFuture
           tables <- tablesFuture
@@ -130,23 +113,19 @@ object DebuggerServiceFactory {
           spec = Spec(Some(version), grammar, algo, tables, tyModel)
         } yield  {
 
-          class IllegalFinder(f: Func) extends UnitWalker {
+          // TODO : fix parser
+          // class IllegalFinder(f: Func) extends UnitWalker {
+          //   override def walk(var1: Name): Unit = {
+          //     if (var1.name == "false") {
+          //       println(s"Illegal variable found: false in ${f.name}")
+          //     }
+          //   }
+          // }
 
-            override def walk(var1: Name): Unit = {
-              if (var1.name == "false") {
-                println(s"Illegal variable found: false in ${f.name}")
-              }
-            }
-          }
-
-          funcs.foreach(f => {
-            val illegalFinder = IllegalFinder(f)
-            illegalFinder.walk(f)
-          })
-
-          val esParser : AstFrom = benchmark {ESParser(spec.grammar).apply("Script") }{
-            _ => println(s"ESParser created successfully")
-          }
+          // funcs.foreach(f => {
+          //   val illegalFinder = IllegalFinder(f)
+          //   illegalFinder.walk(f)
+          // })
 
           val cfg = benchmark { CFGBuilder.apply(Program.apply(funcs, spec)) }{ t =>
             println(s"CFG created successfully, time taken: ${t}ms")
@@ -160,7 +139,6 @@ object DebuggerServiceFactory {
         }
 
       }
-    }
   }.toJSPromise
 
   @JSExport
