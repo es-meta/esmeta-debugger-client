@@ -2,9 +2,12 @@ import * as path from "path";
 
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
+import viteCompression from 'vite-plugin-compression';
 
 export default defineConfig({
-	plugins: [react()],
+  plugins: [react(), viteCompression({
+    filter: /\.(js|mjs|css|html)$/i
+  })],
 	server: {
 		port: 3000,
 	},
@@ -26,6 +29,7 @@ export default defineConfig({
 		alias: {
       "@": path.resolve(__dirname, "./src"),
       "@esmeta": path.resolve(__dirname, "./scalajs/target/scala-3.3.3/esmeta-worker-opt"),
+      "@esmeta-debug": path.resolve(__dirname, "./scalajs/target/scala-3.3.3/esmeta-worker-fastopt"),
 		},
 	},
 });
