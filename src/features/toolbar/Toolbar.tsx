@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import {
   ArrowDownToDotIcon,
   ArrowUpFromDotIcon,
@@ -9,13 +9,12 @@ import {
   StepBackIcon,
   UndoDotIcon,
   UndoIcon,
-  NavigationIcon,
-  NavigationOffIcon,
+  PowerIcon,
+  PowerOffIcon,
 } from "lucide-react";
 import {
   run,
   stop,
-  stepWithoutBreak as runStepWithoutBreak,
   specStep,
   specStepOut,
   specStepOver,
@@ -36,10 +35,10 @@ import ToolbarButtonGroup from "@/features/toolbar/ToolbarButtonGroup";
 import ConnectionSettings from "../modal/connection/ConnectionSettings";
 
 export default function Toolbar() {
-  const [stepWithoutBreak, setStepWithoutBreak] = useState<boolean>(false);
+  const ignoreBp = useSelector((state: { appState: AppStateState }) =>  state.appState.ignoreBP)
+  const appStateDispatch = useDispatch<Dispatch<AppStateAction>>();
   const toggleStepWithoutBreak = () => {
-    setStepWithoutBreak(!stepWithoutBreak);
-    dispatch(runStepWithoutBreak());
+    appStateDispatch({ type: AppStateActionType.TOGGLE_IGNORE });
   };
 
   const dispatch = useDispatch<Dispatch<DebuggerAction>>();
@@ -112,11 +111,11 @@ export default function Toolbar() {
             disabled={disableGoingForward}
             onClick={toggleStepWithoutBreak}
             className={
-              stepWithoutBreak
+              ignoreBp
                 ? "bg-blue-600 hover:bg-blue-500 text-white hover:text-white"
                 : ""
             }
-            icon={stepWithoutBreak ? <NavigationIcon /> : <NavigationOffIcon />}
+            icon={ignoreBp ? <PowerIcon /> : <PowerOffIcon />}
             label={<span>step without break</span>}
           />
         </ToolbarButtonGroup>
@@ -280,6 +279,7 @@ import { handleKeyPressBuilder } from "./Toolbar.util";
 import { selector } from "./Toolbar.redux";
 import { GIVEN_SETTINGS } from "@/constants/settings";
 import SpecVersionView from "../spec/SpecVersionView";
+import { AppStateAction, AppStateActionType, AppStateState } from "@/store/reducers/AppState";
 
 function Seperator() {
   return (

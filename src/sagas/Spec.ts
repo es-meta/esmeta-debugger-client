@@ -32,7 +32,7 @@ function* updateByCidSaga() {
         string,
         [number, number],
       ] = yield call(() => doAPIGetRequest(`state/context/${cid}`));
-      yield put({ type: AppStateActionType.RECIEVE });
+      yield put({ type: AppStateActionType.RECEIVE });
       const params = rawParams.map(([name, optional, type]) => ({
         name,
         optional,
@@ -58,7 +58,7 @@ function* updateAlgoListSaga() {
       const raw: [number, string][] = yield call(() =>
         doAPIGetRequest(`spec/func`),
       );
-      yield put({ type: AppStateActionType.RECIEVE });
+      yield put({ type: AppStateActionType.RECEIVE });
       const nameMap: Record<string, number> = {};
       raw.forEach(([fid, name]) => {
         nameMap[name] = fid;
@@ -85,7 +85,7 @@ function* updateVersionInfo() {
       const raw: SpecVersion = yield call(() =>
         doAPIGetRequest(`spec/version`),
       );
-      yield put({ type: AppStateActionType.RECIEVE });
+      yield put({ type: AppStateActionType.RECEIVE });
       yield put(updateVersionSuccess(raw));
     } catch (e: unknown) {
       // show error toast

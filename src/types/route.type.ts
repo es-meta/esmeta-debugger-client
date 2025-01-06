@@ -9,7 +9,6 @@ export const routes = [
   "breakpoint",
   "exec/run",
   "exec/resumeFromIter",
-  "exec/ignoreFlag",
   "exec/backToProvenance",
   "exec/specStep",
   "exec/specStepOver",

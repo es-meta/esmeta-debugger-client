@@ -13,8 +13,9 @@ export enum AppState {
 export enum AppStateActionType {
   MOVE = "ConnectionStateAction/MOVE",
   SEND = "ConnectionStateAction/SEND",
-  RECIEVE = "ConnectionStateAction/RECIEVE",
+  RECEIVE = "ConnectionStateAction/RECEIVE",
   TIMEOUT = "ConnectionStateAction/TIMEOUT",
+  TOGGLE_IGNORE = "ConnectionStateAction/TOGGLE_IGNORE",
 }
 
 export function move(nextState: AppState): AppStateAction {
@@ -32,19 +33,23 @@ export type AppStateAction =
       type: AppStateActionType.SEND;
     }
   | {
-      type: AppStateActionType.RECIEVE;
+      type: AppStateActionType.RECEIVE;
     }
   | {
       type: AppStateActionType.TIMEOUT;
-    };
+    }
+  | {
+    type: AppStateActionType.TOGGLE_IGNORE;
+  }
 
 // redux state
-type AppStateState = {
+export type AppStateState = {
   state: AppState;
   busy: number;
+  ignoreBP: boolean,
 };
 
-const initialState: AppStateState = { state: AppState.INIT, busy: -0 };
+const initialState: AppStateState = { state: AppState.INIT, busy: -0, ignoreBP: false };
 
 import { workingset } from "@/util/api/api";
 
@@ -62,7 +67,7 @@ export default function reducer(state = initialState, action: AppStateAction) {
         draft.busy += 1;
       });
 
-    case AppStateActionType.RECIEVE:
+    case AppStateActionType.RECEIVE:
       return produce(state, draft => {
         draft.busy = workingset.size;
       });
@@ -71,6 +76,11 @@ export default function reducer(state = initialState, action: AppStateAction) {
       return produce(state, draft => {
         draft.busy = workingset.size;
       });
+
+    case AppStateActionType.TOGGLE_IGNORE:
+      return produce(state, draft => {
+        draft.ignoreBP = !draft.ignoreBP;
+      })
 
     default:
       return state;

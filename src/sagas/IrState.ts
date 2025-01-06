@@ -21,7 +21,7 @@ function* updateHeapSaga() {
     try {
       yield put({ type: AppStateActionType.SEND });
       const heap: Heap = yield call(() => doAPIGetRequest("state/heap"));
-      yield put({ type: AppStateActionType.RECIEVE });
+      yield put({ type: AppStateActionType.RECEIVE });
       yield put(updateHeapSuccess(heap));
     } catch (e: unknown) {
       // show error toast
