@@ -45,7 +45,6 @@ const doGetRequest = async (
 
     default:
       if (endpoint.startsWith("state/context/")) {
-        // @ts-expect-error TODO type definition
         return JSON.parse(
           (await ESMetaDebugger).state_context(
             Number(endpoint.split("/").at(2)),
@@ -70,21 +69,18 @@ const doWriteRequest = async (
       console.log("got breakpoint request");
       switch (method) {
         case "POST":
-          // @ts-expect-error TODO type definition
           return JSON.parse(
             (await ESMetaDebugger).breakpoint_add(
               bodyObj !== undefined ? JSON.stringify(bodyObj) : undefined,
             ),
           );
         case "DELETE":
-          // @ts-expect-error TODO type definition
           return JSON.parse(
             (await ESMetaDebugger).breakpoint_remove(
               bodyObj !== undefined ? JSON.stringify(bodyObj) : undefined,
             ),
           );
         case "PUT":
-          // @ts-expect-error TODO type definition
           return JSON.parse(
             (await ESMetaDebugger).breakpoint_toggle(
               bodyObj !== undefined ? JSON.stringify(bodyObj) : undefined,
@@ -95,7 +91,6 @@ const doWriteRequest = async (
       }
 
     case "exec/run":
-      // @ts-expect-error TODO type definition
       return JSON.parse(
         (await ESMetaDebugger).exec_run(
           bodyObj !== undefined ? JSON.stringify(bodyObj) : undefined,
