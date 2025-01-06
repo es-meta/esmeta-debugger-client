@@ -18,6 +18,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-grid-layout": "^1.5.0",
+    "react-intersection-observer": "^9.14.1",
     "react-redux": "^7.2.4",
     "react-router": "^7.0.2",
     "react-toastify": "^10.0.6",
