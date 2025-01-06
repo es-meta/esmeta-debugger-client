@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useMemo } from "react";
 import Editor, { type Monaco } from "@monaco-editor/react";
 import { editor } from "monaco-editor";
 import * as monaco_editor from "monaco-editor";
@@ -40,7 +40,11 @@ export default function MonacoEditor({
           content: "declare function print(value: any): void;",
         },
       ]);
-
+      monaco.editor.addKeybindingRule({
+        keybinding: monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyK,
+        command: null,
+        when: null,
+      });
       monacoRef.current = monaco;
       editorRef.current = mountedEditor;
       decorations.current = mountedEditor.createDecorationsCollection();
@@ -48,9 +52,21 @@ export default function MonacoEditor({
     [],
   );
 
-  useEffect(() => {
-    editorRef.current?.updateOptions({ readOnly });
-  }, [readOnly]);
+
+const options: editor.IStandaloneEditorConstructionOptions = useMemo(() => ({
+    scrollbar: {
+      alwaysConsumeMouseWheel: false,
+    },
+    minimap: { enabled: false },
+    wordWrap: "on",
+    readOnly,
+    lineNumbers: "on",
+    fontSize: 14,
+    tabSize: 2,
+    fontFamily: '"Fira code", "Fira Mono", monospace',
+    theme: "vs",
+    automaticLayout: true,
+  }), [readOnly]);
 
   useEffect(() => {
     if (!monacoRef.current || !decorations.current || !editorRef.current) {
@@ -96,18 +112,3 @@ export default function MonacoEditor({
 function Loading() {
   return <LoaderIcon className="animate-spin text-blue-500" size={32} />;
 }
-
-const options: editor.IStandaloneEditorConstructionOptions = {
-  scrollbar: {
-    alwaysConsumeMouseWheel: false,
-  },
-  minimap: { enabled: false },
-  wordWrap: "on",
-  readOnly: false,
-  lineNumbers: "on",
-  fontSize: 14,
-  tabSize: 2,
-  fontFamily: '"Fira code", "Fira Mono", monospace',
-  theme: "vs",
-  automaticLayout: true,
-};
