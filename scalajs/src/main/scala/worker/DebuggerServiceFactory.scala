@@ -86,8 +86,71 @@ import esmeta.ir.*
 import esmeta.ir.Expr
 import esmeta.ir.util.UnitWalker
 
+// @ScalaJSDefined
+trait Input extends js.Object {
+  val funcs: String
+  val version: String
+  val grammar: String
+  val tables: String
+  val tyModel: String
+  val irFuncToCode: String
+}
+
 @JSExportTopLevel("DebuggerServiceFactory")
 object DebuggerServiceFactory {
+
+  @JSExport
+  def buildFromGiven(
+    input: Input
+  ): js.Promise[DebuggerService] = 
+    measureFutureTime { withMeasure("build") {
+
+            val  funcsFuture = (decodeWithMeasure[List[Func]]("Funcs")(input.funcs))
+            val  versionFuture =  (decodeWithMeasure[Spec.Version]("Version")(input.version))
+            val  grammarFuture = (decodeWithMeasure[Grammar]("Grammar")(input.grammar))
+            val  tablesFuture = (decodeWithMeasure[Map[String, Table]]("Tables")(input.tables))
+            val  tyModelFuture = (decodeWithMeasure[TyModel]("TyModel")(input.tyModel))
+            val  irFuncToCodeFuture = (decodeWithMeasure[Map[String, Option[String]]]("irFuncToCode")(input.irFuncToCode))
+            val algoFuture = Future(Nil) // not needed for now
+
+            for {
+              funcs <- funcsFuture
+              algo <- algoFuture
+              version <- versionFuture
+              grammar <- grammarFuture
+              tables <- tablesFuture
+              tyModel <- tyModelFuture
+              irFuncToCode <- irFuncToCodeFuture
+              spec = Spec(Some(version), grammar, algo, tables, tyModel)
+            } yield  {
+
+              // TODO : fix parser
+              // class IllegalFinder(f: Func) extends UnitWalker {
+              //   override def walk(var1: Name): Unit = {
+              //     if (var1.name == "false") {
+              //       println(s"Illegal variable found: false in ${f.name}")
+              //     }
+              //   }
+              // }
+
+              // funcs.foreach(f => {
+              //   val illegalFinder = IllegalFinder(f)
+              //   illegalFinder.walk(f)
+              // })
+
+              val cfg = benchmark { CFGBuilder.apply(Program.apply(funcs, spec)) }{ t =>
+                println(s"CFG created successfully, time taken: ${t}ms")
+              }
+
+              val service = benchmark { DebuggerService(cfg, irFuncToCode)} {
+                t => println(s"Mocking Interface created successfully, Time taken: ${t} ms")
+              }
+
+              service
+            }
+
+          }
+      }.toJSPromise
 
   @JSExport
   def build(
@@ -140,6 +203,8 @@ object DebuggerServiceFactory {
 
       }
   }.toJSPromise
+
+
 
   @JSExport
   def run(base : String): Unit = build(base)
