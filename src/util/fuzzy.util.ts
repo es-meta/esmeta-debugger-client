@@ -11,7 +11,7 @@ export const fuzzyFilter = <T>(
   const fzf = new Fzf(list, {
     selector: item => item.text,
     casing: "case-insensitive",
-   });
+  });
   return fzf
     .find(query)
     .filter(r => r.score > threshold)
