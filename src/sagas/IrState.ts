@@ -11,7 +11,7 @@ import {
   updateHeapSuccess,
   updateCallStackSuccess,
 } from "../store/reducers/IrState";
-import { updateAlgoByCidRequset } from "../store/reducers/Spec";
+import { AlgorithmKind, updateAlgoByCidRequset } from "../store/reducers/Spec";
 import { doAPIGetRequest } from "../util/api/api";
 import { AppStateActionType } from "@/store/reducers/AppState";
 
@@ -36,15 +36,45 @@ function* updateHeapSaga() {
 function* updateCallStackSaga() {
   function* _updateCallStack() {
     try {
-      const raw: [number, string, number[], Environment][] = yield call(() =>
-        doAPIGetRequest("state/callStack"),
+      const raw: [
+        number,
+        string,
+        number[],
+        unknown,
+        Environment,
+        number[][],
+      ][] = yield call(() => doAPIGetRequest("state/callStack"));
+      const callStack: CallStack = raw.map(
+        ([fid, name, steps, _, env, visited]) => ({
+          fid,
+          name,
+          steps,
+          env,
+          algo: null as unknown as Algorithm,
+          visited,
+        }),
       );
-      const callStack: CallStack = raw.map(([fid, name, steps, env]) => ({
-        fid,
-        name,
-        steps,
-        env,
-      }));
+
+      for (let i = 0; i < callStack.length; i++) {
+        const [fid, kind, name, rawParams, dot, code]: [
+          number,
+          AlgorithmKind,
+          string,
+          [string, boolean, string][],
+          string,
+          string,
+          [number, number],
+        ] = yield call(() => doAPIGetRequest(`state/context/${i}`));
+        yield put({ type: AppStateActionType.RECIEVE });
+        const params = rawParams.map(([name, optional, type]) => ({
+          name,
+          optional,
+          type,
+        }));
+        const algo = { fid, kind, name, params, dot, code };
+        callStack[i].algo = algo;
+        ///
+      }
       yield put(updateCallStackSuccess(callStack));
       yield put(updateContextIdx(0));
     } catch (e: unknown) {
