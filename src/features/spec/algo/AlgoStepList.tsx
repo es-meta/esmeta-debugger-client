@@ -7,21 +7,14 @@ import {
 import type { ListNode, OrderedListNode, FragmentNode } from "ecmarkdown";
 import { twJoin } from "tailwind-merge";
 import "@/styles/AlgoViewer.css";
-
-// util
-function isSameStep(steps1: number[], steps2: number[]) {
-  return (
-    steps1.length === steps2.length &&
-    steps1.every((s, idx) => s === steps2[idx])
-  );
-}
+import { isSameStep } from "./algo.util";
 
 // algo steps prefix
-type AlgoStepPrefixProps = {
+interface AlgoStepPrefixProps {
   steps: number[];
   breakedStepsList: number[][];
   onPrefixClick: (steps: number[]) => void;
-};
+}
 
 function AlgoStepPrefix(props: AlgoStepPrefixProps) {
   const { breakedStepsList, steps, onPrefixClick } = props;
@@ -36,24 +29,26 @@ function AlgoStepPrefix(props: AlgoStepPrefixProps) {
 }
 
 // algo steps
-type AlgoStepProps = {
+interface AlgoStepProps {
   contents: FragmentNode[];
   sublist: ListNode | null;
   steps: number[];
   currentSteps: number[];
   breakedStepsList: number[][];
+  visitedStepList: number[][];
   onPrefixClick: (steps: number[]) => void;
   level: number;
-};
+}
 
-export const AlgoStepList = (props: {
+export default function AlgoStepList(props: {
   listNode: OrderedListNode;
   steps: number[];
   currentSteps: number[];
   breakedStepsList: number[][];
+  visitedStepList: number[][];
   onPrefixClick: (steps: number[]) => void;
   level: number;
-}) => {
+}) {
   return (
     <ol
       className={twJoin(
@@ -64,14 +59,20 @@ export const AlgoStepList = (props: {
       )}
     >
       {props.listNode.contents.map((listItemNode, idx) => {
+        const a = uuid();
+        console.log(props.steps.join(","), a);
         return (
           <AlgoStep
-            key={uuid()}
+            key={
+              a
+              // `${props.steps.join(',')}`
+            }
             contents={listItemNode.contents}
             sublist={listItemNode.sublist}
             steps={props.steps.concat([idx + 1])}
             currentSteps={props.currentSteps}
             breakedStepsList={props.breakedStepsList}
+            visitedStepList={props.visitedStepList}
             onPrefixClick={props.onPrefixClick}
             level={(props.level + 1) % 3}
           />
@@ -79,7 +80,7 @@ export const AlgoStepList = (props: {
       })}
     </ol>
   );
-};
+}
 
 // algorithm steps
 function AlgoStep(props: AlgoStepProps) {
@@ -93,9 +94,14 @@ function AlgoStep(props: AlgoStepProps) {
   const className = useMemo((): string => {
     let className = "algo-step";
     const highlight = isSameStep(steps, currentSteps);
-    if (highlight) className += " highlight";
+    const visited = props.visitedStepList.some(visitedSteps =>
+      isSameStep(visitedSteps, steps),
+    );
+    console.log("visitiedSteps", visited, props.visitedStepList);
+    if (highlight) className += " highlight ";
+    if (visited) className += " bg-neutral-100 ";
     return className;
-  }, [steps, currentSteps]);
+  }, [steps, currentSteps, props.visitedStepList]);
 
   const handleClick = useCallback(() => {
     setTimeout(() => onPrefixClick(steps), 0);
@@ -119,6 +125,7 @@ function AlgoStep(props: AlgoStepProps) {
           steps={steps}
           currentSteps={currentSteps}
           breakedStepsList={breakedStepsList}
+          visitedStepList={props.visitedStepList}
           onPrefixClick={onPrefixClick}
           level={level}
         />
@@ -133,20 +140,17 @@ interface CoreProps {
   handleClick: () => void;
 }
 
-const AlgoStepCore = React.memo(
-  function AlgoStepCore({ className, contents, handleClick }: CoreProps) {
-    return (
-      <li
-        className={twJoin(
-          className,
-          "hover:scale-[1.015625] hover:bg-neutral-100 active:scale-95 transition-all cursor-pointer",
-          "text-black",
-        )}
-        onClick={handleClick}
-      >
-        {Emitter.emit(contents)}
-      </li>
-    );
-  },
-  (prev, next) => prev.contents === next.contents,
-);
+function AlgoStepCore({ className, contents, handleClick }: CoreProps) {
+  return (
+    <li
+      className={twJoin(
+        className,
+        "hover:scale-[1.015625] hover:bg-neutral-100 active:scale-95 transition-all cursor-pointer",
+        "text-black",
+      )}
+      onClick={handleClick}
+    >
+      {Emitter.emit(contents)}
+    </li>
+  );
+}

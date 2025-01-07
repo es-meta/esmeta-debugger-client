@@ -1,18 +1,20 @@
 import React, { useCallback, useMemo } from "react";
 import { parseAlgorithm } from "ecmarkdown";
 import { Algorithm } from "@/store/reducers/Spec";
-import { AlgoStepList } from "./AlgoStep";
+import AlgoStepList from "./AlgoStepList";
 import "@/styles/AlgoViewer.css";
 import { BreakpointType } from "@/store/reducers/Breakpoint";
-import { SpecViewerProps, connector } from "../SpecViewer.redux";
+import { SpecViewerProps } from "../SpecViewer.redux";
+import { addBreak, rmBreak } from "@/store/reducers/Breakpoint";
+import { useDispatch } from "react-redux";
+import { Context } from "@/store/reducers/IrState";
 
-export default connector(function AlgoViewer(props: SpecViewerProps) {
-  const { irState, spec, breakpoints, rmBreak, addBreak } = props;
-
-  const context = irState.callStack[irState.contextIdx];
+function ContextViewer(props: SpecViewerProps & { context: Context }) {
+  const dispatch = useDispatch();
+  const { algo, breakpoints, context } = props;
 
   const currentSteps = useMemo(
-    () => (context === undefined ? [] : context.steps),
+    () => (context === undefined ? [] : context.steps) satisfies number[],
     [context],
   );
 
@@ -44,48 +46,55 @@ export default connector(function AlgoViewer(props: SpecViewerProps) {
       });
 
       // remove breakpoints
-      if (bpIdx !== -1) rmBreak(bpIdx);
+      if (bpIdx !== -1) dispatch(rmBreak(bpIdx));
       else {
         const bpName = `${steps} @ ${algoName}`;
-        addBreak({
-          type: BreakpointType.Spec,
-          fid,
-          name: bpName,
-          steps,
-          enabled: true,
-        });
+        dispatch(
+          addBreak({
+            type: BreakpointType.Spec,
+            fid,
+            name: bpName,
+            steps,
+            enabled: true,
+          }),
+        );
       }
     },
-    [rmBreak, breakpoints, addBreak],
+    [breakpoints, dispatch],
   );
 
   const empty = useMemo(() => [], []);
 
-  const parsed = useMemo(
-    () => parseAlgorithm(spec.algorithm.code),
-    [spec.algorithm.code],
-  );
+  const parsed = useMemo(() => parseAlgorithm(algo.code), [algo.code]);
 
   const handlePrefixClick = useCallback(
-    (steps: number[]) =>
-      onPrefixClick(spec.algorithm.fid, spec.algorithm.name, steps),
-    [onPrefixClick, spec.algorithm.fid, spec.algorithm.name],
+    (steps: number[]) => onPrefixClick(algo.fid, algo.name, steps),
+    [onPrefixClick, algo.fid, algo.name],
   );
 
   return (
     <div className="algo-container size-fit">
-      <AlgoViewerHeader algorithm={spec.algorithm} />
+      <AlgoViewerHeader algorithm={algo} />
       <AlgoStepList
         listNode={parsed.contents}
         steps={empty}
         currentSteps={currentSteps}
         breakedStepsList={breakedStepsList}
+        visitedStepList={context.visited}
         onPrefixClick={handlePrefixClick}
         level={0}
       />
     </div>
   );
-});
+}
+
+export default function AlgoViewer(props: SpecViewerProps) {
+  const { irState } = props;
+
+  const context = irState.callStack[irState.contextIdx];
+
+  return <ContextViewer {...props} context={context} />;
+}
 
 function AlgoViewerHeader({ algorithm }: { algorithm: Algorithm }) {
   return (
