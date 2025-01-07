@@ -4,7 +4,6 @@ import { toast } from "react-toastify";
 // import { ReduxState } from "../store";
 import {
   Environment,
-  Heap,
   CallStack,
   IrStateActionType,
   updateContextIdx,
@@ -14,6 +13,7 @@ import {
 import { Algorithm, AlgorithmKind, updateAlgoByCidRequset } from "../store/reducers/Spec";
 import { doAPIGetRequest } from "../util/api/api";
 import { AppStateActionType } from "@/store/reducers/AppState";
+import { Heap } from "@/types/heap.type";
 
 // heap saga
 function* updateHeapSaga() {

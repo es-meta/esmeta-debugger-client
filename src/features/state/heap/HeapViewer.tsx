@@ -1,17 +1,11 @@
-import { forwardRef, useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import { toast } from "react-toastify";
 import MyCombobox from "@/components/combobox/MyCombobox";
 import { CopyIcon, XIcon } from "lucide-react";
 import StateViewerItem from "../StateViewerItem";
 import { useSelector } from "react-redux";
 import { ReduxState } from "@/store";
-// import { useHeap } from "@/services/heap.service";
 
-import { z } from "zod";
-
-const HeapSchema = z.record(z.string(), z.string());
-
-function HeapObjView({ obj }: { obj: HeapObj }) {}
 
 export default function HeapViewer() {
   const [addr, setAddr] = useState<string | null>(null);
