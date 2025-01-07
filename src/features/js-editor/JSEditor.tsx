@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { ReduxState } from "@/store";
 import { edit } from "@/store/reducers/JS";
 import { AppState } from "@/store/reducers/AppState";
+import { CodeIcon } from "lucide-react";
 
 export default function JSEditor() {
   // size = 14;
@@ -32,15 +33,18 @@ export default function JSEditor() {
     [appState, edit],
   );
 
-  const [toggle, setToggle] = useState(false);
+  // const [toggle, setToggle] = useState(false);
 
-  useEffect(() => {
-    setToggle(t => !t);
-  }, [code]);
+  // useEffect(() => {
+  //   setToggle(t => !t);
+  // }, [code]);
 
   return (
     <Card>
-      <CardHeader title="JavaScript&nbsp;Editor">
+      <CardHeader
+        title="JavaScript&nbsp;Editor"
+        icon={<CodeIcon size={14} className="inline" />}
+      >
         {/* <div className="flex flex-row px-4 justify-between">
           <StateTransition state={toggle ? "astReady" : "loading"} />
           <div className="flex flex-row gap-2">

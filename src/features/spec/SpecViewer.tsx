@@ -3,10 +3,7 @@ import AlgoViewer from "./algo/AlgoViewer";
 import Graphviz from "./Graphviz";
 import Card from "@/components/layout/Card";
 import CardHeader from "@/components/layout/CardHeader";
-import { ReduxState } from "@/store";
 // import { LinkIcon, LockIcon, LockOpenIcon } from "lucide-react";
-import { useState } from "react";
-import SpecVersionView from "./SpecVersionView";
 
 // view type of spec
 enum SpecViewType {
@@ -15,17 +12,13 @@ enum SpecViewType {
   DEFAULT,
 }
 
-const selector = (st: ReduxState) => ({
-  spec: st.spec,
-  irState: st.irState,
-  breakpoints: st.breakpoint.items,
-});
+import { selector } from "./SpecViewer.redux";
+import { BookMarkedIcon } from "lucide-react";
 
 export default function SpecViewer() {
   // TODO optimize
   const props = useSelector(selector);
-  const algo = props.spec.algorithm;
-  const [locked, setLocked] = useState(false);
+  const algo = props.algo;
 
   const viewType: SpecViewType =
     algo.fid === -1
@@ -36,18 +29,27 @@ export default function SpecViewer() {
 
   return (
     <Card>
-      <CardHeader title="ECMAScript Specification"></CardHeader>
-      <div className="size-full overflow-y-scroll">
+      <CardHeader
+        title="ECMAScript Specification"
+        icon={<BookMarkedIcon size={14} className="inline" />}
+      ></CardHeader>
+      <div className="flex flex-col overflow-hidden">
         {viewType === SpecViewType.ALGORITHM ? (
           <AlgoViewer {...props} />
         ) : viewType === SpecViewType.GRAPH ? (
-          <Graphviz dot={props.spec.algorithm.dot} />
+          <Graphviz dot={props.algo.dot} />
         ) : (
-          <p className="px-4">
-            Please write JavaScript code and press the run button.
-          </p>
+          <EmptyView />
         )}
       </div>
     </Card>
+  );
+}
+
+function EmptyView() {
+  return (
+    <p className="text-neutral-500 p-2">
+      Please write JavaScript code and press the run button.
+    </p>
   );
 }

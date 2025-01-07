@@ -52,21 +52,23 @@ export default function MonacoEditor({
     [],
   );
 
-
-const options: editor.IStandaloneEditorConstructionOptions = useMemo(() => ({
-    scrollbar: {
-      alwaysConsumeMouseWheel: false,
-    },
-    minimap: { enabled: false },
-    wordWrap: "on",
-    readOnly,
-    lineNumbers: "on",
-    fontSize: 14,
-    tabSize: 2,
-    fontFamily: '"Fira code", "Fira Mono", monospace',
-    theme: "vs",
-    automaticLayout: true,
-  }), [readOnly]);
+  const options: editor.IStandaloneEditorConstructionOptions = useMemo(
+    () => ({
+      scrollbar: {
+        alwaysConsumeMouseWheel: false,
+      },
+      minimap: { enabled: false },
+      wordWrap: "on",
+      readOnly,
+      lineNumbers: "on",
+      fontSize: 14,
+      tabSize: 2,
+      fontFamily: '"Fira code", "Fira Mono", monospace',
+      theme: "vs",
+      automaticLayout: true,
+    }),
+    [readOnly],
+  );
 
   useEffect(() => {
     if (!monacoRef.current || !decorations.current || !editorRef.current) {
