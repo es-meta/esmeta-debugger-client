@@ -17,25 +17,34 @@ import StateViewerItem from "../StateViewerItem";
 // sort
 export default connector(function Breakpoints(props: BreakpointsProps) {
   const { breakpoints, algoNames } = props;
-  const [algoName, setAlgoName] = useState("");
+  const [algoName, setAlgoName] = useState<string | null>(null);
 
-  const onAddClick = useCallback(() => {
-    const steps: number[] = [1];
+  const onAddClick = useCallback(
+    (algoName: string | null) => {
+      if (algoName === null) {
+        setAlgoName(algoName);
+        return;
+      }
 
-    const bpName = `${steps} @ ${algoName}`;
-    const duplicated = props.breakpoints.some(({ name }) => name === bpName);
-    const valid = props.algos.hasOwnProperty(algoName);
-    if (valid && !duplicated)
-      props.addBreak({
-        type: BreakpointType.Spec,
-        fid: props.algos[algoName],
-        name: bpName,
-        steps: steps,
-        enabled: true,
-      });
-    else if (duplicated) toast.warning(`Breakpoint already set: ${bpName}`);
-    else toast.warning(`Wrong algorithm name: ${algoName}`);
-  }, [algoName, props.breakpoints, props.algos]);
+      const steps: number[] = [1];
+
+      const bpName = `${steps} @ ${algoName}`;
+      const duplicated = props.breakpoints.some(({ name }) => name === bpName);
+      const valid = props.algos.hasOwnProperty(algoName);
+      if (valid && !duplicated)
+        props.addBreak({
+          type: BreakpointType.Spec,
+          fid: props.algos[algoName],
+          name: bpName,
+          steps: steps,
+          enabled: true,
+        });
+      else if (duplicated) toast.warning(`Breakpoint already set: ${bpName}`);
+      else toast.warning(`Wrong algorithm name: ${algoName}`);
+      setAlgoName(algoName);
+    },
+    [props.breakpoints, props.algos],
+  );
 
   // const onKeyDown = useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
   //   if (e.key === "Enter") {
@@ -46,14 +55,7 @@ export default connector(function Breakpoints(props: BreakpointsProps) {
   return (
     <StateViewerItem header="Breakpoints">
       <div className="flex flex-row items-center w-full">
-        <MyCombobox
-          value={algoName}
-          values={algoNames}
-          onChange={setAlgoName}
-        />
-        <button style={{ padding: 0 }} onClick={() => onAddClick()}>
-          <PlusIcon />
-        </button>
+        <MyCombobox value={algoName} values={algoNames} onChange={onAddClick} />
       </div>
       <table className="w-full">
         <thead>

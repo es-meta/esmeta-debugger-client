@@ -1,20 +1,27 @@
 import { useCallback } from "react";
 import { v4 as uuid } from "uuid";
-import { connector, type CallStackViewerProps } from "./CallStackViewer.redux";
 import ContextItem from "./ContextItem";
 import StateViewerItem from "../StateViewerItem";
+import { useDispatch, useSelector } from "react-redux";
+import { ReduxState } from "@/store";
+import { updateContextIdx } from "@/store/reducers/IrState";
 
-export default connector(function CallStackViewer(props: CallStackViewerProps) {
+export default function CallStackViewer() {
+  const dispatch = useDispatch();
+
   const {
     irState: { callStack, contextIdx },
-    updateContextIdx,
-  } = props;
+    breakpoints,
+  } = useSelector((st: ReduxState) => ({
+    irState: st.irState,
+    breakpoints: st.breakpoint.items,
+  }));
 
   const onItemClick = useCallback(
     (idx: number) => {
-      updateContextIdx(idx);
+      dispatch(updateContextIdx(idx));
     },
-    [updateContextIdx],
+    [dispatch],
   );
 
   return (
@@ -40,4 +47,4 @@ export default connector(function CallStackViewer(props: CallStackViewerProps) {
       </table>
     </StateViewerItem>
   );
-});
+}
