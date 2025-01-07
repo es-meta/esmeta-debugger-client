@@ -57,7 +57,8 @@ export const handleKeyPressBuilder = (dispatch: Dispatch, cond: Selected) =>
     )
       return;
 
-    const isComplex = (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey);
+    const isComplex =
+      event.ctrlKey || event.metaKey || event.altKey || event.shiftKey;
 
     const action = map(event.key, cond);
 
