@@ -11,7 +11,7 @@ import {
   updateHeapSuccess,
   updateCallStackSuccess,
 } from "../store/reducers/IrState";
-import { AlgorithmKind, updateAlgoByCidRequset } from "../store/reducers/Spec";
+import { Algorithm, AlgorithmKind, updateAlgoByCidRequset } from "../store/reducers/Spec";
 import { doAPIGetRequest } from "../util/api/api";
 import { AppStateActionType } from "@/store/reducers/AppState";
 
