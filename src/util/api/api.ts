@@ -1,12 +1,38 @@
 import { toast } from "react-toastify";
 import type { Route } from "@/types/route.type";
 import { GIVEN_SETTINGS } from "@/constants/settings";
+import { ScalaJSFactoryInput } from "./esmeta.type";
+
+function fetchFromDump(url: string): Promise<string> {
+  return fetch(url).then(response => response.text());
+}
 
 // Create worker instance
 const workerPromise = new Promise<Worker>(resolve => {
   const GIVEN_API = GIVEN_SETTINGS.api;
   if (GIVEN_API.type === "browser") {
-    resolve(new Worker(new URL("./esmeta.worker.ts", import.meta.url)));
+    const input = Promise.all([
+      fetchFromDump("/dump/funcs.json"),
+      fetchFromDump("/dump/spec.version.json"),
+      fetchFromDump("/dump/grammar.json"),
+      fetchFromDump("/dump/spec.tables.json"),
+      fetchFromDump("/dump/tyModel.decls.json"),
+      fetchFromDump("/dump/irFuncToCode.json"),
+    ]).then(
+      ([funcs, version, grammar, tables, tyModel, irFuncToCode]) =>
+        ({
+          funcs,
+          version,
+          grammar,
+          tables,
+          tyModel,
+          irFuncToCode,
+        }) satisfies ScalaJSFactoryInput,
+    );
+
+    const w = new Worker(new URL("./esmeta.worker.ts", import.meta.url));
+    w.postMessage({ type: "META", data: input });
+    resolve(w);
   } else {
     const w = new Worker(new URL("./http.worker.ts", import.meta.url));
     w.postMessage({ type: "META", data: GIVEN_API.url });
@@ -20,11 +46,16 @@ var counter = 0;
 export const workingset = new Set();
 
 // Helper function to handle worker communication
-const createWorkerRequest = async (
+
+type ReturnTypeForApi<T extends Route> = T extends "state/heap"
+  ? number
+  : unknown;
+
+const createWorkerRequest = async <T extends Route>(
   type: string,
-  endpoint: Route,
+  endpoint: T,
   data?: unknown,
-): Promise<unknown> => {
+): Promise<ReturnTypeForApi<T>> => {
   const worker = await workerPromise;
   return new Promise((resolve, reject) => {
     const id = counter++;
@@ -51,29 +82,29 @@ const createWorkerRequest = async (
 };
 
 // Modified API request functions
-export const doAPIGetRequest = (
-  endpoint: Route,
+export const doAPIGetRequest = <T extends Route>(
+  endpoint: T,
   queryObj?: { [key: string]: unknown },
-): Promise<unknown> => {
-  return createWorkerRequest("GET", endpoint, queryObj);
+) => {
+  return createWorkerRequest<T>("GET", endpoint, queryObj);
 };
 
-export const doAPIPostRequest = (
-  endpoint: Route,
+export const doAPIPostRequest = <T extends Route>(
+  endpoint: T,
   bodyObj?: unknown,
 ): Promise<unknown> => {
-  return createWorkerRequest("POST", endpoint, bodyObj);
+  return createWorkerRequest<T>("POST", endpoint, bodyObj);
 };
 
-export const doAPIDeleteRequest = (
-  endpoint: Route,
+export const doAPIDeleteRequest = <T extends Route>(
+  endpoint: T,
   bodyObj?: unknown,
 ): Promise<unknown> => {
   return createWorkerRequest("DELETE", endpoint, bodyObj);
 };
 
-export const doAPIPutRequest = (
-  endpoint: Route,
+export const doAPIPutRequest = <T extends Route>(
+  endpoint: T,
   bodyObj?: unknown,
 ): Promise<unknown> => {
   return createWorkerRequest("PUT", endpoint, bodyObj);

@@ -20,3 +20,12 @@ export interface ScalaJSDebuggerService {
   breakpoint_toggle: (body: string | undefined) => string;
   exec_run: (body: string | undefined) => string;
 }
+
+export interface ScalaJSFactoryInput {
+  funcs: string;
+  version: string;
+  grammar: string;
+  tables: string;
+  tyModel: string;
+  irFuncToCode: string;
+}

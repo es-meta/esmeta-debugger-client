@@ -1,15 +1,45 @@
 /// <reference lib="webworker" />
 
 // import type { ApiMessageData } from './message.type';
-import type { ScalaJSDebuggerService } from "./esmeta.type";
+import type {
+  ScalaJSDebuggerService,
+  ScalaJSFactoryInput,
+} from "./esmeta.type";
 
 //////////////////////// import from Scala.js /////////////////////////
 
-let ESMetaDebugger: Promise<ScalaJSDebuggerService> = (async () => {
-  const module = await import("@esmeta/main.mjs");
-  const mokcing = await (await module.DebuggerServiceFactory).build("");
-  return mokcing;
-})();
+const module = import("@esmeta/main.mjs");
+
+let ESMetaDebugger: Promise<ScalaJSDebuggerService> = Promise.reject(null);
+
+// OLD CODE
+// (async () => {
+//   const [factory, input] = await Promise.all([
+//     import("@esmeta/main.mjs"),
+//     fetchFromDump("/dump/funcs.json"),
+//     fetchFromDump("/dump/spec.version.json"),
+//     fetchFromDump("/dump/grammar.json"),
+//     fetchFromDump("/dump/spec.tables.json"),
+//     fetchFromDump("/dump/tyModel.decls.json"),
+//     fetchFromDump("/dump/irFuncToCode.json"),
+//   ]).then(
+//     ([module, funcs, version, grammar, tables, tyModel, irFuncToCode]) =>
+//       [
+//         module.DebuggerServiceFactory,
+//         {
+//           funcs,
+//           version,
+//           grammar,
+//           tables,
+//           tyModel,
+//           irFuncToCode,
+//         },
+//       ] satisfies [unknown, ScalaJSFactoryInput],
+//   );
+
+//   const mokcing = await factory.buildFromGiven(input);
+//   return mokcing;
+// })();
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -17,6 +47,7 @@ const apiError = (s: string) => new Error(`Unknown API endpoint ${s}`);
 
 // HTTP methods
 type HTTPMethod =
+  | "META"
   | "DELETE"
   | "GET"
   | "HEAD"
@@ -136,6 +167,11 @@ self.onmessage = async (e: MessageEvent<any>) => {
   try {
     let result;
     switch (type) {
+      case "META":
+        ESMetaDebugger = await (
+          await module
+        ).DebuggerServiceFactory.buildFromGiven(data);
+        break;
       case "GET":
         result = await doGetRequest(endpoint, data);
         break;
