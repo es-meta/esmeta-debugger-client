@@ -11,8 +11,8 @@ import { twJoin } from "tailwind-merge";
 
 interface ComboProps {
   values: string[];
-  value: string;
-  onChange: (value: string) => void;
+  value: string | null;
+  onChange: (value: string | null) => void;
 }
 
 export default function MyCombobox({ values, value, onChange }: ComboProps) {
@@ -20,7 +20,9 @@ export default function MyCombobox({ values, value, onChange }: ComboProps) {
 
   const filtered = useMemo(
     () =>
-      query === "" ? values : fuzzyFilter(values, query.replace(" ", ""), 0.2),
+      query === ""
+        ? values
+        : fuzzyFilter(values, query.replace(" ", ""), 0.2, x => x),
     [query, values],
   );
 
@@ -31,10 +33,10 @@ export default function MyCombobox({ values, value, onChange }: ComboProps) {
       className="relative size-full"
       virtual={{ options: filtered }}
       value={value}
-      onChange={value => onChange(value || "")}
+      onChange={value => onChange(value)}
     >
       <ComboboxInput
-        className="font-mono text-sm w-full p-2 border focus:border focus:border-blue-300 focus:outline-none"
+        className="font-mono text-sm w-full p-2 focus:outline focus:outline-blue-300 bg-neutral-50"
         onChange={event => setQuery(event.target.value)}
       />
       <ComboboxOptions
