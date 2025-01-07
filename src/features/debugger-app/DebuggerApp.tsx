@@ -2,11 +2,7 @@
 import SpecViewer from "@/features/spec/SpecViewer";
 import Toolbar from "@/features/toolbar/Toolbar";
 import JSEditor from "@/features/js-editor/JSEditor";
-
-// NOTE don't edit import order below
-import "react-grid-layout/css/styles.css";
-import "react-resizable/css/styles.css";
-import "@/styles/DebuggerApp.css";
+// import "react-resizable/css/styles.css";
 
 // hooks
 import { useEffect } from "react";
