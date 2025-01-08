@@ -25,6 +25,7 @@ export default function HeapViewer() {
           <MyCombobox
             values={addrs}
             value={addr}
+            placeholder="Select an address"
             onChange={newAddr => {
               if (newAddr === null) return;
 
