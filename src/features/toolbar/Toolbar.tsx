@@ -35,7 +35,9 @@ import ToolbarButtonGroup from "@/features/toolbar/ToolbarButtonGroup";
 import ConnectionSettings from "../modal/connection/ConnectionSettings";
 
 export default function Toolbar() {
-  const ignoreBp = useSelector((state: { appState: AppStateState }) =>  state.appState.ignoreBP)
+  const ignoreBp = useSelector(
+    (state: { appState: AppStateState }) => state.appState.ignoreBP,
+  );
   const appStateDispatch = useDispatch<Dispatch<AppStateAction>>();
   const toggleStepWithoutBreak = () => {
     appStateDispatch({ type: AppStateActionType.TOGGLE_IGNORE });
@@ -95,7 +97,7 @@ export default function Toolbar() {
           )}
 
           <ToolbarButton
-            position="right"
+            position="center"
             disabled={disableQuit}
             onClick={() => dispatch(stop())}
             icon={<SquareIcon />}
@@ -279,7 +281,11 @@ import { handleKeyPressBuilder } from "./Toolbar.util";
 import { selector } from "./Toolbar.redux";
 import { GIVEN_SETTINGS } from "@/constants/settings";
 import SpecVersionView from "../spec/SpecVersionView";
-import { AppStateAction, AppStateActionType, AppStateState } from "@/store/reducers/AppState";
+import {
+  AppStateAction,
+  AppStateActionType,
+  AppStateState,
+} from "@/store/reducers/AppState";
 
 function Seperator() {
   return (
