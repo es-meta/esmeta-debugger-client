@@ -62,7 +62,6 @@ export default function AlgoStepList(props: {
     >
       {props.listNode.contents.map((listItemNode, idx) => {
         const a = uuid();
-        console.log(props.steps.join(","), a);
         return (
           <AlgoStep
             key={
