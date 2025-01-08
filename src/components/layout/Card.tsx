@@ -8,7 +8,12 @@ interface Props {
 
 export default function Card({ className, children }: Props) {
   return (
-    <div className={twMerge("bg-white max-h-full h-full rounded-xl flex flex-col overflow-y-scroll relative", className)}>
+    <div
+      className={twMerge(
+        "bg-white max-h-full h-full rounded-xl flex flex-col overflow-y-scroll relative",
+        className,
+      )}
+    >
       {children}
     </div>
   );
