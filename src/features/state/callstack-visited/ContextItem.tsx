@@ -4,6 +4,9 @@ import { twMerge } from "tailwind-merge";
 import { ContextVisitedViewer } from "./algo/AlgoVisitedViewer";
 import { Breakpoint } from "@/store/reducers/Breakpoint";
 import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { ReduxState } from "@/store";
+import { toggleMap } from "@/store/reducers/Spec";
 
 type ContextItemProps = {
   data: Context;
@@ -14,7 +17,12 @@ type ContextItemProps = {
 };
 
 export default function ContextItem(props: ContextItemProps) {
-  const [fold, setFold] = useState(true);
+
+  const dispatch = useDispatch();
+  const expand = useSelector((s: ReduxState) => {
+    const cand = s.spec.toggleMap[props.data.name];
+    return cand;
+  });
 
   const className = useMemo(() => {
     const { highlight } = props;
@@ -34,21 +42,21 @@ export default function ContextItem(props: ContextItemProps) {
   return (
     <>
       <tr className={className} onClick={() => onItemClick(idx)}>
-        <td>{idx}</td>
-        <td>{content}</td>
-        <td>
+        <td className="border">{idx}</td>
+        <td className="border text-center font-mono">{content}</td>
+        <td className="border">
           <button
             className="size-full hover:text-black/25 flex items-center justify-center"
             onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
               e.stopPropagation();
-              setFold(f => !f);
+              dispatch(toggleMap(data.name, !expand));
             }}
           >
-            {fold ? <ChevronDownIcon /> : <ChevronUpIcon />}
+            {expand ? <ChevronUpIcon /> : <ChevronDownIcon />}
           </button>
         </td>
       </tr>
-      {fold ? null : data.algo.code !== "" ? (
+      {expand && (data.algo.code !== "" ? (
         <tr>
           <td colSpan={3}>
             <ContextVisitedViewer
@@ -64,7 +72,7 @@ export default function ContextItem(props: ContextItemProps) {
             this context has algorithm to show
           </td>
         </tr>
-      )}
+      ))}
     </>
   );
 }

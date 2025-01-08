@@ -26,11 +26,11 @@ export default function CallStackViewer() {
 
   return (
     <StateViewerItem header="Call Stack">
-      <table className="w-full border-y border-y-neutral-300">
+      <table className="w-full">
         <thead>
           <tr>
-            <th className="w-1/12">#</th>
-            <th className="w-11/12">name</th>
+            <th className="border w-4">#</th>
+            <th className="border ">name</th>
           </tr>
         </thead>
         <tbody>

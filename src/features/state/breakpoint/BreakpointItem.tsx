@@ -29,18 +29,16 @@ export default function BreakpointItem(props: BreakpointItemProp) {
   }, [onRemoveClick, idx]);
 
   return (
-    <tr>
-      <th className="overflow-hidden">
-        {name}
-      </th>
-      <th>
+    <tr className="even:bg-neutral-100 odd:bg-white hover:bg-neutral-200 transition-all">
+      <td className="border-r overflow-hidden font-mono text-wrap break-all text-center">{name}</td>
+      <td className="border-r text-center">
         <MySwitch checked={enabled} onChange={() => handleToggleClick()} />
-      </th>
-      <th>
-        <button onClick={() => handleRemoveClick()}>
+      </td>
+      <td className="">
+        <button className="h-full size-full items-center flex justify-center hover:text-red-600 active:scale-90 transition-all" onClick={() => handleRemoveClick()}>
           <XIcon />
         </button>
-      </th>
+      </td>
     </tr>
   );
 }

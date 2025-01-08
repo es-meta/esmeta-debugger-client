@@ -26,9 +26,9 @@ const selector = (st: ReduxState) => ({
 });
 
 const shows = [
+  { name: "Environment", icon: <ContainerIcon />, view: <SpecEnvViewer /> },
   { name: "Heap", icon: <MemoryStickIcon />, view: <HeapViewer /> },
-  { name: "Env", icon: <ContainerIcon />, view: <SpecEnvViewer /> },
-  { name: "Break", icon: <OctagonXIcon />, view: <Breakpoints /> },
+  { name: "Breakpoints", icon: <OctagonXIcon />, view: <Breakpoints /> },
   {
     name: "Callstack",
     icon: <LayersIcon />,
@@ -64,7 +64,12 @@ export default function StateViewer() {
       {disabled ? (
         <p className="text-neutral-500 p-2">Disabled. Start debugger to use.</p>
       ) : (
-        show.view
+        // temp fix to preserve state in render tree - use redux later
+        shows.map(s => (
+          <div key={s.name} className={show === s ? "" : "hidden"}>
+            {s.view}
+          </div>
+        ))
       )}
     </Card>
   );

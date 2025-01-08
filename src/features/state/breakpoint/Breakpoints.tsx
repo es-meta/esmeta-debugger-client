@@ -49,26 +49,40 @@ export default connector(function Breakpoints(props: BreakpointsProps) {
   return (
     <StateViewerItem header="Breakpoints">
       <div className="flex flex-row items-center w-full">
-        <MyCombobox value={algoName} values={algoNames} onChange={onAddClick} />
+        <MyCombobox
+          value={algoName}
+          values={algoNames}
+          onChange={onAddClick}
+          placeholder="search by name"
+        />
       </div>
       <table className="w-full">
-        <thead>
+        <thead className="text-sm font-200 text-neutral-500">
           <tr>
-            <th style={{ width: "70%" }}>Name</th>
-            <th style={{ width: "15%" }}>Enable</th>
-            <th style={{ width: "15%" }}>Remove</th>
+            <th className="border-r w-auto">Name</th>
+            <th className="border-r w-4">Enable</th>
+            <th className="w-1">Remove</th>
           </tr>
         </thead>
         <tbody>
-          {breakpoints.map((bp, idx) => (
-            <BreakpointItem
-              key={uuid()}
-              data={bp}
-              idx={idx}
-              onRemoveClick={(idx: number) => props.rmBreak(idx)}
-              onToggleClick={(idx: number) => props.toggleBreak(idx)}
-            />
-          ))}
+          {breakpoints.length > 0 ? (
+            breakpoints.map((bp, idx) => (
+              <BreakpointItem
+                key={uuid()}
+                data={bp}
+                idx={idx}
+                onRemoveClick={(idx: number) => props.rmBreak(idx)}
+                onToggleClick={(idx: number) => props.toggleBreak(idx)}
+              />
+            ))
+          ) : (
+            <tr className="text-center text p-4 text-sm">
+              <td colSpan={3}>
+                No breakpoints. Add Breakpoint by clicking on steps in spec
+                viewer or by searching name
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
     </StateViewerItem>

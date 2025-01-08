@@ -9,6 +9,7 @@ import clsx from "clsx";
 import { backToProvenance, DebuggerAction } from "@/store/reducers/Debugger";
 import { useDispatch } from "react-redux";
 import { Dispatch } from "redux";
+import Address from "@/features/state/heap/Address";
 
 export default connector(function SpecEnvViewer(props: SpecEnvViewerProps) {
   const { callStack, contextIdx } = props.irState;
@@ -29,65 +30,40 @@ export default connector(function SpecEnvViewer(props: SpecEnvViewerProps) {
 
   return (
     <StateViewerItem header="Environment">
-    <table className="w-full border-y border-y-neutral-300">
-      <thead>
-        <tr>
-          <th className="w-1/4">name</th>
-          <th className="w-3/4">value</th>
-        </tr>
-      </thead>
-      <tbody>
-          {sorted.map(([name, value]) => (
+      <table className="w-full text-sm">
+      <thead className="text-sm font-200 text-neutral-500">
+          <tr>
+            <th className="border-r w-1/4">name</th>
+            <th className="w-3/4">value</th>
+          </tr>
+        </thead>
+        <tbody>
+          {sorted.length === 0 ?
+                        <tr className="text-center text p-4 text-sm">
+                        <td colSpan={2}>
+                          No breakpoints. Add Breakpoint by clicking on steps in spec
+                          viewer or by searching name
+                        </td>
+                      </tr>
+             : sorted.map(([name, value]) => (
             <tr
               key={uuid()}
               className={twJoin(
                 clsx(
-                  "border-y border-y-neutral-300",
-                  "even:bg-white odd:bg-neutral-50",
-                  "hover:bg-neutral-100 transition-all",
+                  "even:bg-white odd:bg-neutral-100",
+                  "hover:bg-neutral-200 transition-all",
                   { "!bg-[#BAF7D0]": name === "return" },
                 ),
               )}
             >
-              <th className="overflow-hidden">{name}</th>
-              <th className="overflow-hidden flex flex-row gap-2 justify-center items-center">
-                {value}
-                {name === "return" && (
-                  <button
-                    onClick={() => {
-                      dispatch(backToProvenance());
-                    }}
-                    className="text-blue-600 hover:text-blue-800"
-                  >
-                    Back To Provenance
-                  </button>
-                )}
-              </th>
-
-            </tr>))}
-      </tbody>
-        {
-          /*
-        </thead>
-        <tbody>
-          {sorted.map(([name, value]) => (
-            <tr
-              key={uuid()}
-              className={twJoin(
-                "border-y border-y-neutral-300",
-                "even:bg-white odd:bg-neutral-50",
-                "hover:bg-neutral-100 transition-all",
-              )}
-            >
-              <th className="overflow-hidden">{name}</th>
-              <th className="overflow-hidden">{value}</th>
+              <td className="border-r font-mono text-wrap break-all text-center overflow-hidden">{name}</td>
+              <td className="font-mono text-wrap break-all text-center overflow-hidden flex flex-row gap-2 justify-center items-center">
+                {value.startsWith("#") ? <Address address={value} /> : value}
+              </td>
             </tr>
           ))}
-      </tbody>
-      */
-        }
+        </tbody>
       </table>
     </StateViewerItem>
   );
 });
-

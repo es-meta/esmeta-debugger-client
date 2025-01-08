@@ -29,7 +29,9 @@ export default function StateViewerSelect<T>({
         <Radio
           key={getId(o)}
           value={o}
-          className="cursor-pointer hover:bg-neutral-200 active:scale-90 transition-all [&>svg]:size-4 font-600 flex flex-row justify-center items-center px-1 gap-1 rounded-lg"
+          className="cursor-pointer
+          data-[checked]:bg-es-600 data-[checked]:text-white
+          hover:bg-neutral-200 active:scale-90 transition-all [&>svg]:size-4 font-600 flex flex-row justify-center items-center px-1 gap-1 rounded-lg"
         >
           {getIcon(o)}
           {getLabel(o)}

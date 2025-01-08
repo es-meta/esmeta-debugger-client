@@ -13,7 +13,6 @@ export default function ContextItem(props: ContextItemProps) {
   const className = useMemo(() => {
     const { highlight } = props;
     return twMerge(
-      "border-y border-y-neutral-300",
       "even:bg-white odd:bg-neutral-50",
       "hover:bg-neutral-100 hover:scale-[0.98] active:scale-95 transition-all cursor-pointer",
       highlight && "even:bg-green-200 odd:bg-green-200 hover:bg-green-300",
@@ -27,8 +26,8 @@ export default function ContextItem(props: ContextItemProps) {
 
   return (
     <tr className={className} onClick={() => onItemClick(idx)}>
-      <th>{idx}</th>
-      <th>{content}</th>
+      <th className="border">{idx}</th>
+      <th className="border">{content}</th>
     </tr>
   );
 }
