@@ -26,9 +26,8 @@ export default function ContextItem(props: ContextItemProps) {
   const className = useMemo(() => {
     const { highlight } = props;
     return twMerge(
-      "border-y border-y-neutral-300",
       "even:bg-white odd:bg-neutral-50",
-      "hover:bg-neutral-100 active:scale-95 transition-all cursor-pointer",
+      "hover:bg-neutral-100 active:bg-green-100 transition-all cursor-pointer",
       highlight && "even:bg-green-200 odd:bg-green-200 hover:bg-green-300",
     );
   }, [props.highlight]);
@@ -41,9 +40,9 @@ export default function ContextItem(props: ContextItemProps) {
   return (
     <>
       <tr className={className} onClick={() => onItemClick(idx)}>
-        <td className="border">{idx}</td>
-        <td className="border text-center font-mono">{content}</td>
-        <td className="border">
+        <td className="border-r text-center">{idx}</td>
+        <td className="border-r text-center text-wrap break-all font-mono">{content}</td>
+        <td className="">
           <button
             className="size-full hover:text-black/25 flex items-center justify-center"
             onClick={(e: React.MouseEvent<HTMLButtonElement>) => {

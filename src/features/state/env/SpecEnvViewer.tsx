@@ -29,7 +29,7 @@ export default connector(function SpecEnvViewer(props: SpecEnvViewerProps) {
   );
 
   return (
-    <StateViewerItem header="Environment">
+    <StateViewerItem header="Specification&nbsp;Environment">
       <table className="w-full text-sm">
         <thead className="text-sm font-200 text-neutral-500">
           <tr>

@@ -29,7 +29,7 @@ export default function BreakpointItem(props: BreakpointItemProp) {
   }, [onRemoveClick, idx]);
 
   return (
-    <tr className="even:bg-neutral-100 odd:bg-white hover:bg-neutral-200 transition-all">
+    <tr className="odd:bg-neutral-100 even:bg-white hover:bg-neutral-200 transition-all">
       <td className="border-r overflow-hidden font-mono text-wrap break-all text-center">
         {name}
       </td>

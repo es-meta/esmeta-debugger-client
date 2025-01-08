@@ -22,7 +22,7 @@ export default function StateViewerSelect<T>({
     <RadioGroup
       value={selected}
       onChange={setSelected}
-      className="flex flex-row gap-1 text-xs text-neutral-500"
+      className="absolute right-0 bg-white h-6 mr-1 flex flex-row gap-1 text-xs text-neutral-500 overflow-scroll"
       aria-label="State Viewer Select"
     >
       {options.map(o => (

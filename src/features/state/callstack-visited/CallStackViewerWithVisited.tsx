@@ -28,7 +28,7 @@ export default function CallStackViewerWithVisited() {
 
   return (
     <StateViewerItem
-      header="Call Stack"
+      header="Specification&nbsp;Call&nbsp;Stack"
       headerItems={
         <div className="flex flex-row space-x-2 text-neutral-600 text-sm">
           <button
@@ -56,12 +56,12 @@ export default function CallStackViewerWithVisited() {
         </div>
       }
     >
-      <table className="w-full border-y border-y-neutral-300">
+      <table className="w-full">
         <thead className="text-sm font-200 text-neutral-500">
           <tr>
-            <th className="border w-4">#</th>
-            <th className="border">name</th>
-            <th className="border w-1">show</th>
+            <th className="border-r w-8">#</th>
+            <th className="border-r">name</th>
+            <th className="w-4">show</th>
           </tr>
         </thead>
         <tbody>

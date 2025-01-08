@@ -19,7 +19,7 @@ export default function HeapViewer() {
   }
 
   return (
-    <StateViewerItem header="Heap Viewer">
+    <StateViewerItem header="Specification&nbsp;Heap">
       <div className="w-full">
         <div className="flex flex-row items-center w-full">
           <MyCombobox
