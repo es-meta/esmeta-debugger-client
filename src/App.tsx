@@ -7,18 +7,19 @@ import Header from "@/components/custom/Header";
 import DebuggerApp from "@/features/debugger-app/DebuggerApp";
 import { IS_DEBUG } from "./constants/constant";
 import CookiePopup from "./CookiePopup";
-import WelcomeModal from "./features/docs/welcome/Welcome";
+// import WelcomeModal from "./features/docs/welcome/Welcome";
 
 export default function App() {
   useAppInitializer();
 
-  return (<>
+  return (
+    <>
       <div className="min-h-dvh bg-neutral-100 dark:bg-neutral-800 pb-8 h-full flex flex-col">
         <Header />
         <DebuggerApp />
       </div>
       <ToastContainer autoClose={1000} transition={Slide} />
-      <WelcomeModal />
+      {/* <WelcomeModal /> */}
     </>
   );
 }
