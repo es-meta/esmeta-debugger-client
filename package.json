@@ -7,8 +7,6 @@
   "dependencies": {
     "@headlessui/react": "^2.2.0",
     "@monaco-editor/react": "^4.6.0",
-    "@tanstack/react-query": "^5.62.15",
-    "@tanstack/react-query-devtools": "^5.62.15",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "d3-graphviz": "^5.6.0",
@@ -61,7 +59,6 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.28.1",
-    "@tanstack/eslint-plugin-query": "^5.62.15",
     "@types/d3-graphviz": "^2.6.10",
     "@types/node": "^22.10.2",
     "@types/react": "^18.3.12",
