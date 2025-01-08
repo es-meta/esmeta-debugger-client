@@ -30,21 +30,24 @@ export default function DebuggerApp() {
 
       {/* <div className="grid lg:grid-cols-3"> */}
       <div className="size-full flex flex-col grow">
-      <ResizablePanelGroup
-        direction="horizontal"
-        className="bg-white rounded-xl border grow border-neutral-300"
+        <ResizablePanelGroup
+          direction="horizontal"
+          className="bg-white rounded-xl border grow border-neutral-300"
         >
-        <ResizablePanel minSize={24}>
-          <JSEditor />
-        </ResizablePanel>
-        <ResizableHandle withHandle />
-        <ResizablePanel minSize={24}>
-          <SpecViewer />
-        </ResizablePanel>
-        <ResizableHandle withHandle hitAreaMargins={{coarse: 16, fine: 8}}/>
-        <ResizablePanel minSize={24} collapsible>
-          <StateViewer />
-        </ResizablePanel>
+          <ResizablePanel minSize={24}>
+            <JSEditor />
+          </ResizablePanel>
+          <ResizableHandle withHandle />
+          <ResizablePanel minSize={24}>
+            <SpecViewer />
+          </ResizablePanel>
+          <ResizableHandle
+            withHandle
+            hitAreaMargins={{ coarse: 16, fine: 8 }}
+          />
+          <ResizablePanel minSize={24} collapsible>
+            <StateViewer />
+          </ResizablePanel>
         </ResizablePanelGroup>
       </div>
     </main>
