@@ -8,7 +8,6 @@ interface Props {
 }
 
 export default function CopyButton({ content, className, children }: Props) {
-
   const handleCopy = useCallback(() => {
     if (content !== null && content !== undefined) {
       navigator.clipboard

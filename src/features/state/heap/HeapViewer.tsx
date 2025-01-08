@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import { useState } from "react";
 import MyCombobox from "@/components/combobox/MyCombobox";
 import StateViewerItem from "../StateViewerItem";
 import { useSelector } from "react-redux";
@@ -47,7 +47,6 @@ export default function HeapViewer() {
         {addr !== null && obj !== null && (
           <Address address={addr} initialFold={true} />
         )}
-        
       </div>
     </StateViewerItem>
   );

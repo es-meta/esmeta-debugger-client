@@ -17,7 +17,6 @@ type ContextItemProps = {
 };
 
 export default function ContextItem(props: ContextItemProps) {
-
   const dispatch = useDispatch();
   const expand = useSelector((s: ReduxState) => {
     const cand = s.spec.toggleMap[props.data.name];
@@ -56,23 +55,27 @@ export default function ContextItem(props: ContextItemProps) {
           </button>
         </td>
       </tr>
-      {expand && (data.algo.code !== "" ? (
-        <tr>
-          <td colSpan={3}>
-            <ContextVisitedViewer
-              context={data}
-              algo={data.algo}
-              breakpoints={breakpoints}
-            />
-          </td>
-        </tr>
-      ) : (
-        <tr>
-          <td colSpan={3} className="text-sm text-neutral-400 py-2 text-center">
-            this context has algorithm to show
-          </td>
-        </tr>
-      ))}
+      {expand &&
+        (data.algo.code !== "" ? (
+          <tr>
+            <td colSpan={3}>
+              <ContextVisitedViewer
+                context={data}
+                algo={data.algo}
+                breakpoints={breakpoints}
+              />
+            </td>
+          </tr>
+        ) : (
+          <tr>
+            <td
+              colSpan={3}
+              className="text-sm text-neutral-400 py-2 text-center"
+            >
+              this context has algorithm to show
+            </td>
+          </tr>
+        ))}
     </>
   );
 }

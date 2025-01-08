@@ -10,7 +10,11 @@ import {
   updateHeapSuccess,
   updateCallStackSuccess,
 } from "../store/reducers/IrState";
-import { Algorithm, AlgorithmKind, updateAlgoByCidRequset } from "../store/reducers/Spec";
+import {
+  Algorithm,
+  AlgorithmKind,
+  updateAlgoByCidRequset,
+} from "../store/reducers/Spec";
 import { doAPIGetRequest } from "../util/api/api";
 import { AppStateActionType } from "@/store/reducers/AppState";
 import { Heap } from "@/types/heap.type";

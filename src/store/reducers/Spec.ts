@@ -8,6 +8,7 @@ export enum SpecActionType {
   UPDATE_ALGO_SUCCESS = "SpecActionType/UPDATE_ALGO_SUCCESS",
   UPDATE_VERSION_REQUEST = "SpecActionType/UPDATE_VERSION_REQUEST",
   UPDATE_VERSION_SUCCESS = "SpecActionType/UPDATE_VERSION_SUCCESS",
+  TOGGLE_CALLSTACK_FOLD = "SpecActionType/TOGGLE_CALLSTACK_FOLD",
   CLEAR = "SpecActionType/CLEAR",
 }
 export const updateAlgoListRequest = (): SpecAction => ({
@@ -33,6 +34,11 @@ export const updateVersionRequest = (): SpecAction => ({
 export const updateVersionSuccess = (version: SpecVersion): SpecAction => ({
   type: SpecActionType.UPDATE_VERSION_SUCCESS,
   version,
+});
+export const toggleMap = (name: string, boolean: boolean): SpecAction => ({
+  type: SpecActionType.TOGGLE_CALLSTACK_FOLD,
+  name,
+  boolean,
 });
 export const clearAlgo = (): SpecAction => ({
   type: SpecActionType.CLEAR,
@@ -60,6 +66,11 @@ export type SpecAction =
   | {
       type: SpecActionType.UPDATE_VERSION_SUCCESS;
       version: SpecVersion;
+    }
+  | {
+      type: SpecActionType.TOGGLE_CALLSTACK_FOLD;
+      name: string;
+      boolean: boolean;
     }
   | {
       type: SpecActionType.CLEAR;
@@ -96,6 +107,7 @@ export interface SpecVersion {
 export type SpecState = {
   algorithm: Algorithm;
   nameMap: Record<string, number>;
+  toggleMap: Record<string, boolean>; // ir function name to fold state
   version: SpecVersion;
 };
 const initialState: SpecState = {
@@ -108,6 +120,7 @@ const initialState: SpecState = {
     code: "",
   },
   nameMap: {}, // algoirhtm lists
+  toggleMap: {},
   version: {
     hash: null,
     tag: null,
@@ -132,6 +145,10 @@ export default function reducer(state = initialState, action: SpecAction) {
     case SpecActionType.CLEAR:
       return produce(state, draft => {
         draft.algorithm = initialState.algorithm;
+      });
+    case SpecActionType.TOGGLE_CALLSTACK_FOLD:
+      return produce(state, draft => {
+        draft.toggleMap[action.name] = action.boolean;
       });
     default:
       return state;

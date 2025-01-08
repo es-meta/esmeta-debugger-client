@@ -31,37 +31,41 @@ export default connector(function SpecEnvViewer(props: SpecEnvViewerProps) {
   return (
     <StateViewerItem header="Environment">
       <table className="w-full text-sm">
-      <thead className="text-sm font-200 text-neutral-500">
+        <thead className="text-sm font-200 text-neutral-500">
           <tr>
             <th className="border-r w-1/4">name</th>
             <th className="w-3/4">value</th>
           </tr>
         </thead>
         <tbody>
-          {sorted.length === 0 ?
-                        <tr className="text-center text p-4 text-sm">
-                        <td colSpan={2}>
-                          No breakpoints. Add Breakpoint by clicking on steps in spec
-                          viewer or by searching name
-                        </td>
-                      </tr>
-             : sorted.map(([name, value]) => (
-            <tr
-              key={uuid()}
-              className={twJoin(
-                clsx(
-                  "even:bg-white odd:bg-neutral-100",
-                  "hover:bg-neutral-200 transition-all",
-                  { "!bg-[#BAF7D0]": name === "return" },
-                ),
-              )}
-            >
-              <td className="border-r font-mono text-wrap break-all text-center overflow-hidden">{name}</td>
-              <td className="font-mono text-wrap break-all text-center overflow-hidden flex flex-row gap-2 justify-center items-center">
-                {value.startsWith("#") ? <Address address={value} /> : value}
+          {sorted.length === 0 ? (
+            <tr className="text-center text p-4 text-sm">
+              <td colSpan={2}>
+                No breakpoints. Add Breakpoint by clicking on steps in spec
+                viewer or by searching name
               </td>
             </tr>
-          ))}
+          ) : (
+            sorted.map(([name, value]) => (
+              <tr
+                key={uuid()}
+                className={twJoin(
+                  clsx(
+                    "even:bg-white odd:bg-neutral-100",
+                    "hover:bg-neutral-200 transition-all",
+                    { "!bg-[#BAF7D0]": name === "return" },
+                  ),
+                )}
+              >
+                <td className="border-r font-mono text-wrap break-all text-center overflow-hidden">
+                  {name}
+                </td>
+                <td className="font-mono text-wrap break-all text-center overflow-hidden flex flex-row gap-2 justify-center items-center">
+                  {value.startsWith("#") ? <Address address={value} /> : value}
+                </td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
     </StateViewerItem>

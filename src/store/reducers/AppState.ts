@@ -39,17 +39,21 @@ export type AppStateAction =
       type: AppStateActionType.TIMEOUT;
     }
   | {
-    type: AppStateActionType.TOGGLE_IGNORE;
-  }
+      type: AppStateActionType.TOGGLE_IGNORE;
+    };
 
 // redux state
 export type AppStateState = {
   state: AppState;
   busy: number;
-  ignoreBP: boolean,
+  ignoreBP: boolean;
 };
 
-const initialState: AppStateState = { state: AppState.INIT, busy: -0, ignoreBP: false };
+const initialState: AppStateState = {
+  state: AppState.INIT,
+  busy: -0,
+  ignoreBP: false,
+};
 
 import { workingset } from "@/util/api/api";
 
@@ -80,7 +84,7 @@ export default function reducer(state = initialState, action: AppStateAction) {
     case AppStateActionType.TOGGLE_IGNORE:
       return produce(state, draft => {
         draft.ignoreBP = !draft.ignoreBP;
-      })
+      });
 
     default:
       return state;

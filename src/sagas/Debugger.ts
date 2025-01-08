@@ -44,17 +44,18 @@ function* runSaga() {
 }
 
 function* backToProvenanceSaga() {
-  function* _backToProvenanceSaga({ address,
-      }: {
-        type: DebuggerActionType.BACK_TO_PROVENANCE;
-        address: string;
-      }) {
+  function* _backToProvenanceSaga({
+    address,
+  }: {
+    type: DebuggerActionType.BACK_TO_PROVENANCE;
+    address: string;
+  }) {
     try {
       // const { irState }: ReduxState = yield select();
       // const { callStack, contextIdx } = irState;
       // const env: Environment =
       //   callStack.length > 0 ? callStack[contextIdx].env : [];
-      const provenanceAddr = address // env.filter(e => e[0] === "return")[0][1];
+      const provenanceAddr = address; // env.filter(e => e[0] === "return")[0][1];
 
       yield call(mkStepSaga("exec/backToProvenance", provenanceAddr));
     } catch (e: unknown) {
@@ -133,7 +134,7 @@ function mkStepSaga(endpoint: Route, bodyObj?: unknown) {
     try {
       yield put({ type: AppStateActionType.SEND });
 
-      console.log('endpoint', endpoint, 'body', bodyObj)
+      console.log("endpoint", endpoint, "body", bodyObj);
 
       const res: StepResult = yield call(() =>
         doAPIPostRequest(endpoint, bodyObj),
