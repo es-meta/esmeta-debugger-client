@@ -66,7 +66,7 @@ function* updateCallStackSaga() {
           string,
           [number, number],
         ] = yield call(() => doAPIGetRequest(`state/context/${i}`));
-        yield put({ type: AppStateActionType.RECIEVE });
+        yield put({ type: AppStateActionType.RECEIVE });
         const params = rawParams.map(([name, optional, type]) => ({
           name,
           optional,
