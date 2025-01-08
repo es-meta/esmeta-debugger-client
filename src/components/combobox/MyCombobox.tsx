@@ -13,9 +13,15 @@ interface ComboProps {
   values: string[];
   value: string | null;
   onChange: (value: string | null) => void;
+  placeholder?: string;
 }
 
-export default function MyCombobox({ values, value, onChange }: ComboProps) {
+export default function MyCombobox({
+  values,
+  value,
+  onChange,
+  placeholder,
+}: ComboProps) {
   const [query, setQuery] = useState("");
 
   const filtered = useMemo(
@@ -36,6 +42,7 @@ export default function MyCombobox({ values, value, onChange }: ComboProps) {
       onChange={value => onChange(value)}
     >
       <ComboboxInput
+        placeholder={placeholder}
         className="font-mono text-sm w-full p-2 focus:outline focus:outline-blue-300 bg-neutral-50"
         onChange={event => setQuery(event.target.value)}
       />
