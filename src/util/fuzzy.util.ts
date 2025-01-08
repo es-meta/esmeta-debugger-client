@@ -15,6 +15,16 @@ export const fuzzyFilter = <T>(
   return fzf
     .find(query)
     .filter(r => r.score > threshold)
-    .sort((a, b) => b.score - a.score)
+    .sort((a, b) => {
+      // Prioritize exact matches
+      const aIsExact = a.item.text.toLowerCase() === query.toLowerCase();
+      const bIsExact = b.item.text.toLowerCase() === query.toLowerCase();
+
+      if (aIsExact && !bIsExact) return -1;
+      if (!aIsExact && bIsExact) return 1;
+
+      // Otherwise, sort by score
+      return b.score - a.score;
+    })
     .map(r => r.item.value);
 };
