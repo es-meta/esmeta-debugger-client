@@ -1,8 +1,14 @@
-import { type PropsWithChildren } from "react";
+import type { ReactNode } from "react";
+import { twMerge } from "tailwind-merge";
 
-export default function Card({ children }: PropsWithChildren) {
+interface Props {
+  className?: string;
+  children?: ReactNode;
+}
+
+export default function Card({ className, children }: Props) {
   return (
-    <div className="bg-white size-full rounded-xl flex flex-col overflow-y-scroll relative">
+    <div className={twMerge("bg-white max-h-full h-full rounded-xl flex flex-col overflow-y-scroll relative", className)}>
       {children}
     </div>
   );

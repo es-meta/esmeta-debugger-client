@@ -33,7 +33,7 @@ export default function SpecViewer() {
         title="ECMAScript Specification"
         icon={<BookMarkedIcon size={14} className="inline" />}
       ></CardHeader>
-      <div className="flex flex-col overflow-hidden">
+      <div className="flex flex-col overflow-scroll">
         {viewType === SpecViewType.ALGORITHM ? (
           <AlgoViewer {...props} />
         ) : viewType === SpecViewType.GRAPH ? (

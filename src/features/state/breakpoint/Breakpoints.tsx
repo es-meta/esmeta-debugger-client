@@ -46,12 +46,6 @@ export default connector(function Breakpoints(props: BreakpointsProps) {
     [props.breakpoints, props.algos],
   );
 
-  // const onKeyDown = useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
-  //   if (e.key === "Enter") {
-  //     onAddClick();
-  //   }
-  // }, [onAddClick]);
-
   return (
     <StateViewerItem header="Breakpoints">
       <div className="flex flex-row items-center w-full">

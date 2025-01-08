@@ -18,6 +18,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
+import StateViewer from "../state/StateViewer";
 
 // App component
 export default function DebuggerApp() {
@@ -28,10 +29,11 @@ export default function DebuggerApp() {
       <Toolbar />
 
       {/* <div className="grid lg:grid-cols-3"> */}
+      <div className="size-full flex flex-col grow">
       <ResizablePanelGroup
         direction="horizontal"
-        className="bg-white rounded-xl min-h-full border grow border-neutral-300"
-      >
+        className="bg-white rounded-xl border grow border-neutral-300"
+        >
         <ResizablePanel minSize={24}>
           <JSEditor />
         </ResizablePanel>
@@ -39,7 +41,12 @@ export default function DebuggerApp() {
         <ResizablePanel minSize={24}>
           <SpecViewer />
         </ResizablePanel>
-      </ResizablePanelGroup>
+        <ResizableHandle withHandle hitAreaMargins={{coarse: 16, fine: 8}}/>
+        <ResizablePanel minSize={24} collapsible>
+          <StateViewer />
+        </ResizablePanel>
+        </ResizablePanelGroup>
+      </div>
     </main>
   );
 }

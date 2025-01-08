@@ -18,7 +18,7 @@ export default function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="min-h-dvh bg-neutral-100 dark:bg-neutral-800 pb-16 h-full flex flex-col">
+      <div className="min-h-dvh bg-neutral-100 dark:bg-neutral-800 pb-8 h-full flex flex-col">
         <Header />
         <DebuggerApp />
       </div>

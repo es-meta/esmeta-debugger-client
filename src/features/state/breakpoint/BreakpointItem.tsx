@@ -31,9 +31,6 @@ export default function BreakpointItem(props: BreakpointItemProp) {
   return (
     <tr>
       <th className="overflow-hidden">
-        {/* <Tooltip title={name}>
-          <span>{name}</span>
-        </Tooltip> */}
         {name}
       </th>
       <th>
