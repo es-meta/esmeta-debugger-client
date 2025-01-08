@@ -25,6 +25,6 @@ export interface HeapObjYet {
 
 // types for ir state
 // beautified addr and value
-export type HeapObjs = HeapObjRecord | HeapObjList | HeapObjMap | HeapObjYet;
+export type HeapObj = HeapObjRecord | HeapObjList | HeapObjMap | HeapObjYet;
 
-export type Heap = { [addr: string]: HeapObjs };
+export type Heap = { [addr: string]: HeapObj };
