@@ -24,8 +24,9 @@ export const run = (): DebuggerAction => ({
 export const resumeFromIter = (): DebuggerAction => ({
   type: DebuggerActionType.RESUME_FROM_ITER,
 });
-export const backToProvenance = (): DebuggerAction => ({
+export const backToProvenance = (address: string): DebuggerAction => ({
   type: DebuggerActionType.BACK_TO_PROVENANCE,
+  address,
 });
 export const stop = (): DebuggerAction => ({
   type: DebuggerActionType.STOP,
@@ -72,6 +73,7 @@ export type DebuggerAction =
     }
   | {
       type: DebuggerActionType.BACK_TO_PROVENANCE;
+      address: string;
     }
   | {
       type: DebuggerActionType.STOP;
