@@ -9,8 +9,8 @@ import {
   StepBackIcon,
   UndoDotIcon,
   UndoIcon,
-  PowerIcon,
-  PowerOffIcon,
+  OctagonIcon,
+  OctagonPauseIcon,
 } from "lucide-react";
 import {
   run,
@@ -108,7 +108,9 @@ export default function Toolbar() {
             }
           />
 
-          <ToolbarButton
+          <Tooltip>
+            <TooltipTrigger>
+            <ToolbarButton
             position="right"
             disabled={disableGoingForward}
             onClick={toggleStepWithoutBreak}
@@ -117,9 +119,18 @@ export default function Toolbar() {
                 ? "bg-blue-600 hover:bg-blue-500 text-white hover:text-white"
                 : ""
             }
-            icon={ignoreBp ? <PowerIcon /> : <PowerOffIcon />}
-            label={<span>step without break</span>}
+            icon={ignoreBp ? <OctagonIcon /> : <OctagonPauseIcon />}
+            label={ignoreBp ?
+               <span>skipping breakpoints</span>
+              : <span>using breakpoints</span>
+            }
           />
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>If this is toggled on, skip breakpoints when doing steps</p>
+            </TooltipContent>
+          </Tooltip>
+
         </ToolbarButtonGroup>
 
         <Seperator />
@@ -286,6 +297,8 @@ import {
   AppStateActionType,
   AppStateState,
 } from "@/store/reducers/AppState";
+import { Tooltip, TooltipContent } from "@/components/ui/tooltip";
+import { TooltipTrigger } from "@radix-ui/react-tooltip";
 
 function Seperator() {
   return (
