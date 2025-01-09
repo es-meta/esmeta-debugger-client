@@ -11,11 +11,12 @@ import {
   MemoryStickIcon,
   OctagonXIcon,
 } from "lucide-react";
-import { useState } from "react";
+import { ReactElement, ReactNode, useState } from "react";
 import { ReduxState } from "@/store";
 import { AppState } from "@/store/reducers/AppState";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import StateViewerSelect from "./StateViewerSelect";
+import { chooseStateViewer, ClientState } from "@/store/reducers/Client";
 
 const selector = (st: ReduxState) => ({
   disabled: !(
@@ -23,14 +24,33 @@ const selector = (st: ReduxState) => ({
     st.appState.state === AppState.DEBUG_READY ||
     st.appState.state === AppState.TERMINATED
   ),
+  targetId: st.client.stateviewer.view,
 });
 
-const shows = [
-  { name: "Environment", icon: <ContainerIcon />, view: <SpecEnvViewer /> },
-  { name: "Heap", icon: <MemoryStickIcon />, view: <HeapViewer /> },
-  { name: "Breakpoints", icon: <OctagonXIcon />, view: <Breakpoints /> },
+interface Show {
+  name: string;
+  id: ClientState["stateviewer"]["view"];
+  icon: ReactElement<SVGElement>;
+  view: ReactNode;
+}
+
+const shows: Show[] = [
+  {
+    name: "Envrironment",
+    id: "env",
+    icon: <ContainerIcon />,
+    view: <SpecEnvViewer />,
+  },
+  { name: "Heap", id: "heap", icon: <MemoryStickIcon />, view: <HeapViewer /> },
+  {
+    name: "Breakpoint",
+    id: "bp",
+    icon: <OctagonXIcon />,
+    view: <Breakpoints />,
+  },
   {
     name: "Callstack",
+    id: "callstack",
     icon: <LayersIcon />,
     view: <CallStackViewerWithVisited />,
   },
@@ -38,9 +58,10 @@ const shows = [
 
 export default function StateViewer() {
   const [collapsed, setCollapsed] = useState(false);
-  const [show, setShow] = useState(shows[0]);
+  // const [show, setShow] = useState(shows[0]);
+  const dispatch = useDispatch();
 
-  const { disabled } = useSelector(selector);
+  const { disabled, targetId } = useSelector(selector);
 
   const toggle = <div onClick={() => setCollapsed(!collapsed)}>toggle</div>;
 
@@ -53,9 +74,12 @@ export default function StateViewer() {
         icon={<CpuIcon size={14} className="inline" />}
       >
         <StateViewerSelect
-          selected={show}
+          selected={shows.find(s => s.id === targetId) || shows[0]}
           options={shows}
-          setSelected={setShow}
+          setSelected={(s: Show) => {
+            if (!s) return;
+            dispatch(chooseStateViewer(s.id));
+          }}
           getId={s => s.name}
           getIcon={s => s.icon}
           getLabel={s => s.name}
@@ -66,7 +90,7 @@ export default function StateViewer() {
       ) : (
         // temp fix to preserve state in render tree - use redux later
         shows.map(s => (
-          <div key={s.name} className={show === s ? "" : "hidden"}>
+          <div key={s.name} className={targetId === s.id ? "" : "hidden"}>
             {s.view}
           </div>
         ))
