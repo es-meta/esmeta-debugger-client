@@ -6,14 +6,10 @@ import { Environment } from "@/store/reducers/IrState";
 import { connector, type SpecEnvViewerProps } from "./SpecEnvViewer.radix";
 import StateViewerItem from "../StateViewerItem";
 import clsx from "clsx";
-import { backToProvenance, DebuggerAction } from "@/store/reducers/Debugger";
-import { useDispatch } from "react-redux";
-import { Dispatch } from "redux";
 import Address from "@/features/state/heap/Address";
 
 export default connector(function SpecEnvViewer(props: SpecEnvViewerProps) {
   const { callStack, contextIdx } = props.irState;
-  const dispatch = useDispatch<Dispatch<DebuggerAction>>();
 
   const env: Environment =
     callStack.length > 0 ? callStack[contextIdx].env : [];
