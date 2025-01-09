@@ -1,7 +1,7 @@
 export function getSearchQuery(name: string): string | null {
   const x = new URLSearchParams(location.search).get(name);
   if (x === null) return null;
-  return decodeURI(x);
+  return decodeURIComponent(x);
 }
 
 export function buildSearchParams(name: string, value: string | null): string {
