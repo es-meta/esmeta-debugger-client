@@ -14,7 +14,9 @@ export default function StateViewerItem(props: StateViewerItemProps) {
 
   return (
     <Card className="bg-white rounded-none">
-      <CardHeader title={header}>{headerItems}</CardHeader>
+      <CardHeader icon={null} title={header}>
+        {headerItems}
+      </CardHeader>
       <div className="relative size-full overflow-y-scroll bg-white">
         {children}
       </div>

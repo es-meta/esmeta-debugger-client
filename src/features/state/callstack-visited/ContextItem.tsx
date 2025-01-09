@@ -41,7 +41,9 @@ export default function ContextItem(props: ContextItemProps) {
     <>
       <tr className={className} onClick={() => onItemClick(idx)}>
         <td className="border-r text-center">{idx}</td>
-        <td className="border-r text-center text-wrap break-all font-mono">{content}</td>
+        <td className="border-r text-center text-wrap break-all font-mono">
+          {content}
+        </td>
         <td className="">
           <button
             className="size-full hover:text-black/25 flex items-center justify-center"

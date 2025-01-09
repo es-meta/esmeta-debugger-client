@@ -1,10 +1,10 @@
 import { Radio, RadioGroup } from "@headlessui/react";
-import React, { type SetStateAction, type Dispatch } from "react";
+import React from "react";
 
 interface Props<T> {
   selected: T;
   options: T[];
-  setSelected: Dispatch<SetStateAction<T>>;
+  setSelected: (t: T) => void;
   getId: (t: T) => string | number;
   getIcon: (t: T) => React.ReactElement<SVGElement>;
   getLabel: (t: T) => string;
