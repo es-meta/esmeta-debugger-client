@@ -1,4 +1,4 @@
-import * as path from "path";
+import path from 'path';
 
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
@@ -6,12 +6,13 @@ import { defineConfig } from "vite";
 export default defineConfig({
   plugins: [react()],
 	server: {
-		port: 3000,
-	},
+    port: 3000,
+  },
   preview: {
     port: 3000,
   },
-	build: {
+  build: {
+    outDir: "./dist/csr",
     target: 'esnext', // or appropriate target for your environment
     rollupOptions: {
       output: {
