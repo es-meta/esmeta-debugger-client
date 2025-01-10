@@ -3,35 +3,8 @@ import MyCombobox from "@/components/combobox/MyCombobox";
 import StateViewerItem from "../StateViewerItem";
 import { useDispatch, useSelector } from "react-redux";
 import { ReduxState } from "@/store";
-import Address, { ProvinenceButton } from "./Address";
-import {
-  ChevronDownIcon,
-  CircleHelpIcon,
-  RewindIcon,
-  SearchIcon,
-} from "lucide-react";
+import Address, { GuideTooltip, ProvinenceButton } from "./Address";
 import { setHeapViewerAddr } from "@/store/reducers/Client";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-// import { CopyIcon } from "lucide-react";
-// import CopyButton from "@/components/button/CopyButton";
-
-function Guide() {
-  return         <div className="flex flex-col items-start text-xs  gap-1">
-  <p>values starting with # are addresses. you can do the following:</p>
-  <div className="flex flex-row items-center text-xs">
-    <RewindIcon className="text-blue-500" size={16} />
-    &nbsp;Go back to provenance
-  </div>
-  <div className="flex flex-row items-center text-xs">
-    <SearchIcon className="text-es-500" size={16} />
-    &nbsp;Inspect in heap viewer
-  </div>
-  <div className="flex flex-row items-center text-xs">
-    <ChevronDownIcon className="text-es-500" size={16} />
-    &nbsp;Fold/Unfold inlined heap viewer
-  </div>
-</div>
-}
 
 export default function HeapViewer() {
   const dispatch = useDispatch();
@@ -54,16 +27,10 @@ export default function HeapViewer() {
   }
 
   return (
-    <StateViewerItem header="Specification&nbsp;Heap" headerItems={
-      <Tooltip>
-        <TooltipTrigger className="flex flex-row items-center gap-1 text-sm">
-        <CircleHelpIcon size={16} /> Help
-          </TooltipTrigger>
-        <TooltipContent>
-        <Guide />
-        </TooltipContent>
-      </Tooltip>
-    }>
+    <StateViewerItem
+      header="Specification&nbsp;Heap"
+      headerItems={<GuideTooltip />}
+    >
       <div className="w-full">
         <div className="flex flex-row items-center w-full">
           <MyCombobox

@@ -110,27 +110,29 @@ export default function Toolbar() {
 
           <Tooltip>
             <TooltipTrigger>
-            <ToolbarButton
-            position="right"
-            disabled={disableGoingForward}
-            onClick={toggleStepWithoutBreak}
-            className={
-              ignoreBp
-                ? "bg-blue-600 hover:bg-blue-500 text-white hover:text-white"
-                : ""
-            }
-            icon={ignoreBp ? <OctagonIcon /> : <OctagonPauseIcon />}
-            label={ignoreBp ?
-               <span>skipping breakpoints</span>
-              : <span>using breakpoints</span>
-            }
-          />
+              <ToolbarButton
+                position="right"
+                disabled={disableGoingForward}
+                onClick={toggleStepWithoutBreak}
+                className={
+                  ignoreBp
+                    ? "bg-blue-600 hover:bg-blue-500 text-white hover:text-white"
+                    : ""
+                }
+                icon={ignoreBp ? <OctagonIcon /> : <OctagonPauseIcon />}
+                label={
+                  ignoreBp ? (
+                    <span>skipping breakpoints</span>
+                  ) : (
+                    <span>using breakpoints</span>
+                  )
+                }
+              />
             </TooltipTrigger>
             <TooltipContent>
               <p>If this is toggled on, skip breakpoints when doing steps</p>
             </TooltipContent>
           </Tooltip>
-
         </ToolbarButtonGroup>
 
         <Seperator />

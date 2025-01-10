@@ -6,7 +6,7 @@ import { Environment } from "@/store/reducers/IrState";
 import { connector, type SpecEnvViewerProps } from "./SpecEnvViewer.radix";
 import StateViewerItem from "../StateViewerItem";
 import clsx from "clsx";
-import Address from "@/features/state/heap/Address";
+import Address, { GuideTooltip } from "@/features/state/heap/Address";
 
 export default connector(function SpecEnvViewer(props: SpecEnvViewerProps) {
   const { callStack, contextIdx } = props.irState;
@@ -25,7 +25,10 @@ export default connector(function SpecEnvViewer(props: SpecEnvViewerProps) {
   );
 
   return (
-    <StateViewerItem header="Specification&nbsp;Environment">
+    <StateViewerItem
+      header="Specification&nbsp;Environment"
+      headerItems={<GuideTooltip />}
+    >
       <table className="w-full text-sm">
         <thead className="text-sm font-200 text-neutral-500">
           <tr>
