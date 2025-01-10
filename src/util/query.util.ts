@@ -1,7 +1,11 @@
+import { IS_PRERENDERING } from "@/constants/constant";
+
 export function getSearchQuery(name: string): string | null {
+  if (IS_PRERENDERING) return null;
   const x = new URLSearchParams(location.search).get(name);
+  console.log('got ', x, ' for ', name);
   if (x === null) return null;
-  return decodeURIComponent(x);
+  return x //decodeURIComponent(x);
 }
 
 export function buildSearchParams(name: string, value: string | null): string {
@@ -21,6 +25,7 @@ function withPrefix(prefix: string, name: string): string {
 }
 
 export function setLocalStorage(name: string, value: string): boolean {
+  if (IS_PRERENDERING) return false;
   if (!window.localStorage) return false;
   try {
     window.localStorage.setItem(withPrefix(PREFIX, name), value);
@@ -31,6 +36,7 @@ export function setLocalStorage(name: string, value: string): boolean {
 }
 
 export function getLocalStorage(name: string): string | null {
+  if (IS_PRERENDERING) return null;
   const x = localStorage.getItem(withPrefix(PREFIX, name));
   if (x === null) return null;
   return x;
