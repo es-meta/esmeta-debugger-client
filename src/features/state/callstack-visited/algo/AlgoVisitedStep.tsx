@@ -129,12 +129,12 @@ function AlgoStep(props: AlgoStepProps) {
   return (
     <>
       {(visited || visiting) && (
-          <AlgoStepPrefix
-            steps={steps}
-            breakedStepsList={breakedStepsList}
-            onPrefixClick={onPrefixClick}
-          />
-        )}
+        <AlgoStepPrefix
+          steps={steps}
+          breakedStepsList={breakedStepsList}
+          onPrefixClick={onPrefixClick}
+        />
+      )}
       {visited || visiting ? (
         <AlgoStepCore
           className={className}

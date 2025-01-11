@@ -16,6 +16,46 @@ type ContextItemProps = {
   breakpoints: Breakpoint[];
 };
 
+function toAlpha(num: number): string {
+  return String.fromCharCode(65 + num - 1);
+}
+
+function toRoman(num: number): string {
+
+  const roman = [
+    ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"],
+    ["", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"],
+    ["", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"],
+    ["", "M", "MM", "MMM", "MMMM"],
+  ];
+
+  const digits = num.toString().split("").reverse();
+  let romanNum = "";
+  for (let i = 0; i < digits.length; i++) {
+    romanNum = roman[i][Number(digits[i])] + romanNum;
+  }
+  return romanNum;
+}
+
+function toStepString(steps: number[]) {
+  let str = '';
+  for (let i = 0; i < steps.length; i++) {
+    switch (i % 3) {
+      case 0:
+        str += steps[i];
+        break;
+      case 1:
+        str += toAlpha(steps[i]);
+        break;
+      case 2:
+        str += toRoman(steps[i]);
+        break;
+    }
+    if (i !== steps.length - 1) str += '.';
+  }
+  return str;
+}
+
 export default function ContextItem(props: ContextItemProps) {
   const dispatch = useDispatch();
   const expand = useSelector((s: ReduxState) => {
@@ -26,7 +66,7 @@ export default function ContextItem(props: ContextItemProps) {
   const className = useMemo(() => {
     const { highlight } = props;
     return twMerge(
-      "even:bg-white odd:bg-neutral-50",
+      "even:bg-white odd:bg-neutral-50 text-xs",
       "hover:bg-neutral-100 active:bg-green-100 transition-all cursor-pointer",
       highlight && "even:bg-green-200 odd:bg-green-200 hover:bg-green-300",
     );
@@ -35,24 +75,27 @@ export default function ContextItem(props: ContextItemProps) {
   const { data, idx, onItemClick, breakpoints } = props;
   const { name, steps } = data;
   // TODO beautify steps
-  const content = steps.length === 0 ? name : `${steps} @ ${name}`;
+  const stepString = steps.length === 0 ? '' : toStepString(steps);
 
   return (
     <>
       <tr className={className} onClick={() => onItemClick(idx)}>
-        <td className="border-r text-center">{idx}</td>
+        <td className="py-1 border-r text-center">{idx}</td>
+        <td className="border-r text-center text-wrap break-all">
+          {stepString}
+        </td>
         <td className="border-r text-center text-wrap break-all font-mono">
-          {content}
+          {name}
         </td>
         <td className="">
           <button
-            className="size-full hover:text-black/25 flex items-center justify-center"
+            className="size-full text-black/50 hover:text-black/25 flex items-center justify-center"
             onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
               e.stopPropagation();
               dispatch(toggleMap(data.name, !expand));
             }}
           >
-            {expand ? <ChevronUpIcon /> : <ChevronDownIcon />}
+            {expand ? <ChevronUpIcon size={14} /> : <ChevronDownIcon size={14} />}
           </button>
         </td>
       </tr>

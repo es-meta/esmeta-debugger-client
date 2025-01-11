@@ -60,6 +60,7 @@ export default function CallStackViewerWithVisited() {
         <thead className="text-sm font-200 text-neutral-500">
           <tr>
             <th className="border-r w-8">#</th>
+            <th className="border-r w-8">position</th>
             <th className="border-r">name</th>
             <th className="w-4">show</th>
           </tr>
