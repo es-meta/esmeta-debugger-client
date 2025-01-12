@@ -1,7 +1,4 @@
-import { IS_PRERENDERING } from "@/constants/constant";
-
 export function getSearchQuery(name: string): string | null {
-  if (IS_PRERENDERING) return null;
   const x = new URLSearchParams(location.search).get(name);
   console.log('got ', x, ' for ', name);
   if (x === null) return null;
@@ -18,26 +15,31 @@ export function buildSearchParams(name: string, value: string | null): string {
   return `?${search.toString()}`;
 }
 
-const PREFIX = "esmeta_";
+// TODO - use localstorage with cookie alert
 
-function withPrefix(prefix: string, name: string): string {
-  return `${prefix}${name}`;
-}
+// const PREFIX = "esmeta_";
 
+// function withPrefix(prefix: string, name: string): string {
+//   return `${prefix}${name}`;
+// }
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function setLocalStorage(name: string, value: string): boolean {
-  if (IS_PRERENDERING) return false;
-  if (!window.localStorage) return false;
-  try {
-    window.localStorage.setItem(withPrefix(PREFIX, name), value);
-    return true;
-  } catch {
-    return false;
-  }
+  return false;
+  // if (!window.localStorage) return false;
+  // try {
+  //   window.localStorage.setItem(withPrefix(PREFIX, name), value);
+  //   return true;
+  // } catch {
+  //   return false;
+  // }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function getLocalStorage(name: string): string | null {
-  if (IS_PRERENDERING) return null;
-  const x = localStorage.getItem(withPrefix(PREFIX, name));
-  if (x === null) return null;
-  return x;
+  return null;
+  // if (IS_PRERENDERING) return null;
+  // const x = localStorage.getItem(withPrefix(PREFIX, name));
+  // if (x === null) return null;
+  // return x;
 }

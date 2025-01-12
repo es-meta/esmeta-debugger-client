@@ -25,20 +25,19 @@ export default function DebuggerApp() {
   useDebuggerAppInitializers();
 
   return (
-    <main className="relative px-4 xl:px-20 h-full grow flex flex-col">
-      <Toolbar />
-
-      {/* <div className="grid lg:grid-cols-3"> */}
-      <div className="size-full flex flex-col grow">
+    <main className="relative px-4 xl:px-12 grow flex flex-col overflow-hidden">
+      <Toolbar />      
         <ResizablePanelGroup
           direction="horizontal"
-          className="bg-white rounded-xl border grow border-neutral-300"
+          className="bg-white rounded-xl border grow border-neutral-300 flex overflow-hidden"
         >
           <ResizablePanel minSize={24}>
             <JSEditor />
           </ResizablePanel>
-          <ResizableHandle withHandle />
-          <ResizablePanel minSize={24}>
+          <ResizableHandle withHandle
+            hitAreaMargins={{ coarse: 16, fine: 8 }}
+          />
+          <ResizablePanel minSize={24} className="">
             <SpecViewer />
           </ResizablePanel>
           <ResizableHandle
@@ -49,7 +48,6 @@ export default function DebuggerApp() {
             <StateViewer />
           </ResizablePanel>
         </ResizablePanelGroup>
-      </div>
     </main>
   );
 }

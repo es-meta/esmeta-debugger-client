@@ -1,14 +1,10 @@
 import {
   GITHUB_LINK_ESMETA,
-  GITHUB_LINK_ESMETA_DEBUGGER,
 } from "@/constants/constant";
-import tw from "tailwind-styled-components";
-
-const A = tw.a`flex flex-row gap-1 items-center text-xs font-500 hover:bg-neutral-100 rounded-lg active:scale-90 transition-all cursor-pointer p-2`;
 
 export default function Header() {
   return (
-    <nav className="bg-white dark:text-white dark:bg-neutral-800 border-b border-b-neutral-300 dark:border-b-neutral-600 bg-opacity-75 h-14 w-full text-sm xl:px-24 flex flex-row justify-between gap-3 items-center px-4">
+    <nav className="bg-white dark:text-white dark:bg-neutral-800 border-b border-b-neutral-300 dark:border-b-neutral-600 bg-opacity-75 min-h-12 max-h-12 h-12 w-full text-sm xl:px-24 flex flex-row justify-between gap-3 items-center px-4">
       <Left />
       <Right />
     </nav>
@@ -38,18 +34,12 @@ function Left() {
 function Right() {
   return (
     <div className="flex flex-row gap-2">
-      <A href={GITHUB_LINK_ESMETA} target="_blank" rel="noopener noreferrer">
+      <a
+      className="flex flex-row gap-1 items-center text-xs font-500 hover:bg-neutral-100 rounded-lg active:scale-90 transition-all cursor-pointer p-2"
+        href={GITHUB_LINK_ESMETA} target="_blank" rel="noopener noreferrer">
         <GitHubIcon />
         ESMeta
-      </A>
-      <A
-        href={GITHUB_LINK_ESMETA_DEBUGGER}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <GitHubIcon />
-        ESMeta&nbsp;Debugger&nbsp;Client
-      </A>
+      </a>
     </div>
   );
 }
@@ -59,8 +49,8 @@ function GitHubIcon() {
     <svg
       aria-disabled
       fill="currentColor"
-      width={14}
-      height={14}
+      width={18}
+      height={18}
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
     >
