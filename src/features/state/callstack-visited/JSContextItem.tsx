@@ -7,6 +7,18 @@ import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { ReduxState } from "@/store";
 import { toggleMap } from "@/store/reducers/Spec";
+import Address from "../heap/Address";
+
+export interface JSContext {
+  name: string;
+  type: string;
+  address: string;
+}
+
+interface Props extends JSContext {
+  idx: number;
+}
+
 
 type ContextItemProps = {
   data: Context;
@@ -56,70 +68,52 @@ function toStepString(steps: number[]) {
   return str;
 }
 
-export default function ContextItem(props: ContextItemProps) {
+export default function JSContextItem(props: Props) {
   const dispatch = useDispatch();
-  const expand = useSelector((s: ReduxState) => {
-    const cand = s.spec.toggleMap[props.data.name];
-    return cand;
-  });
+  const [expand, setExpand] = useState(false);
 
   const className = useMemo(() => {
-    const { highlight } = props;
+    // const { highlight } = props;
+    const highlight = false;
     return twMerge(
       "even:bg-white odd:bg-neutral-50 text-xs",
       "hover:bg-neutral-100 active:bg-green-100 transition-all cursor-pointer",
       highlight && "even:bg-green-200 odd:bg-green-200 hover:bg-green-300",
     );
-  }, [props.highlight]);
+  }, []);
 
-  const { data, idx, onItemClick, breakpoints } = props;
-  const { name, steps } = data;
+  // const { data, idx, onItemClick, breakpoints } = props;
+  // const { name, steps } = data;
   // TODO beautify steps
-  const stepString = steps.length === 0 ? '' : toStepString(steps);
+  // const stepString = steps.length === 0 ? '' : toStepString(steps);
 
   return (
     <>
-      <tr className={className} onClick={() => onItemClick(idx)}>
-        <td className="py-1 border-r text-center">{idx}</td>
+      <tr className={className} onClick={() => /* onItemClick(idx) */ { }}>
+        <td className="py-1 border-r text-center">{props.idx}</td>
         <td className="border-r text-center text-wrap break-all">
-          {stepString}
+          {props.type}
         </td>
         <td className="border-r text-center text-wrap break-all font-mono">
-          {name}
+          {props.name}
         </td>
         <td className="">
           <button
             className="size-full text-black/50 hover:text-black/25 flex items-center justify-center"
             onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
               e.stopPropagation();
-              dispatch(toggleMap(data.name, !expand));
+              setExpand(expand => !expand);
             }}
           >
             {expand ? <ChevronUpIcon size={14} /> : <ChevronDownIcon size={14} />}
           </button>
         </td>
       </tr>
-      {expand &&
-        (data.algo.code !== "" ? (
-          <tr>
-            <td colSpan={3}>
-              <ContextVisitedViewer
-                context={data}
-                algo={data.algo}
-                breakpoints={breakpoints}
-              />
-            </td>
-          </tr>
-        ) : (
-          <tr>
-            <td
-              colSpan={3}
-              className="text-sm text-neutral-400 py-2 text-center"
-            >
-              this context has algorithm to show
-            </td>
-          </tr>
-        ))}
+      {expand && <tr>
+        <td colSpan={4}>
+        <Address address={props.address}  singleMode />
+      </td>
+      </tr>}
     </>
   );
 }

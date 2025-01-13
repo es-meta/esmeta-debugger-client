@@ -80,7 +80,7 @@ export function ContextVisitedViewer(props: {
   );
 
   return (
-    <div className="algo-container w-full h-fit break-before-all">
+    <div className="algo-container w-full h-fit break-all">
       <AlgoViewerHeader algorithm={algo} irToSpecMapping={irToSpecMapping} />
       <AlgoVisitedStepList
         listNode={parsed.contents}
@@ -136,7 +136,7 @@ function AlgoViewerHeader({ algorithm, irToSpecMapping }: { algorithm: Algorithm
       </span>
     </div>
     {isSdo &&
-      <div className="px-2 flex flex-col mb-1">
+      <div className="px-2 flex flex-col mb-1 break-all">
       {prodInfo && <p className="ml-4"><b className="inline font-300 italic">
           {specInfo.sdoInfo?.prod?.astName}
         </b><b className="inline font-700">&nbsp;:</b>{prodInfo.map((prod, idx) => (<b key={idx} className={

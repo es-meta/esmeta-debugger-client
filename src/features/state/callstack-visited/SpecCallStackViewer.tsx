@@ -1,23 +1,23 @@
-import { useCallback } from "react";
-import { v4 as uuid } from "uuid";
-import ContextItem from "./ContextItem";
+import { useCallback, useMemo, useState } from "react";
+import SpecContextItem from "./SpecContextItem";
 import StateViewerItem from "../StateViewerItem";
-import { useDispatch, useSelector } from "react-redux";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { ReduxState } from "@/store";
 import { updateContextIdx } from "@/store/reducers/IrState";
 import { FoldVerticalIcon, UnfoldVerticalIcon } from "lucide-react";
-import { toggleMap } from "@/store/reducers/Spec";
+import { v4 } from "uuid";
 
-export default function CallStackViewerWithVisited() {
+export default function SpecCallStackViewer() {
   const dispatch = useDispatch();
+  const [globalExpand, setGlobalExpand] = useState<boolean | null>(null);
 
   const {
-    irState: { callStack, contextIdx },
+    callStack,
     breakpoints,
   } = useSelector((st: ReduxState) => ({
-    irState: st.irState,
+    callStack: st.irState.callStack,
     breakpoints: st.breakpoint.items,
-  }));
+  }), shallowEqual);
 
   const onItemClick = useCallback(
     (idx: number) => {
@@ -26,6 +26,8 @@ export default function CallStackViewerWithVisited() {
     [dispatch],
   );
 
+  const prefix = useMemo(() => v4(), [callStack, breakpoints]);
+
   return (
     <StateViewerItem
       header="Specification&nbsp;Call&nbsp;Stack"
@@ -33,22 +35,14 @@ export default function CallStackViewerWithVisited() {
         <div className="flex flex-row space-x-2 text-neutral-600 text-sm">
           <button
             className="flex flex-row hover:bg-neutral-200 rounded items-center gap-1 active:scale-90 transition-all"
-            onClick={() => {
-              callStack.forEach(ctxt => {
-                dispatch(toggleMap(ctxt.name, true));
-              });
-            }}
+            onClick={() => callStack.forEach(() => setGlobalExpand(true))}
           >
             <UnfoldVerticalIcon size={16} />
             expand
           </button>
           <button
             className="flex flex-row hover:bg-neutral-200 rounded items-center gap-1 active:scale-90 transition-all"
-            onClick={() => {
-              callStack.forEach(ctxt => {
-                dispatch(toggleMap(ctxt.name, false));
-              });
-            }}
+            onClick={() => callStack.forEach(() => setGlobalExpand(false))}
           >
             <FoldVerticalIcon size={16} />
             collapse
@@ -67,13 +61,14 @@ export default function CallStackViewerWithVisited() {
         </thead>
         <tbody>
           {callStack.map((ctxt, idx) => (
-            <ContextItem
-              key={uuid()}
+            <SpecContextItem
+              key={prefix + idx}
               data={ctxt}
               idx={idx}
-              highlight={idx === contextIdx}
               onItemClick={onItemClick}
               breakpoints={breakpoints}
+              globalExpand={globalExpand}
+              setGlobalExpand={setGlobalExpand}
             />
           ))}
         </tbody>
