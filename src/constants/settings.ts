@@ -1,6 +1,6 @@
 /////// programs ///////
 import { getLocalStorage, getSearchQuery } from "@/util/query.util";
-import { toast } from "react-toastify";
+import { logger } from "./constant";
 
 const QUERY_PROG = "prog";
 const FALLBACK_CODE = `var x = 1;
@@ -56,7 +56,7 @@ const GIVEN_API:
     return { type: "browser" };
   } else {
     try {
-      console.warn(api);
+      logger.warn(api);
       if (api === null) throw new Error("API URL is not set");
       new URL(api);
       return {
@@ -66,11 +66,11 @@ const GIVEN_API:
         rawUrl: api,
       };
     } catch {
-      console.error(
+      logger.error(
         `Invalid API URL: ${api}. Using fallback URL: ${FALLBACK_API_URl}`,
       );
       return { type: "http", url: FALLBACK_API_URl, error: true, rawUrl: api };
-    }
+  }
   }
 })();
 
