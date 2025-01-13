@@ -8,7 +8,18 @@ import type {
 
 //////////////////////// import from Scala.js /////////////////////////
 
-const module = import("@esmeta/main.mjs");
+// suppress for now
+const module = new Promise<{
+  DebuggerServiceFactory: {
+    buildFromGiven: (input: ScalaJSFactoryInput) => Promise<ScalaJSDebuggerService>;
+  };
+}>((resolve) => resolve({
+  DebuggerServiceFactory: {
+    buildFromGiven: async (input: ScalaJSFactoryInput) => {
+      return Promise.reject(null);
+    },
+  },
+})); // import("@esmeta/main.mjs");
 
 let ESMetaDebugger: Promise<ScalaJSDebuggerService> = Promise.reject(null);
 
@@ -169,9 +180,10 @@ self.onmessage = async (e: MessageEvent<any>) => {
     let result;
     switch (type) {
       case "META":
-        ESMetaDebugger = await (
+        ESMetaDebugger = (
           await module
         ).DebuggerServiceFactory.buildFromGiven(data);
+        await ESMetaDebugger;
         break;
       case "GET":
         result = await doGetRequest(endpoint, data);

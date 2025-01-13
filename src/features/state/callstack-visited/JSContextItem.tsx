@@ -4,7 +4,7 @@ import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import Address from "../heap/Address";
 
 export interface JSContext {
-  name: string;
+  // name: string;
   type: string;
   address: string;
 }

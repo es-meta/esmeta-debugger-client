@@ -28,7 +28,6 @@ function readJSExecutionStack(state: ReduxState) : JSContext[] {
 
       if (f === 'null' && som === 'null') {
         return ({
-          name: '',
           type: 'HostDefined',
           address: addr,
         })
