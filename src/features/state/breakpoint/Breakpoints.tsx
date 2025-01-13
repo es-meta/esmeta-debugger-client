@@ -4,51 +4,55 @@ import { v4 as uuid } from "uuid";
 
 import MyCombobox from "@/components/combobox/MyCombobox";
 
-import { BreakpointType } from "@/store/reducers/Breakpoint";
+import { addBreak, Breakpoint, BreakpointType } from "@/store/reducers/Breakpoint";
 
 import { connector, type BreakpointsProps } from "./Breakpoints.redux";
 import BreakpointItem from "./BreakpointItem";
-import { PlusIcon } from "lucide-react";
 import StateViewerItem from "../StateViewerItem";
+import { Dispatch } from "@/store";
+import { useDispatch } from "react-redux";
+
+// TODO support turning off or toggling breakpoints
+export function addBreakHandler(toEnabled: true, algoName: string | null, breakpoints: Breakpoint[], algos: Record<string, number>, dispatch: Dispatch): string | null {
+    if (algoName === null) {
+      return algoName;
+    }
+
+    const steps: number[] = [1];
+
+    const bpName = `${steps} @ ${algoName}`;
+    const duplicated = breakpoints.some(({ name }) => name === bpName);
+    const valid = algos.hasOwnProperty(algoName);
+    if (valid && !duplicated)
+      dispatch(addBreak({
+        type: BreakpointType.Spec,
+        fid: algos[algoName],
+        name: bpName,
+        steps: steps,
+        enabled: true,
+      }));
+    else if (duplicated) toast.warning(`Breakpoint already set: ${bpName}`);
+    else toast.warning(`Wrong algorithm name: ${algoName}`);
+  return algoName;
+};
 
 // TODO add util buttons
 // delete all
 // disable all
 // sort
 export default connector(function Breakpoints(props: BreakpointsProps) {
+  const dispatch = useDispatch<Dispatch>();
   const { breakpoints, algoNames } = props;
   const [algoName, setAlgoName] = useState<string | null>(null);
 
-  const onAddClick = useCallback(
-    (algoName: string | null) => {
-      if (algoName === null) {
-        setAlgoName(algoName);
-        return;
-      }
-
-      const steps: number[] = [1];
-
-      const bpName = `${steps} @ ${algoName}`;
-      const duplicated = props.breakpoints.some(({ name }) => name === bpName);
-      const valid = props.algos.hasOwnProperty(algoName);
-      if (valid && !duplicated)
-        props.addBreak({
-          type: BreakpointType.Spec,
-          fid: props.algos[algoName],
-          name: bpName,
-          steps: steps,
-          enabled: true,
-        });
-      else if (duplicated) toast.warning(`Breakpoint already set: ${bpName}`);
-      else toast.warning(`Wrong algorithm name: ${algoName}`);
-      setAlgoName(algoName);
-    },
-    [props.breakpoints, props.algos],
+  const onAddClick = useCallback((name: string | null) => {
+    setAlgoName(addBreakHandler(true, name, breakpoints, props.algos, dispatch));
+  }, [props.breakpoints, props.algos],
   );
 
   return (
     <StateViewerItem header="Breakpoints">
-      <div className="flex flex-row items-center w-full">
+      <div className="flex flex-row items-center w-full text-xs">
         <MyCombobox
           value={algoName}
           values={algoNames}
@@ -57,8 +61,9 @@ export default connector(function Breakpoints(props: BreakpointsProps) {
         />
       </div>
       <table className="w-full">
-        <thead className="text-sm font-200 text-neutral-500">
+        <thead className="font-200 text-neutral-500">
           <tr>
+            <th className="border-r">Step</th>
             <th className="border-r w-auto">Name</th>
             <th className="border-r w-4">Enable</th>
             <th className="w-1">Remove</th>
@@ -76,8 +81,8 @@ export default connector(function Breakpoints(props: BreakpointsProps) {
               />
             ))
           ) : (
-            <tr className="text-center text p-4 text-sm">
-              <td colSpan={3}>
+                <tr >
+            <td colSpan={4} className="text-center text-neutral-500 p-4 text-sm">
                 No breakpoints. Add Breakpoint by clicking on steps in spec
                 viewer or by searching name
               </td>

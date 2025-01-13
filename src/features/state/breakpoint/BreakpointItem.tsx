@@ -17,8 +17,10 @@ export default function BreakpointItem(props: BreakpointItemProp) {
     idx,
     onToggleClick,
     onRemoveClick,
-    data: { name, enabled },
+    data,
   } = props;
+
+  const { name, enabled } = data;
 
   const handleToggleClick = useCallback(() => {
     onToggleClick(idx);
@@ -30,6 +32,9 @@ export default function BreakpointItem(props: BreakpointItemProp) {
 
   return (
     <tr className="odd:bg-neutral-100 even:bg-white hover:bg-neutral-200 transition-all">
+      <td className="border-r overflow-hidden font-mono text-wrap break-all text-center">
+        TODO
+      </td>
       <td className="border-r overflow-hidden font-mono text-wrap break-all text-center">
         {name}
       </td>
