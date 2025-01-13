@@ -1,9 +1,9 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { SPEC_URL } from "@/constants/constant";
-import { Algorithm, SpecFuncInfo } from "@/store/reducers/Spec";
+import { Algorithm, IrToSpecMapping } from "@/store/reducers/Spec";
 import { twMerge } from "tailwind-merge";
 
-function Info({ algorithm, irToSpecMapping }: { algorithm: Algorithm, irToSpecMapping: Record<string, SpecFuncInfo> }) {
+function Info({ algorithm, irToSpecMapping }: { algorithm: Algorithm, irToSpecMapping: IrToSpecMapping }) {
   
 
   const specInfo = irToSpecMapping[algorithm.name]
@@ -34,7 +34,7 @@ function Info({ algorithm, irToSpecMapping }: { algorithm: Algorithm, irToSpecMa
   )
 }
 
-function Sdo({ algorithm, irToSpecMapping }: { algorithm: Algorithm, irToSpecMapping: Record<string, SpecFuncInfo> }) {
+function Sdo({ algorithm, irToSpecMapping }: { algorithm: Algorithm, irToSpecMapping: IrToSpecMapping }) {
 
   const specInfo = irToSpecMapping[algorithm.name]
   const CONTAINS = specInfo !== undefined;
@@ -63,7 +63,7 @@ function Sdo({ algorithm, irToSpecMapping }: { algorithm: Algorithm, irToSpecMap
 }
 
 
-export default function AlgoViewerHeader({ algorithm, irToSpecMapping }: { algorithm: Algorithm, irToSpecMapping: Record<string, SpecFuncInfo> }) {
+export default function AlgoViewerHeader({ algorithm, irToSpecMapping }: { algorithm: Algorithm, irToSpecMapping: IrToSpecMapping }) {
 
 
   const specInfo = irToSpecMapping[algorithm.name]
@@ -78,17 +78,24 @@ export default function AlgoViewerHeader({ algorithm, irToSpecMapping }: { algor
       return algorithm.name.substring('INTRINSICS.'.length);
     }
 
+    if (specInfo?.methodInfo) {
+      const [, mn] = specInfo.methodInfo;
+      return mn;
+    }
+
     return algorithm.name;
   }) ();
 
   const isSdo = specInfo?.isSdo === true;
+  const isMethod = specInfo?.isMethod === true;
 
   const params = (
-    specInfo?.isSdo === true ?
+    (specInfo?.isSdo === true || specInfo?.isMethod === true)  ?
     algorithm.params.slice(1)
     : 
     algorithm.params
-  ).map(({ name, optional }) => {
+  )
+    .map(({ name, optional }) => {
         return optional ? name + "?" : name;
       })
     .join(", ");
@@ -119,6 +126,14 @@ export default function AlgoViewerHeader({ algorithm, irToSpecMapping }: { algor
       </b>))}
       </p>}
         </div>
+    }
+    {
+      specInfo?.methodInfo &&
+      <div className="px-2 flex flex-col mb-1 break-all">
+      <p className="px-2 font-300">
+          <b className="size-14 text-[#2aa198] italic font-es">{algorithm.params[0].name}</b> : <b className="size-14 text-black font-es">{specInfo?.methodInfo[0]}</b>
+      </p>
+      </div>
     }
     </>
   );

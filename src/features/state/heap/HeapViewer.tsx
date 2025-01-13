@@ -6,8 +6,6 @@ import { Dispatch, ReduxState } from "@/store";
 import Address, { GuideTooltip, ProvinenceButton } from "./Address";
 import { setHeapViewerAddr } from "@/store/reducers/Client";
 import { HistoryIcon } from "lucide-react";
-
-import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react'
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 function HistoryViewer({ history, dispatch }: { history: string[], dispatch: Dispatch }) {
@@ -16,8 +14,10 @@ function HistoryViewer({ history, dispatch }: { history: string[], dispatch: Dis
       <TooltipTrigger className="aspect-square h-full flex items-center justify-center px-1 text-neutral-500"><HistoryIcon size={18} /></TooltipTrigger>
       <TooltipContent>
         <p className="flex flex-col text-sm items-start">
-          {history.map((addr, idx) => <button
-            key={idx}
+          {history.length === 0 ?
+            'No history'
+            : history.map((addr) => <button
+            key={addr}
             className="active:scale-95 transition-all hover:opacity-50"
             onClick={() => dispatch(setHeapViewerAddr(addr))}>{addr}</button>)}
         </p>

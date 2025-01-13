@@ -54,7 +54,8 @@ function ContextViewer(props: SpecViewerProps & { context: Context }) {
           addBreak({
             type: BreakpointType.Spec,
             fid,
-            name: bpName,
+            duplicateCheckId: bpName,
+            name: algoName,
             steps,
             enabled: true,
           }),

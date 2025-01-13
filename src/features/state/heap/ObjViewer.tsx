@@ -1,5 +1,6 @@
 import { HeapObj } from "@/types/heap.type";
 import Address, { ProvinenceButton } from "./Address";
+import { v4 } from "uuid";
 
 interface Props {
   obj: HeapObj;
@@ -37,7 +38,7 @@ export default function ObjectView({ obj, singleMode, address }: Props) {
               </tr>
             ) : (
               Object.entries(obj.map).map(([key, value]) => (
-                <tr className="even:bg-white odd:bg-neutral-100 hover:bg-neutral-200 transition-all">
+                <tr key={v4()} className="even:bg-white odd:bg-neutral-100 hover:bg-neutral-200 transition-all">
                   <td className="border-r">{key}</td>
                   <td className="font-mono text-wrap break-all text-center overflow-hidden flex flex-row gap-2 justify-center items-center">
                     {value.startsWith("#") ? (
@@ -72,7 +73,7 @@ export default function ObjectView({ obj, singleMode, address }: Props) {
               </>
             ) : (
               Object.entries(obj.map).map(([key, value]) => (
-                <tr className="even:bg-white odd:bg-neutral-100 hover:bg-neutral-200 transition-all">
+                <tr key={v4()} className="even:bg-white odd:bg-neutral-100 hover:bg-neutral-200 transition-all">
                   <td className="border-r">{key}</td>
                   <td className="font-mono text-wrap break-all text-center overflow-hidden flex flex-row gap-2 justify-center items-center">
                     {value.startsWith("#") ? (
@@ -99,7 +100,7 @@ export default function ObjectView({ obj, singleMode, address }: Props) {
           <tbody>
             {Object.keys(obj.values).length === 0 ? (
               <tr>
-                <td colSpan={2}>No values</td>
+                <td key={v4()} colSpan={2}>No values</td>
               </tr>
             ) : (
               obj.values.map((value, idx) => (

@@ -6,7 +6,7 @@ import { Breakpoint } from "@/store/reducers/Breakpoint";
 import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import { shallowEqual, useSelector } from "react-redux";
 import { ReduxState } from "@/store";
-import { SpecFuncInfo } from "@/store/reducers/Spec";
+import { IrToSpecMapping } from "@/store/reducers/Spec";
 
 type ContextItemProps = {
   data: Context;
@@ -57,12 +57,12 @@ function toStepString(steps: number[]) {
   return str;
 }
 
-function replacedName(name: string, irToSpecMapping: Record<string, SpecFuncInfo>) {
+function replacedName(name: string, irToSpecMapping: IrToSpecMapping): string {
   const specInfo = irToSpecMapping[name];
-  if (specInfo.isBuiltIn) {
+  if (specInfo?.isBuiltIn) {
     return name.substring('INTRINSICS.'.length);
   }
-  if (specInfo.isSdo && specInfo.sdoInfo && specInfo.sdoInfo.prod) {
+  if (specInfo?.isSdo && specInfo?.sdoInfo && specInfo?.sdoInfo.prod) {
     return `${specInfo.sdoInfo.method} of ${specInfo.sdoInfo.prod?.astName}`;
   }
   return name;

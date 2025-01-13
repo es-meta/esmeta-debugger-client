@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from "react";
 import { parseAlgorithm } from "ecmarkdown";
-import { Algorithm, SpecFuncInfo } from "@/store/reducers/Spec";
+import { Algorithm, IrToSpecMapping } from "@/store/reducers/Spec";
 import { AlgoVisitedStepList } from "./AlgoVisitedStep";
 import "@/styles/AlgoViewer.css";
 import { Breakpoint, BreakpointType } from "@/store/reducers/Breakpoint";
@@ -60,7 +60,8 @@ export function ContextVisitedViewer(props: {
           addBreak({
             type: BreakpointType.Spec,
             fid,
-            name: bpName,
+            duplicateCheckId: bpName,
+            name: algoName,
             steps,
             enabled: true,
           }),
@@ -95,7 +96,7 @@ export function ContextVisitedViewer(props: {
   );
 }
 
-function AlgoViewerHeader({ algorithm, irToSpecMapping }: { algorithm: Algorithm, irToSpecMapping: Record<string, SpecFuncInfo> }) {
+function AlgoViewerHeader({ algorithm, irToSpecMapping }: { algorithm: Algorithm, irToSpecMapping: IrToSpecMapping }) {
 
 
   const specInfo = irToSpecMapping[algorithm.name]

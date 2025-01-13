@@ -21,13 +21,14 @@ export function addBreakHandler(toEnabled: true, algoName: string | null, breakp
     const steps: number[] = [1];
 
     const bpName = `${steps} @ ${algoName}`;
-    const duplicated = breakpoints.some(({ name }) => name === bpName);
+    const duplicated = breakpoints.some(({ duplicateCheckId }) => duplicateCheckId === bpName);
     const valid = algos.hasOwnProperty(algoName);
     if (valid && !duplicated)
       dispatch(addBreak({
         type: BreakpointType.Spec,
         fid: algos[algoName],
-        name: bpName,
+        duplicateCheckId: bpName,
+        name: algoName,
         steps: steps,
         enabled: true,
       }));
@@ -60,7 +61,7 @@ export default connector(function Breakpoints(props: BreakpointsProps) {
           placeholder="search by name"
         />
       </div>
-      <table className="w-full">
+      <table className="w-full text-xs">
         <thead className="font-200 text-neutral-500">
           <tr>
             <th className="border-r">Step</th>
