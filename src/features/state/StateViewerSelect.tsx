@@ -1,5 +1,6 @@
 import { Radio, RadioGroup } from "@headlessui/react";
 import React from "react";
+import { ViewerItem } from "./vieweritems";
 
 interface Props<T> {
   selected: T;
@@ -10,7 +11,7 @@ interface Props<T> {
   getLabel: (t: T) => string;
 }
 
-export default function StateViewerSelect<T>({
+export default function StateViewerSelect<T extends ViewerItem>({
   selected,
   options,
   setSelected,
@@ -25,7 +26,7 @@ export default function StateViewerSelect<T>({
       className="absolute right-0 bg-white h-6 mr-1 flex flex-row gap-1 text-xs text-neutral-500 overflow-scroll"
       aria-label="State Viewer Select"
     >
-      {options.map(o => (
+      {options.map(o => ((o.hiddenByDefault && o !== selected) ? null : (
         <Radio
           key={getId(o)}
           value={o}
@@ -36,7 +37,7 @@ export default function StateViewerSelect<T>({
           {getIcon(o)}
           {getLabel(o)}
         </Radio>
-      ))}
+      )))}
     </RadioGroup>
   );
 }

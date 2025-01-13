@@ -1,22 +1,13 @@
 import Card from "@/components/layout/Card";
-import Breakpoints from "./breakpoint/Breakpoints";
-import CallStackViewerWithVisited from "./callstack-visited/CallStackViewerWithVisited";
-import SpecEnvViewer from "./env/SpecEnvViewer";
-import HeapViewer from "./heap/HeapViewer";
 import CardHeader from "@/components/layout/CardHeader";
-import {
-  ContainerIcon,
-  CpuIcon,
-  LayersIcon,
-  MemoryStickIcon,
-  OctagonXIcon,
-} from "lucide-react";
-import { ReactElement, ReactNode, useState } from "react";
+import { CpuIcon } from "lucide-react";
+import {  useCallback, useState } from "react";
 import { ReduxState } from "@/store";
 import { AppState } from "@/store/reducers/AppState";
 import { useDispatch, useSelector } from "react-redux";
 import StateViewerSelect from "./StateViewerSelect";
-import { chooseStateViewer, ClientState } from "@/store/reducers/Client";
+import { chooseStateViewer } from "@/store/reducers/Client";
+import { ViewerItem, viewerItems } from "./vieweritems";
 
 const selector = (st: ReduxState) => ({
   disabled: !(
@@ -27,39 +18,21 @@ const selector = (st: ReduxState) => ({
   targetId: st.client.stateviewer.view,
 });
 
-interface Show {
-  name: string;
-  id: ClientState["stateviewer"]["view"];
-  icon: ReactElement<SVGElement>;
-  view: ReactNode;
-}
-
-const shows: Show[] = [
-  {
-    name: "Envrironment",
-    id: "env",
-    icon: <ContainerIcon />,
-    view: <SpecEnvViewer />,
-  },
-  { name: "Heap", id: "heap", icon: <MemoryStickIcon />, view: <HeapViewer /> },
-  {
-    name: "Breakpoint",
-    id: "bp",
-    icon: <OctagonXIcon />,
-    view: <Breakpoints />,
-  },
-  {
-    name: "Callstack",
-    id: "callstack",
-    icon: <LayersIcon />,
-    view: <CallStackViewerWithVisited />,
-  },
-];
-
 export default function StateViewer() {
   const [collapsed, setCollapsed] = useState(false);
   // const [show, setShow] = useState(shows[0]);
   const dispatch = useDispatch();
+
+  const ref = useCallback((node: HTMLDivElement | null) => {
+    // if node === null : unmount
+
+    const observer = new ResizeObserver(() => {
+
+    });
+
+
+
+  },[]);
 
   const { disabled, targetId } = useSelector(selector);
 
@@ -68,15 +41,15 @@ export default function StateViewer() {
   return collapsed ? (
     toggle
   ) : (
-    <Card>
+    <Card ref={ref} className="flex flex-col size-full">
       <CardHeader
         title="State&nbsp;Viewer"
         icon={<CpuIcon size={14} className="inline" />}
       >
         <StateViewerSelect
-          selected={shows.find(s => s.id === targetId) || shows[0]}
-          options={shows}
-          setSelected={(s: Show) => {
+          selected={viewerItems.find(s => s.id === targetId) || viewerItems[0]}
+          options={viewerItems}
+          setSelected={(s: ViewerItem) => {
             if (!s) return;
             dispatch(chooseStateViewer(s.id));
           }}
@@ -84,17 +57,19 @@ export default function StateViewer() {
           getIcon={s => s.icon}
           getLabel={s => s.name}
         />
-      </CardHeader>
+        </CardHeader>
+        <div className="overflow-y-scroll size-full">
       {disabled ? (
         <p className="text-neutral-500 p-2">Disabled. Start debugger to use.</p>
       ) : (
         // temp fix to preserve state in render tree - use redux later
-        shows.map(s => (
+        viewerItems.map(s => (
           <div key={s.name} className={targetId === s.id ? "" : "hidden"}>
             {s.view}
           </div>
         ))
-      )}
+          )}
+          </div>
     </Card>
   );
 }
