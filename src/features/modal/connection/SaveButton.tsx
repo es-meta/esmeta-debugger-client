@@ -14,7 +14,7 @@ interface SaveOption {
 
 export const opts: SaveOption[] = [
   { id: "params", name: "Save for this Tab (Requires Refresh)" },
-  { id: "storage", name: "Save for This Browser (Requires Refresh)" },
+  // { id: "storage", name: "Save for This Browser (Requires Refresh)" },
 ];
 
 interface Props {
