@@ -98,7 +98,6 @@ export function ContextVisitedViewer(props: {
 
 function AlgoViewerHeader({ algorithm, irToSpecMapping }: { algorithm: Algorithm, irToSpecMapping: IrToSpecMapping }) {
 
-
   const specInfo = irToSpecMapping[algorithm.name]
 
   const title = (() => {
@@ -111,17 +110,23 @@ function AlgoViewerHeader({ algorithm, irToSpecMapping }: { algorithm: Algorithm
       return algorithm.name.substring('INTRINSICS.'.length);
     }
 
+    if (specInfo?.methodInfo) {
+      const [, mn] = specInfo.methodInfo;
+      return mn;
+    }
+
     return algorithm.name;
   }) ();
 
   const isSdo = specInfo?.isSdo === true;
 
   const params = (
-    specInfo?.isSdo === true ?
+    (specInfo?.isSdo === true || specInfo?.isMethod === true)  ?
     algorithm.params.slice(1)
     : 
     algorithm.params
-  ).map(({ name, optional }) => {
+  )
+    .map(({ name, optional }) => {
         return optional ? name + "?" : name;
       })
     .join(", ");
@@ -135,6 +140,7 @@ function AlgoViewerHeader({ algorithm, irToSpecMapping }: { algorithm: Algorithm
       <span className="algo-parameters">
         ({params})
       </span>
+      {/* <Info algorithm={algorithm} irToSpecMapping={irToSpecMapping} /> */}
     </div>
     {isSdo &&
       <div className="px-2 flex flex-col mb-1 break-all">
@@ -151,6 +157,14 @@ function AlgoViewerHeader({ algorithm, irToSpecMapping }: { algorithm: Algorithm
       </b>))}
       </p>}
         </div>
+    }
+    {
+      specInfo?.methodInfo &&
+      <div className="px-2 flex flex-col mb-1 break-all">
+      <p className="px-2 font-300">
+          <b className="size-14 text-[#2aa198] italic font-es">{algorithm.params[0].name}</b> : <b className="size-14 text-black font-es">{specInfo?.methodInfo[0]}</b>
+      </p>
+      </div>
     }
     </>
   );
