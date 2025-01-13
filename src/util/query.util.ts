@@ -1,6 +1,8 @@
+import { logger } from "@/constants/constant";
+
 export function getSearchQuery(name: string): string | null {
   const x = new URLSearchParams(location.search).get(name);
-  console.log('got ', x, ' for ', name);
+  logger.log('[PREPARING]', 'getSearchQuery', 'got', x, 'for', name);
   if (x === null) return null;
   return x //decodeURIComponent(x);
 }
