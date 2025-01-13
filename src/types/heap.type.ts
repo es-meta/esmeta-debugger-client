@@ -7,7 +7,7 @@ export interface HeapObjRecord {
 
 export interface HeapObjList {
   type: "ListObj";
-  values: Record<string, string>;
+  values: Array<string>;
   stringform: string;
 }
 

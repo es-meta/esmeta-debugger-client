@@ -6,6 +6,7 @@ import irState from "./IrState";
 import breakpoint from "./Breakpoint";
 import spec from "./Spec";
 import client from "./Client";
+import stats from './Stats';
 
 export default combineReducers({
   appState,
@@ -15,4 +16,5 @@ export default combineReducers({
   irState,
   spec,
   client,
+  stats,
 });

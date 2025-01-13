@@ -22,7 +22,7 @@ export const setHeapViewerAddr = (heapAddr: string | null): ClientAction => ({
   addr: heapAddr,
 });
 
-type StateViewerView = "env" | "heap" | "callstack" | "bp";
+type StateViewerView = "env" | "heap" | "callstack" | "bp" | "stats";
 
 export type ClientAction =
   | {

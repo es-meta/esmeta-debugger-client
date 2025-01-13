@@ -10,11 +10,12 @@ import {
   updateHeapRequest,
   updateCallStackRequest,
 } from "../store/reducers/IrState";
-import { clearJS } from "../store/reducers/JS";
+import { clearJS, edit } from "../store/reducers/JS";
 import { clearAlgo } from "../store/reducers/Spec";
 import { doAPIPostRequest } from "../util/api/api";
 import { Route } from "@/types/route.type";
 import { GIVEN_SETTINGS } from "@/constants/settings";
+import { updateStatRequest } from "@/store/reducers/Stats";
 
 // run debugger saga
 function* runSaga() {
@@ -27,13 +28,17 @@ function* runSaga() {
 
       // run server debugger with js code and breakpoints
       yield put({ type: AppStateActionType.SEND });
-      yield call(() => doAPIPostRequest("exec/run", [code, breakpoints]));
+      const reprinted: string | null = yield call(() => doAPIPostRequest("exec/run", [code, breakpoints]));
+      if (reprinted !== null) {
+        yield put(edit(reprinted));
+      }
       yield put({ type: AppStateActionType.RECEIVE });
       // move app state to DEBUG_READY
       yield put(move(AppState.DEBUG_READY_AT_FRONT));
       // update heap, call stack
       yield put(updateHeapRequest());
       yield put(updateCallStackRequest());
+      yield put(updateStatRequest());
     } catch (e: unknown) {
       // show error toast
       // toast.error((e as Error).message);
@@ -100,6 +105,7 @@ function* resumeFromIterSaga() {
       // update heap, call stack
       yield put(updateHeapRequest());
       yield put(updateCallStackRequest());
+      yield put(updateStatRequest());
     } catch (e: unknown) {
       // show error toast
       // toast.error((e as Error).message);
@@ -158,9 +164,10 @@ function mkStepSaga(endpoint: Route, bodyObj?: unknown) {
           break;
       }
 
-      // update heap, call stack
+      // update heap, call stack, and stats
       yield put(updateHeapRequest());
       yield put(updateCallStackRequest());
+      yield put(updateStatRequest());
     } catch (e: unknown) {
       console.error(e);
       if (e instanceof Error) {
@@ -174,6 +181,27 @@ function mkStepSaga(endpoint: Route, bodyObj?: unknown) {
   return _stepBodySaga;
 }
 
+// ir step saga
+function* irStepSaga() {
+  yield takeLatest(DebuggerActionType.IR_STEP, function* () {
+    const state: ReduxState = yield select();
+    yield call(mkStepSaga("exec/irStep", state.appState.ignoreBP));
+  });
+}
+// ir step over saga
+function* irStepOverSaga() {
+  yield takeLatest(DebuggerActionType.IR_STEP_OVER, function* () {
+    const state: ReduxState = yield select();
+    yield call(mkStepSaga("exec/irStepOver", state.appState.ignoreBP));
+  });
+}
+// ir step over saga
+function* irStepOutSaga() {
+  yield takeLatest(DebuggerActionType.IR_STEP_OUT, function* () {
+    const state: ReduxState = yield select();
+    yield call(mkStepSaga("exec/irStepOut", state.appState.ignoreBP));
+  });
+}
 // spec step saga
 function* specStepSaga() {
   yield takeLatest(DebuggerActionType.SPEC_STEP, function* () {
@@ -232,9 +260,15 @@ function* specRewindSaga() {
   );
 }
 
-// js step saga
-function* jsStepSaga() {
-  yield takeLatest(DebuggerActionType.JS_STEP, mkStepSaga("exec/esStep"));
+// js ast step saga
+function* jsAstStepSaga() {
+  yield takeLatest(DebuggerActionType.JS_STEP_AST, mkStepSaga("exec/esAstStep"));
+}
+
+
+// js statement step saga
+function* jsStatementStepSaga() {
+  yield takeLatest(DebuggerActionType.JS_STEP_STATEMENT, mkStepSaga("exec/esStatementStep"));
 }
 
 // js step over saga
@@ -260,13 +294,17 @@ export default function* debuggerSaga() {
     resumeFromIterSaga(),
     stopSaga(),
     backToProvenanceSaga(),
+    irStepSaga(),
+    irStepOverSaga(),
+    irStepOutSaga(),
     specStepSaga(),
     specStepOverSaga(),
     specStepOutSaga(),
     specStepBackSaga(),
     specStepBackOverSaga(),
     specStepBackOutSaga(),
-    jsStepSaga(),
+    jsAstStepSaga(),
+    jsStatementStepSaga(),
     jsStepOverSaga(),
     jsStepOutSaga(),
     specContinueSaga(),

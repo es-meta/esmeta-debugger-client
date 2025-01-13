@@ -12,7 +12,11 @@ export enum DebuggerActionType {
   SPEC_STEP_BACK = "DebuggerAction/STEP_BACK",
   SPEC_STEP_BACK_OVER = "DebuggerAction/STEP_BACK_OVER",
   SPEC_STEP_BACK_OUT = "DebuggerAction/STEP_BACK_OUT",
-  JS_STEP = "DebuggerAction/JS_STEP",
+  IR_STEP = "DebuggerAction/IR_STEP",
+  IR_STEP_OVER = "DebuggerAction/IR_STEP_OVER",
+  IR_STEP_OUT = "DebuggerAction/IR_STEP_OUT",
+  JS_STEP_AST = "DebuggerAction/JS_STEP_AST",
+  JS_STEP_STATEMENT = "DebuggerAction/JS_STEP_STATEMENT",
   JS_STEP_OUT = "DebuggerAction/JS_STEP_OUT",
   JS_STEP_OVER = "DebuggerAction/JS_STEP_OVER",
   SPEC_CONTINUE = "DebuggerAction/SPEC_CONTINUE",
@@ -49,8 +53,20 @@ export const specStepBackOver = (): DebuggerAction => ({
 export const specStepBackOut = (): DebuggerAction => ({
   type: DebuggerActionType.SPEC_STEP_BACK_OUT,
 });
-export const jsStep = (): DebuggerAction => ({
-  type: DebuggerActionType.JS_STEP,
+export const irStep = (): DebuggerAction => ({
+  type: DebuggerActionType.IR_STEP,
+});
+export const irStepOver = (): DebuggerAction => ({
+  type: DebuggerActionType.IR_STEP_OVER,
+});
+export const irStepOut = (): DebuggerAction => ({
+  type: DebuggerActionType.IR_STEP_OUT,
+});
+export const jsStepAst = (): DebuggerAction => ({
+  type: DebuggerActionType.JS_STEP_AST,
+});
+export const jsStepStatement = (): DebuggerAction => ({
+  type: DebuggerActionType.JS_STEP_STATEMENT,
 });
 export const jsStepOver = (): DebuggerAction => ({
   type: DebuggerActionType.JS_STEP_OVER,
@@ -95,9 +111,21 @@ export type DebuggerAction =
     }
   | {
       type: DebuggerActionType.SPEC_STEP_BACK_OUT;
+  }
+  | {
+    type: DebuggerActionType.IR_STEP;
+  }
+  | {
+    type: DebuggerActionType.IR_STEP_OVER;
+  }
+  | {
+    type: DebuggerActionType.IR_STEP_OUT;
+  }
+  | {
+      type: DebuggerActionType.JS_STEP_AST;
     }
   | {
-      type: DebuggerActionType.JS_STEP;
+      type: DebuggerActionType.JS_STEP_STATEMENT;
     }
   | {
       type: DebuggerActionType.JS_STEP_OVER;

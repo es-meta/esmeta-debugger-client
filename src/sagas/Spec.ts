@@ -8,6 +8,7 @@ import {
   updateAlgoListSuccess,
   SpecVersion,
   updateVersionSuccess,
+  SpecFuncInfo,
 } from "../store/reducers/Spec";
 import { updateRange } from "../store/reducers/JS";
 import { AppState, AppStateActionType, move } from "../store/reducers/AppState";
@@ -58,12 +59,19 @@ function* updateAlgoListSaga() {
       const raw: [number, string][] = yield call(() =>
         doAPIGetRequest(`spec/func`),
       );
+      const raw2: [string, SpecFuncInfo][] = yield call(() =>
+        doAPIGetRequest(`spec/irToSpecNameMap`),
+      );
       yield put({ type: AppStateActionType.RECEIVE });
       const nameMap: Record<string, number> = {};
       raw.forEach(([fid, name]) => {
         nameMap[name] = fid;
       });
-      yield put(updateAlgoListSuccess(nameMap));
+      const irToSpecMapping: Record<string, SpecFuncInfo> = {};
+      raw2.forEach(([ir, { name, htmlId, isSdo, sdoInfo, isBuiltIn }]) => {
+        irToSpecMapping[ir] = { name, htmlId, isSdo, sdoInfo, isBuiltIn };
+      });
+      yield put(updateAlgoListSuccess(nameMap, irToSpecMapping));
       yield put(move(AppState.JS_INPUT));
     } catch (e: unknown) {
       // show error toast
@@ -82,11 +90,14 @@ function* updateVersionInfo() {
   function* _updateVersionInfo() {
     try {
       yield put({ type: AppStateActionType.SEND });
-      const raw: SpecVersion = yield call(() =>
+      const rawSpec: SpecVersion = yield call(() =>
         doAPIGetRequest(`spec/version`),
       );
+      const rawESMeta: string = yield call(() =>
+        doAPIGetRequest(`meta/version`),
+      );
       yield put({ type: AppStateActionType.RECEIVE });
-      yield put(updateVersionSuccess(raw));
+      yield put(updateVersionSuccess(rawSpec, rawESMeta));
     } catch (e: unknown) {
       // show error toast
       toast.error((e as Error).message);
