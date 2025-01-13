@@ -8,11 +8,13 @@ import {
   updateAlgoListSuccess,
   SpecVersion,
   updateVersionSuccess,
-  SpecFuncInfo,
+  IrToSpecMapping,
 } from "../store/reducers/Spec";
 import { updateRange } from "../store/reducers/JS";
 import { AppState, AppStateActionType, move } from "../store/reducers/AppState";
 import { doAPIGetRequest } from "../util/api/api";
+
+type ValueOf<T> = T[keyof T];
 
 // get algorithm by cid
 function* updateByCidSaga() {
@@ -59,7 +61,7 @@ function* updateAlgoListSaga() {
       const raw: [number, string][] = yield call(() =>
         doAPIGetRequest(`spec/func`),
       );
-      const raw2: [string, SpecFuncInfo][] = yield call(() =>
+      const raw2: [string, ValueOf<IrToSpecMapping>][] = yield call(() =>
         doAPIGetRequest(`spec/irToSpecNameMap`),
       );
       yield put({ type: AppStateActionType.RECEIVE });
@@ -67,9 +69,9 @@ function* updateAlgoListSaga() {
       raw.forEach(([fid, name]) => {
         nameMap[name] = fid;
       });
-      const irToSpecMapping: Record<string, SpecFuncInfo> = {};
-      raw2.forEach(([ir, { name, htmlId, isSdo, sdoInfo, isBuiltIn }]) => {
-        irToSpecMapping[ir] = { name, htmlId, isSdo, sdoInfo, isBuiltIn };
+      const irToSpecMapping: IrToSpecMapping = {};
+      raw2.forEach(([ir, info]) => {
+        irToSpecMapping[ir] = info !== undefined ? info : undefined;
       });
       yield put(updateAlgoListSuccess(nameMap, irToSpecMapping));
       yield put(move(AppState.JS_INPUT));

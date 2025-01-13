@@ -17,7 +17,7 @@ export const updateAlgoListRequest = (): SpecAction => ({
 });
 export const updateAlgoListSuccess = (
   nameMap: Record<string, number>, // map from function name to id
-  irToSpecMapping: Record<string, SpecFuncInfo>, // map from ir function name to spec function name
+  irToSpecMapping: IrToSpecMapping, // map from ir function name to spec function name
 ): SpecAction => ({
   type: SpecActionType.UPDATE_ALGORITHM_LIST_SUCCESS,
   nameMap,
@@ -58,7 +58,7 @@ export type SpecAction =
   | {
       type: SpecActionType.UPDATE_ALGORITHM_LIST_SUCCESS;
     nameMap: Record<string, number>;
-    irToSpecMapping: Record<string, SpecFuncInfo>;
+    irToSpecMapping: IrToSpecMapping;
     }
   | {
       type: SpecActionType.UPDATE_VERSION_REQUEST;
@@ -100,12 +100,16 @@ export interface SpecVersion {
   tag: string | null;
 }
 
-export type SpecFuncInfo = {
+export type IrToSpecMapping = Record<string, SpecFuncInfo | undefined>;
+
+type SpecFuncInfo = {
   name: string;
   htmlId: string;
   isBuiltIn: boolean;
+  isMethod: boolean;
   isSdo: boolean;
   sdoInfo: SdoInfo | null;
+  methodInfo: [string, string] | null;
 }
 
 type SdoInfo = {
@@ -190,7 +194,7 @@ export type SpecState = {
   algorithm: Algorithm;
   nameMap: Record<string, number>;
   toggleMap: Record<string, boolean>; // ir function name to fold state, TODO remove
-  irToSpecMapping: Record<string, SpecFuncInfo>;
+  irToSpecMapping: IrToSpecMapping;
   version: { spec: SpecVersion, esmeta: string | null };
 };
 const initialState: SpecState = {
