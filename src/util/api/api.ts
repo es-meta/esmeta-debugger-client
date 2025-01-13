@@ -2,15 +2,17 @@ import { toast } from "react-toastify";
 import type { Route } from "@/types/route.type";
 import { GIVEN_SETTINGS } from "@/constants/settings";
 import { ScalaJSFactoryInput } from "./esmeta.type";
+import { logger } from "@/constants/constant";
 
 function fetchFromDump(url: string): Promise<string> {
   return fetch(url).then(response => response.text());
 }
 
 // Create worker instance
-const workerPromise = new Promise<Worker>(resolve => {
+const workerPromise = new Promise<Worker>((resolve) => {
   const GIVEN_API = GIVEN_SETTINGS.api;
   if (GIVEN_API.type === "browser") {
+
     const input = Promise.all([
       fetchFromDump("/dump/funcs.json"),
       fetchFromDump("/dump/spec.version.json"),
@@ -56,29 +58,32 @@ const createWorkerRequest = async <T extends Route>(
   endpoint: T,
   data?: unknown,
 ): Promise<ReturnTypeForApi<T>> => {
-  const worker = await workerPromise;
-  return new Promise((resolve, reject) => {
-    const id = counter++;
-    workingset.add(id);
+    const worker = await workerPromise;
+    return new Promise((resolve, reject) => {
+      const id = counter++;
+      workingset.add(id);
 
-    const handler = (e: MessageEvent) => {
-      const response = e.data;
-      if (response.id === id) {
-        worker.removeEventListener("message", handler);
-        if (response.success) {
-          resolve(response.data);
-        } else {
-          const error = new Error(response.error);
-          toast.error(error.message);
-          reject(error);
+      logger.log(id, type, endpoint, data);
+
+      const handler = (e: MessageEvent) => {
+        const response = e.data;
+        if (response.id === id) {
+          worker.removeEventListener("message", handler);
+          logger.log(id, response);
+          if (response.success) {
+            resolve(response.data);
+          } else {
+            const error = new Error(response.error);
+            toast.error(error.message);
+            reject(error);
+          }
+          workingset.delete(id);
         }
-      }
-      workingset.delete(id);
-    };
+      };
 
-    worker.addEventListener("message", handler);
-    worker.postMessage({ id, type, endpoint, data });
-  });
+      worker.addEventListener("message", handler);
+      worker.postMessage({ id, type, endpoint, data });
+    });
 };
 
 // Modified API request functions
