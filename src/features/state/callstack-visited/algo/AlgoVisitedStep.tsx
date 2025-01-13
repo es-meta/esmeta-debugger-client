@@ -69,14 +69,9 @@ export const AlgoVisitedStepList = (props: {
       )}
     >
       {props.listNode.contents.map((listItemNode, idx) => {
-        const a = uuid();
-        console.log(props.steps.join(","), a);
         return (
           <AlgoStep
-            key={
-              a
-              // `${props.steps.join(',')}`
-            }
+            key={uuid()}
             contents={listItemNode.contents}
             sublist={listItemNode.sublist}
             steps={props.steps.concat([idx + 1])}
@@ -126,6 +121,19 @@ function AlgoStep(props: AlgoStepProps) {
     setTimeout(() => onPrefixClick(steps), 0);
   }, [onPrefixClick, steps]);
 
+  // TODO check this code it is written by copilot
+  const myDescendantsVisitedOrVisiting = useMemo(() => {
+    if (sublist === null) return false;
+    return sublist.contents.some((listItemNode, idx) => {
+      const steps = props.steps.concat([idx + 1]);
+      return (
+        props.visitedStepList.some(visitedSteps =>
+          isSameStep(visitedSteps, steps),
+        ) || isSameStep(steps, currentSteps)
+      );
+    });
+  }, [props.visitedStepList, sublist]);
+
   return (
     <>
       {(visited || visiting) && (
@@ -135,7 +143,7 @@ function AlgoStep(props: AlgoStepProps) {
           onPrefixClick={onPrefixClick}
         />
       )}
-      {visited || visiting ? (
+      {visited || visiting || myDescendantsVisitedOrVisiting ? (
         <AlgoStepCore
           className={className}
           contents={contents}
@@ -143,7 +151,7 @@ function AlgoStep(props: AlgoStepProps) {
           value={idxSelf}
         />
       ) : null}
-      {visited ? (
+      {(visited || myDescendantsVisitedOrVisiting) ? (
         sublist === null || sublist.name === "ul" ? null : (
           <AlgoVisitedStepList
             listNode={sublist}

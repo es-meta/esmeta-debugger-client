@@ -5,8 +5,10 @@ import { AlgoVisitedStepList } from "./AlgoVisitedStep";
 import "@/styles/AlgoViewer.css";
 import { Breakpoint, BreakpointType } from "@/store/reducers/Breakpoint";
 import { addBreak, rmBreak } from "@/store/reducers/Breakpoint";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Context } from "@/store/reducers/IrState";
+import { twMerge } from "tailwind-merge";
+import { ReduxState } from "@/store";
 
 export function ContextVisitedViewer(props: {
   context: Context;
@@ -15,6 +17,8 @@ export function ContextVisitedViewer(props: {
 }) {
   const dispatch = useDispatch();
   const { algo, breakpoints, context } = props;
+
+  const irToSpecMapping = useSelector((st: ReduxState) => st.spec.irToSpecMapping);
 
   const currentSteps = useMemo(
     () => (context === undefined ? [] : context.steps) satisfies number[],
@@ -76,8 +80,8 @@ export function ContextVisitedViewer(props: {
   );
 
   return (
-    <div className="algo-container size-fit">
-      <AlgoViewerHeader algorithm={algo} />
+    <div className="algo-container w-full h-fit break-before-all">
+      <AlgoViewerHeader algorithm={algo} irToSpecMapping={irToSpecMapping} />
       <AlgoVisitedStepList
         listNode={parsed.contents}
         steps={empty}
@@ -91,19 +95,62 @@ export function ContextVisitedViewer(props: {
   );
 }
 
-function AlgoViewerHeader({ algorithm }: { algorithm: Algorithm }) {
-  return (
-    <div className="font-600 text-lg bg-white">
-      <b>{algorithm.name}</b>
+function AlgoViewerHeader({ algorithm, irToSpecMapping }: { algorithm: Algorithm, irToSpecMapping: Record<string, SpecFuncInfo> }) {
+
+
+  const specInfo = irToSpecMapping[algorithm.name]
+
+  const title = (() => {
+    
+    if (specInfo?.sdoInfo && specInfo.isSdo === true) {
+      return specInfo.sdoInfo.method;
+    }
+
+    if (specInfo?.isBuiltIn === true) {
+      return algorithm.name.substring('INTRINSICS.'.length);
+    }
+
+    return algorithm.name;
+  }) ();
+
+  const isSdo = specInfo?.isSdo === true;
+
+  const params = (
+    specInfo?.isSdo === true ?
+    algorithm.params.slice(1)
+    : 
+    algorithm.params
+  ).map(({ name, optional }) => {
+        return optional ? name + "?" : name;
+      })
+    .join(", ");
+  
+  
+  const prodInfo = specInfo?.sdoInfo?.prod?.prodInfo;
+
+  return (<>
+    <div className="pt-2 px-2 font-es font-600 text-lg bg-white">
+      <b>{title}</b>
       <span className="algo-parameters">
-        (
-        {algorithm.params
-          .map(({ name, optional }) => {
-            return optional ? name + "?" : name;
-          })
-          .join(", ")}
-        )
+        ({params})
       </span>
     </div>
+    {isSdo &&
+      <div className="px-2 flex flex-col mb-1">
+      {prodInfo && <p className="ml-4"><b className="inline font-300 italic">
+          {specInfo.sdoInfo?.prod?.astName}
+        </b><b className="inline font-700">&nbsp;:</b>{prodInfo.map((prod, idx) => (<b key={idx} className={
+          twMerge(
+          "inline",
+          prod.type === 'terminal' && 'font-700 font-mono text-sm',
+          prod.type === 'nonterminal' && 'font-300 italic',
+        )
+      }>
+        &nbsp;{prod.value}
+      </b>))}
+      </p>}
+        </div>
+    }
+    </>
   );
 }
