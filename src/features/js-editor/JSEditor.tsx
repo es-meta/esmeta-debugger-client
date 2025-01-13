@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, } from "react";
 import "@/styles/JSEditor.css";
 import MonacoEditor from "./MonacoEditor";
 import Card from "@/components/layout/Card";
@@ -40,7 +40,7 @@ export default function JSEditor() {
   // }, [code]);
 
   return (
-    <Card>
+    <Card className="h-full flex flex-col">
       <CardHeader
         title="JavaScript&nbsp;Editor"
         icon={<CodeIcon size={14} className="inline" />}
