@@ -2,12 +2,10 @@ import { motion, AnimatePresence } from "motion/react";
 import {
   CheckIcon,
   CogIcon,
-  GlobeIcon,
   Loader2Icon,
   PlugIcon,
 } from "lucide-react";
 import {
-  CircleCheckBigIcon,
   LoaderPinwheelIcon,
   CircleAlertIcon,
 } from "lucide-react";
@@ -130,7 +128,8 @@ export default function ConnectStateViewer() {
           animate={variants.animate}
           exit={variants.exit}
           transition={{
-            // bounce: 0,
+            type: "tween",
+            ease: "easeIn",
             duration: 0.0625,
           }}
         >
