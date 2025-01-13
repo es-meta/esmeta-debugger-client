@@ -14,7 +14,10 @@ export default {
   		'800': '800',
   		'900': '900'
   	},
-  	extend: {
+		extend: {
+			fontFamily: {
+				'es': ['Cambria', 'Palatino Linotype', 'Palatino', 'Liberation Serif', 'serif']
+			},
   		colors: {
   			es: {
   				'50': '#fff6f0',
