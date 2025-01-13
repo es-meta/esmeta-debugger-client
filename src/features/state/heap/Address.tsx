@@ -101,7 +101,7 @@ export default function Address({ address, singleMode }: Props) {
           </div>
         </span>
       )}
-      {fold && (obj ? <ObjectView obj={obj} /> : <div>Not found</div>)}
+      {fold && (obj ? <ObjectView address={address} singleMode={singleMode} obj={obj} /> : <div>Not found</div>)}
     </div>
   );
 }

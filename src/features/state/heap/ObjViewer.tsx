@@ -1,10 +1,12 @@
 import { HeapObj } from "@/types/heap.type";
-import Address from "./Address";
+import Address, { ProvinenceButton } from "./Address";
 
 interface Props {
   obj: HeapObj;
+  singleMode?: boolean;
+  address: string;
 }
-export default function ObjectView({ obj }: Props) {
+export default function ObjectView({ obj, singleMode, address }: Props) {
   const type = obj?.type;
   const typeString =
     type === "RecordObj"
@@ -18,8 +20,10 @@ export default function ObjectView({ obj }: Props) {
   return (
     <>
       {obj.type === "RecordObj" && (
-        <table className="bg-white font-mono text-center text-sm">
-          <caption className="break-all">{typeString}</caption>
+        <table className="bg-white font-mono text-center text-xs">
+          <caption className="break-all">{typeString}
+            {singleMode && <ProvinenceButton address={address} />}
+          </caption>
           <thead>
             <tr>
               <th className="border-r w-1/4">key</th>
@@ -49,8 +53,10 @@ export default function ObjectView({ obj }: Props) {
         </table>
       )}
       {obj.type === "MapObj" && (
-        <table className="bg-white font-mono text-center text-sm">
-          <caption className="break-all">{typeString}</caption>
+        <table className="bg-white font-mono text-center text-xs">
+          <caption className="break-all">{typeString}
+          {singleMode && <ProvinenceButton address={address} />}
+          </caption>
           <thead>
             <tr>
               <th className="border-r w-1/4">key</th>
@@ -82,8 +88,8 @@ export default function ObjectView({ obj }: Props) {
         </table>
       )}
       {obj.type === "ListObj" && (
-        <table className="bg-white font-mono text-center text-sm">
-          <caption className="break-all">{typeString}</caption>
+        <table className="bg-white font-mono text-center text-xs">
+          <caption className="break-all">{typeString}{singleMode && <ProvinenceButton address={address} />}</caption>
           <thead>
             <tr>
               <th className="border-r w-1/4">key</th>
@@ -96,10 +102,10 @@ export default function ObjectView({ obj }: Props) {
                 <td colSpan={2}>No values</td>
               </tr>
             ) : (
-              Object.entries(obj.values).map(([idx, value]) => (
+              obj.values.map((value, idx) => (
                 <tr className="even:bg-white odd:bg-neutral-100 hover:bg-neutral-200 transition-all">
                   <td className="border-r">{idx}</td>
-                  <td className="border font-mono text-wrap break-all text-center overflow-hidden flex flex-row gap-2 justify-center items-center">
+                  <td className="font-mono text-wrap break-all text-center overflow-hidden flex flex-row gap-2 justify-center items-center">
                     {value.startsWith("#") ? (
                       <Address address={value} />
                     ) : (
@@ -113,7 +119,7 @@ export default function ObjectView({ obj }: Props) {
         </table>
       )}
       {obj.type === "YetObj" && (
-        <div className="font-mono p-1  text-center">
+        <div className="font-mono p-1 text-center">
           this object is not yet supported in ESMeta
         </div>
       )}
