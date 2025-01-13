@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from "react";
 import { parseAlgorithm } from "ecmarkdown";
-import { Algorithm } from "@/store/reducers/Spec";
+// import { Algorithm } from "@/store/reducers/Spec";
 import AlgoStepList from "./AlgoStepList";
 import "@/styles/AlgoViewer.css";
 import { BreakpointType } from "@/store/reducers/Breakpoint";
@@ -8,10 +8,11 @@ import { SpecViewerProps } from "../SpecViewer.redux";
 import { addBreak, rmBreak } from "@/store/reducers/Breakpoint";
 import { useDispatch } from "react-redux";
 import { Context } from "@/store/reducers/IrState";
+import AlgoViewerHeader from "./AlgoViewerHeader";
 
 function ContextViewer(props: SpecViewerProps & { context: Context }) {
   const dispatch = useDispatch();
-  const { algo, breakpoints, context } = props;
+  const { algo, breakpoints, context, irToSpecMapping } = props;
 
   const currentSteps = useMemo(
     () => (context === undefined ? [] : context.steps) satisfies number[],
@@ -73,8 +74,8 @@ function ContextViewer(props: SpecViewerProps & { context: Context }) {
   );
 
   return (
-    <div className="algo-container size-fit">
-      <AlgoViewerHeader algorithm={algo} />
+    <div className="algo-container w-full h-fit break-all">
+      <AlgoViewerHeader algorithm={algo} irToSpecMapping={irToSpecMapping} />
       <AlgoStepList
         listNode={parsed.contents}
         steps={empty}
@@ -95,21 +96,4 @@ export default function AlgoViewer(props: SpecViewerProps) {
   const context = irState.callStack[irState.contextIdx];
 
   return <ContextViewer {...props} context={context} />;
-}
-
-function AlgoViewerHeader({ algorithm }: { algorithm: Algorithm }) {
-  return (
-    <div className="font-600 text-lg bg-white">
-      <b>{algorithm.name}</b>
-      <span className="algo-parameters">
-        (
-        {algorithm.params
-          .map(({ name, optional }) => {
-            return optional ? name + "?" : name;
-          })
-          .join(", ")}
-        )
-      </span>
-    </div>
-  );
 }

@@ -7,15 +7,13 @@ import {
 } from "@headlessui/react";
 import {
   GitCommitIcon,
-  GitCommitVerticalIcon,
   InfoIcon,
-  SettingsIcon,
   TagIcon,
 } from "lucide-react";
 import { Fragment, useCallback, useState } from "react";
-import { GitBranchIcon, PlugIcon } from "lucide-react";
+import { GitBranchIcon } from "lucide-react";
 
-import { useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import { ReduxState } from "@/store";
 import PlainLabel from "@/components/label/PlainLabel";
 import { AppState } from "@/store/reducers/AppState";
@@ -25,12 +23,13 @@ import { CLIENT_VERSION } from "@/constants/constant";
 export default function SpecVersionView() {
   let [isOpen, setIsOpen] = useState(false);
 
-  const { version, isInit } = useSelector((state: ReduxState) => ({
-    version: state.spec.version,
+  const { specVersion, isInit, esmetaVersion } = useSelector((state: ReduxState) => ({
+    specVersion: state.spec.version.spec,
     isInit: state.appState.state === AppState.INIT,
-  }));
+    esmetaVersion: state.spec.version.esmeta,
+  }), shallowEqual);
 
-  const versionString = versionStringBuilder(version, isInit);
+  const versionString = versionStringBuilder(specVersion, isInit);
 
   const closeModal = useCallback(() => {
     setIsOpen(false);
@@ -52,11 +51,9 @@ export default function SpecVersionView() {
           onClick={openModal}
           className="flex flex-row rounded-md text-sm font-medium text-white transition-all items-center justify-between hover:bg-neutral-500/25 bg-neutral-500/0 focus:outline-none focus-visible:ring-1 focus-visible:ring-neutral-300/75"
         >
-          <div className="h-8 flex flex-row"></div>
-
           <PlainLabel>
             <GitBranchIcon />
-            {versionString}
+            <p className="hidden md:block">{versionString}</p>
           </PlainLabel>
         </button>
       </div>
@@ -102,18 +99,18 @@ export default function SpecVersionView() {
                   <div className="flex flex-col gap-1">
                     <PlainLabel>
                       <TagIcon />
-                      {version.tag || "unknown tag"}
+                      {specVersion.tag || "unknown tag"}
                     </PlainLabel>
                     <PlainLabel>
                       <GitCommitIcon />
-                      {version.hash || "unknown commit hash"}
+                      {specVersion.hash || "unknown commit hash"}
                     </PlainLabel>
                   </div>
 
                   <h4 className="mt-4 text-lg font-700">ESMeta Version</h4>
                   <PlainLabel>
                     <InfoIcon />
-                    to be implemented
+                    {esmetaVersion ?? 'unknown version'}
                   </PlainLabel>
                   <h4 className="mt-4 text-lg font-700">
                     ESMeta Debugger Client Version
