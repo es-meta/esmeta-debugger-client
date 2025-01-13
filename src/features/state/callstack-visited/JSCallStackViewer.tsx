@@ -58,15 +58,14 @@ function readJSExecutionStack(state: ReduxState) : JSContext[] {
 
         const name = nameWithQoute.slice(1, -1);
 
+
         return ({
-          name,
-          type: 'Function',
+          type: name ? `Function (${name})` : 'Function',
           address: addr,
         })
       }
 
       return ({
-        name: '',
         type: 'ScriptOrModule',
         address: addr,
       })
@@ -113,14 +112,13 @@ export default function JSCallStackViewer() {
       <tr>
         <th className="border-r w-8">#</th>
         <th className="border-r w-fit">type</th>
-        <th className="border-r">name</th>
         <th className="w-4">show</th>
       </tr>
     </thead>
       <tbody>
         {executionStack.length === 0 ? (
           <tr>
-            <td colSpan={4} className="text-center text-neutral-500 p-4 text-sm">JavaScript call stack is empty, maybe evaluating script not yet started or already finished.</td>
+            <td colSpan={3} className="text-center text-neutral-500 p-4 text-sm">JavaScript call stack is empty, maybe evaluating script not yet started or already finished.</td>
           </tr>
         ):
           executionStack.map((ctxt, idx) => (

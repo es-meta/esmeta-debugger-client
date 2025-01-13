@@ -59,9 +59,6 @@ export default function JSContextItem(props: Props) {
         <td className="border-r text-center text-wrap break-all">
           {props.type}
         </td>
-        <td className="border-r text-center text-wrap break-all font-mono">
-          {props.name}
-        </td>
         <td className="">
           <button
             className="size-full text-black/50 hover:text-black/25 flex items-center justify-center"

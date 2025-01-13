@@ -7,6 +7,7 @@ import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import { shallowEqual, useSelector } from "react-redux";
 import { ReduxState } from "@/store";
 import { IrToSpecMapping } from "@/store/reducers/Spec";
+import { toStepString } from "@/util/numbering.util";
 
 type ContextItemProps = {
   data: Context;
@@ -17,46 +18,6 @@ type ContextItemProps = {
   setGlobalExpand: (expand: boolean | null) => void;
 };
 
-function toAlpha(num: number): string {
-  return String.fromCharCode(65 + num - 1);
-}
-
-function toRoman(num: number): string {
-
-  const roman = [
-    ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"],
-    ["", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"],
-    ["", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"],
-    ["", "M", "MM", "MMM", "MMMM"],
-  ];
-
-  const digits = num.toString().split("").reverse();
-  let romanNum = "";
-  for (let i = 0; i < digits.length; i++) {
-    romanNum = roman[i][Number(digits[i])] + romanNum;
-  }
-  return romanNum;
-}
-
-function toStepString(steps: number[]) {
-  let str = '';
-  for (let i = 0; i < steps.length; i++) {
-    switch (i % 3) {
-      case 0:
-        str += steps[i];
-        break;
-      case 1:
-        str += toAlpha(steps[i]);
-        break;
-      case 2:
-        str += toRoman(steps[i]);
-        break;
-    }
-    if (i !== steps.length - 1) str += '.';
-  }
-  return str;
-}
-
 function replacedName(name: string, irToSpecMapping: IrToSpecMapping): string {
   const specInfo = irToSpecMapping[name];
   if (specInfo?.isBuiltIn) {
@@ -64,6 +25,9 @@ function replacedName(name: string, irToSpecMapping: IrToSpecMapping): string {
   }
   if (specInfo?.isSdo && specInfo?.sdoInfo && specInfo?.sdoInfo.prod) {
     return `${specInfo.sdoInfo.method} of ${specInfo.sdoInfo.prod?.astName}`;
+  }
+  if (specInfo?.methodInfo) {
+    return specInfo.methodInfo[1];
   }
   return name;
 }
@@ -96,16 +60,16 @@ export default function SpecContextItem(props: ContextItemProps) {
   }, [globalExpand]);
 
 
-  const specName = replacedName(name, irToSpecMapping);
+  const specName = useMemo(() => replacedName(name, irToSpecMapping), [name, irToSpecMapping]);
 
   return (
     <>
       <tr className={className} onClick={() => onItemClick(idx)}>
         <td className="py-1 border-r text-center">{idx}</td>
-        <td className="border-r text-center text-wrap break-all">
+        <td className="border-r text-center text-wrap lowercase break-all">
           {stepString}
         </td>
-        <td className="border-r text-center text-wrap break-all font-mono">
+        <td className="border-r text-center text-wrap break-all font-es font-700 text-sm">
           {specName}
         </td>
         <td className="">

@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import { toast } from "react-toastify";
 import { v4 as uuid } from "uuid";
 
-import MyCombobox from "@/components/combobox/MyCombobox";
+import MyCombobox from "./BreakCombobox";
 
 import { addBreak, Breakpoint, BreakpointType } from "@/store/reducers/Breakpoint";
 

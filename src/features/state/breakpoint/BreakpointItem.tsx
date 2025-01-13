@@ -1,9 +1,15 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 
 import { Breakpoint } from "@/store/reducers/Breakpoint";
 import { XIcon } from "lucide-react";
 
 import MySwitch from "@/components/button/MySwitch";
+import { toStepString } from "@/util/numbering.util";
+import { logger } from "@/constants/constant";
+import { twMerge } from "tailwind-merge";
+import { AlgoViewerHeaderUsingOnlyName } from "@/features/spec/algo/AlgoViewerHeader";
+import { useSelector } from "react-redux";
+import { ReduxState } from "@/store";
 
 interface BreakpointItemProp {
   data: Breakpoint;
@@ -20,6 +26,10 @@ export default function BreakpointItem(props: BreakpointItemProp) {
     data,
   } = props;
 
+  const isEven = useMemo(() => idx % 2 === 0, [idx]);
+
+  const irToSpecMapping = useSelector((st: ReduxState) => st.spec.irToSpecMapping);
+
   const { name, enabled } = data;
 
   const handleToggleClick = useCallback(() => {
@@ -30,13 +40,22 @@ export default function BreakpointItem(props: BreakpointItemProp) {
     onRemoveClick(idx);
   }, [onRemoveClick, idx]);
 
+  if (data.type === "BreakpointType/Js") {
+    logger.error("Js breakpoint is not supported");
+    return null;
+  }
+
   return (
-    <tr className="odd:bg-neutral-100 even:bg-white hover:bg-neutral-200 transition-all">
-      <td className="border-r overflow-hidden font-mono text-wrap break-all text-center">
-        TODO
+    <>
+      <tr className={twMerge(
+        " hover:bg-neutral-200 transition-all",
+        isEven ? "bg-white" : "bg-neutral-100",
+      )}>
+      <td className="lowercase border-r overflow-hidden font-mono text-wrap break-all text-center">
+        {toStepString(data.steps)}
       </td>
-      <td className="border-r overflow-hidden font-mono text-wrap break-all text-center">
-        {name}
+      <td className="border-r overflow-hidden font-mono text-wrap break-all pb-1">
+        <AlgoViewerHeaderUsingOnlyName name={name} irToSpecMapping={irToSpecMapping} />
       </td>
       <td className="border-r text-center">
         <MySwitch checked={enabled} onChange={() => handleToggleClick()} />
@@ -49,6 +68,7 @@ export default function BreakpointItem(props: BreakpointItemProp) {
           <XIcon />
         </button>
       </td>
-    </tr>
+      </tr>
+    </>
   );
 }
