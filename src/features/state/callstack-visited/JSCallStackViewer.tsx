@@ -1,11 +1,9 @@
-import { ChevronDownIcon, ChevronUpIcon, FoldVerticalIcon, InfoIcon, UnfoldVerticalIcon } from "lucide-react";
+import { FoldVerticalIcon, InfoIcon, UnfoldVerticalIcon } from "lucide-react";
 import StateViewerItem from "../StateViewerItem";
 import { useSelector } from "react-redux";
 import { EXECUTION_STACK_ADDR } from "@/constants/constant";
 import { ReduxState } from "@/store";
-import SpecContextItem from "./SpecContextItem";
 import { toast } from "react-toastify";
-import { useState } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import JSContextItem, { JSContext } from "./JSContextItem";
 
@@ -33,7 +31,7 @@ function readJSExecutionStack(state: ReduxState) : JSContext[] {
         })
       }
 
-      if (f !== 'null') {
+      if (f !== 'null' && f !== undefined) {
 
         const funcVal = state.irState.heap[f];
         if (!funcVal || funcVal.type !== 'RecordObj') throw new Error("Invalid address in execution stack");

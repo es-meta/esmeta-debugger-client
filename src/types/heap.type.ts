@@ -1,7 +1,7 @@
 export interface HeapObjRecord {
   type: "RecordObj";
   tname: string;
-  map: Record<string, string>;
+  map: Record<string, string | undefined>;
   stringform: string;
 }
 
@@ -13,13 +13,13 @@ export interface HeapObjList {
 
 export interface HeapObjMap {
   type: "MapObj";
-  map: Record<string, string>;
+  map: Record<string, string | undefined>;
   stringform: string;
 }
 
 export interface HeapObjYet {
   type: "YetObj";
-  tname: Record<string, string>;
+  tname: string;
   stringform: string;
 }
 
@@ -27,4 +27,4 @@ export interface HeapObjYet {
 // beautified addr and value
 export type HeapObj = HeapObjRecord | HeapObjList | HeapObjMap | HeapObjYet;
 
-export type Heap = { [addr: string]: HeapObj };
+export type Heap = { [addr: string]: HeapObj | undefined };

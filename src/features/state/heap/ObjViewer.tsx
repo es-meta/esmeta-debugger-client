@@ -41,7 +41,7 @@ export default function ObjectView({ obj, singleMode, address }: Props) {
                 <tr key={v4()} className="even:bg-white odd:bg-neutral-100 hover:bg-neutral-200 transition-all">
                   <td className="border-r">{key}</td>
                   <td className="font-mono text-wrap break-all text-center overflow-hidden flex flex-row gap-2 justify-center items-center">
-                    {value.startsWith("#") ? (
+                    {value && value.startsWith("#") ? (
                       <Address address={value} />
                     ) : (
                       value
@@ -76,7 +76,7 @@ export default function ObjectView({ obj, singleMode, address }: Props) {
                 <tr key={v4()} className="even:bg-white odd:bg-neutral-100 hover:bg-neutral-200 transition-all">
                   <td className="border-r">{key}</td>
                   <td className="font-mono text-wrap break-all text-center overflow-hidden flex flex-row gap-2 justify-center items-center">
-                    {value.startsWith("#") ? (
+                    {value && value.startsWith("#") ? (
                       <Address address={value} />
                     ) : (
                       value

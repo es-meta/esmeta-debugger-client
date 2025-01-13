@@ -21,6 +21,7 @@ import {
 interface Props {
   address: `${string}`;
   singleMode?: boolean;
+  defaultFold?: boolean;
 }
 
 export function ProvinenceButton({ address }: { address?: string }) {
@@ -67,9 +68,9 @@ function InspectInHaepViewer({ address }: { address: string }) {
   );
 }
 
-export default function Address({ address, singleMode }: Props) {
+export default function Address({ address, singleMode, defaultFold = false }: Props) {
   const [fold, setFold] = useState(
-    singleMode === undefined ? false : singleMode,
+    singleMode === undefined ? defaultFold : singleMode,
   );
   const obj = useSelector((s: ReduxState) => s.irState.heap[address]);
 
