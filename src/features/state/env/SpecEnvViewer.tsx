@@ -3,12 +3,16 @@ import { twJoin } from "tailwind-merge";
 import { v4 as uuid } from "uuid";
 
 import { Environment } from "@/store/reducers/IrState";
-import { connector, type SpecEnvViewerProps } from "./SpecEnvViewer.radix";
 import StateViewerItem from "../StateViewerItem";
 import clsx from "clsx";
 import Address, { GuideTooltip } from "@/features/state/heap/Address";
+import { useSelector } from "react-redux";
+import { ReduxState } from "@/store";
 
-export default connector(function SpecEnvViewer(props: SpecEnvViewerProps) {
+export default function SpecEnvViewer() {
+  const props = useSelector((st: ReduxState) => ({
+    irState: st.irState,
+  }));
   const { callStack, contextIdx } = props.irState;
 
   const env: Environment =
@@ -16,7 +20,10 @@ export default connector(function SpecEnvViewer(props: SpecEnvViewerProps) {
 
   const sorted = useMemo(
     () =>
-      env.slice().sort((a, b) => {
+      env.filter(entry => {
+        const [name] = entry;
+        return !(name.startsWith("__") && name.endsWith("__"));
+      }).slice().sort((a, b) => {
         if (a[0] === "return") return -1;
         if (b[0] === "return") return 1;
         return a[0].localeCompare(b[0]);
@@ -29,7 +36,7 @@ export default connector(function SpecEnvViewer(props: SpecEnvViewerProps) {
       header="Specification&nbsp;Environment"
       headerItems={<GuideTooltip />}
     >
-      <table className="w-full text-sm">
+      <table className="w-full text-xs">
         <thead className="text-sm font-200 text-neutral-500">
           <tr>
             <th className="border-r w-1/4">name</th>
@@ -38,10 +45,9 @@ export default connector(function SpecEnvViewer(props: SpecEnvViewerProps) {
         </thead>
         <tbody>
           {sorted.length === 0 ? (
-            <tr className="text-center text p-4 text-sm">
-              <td colSpan={2}>
-                No breakpoints. Add Breakpoint by clicking on steps in spec
-                viewer or by searching name
+            <tr className="text-center text p-4">
+              <td colSpan={2} className="text-center text-neutral-500 p-4 text-sm">
+                No environment variables.
               </td>
             </tr>
           ) : (
@@ -56,7 +62,7 @@ export default connector(function SpecEnvViewer(props: SpecEnvViewerProps) {
                   ),
                 )}
               >
-                <td className="border-r font-mono text-wrap break-all text-center overflow-hidden">
+                <td className="border-r font-mono text-wrap py-1 break-all text-center overflow-hidden">
                   {name}
                 </td>
                 <td className="font-mono text-wrap break-all text-center overflow-hidden flex flex-row gap-2 justify-center items-center">
@@ -69,4 +75,4 @@ export default connector(function SpecEnvViewer(props: SpecEnvViewerProps) {
       </table>
     </StateViewerItem>
   );
-});
+}
