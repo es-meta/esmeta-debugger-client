@@ -1,12 +1,6 @@
 import { useMemo, useState } from "react";
-import { Context } from "@/store/reducers/IrState";
 import { twMerge } from "tailwind-merge";
-import { ContextVisitedViewer } from "./algo/AlgoVisitedViewer";
-import { Breakpoint } from "@/store/reducers/Breakpoint";
 import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
-import { useDispatch, useSelector } from "react-redux";
-import { ReduxState } from "@/store";
-import { toggleMap } from "@/store/reducers/Spec";
 import Address from "../heap/Address";
 
 export interface JSContext {
@@ -19,57 +13,28 @@ interface Props extends JSContext {
   idx: number;
 }
 
+// function toAlpha(num: number): string {
+//   return String.fromCharCode(65 + num - 1);
+// }
 
-type ContextItemProps = {
-  data: Context;
-  highlight: boolean;
-  idx: number;
-  onItemClick: (idx: number) => void;
-  breakpoints: Breakpoint[];
-};
+// function toRoman(num: number): string {
 
-function toAlpha(num: number): string {
-  return String.fromCharCode(65 + num - 1);
-}
+//   const roman = [
+//     ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"],
+//     ["", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"],
+//     ["", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"],
+//     ["", "M", "MM", "MMM", "MMMM"],
+//   ];
 
-function toRoman(num: number): string {
-
-  const roman = [
-    ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"],
-    ["", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"],
-    ["", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"],
-    ["", "M", "MM", "MMM", "MMMM"],
-  ];
-
-  const digits = num.toString().split("").reverse();
-  let romanNum = "";
-  for (let i = 0; i < digits.length; i++) {
-    romanNum = roman[i][Number(digits[i])] + romanNum;
-  }
-  return romanNum;
-}
-
-function toStepString(steps: number[]) {
-  let str = '';
-  for (let i = 0; i < steps.length; i++) {
-    switch (i % 3) {
-      case 0:
-        str += steps[i];
-        break;
-      case 1:
-        str += toAlpha(steps[i]);
-        break;
-      case 2:
-        str += toRoman(steps[i]);
-        break;
-    }
-    if (i !== steps.length - 1) str += '.';
-  }
-  return str;
-}
+//   const digits = num.toString().split("").reverse();
+//   let romanNum = "";
+//   for (let i = 0; i < digits.length; i++) {
+//     romanNum = roman[i][Number(digits[i])] + romanNum;
+//   }
+//   return romanNum;
+// }
 
 export default function JSContextItem(props: Props) {
-  const dispatch = useDispatch();
   const [expand, setExpand] = useState(false);
 
   const className = useMemo(() => {

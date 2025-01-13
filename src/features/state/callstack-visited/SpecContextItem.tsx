@@ -1,12 +1,12 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Context } from "@/store/reducers/IrState";
 import { twMerge } from "tailwind-merge";
 import { ContextVisitedViewer } from "./algo/AlgoVisitedViewer";
 import { Breakpoint } from "@/store/reducers/Breakpoint";
 import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
-import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import { ReduxState } from "@/store";
-import { SpecFuncInfo, toggleMap } from "@/store/reducers/Spec";
+import { SpecFuncInfo } from "@/store/reducers/Spec";
 
 type ContextItemProps = {
   data: Context;

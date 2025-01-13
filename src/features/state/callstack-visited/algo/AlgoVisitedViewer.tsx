@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from "react";
 import { parseAlgorithm } from "ecmarkdown";
-import { Algorithm } from "@/store/reducers/Spec";
+import { Algorithm, SpecFuncInfo } from "@/store/reducers/Spec";
 import { AlgoVisitedStepList } from "./AlgoVisitedStep";
 import "@/styles/AlgoViewer.css";
 import { Breakpoint, BreakpointType } from "@/store/reducers/Breakpoint";

@@ -148,8 +148,9 @@ const doWriteRequest = async (
     case "exec/specStepBackOver":
       return JSON.parse((await ESMetaDebugger).exec_stepBackOver());
 
-    case "exec/esStep":
-      return JSON.parse((await ESMetaDebugger).exec_esStep());
+    // TODO
+    // case "exec/esStep":
+    //   return JSON.parse((await ESMetaDebugger).exec_esStep());
     case "exec/esStepOver":
       return JSON.parse((await ESMetaDebugger).exec_esStepOver());
 

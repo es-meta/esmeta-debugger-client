@@ -1,12 +1,11 @@
-import { AnimatePresence, motion } from "motion/react";
+import { motion } from "motion/react";
 import {
   Dialog,
   DialogPanel,
   Transition,
   TransitionChild,
 } from "@headlessui/react";
-import { Fragment, ReactNode, Ref, RefObject, useState } from "react";
-import ConnectStateViewer from "@/features/modal/connection/ConnectStateViewer";
+import { Fragment, RefObject, useState } from "react";
 
 export default function WelcomeModal() {
   let [isOpen, setIsOpen] = useState(true);
@@ -62,15 +61,15 @@ export default function WelcomeModal() {
                     <Funnel3 show={idx === 2} />
                     <Funnel4 show={idx === 3} />
                     <div className="fixed bottom-0 right-0 flex flex-row m-4 gap-2 touch-none">
-                      <Button onClick={() => setIsOpen(false)}>dive now</Button>
+                      <button onClick={() => setIsOpen(false)}>dive now</button>
                       {idx < 4 - 1 && (
-                        <Button
+                        <button
                           onClick={() => {
                             setIdx(idx + 1);
                           }}
                         >
                           <ArrowRightIcon />
-                        </Button>
+                        </button>
                       )}
                     </div>
                   </div>
@@ -86,17 +85,13 @@ export default function WelcomeModal() {
 
 ////////////////////////////////////////////////////////
 
-import React, { useEffect, useRef } from "react";
-import ReactDOM from "react-dom";
+import  { useEffect, useRef } from "react";
 import {
-  useViewportScroll,
   useTransform,
-  useMotionValue,
   useScroll,
 } from "motion/react";
 import { useInView } from "react-intersection-observer";
 
-import tw from "tailwind-styled-components";
 import { Funnel1, Funnel2, Funnel3, Funnel4 } from "./funnels";
 import { ArrowRightIcon } from "lucide-react";
 
@@ -278,6 +273,6 @@ function WelcomeScreen({ modalRef, close }: WelcomeScreenProps) {
   );
 }
 
-const Button = tw.button`
-  bg-es-400 hover:bg-es-700 text-white px-4 py-2 rounded-lg active:scale-90 transition-all
-`;
+// const Button = tw.button`
+//   bg-es-400 hover:bg-es-700 text-white px-4 py-2 rounded-lg active:scale-90 transition-all
+// `;
