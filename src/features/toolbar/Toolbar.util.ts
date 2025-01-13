@@ -7,7 +7,8 @@ import {
   specStepOver,
   specStepBack,
   specStepBackOver,
-  jsStep,
+  jsStepAst,
+  jsStepStatement,
   jsStepOut,
   jsStepOver,
   specContinue,
@@ -35,8 +36,10 @@ const map = (key: string, cond: Selected) => {
       return cond.disableGoingBackward ? null : specStepBack();
     case "k":
       return cond.disableGoingBackward ? null : specStepBackOver();
+    // case "j":
+    //   return cond.disableGoingForward ? null : jsStepAst();
     case "j":
-      return cond.disableGoingForward ? null : jsStep();
+      return cond.disableGoingForward ? null : jsStepStatement();
     case "v":
       return cond.disableGoingForward ? null : jsStepOver();
     case "t":

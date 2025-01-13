@@ -31,11 +31,11 @@ const ToolbarButton = forwardRef(function (
     <Button
       ref={ref}
       className={twMerge(
-        "flex flex-row items-center gap-[2px] px-3 py-2",
+        "flex flex-row items-center gap-[1px] px-2 py-2",
         "bg-white border md:w-fit md:border-neutral-200 md:rounded-none",
         "transition-all",
-        "[&>svg]:size-4",
-        "uppercase text-xs font-500",
+        "[&>svg]:size-3",
+        "uppercase text-xs text-neutral-600 font-500",
         "active:scale-90",
         disabled ? "opacity-25" : "hover:z-[1] hover:bg-neutral-200",
 

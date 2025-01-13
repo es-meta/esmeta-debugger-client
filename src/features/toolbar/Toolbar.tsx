@@ -20,7 +20,8 @@ import {
   specStepOver,
   specStepBack,
   specStepBackOver,
-  jsStep,
+  jsStepAst,
+  jsStepStatement,
   jsStepOut,
   jsStepOver,
   specContinue,
@@ -28,6 +29,9 @@ import {
   resumeFromIter,
   specStepBackOut,
   specRewind,
+  irStepOver,
+  irStep,
+  irStepOut,
 } from "@/store/reducers/Debugger";
 
 import ToolbarButton from "@/features/toolbar/ToolbarButton";
@@ -44,18 +48,23 @@ export default function Toolbar() {
   };
 
   const dispatch = useDispatch<Dispatch<DebuggerAction>>();
-  const selected = useSelector(selector);
   const {
     disableRun,
     disableResume,
     disableQuit,
     disableGoingBackward,
     disableGoingForward,
-  } = selected;
+  } = useSelector(selector, shallowEqual);
 
   const handleKeyPress = useCallback(
-    handleKeyPressBuilder(dispatch, selected),
-    [dispatch, selected],
+    handleKeyPressBuilder(dispatch, {
+      disableRun,
+      disableResume,
+      disableQuit,
+      disableGoingBackward,
+      disableGoingForward,
+    }),
+    [dispatch, disableRun, disableResume, disableQuit, disableGoingBackward, disableGoingForward],
   );
 
   useEffect(() => {
@@ -66,9 +75,16 @@ export default function Toolbar() {
   }, [handleKeyPress]);
 
   return (
-    <aside className="sticky top-0 w-full backdrop-blur-sm z-[2]">
-      <div className="bg-neutral-100 dark:bg-neutral-800 size-full flex-row bg-opacity-75 flex items-center min-h-full space-x-0 flex-wrap p-2 gap-y-2 gap-x-1 justify-start z-[1001]">
-        <ToolbarButtonGroup label="Execution">
+    <aside className="relative w-full backdrop-blur-sm z-[2]">
+      <div className="bg-neutral-100 dark:bg-neutral-800 size-full flex-row bg-opacity-75 flex items-center min-h-full space-x-0 flex-wrap p-2 gap-y-1 gap-x-1 justify-start z-[1001]">
+
+        <ConnectionSettings />
+        
+        <SpecVersionView />
+        
+        <Seperator />
+        
+        <ToolbarButtonGroup label="Exec">
           <ToolbarButton
             position="left"
             disabled={disableRun}
@@ -109,7 +125,7 @@ export default function Toolbar() {
           />
 
           <Tooltip>
-            <TooltipTrigger>
+            <TooltipTrigger asChild>
               <ToolbarButton
                 position="right"
                 disabled={disableGoingForward}
@@ -187,9 +203,47 @@ export default function Toolbar() {
           />
         </ToolbarButtonGroup>
 
+        <ToolbarButtonGroup label="Spec">
+          <ToolbarButton
+            position="left"
+            disabled={disableGoingForward}
+            onClick={() => dispatch(irStep())}
+            icon={<ArrowDownToDotIcon />}
+            label={
+              <span>
+                IR Step
+              </span>
+            }
+          />
+
+          <ToolbarButton
+            position="center"
+            disabled={disableGoingForward}
+            onClick={() => dispatch(irStepOver())}
+            icon={<RedoDotIcon />}
+            label={
+              <span>
+                IR Step Over
+              </span>
+            }
+          />
+
+          <ToolbarButton
+            position="right"
+            disabled={disableGoingForward}
+            onClick={() => dispatch(irStepOut())}
+            icon={<ArrowUpFromDotIcon />}
+            label={
+              <span>
+                IR Step Out
+              </span>
+            }
+          />
+        </ToolbarButtonGroup>
+
         <Seperator />
 
-        <ToolbarButtonGroup label="Backward">
+        <ToolbarButtonGroup label="Back">
           <ToolbarButton
             position="left"
             disabled={disableGoingBackward}
@@ -245,7 +299,19 @@ export default function Toolbar() {
           <ToolbarButton
             position="left"
             disabled={disableGoingForward}
-            onClick={() => dispatch(jsStep())}
+            onClick={() => dispatch(jsStepAst())}
+            icon={<ArrowDownToDotIcon />}
+            label={
+              <span>
+                Ast&nbsp;Step
+              </span>
+            }
+          />
+
+          <ToolbarButton
+            position="center"
+            disabled={disableGoingForward}
+            onClick={() => dispatch(jsStepStatement())}
             icon={<ArrowDownToDotIcon />}
             label={
               <span>
@@ -278,17 +344,12 @@ export default function Toolbar() {
             }
           />
         </ToolbarButtonGroup>
-
-        <Seperator />
-
-        <ConnectionSettings />
-        <SpecVersionView />
       </div>
     </aside>
   );
 }
 
-import { useDispatch, useSelector } from "react-redux";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { Dispatch } from "redux";
 import { handleKeyPressBuilder } from "./Toolbar.util";
 import { selector } from "./Toolbar.redux";
@@ -304,7 +365,7 @@ import { TooltipTrigger } from "@radix-ui/react-tooltip";
 
 function Seperator() {
   return (
-    <div className="h-full min-w-[1px] max-w-[1px] bg-neutral-400 block">
+    <div className="h-6 min-w-[1px] max-w-[1px] bg-neutral-300 block">
       &nbsp;
     </div>
   );

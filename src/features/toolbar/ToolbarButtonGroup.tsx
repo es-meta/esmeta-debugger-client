@@ -1,5 +1,4 @@
-import { Fragment, ReactElement, type ReactNode } from "react";
-
+import { ReactElement, type ReactNode } from "react";
 interface Props {
   icon?: ReactElement<SVGAElement>;
   label: ReactNode;
@@ -13,10 +12,11 @@ export default function ToolbarButtonGroup({ icon, label, children }: Props) {
         {children}
       </div>
       <div className="md:hidden">
-        <Menu>
+        <Menu
+        >
           {({ open }) => (
             <>
-              <MenuButton className="[&>svg]:size-4 [&>svg]:inline-block gap-[2px] flex flex-row items-center uppercase text-xs font-500 px-3 py-2 bg-white hover:bg-neutral-100 active:bg-neutral-200 border border-neutral-300 rounded-md transition-all">
+              <MenuButton className="[&>svg]:size-4 [&>svg]:inline-block gap-[2px] flex flex-row items-center uppercase text-xs font-500 px-2 py-2 bg-white hover:bg-neutral-100 active:bg-neutral-200 border border-neutral-300 rounded-md transition-all">
                 {icon || <MenuIcon />}
                 {label}
               </MenuButton>
@@ -58,4 +58,3 @@ export default function ToolbarButtonGroup({ icon, label, children }: Props) {
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { AnimatePresence, motion } from "motion/react";
 import { MenuIcon } from "lucide-react";
-import { v4 } from "uuid";
