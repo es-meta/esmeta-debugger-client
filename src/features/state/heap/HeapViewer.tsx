@@ -3,7 +3,7 @@ import MyCombobox from "@/components/combobox/MyCombobox";
 import StateViewerItem from "../StateViewerItem";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { Dispatch, ReduxState } from "@/store";
-import Address, { GuideTooltip, ProvinenceButton } from "./Address";
+import TreeAddress, { GuideTooltip, ProvinenceButton } from "./TreeAddress";
 import { setHeapViewerAddr } from "@/store/reducers/Client";
 import { HistoryIcon } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -79,7 +79,7 @@ export default function HeapViewer() {
           <HistoryViewer history={history} dispatch={dispatch} />
           <ProvinenceButton address={addr || undefined} />
         </div>
-        {(addr !== null && obj !== null) ? <Address address={addr} singleMode /> :
+        {(addr !== null && obj !== null) ? <TreeAddress address={addr} singleMode /> :
           <p className="text-center text-neutral-500 p-4 text-sm">
             Address is empty. Please select an address from the combobox.
           </p>}

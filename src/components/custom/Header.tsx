@@ -4,7 +4,7 @@ import {
 
 export default function Header() {
   return (
-    <nav className="bg-white dark:text-white dark:bg-neutral-800 border-b border-b-neutral-300 dark:border-b-neutral-600 bg-opacity-75 min-h-12 max-h-12 h-12 w-full text-sm xl:px-24 flex flex-row justify-between gap-3 items-center px-4">
+    <nav className="bg-white dark:text-white dark:bg-neutral-900 border-b border-b-neutral-300 dark:border-b-neutral-700 bg-opacity-75 min-h-12 max-h-12 h-12 w-full text-sm xl:px-24 flex flex-row justify-between gap-3 items-center px-4">
       <Left />
       <Right />
     </nav>
@@ -35,7 +35,7 @@ function Right() {
   return (
     <div className="flex flex-row gap-2">
       <a
-      className="flex flex-row gap-1 items-center text-xs font-500 hover:bg-neutral-100 rounded-lg active:scale-90 transition-all cursor-pointer p-2"
+      className="flex flex-row gap-1 items-center text-xs font-500 hover:bg-neutral-100 hover:bg-neutral-800 rounded-lg active:scale-90 transition-all cursor-pointer p-2"
         href={GITHUB_LINK_ESMETA} target="_blank" rel="noopener noreferrer">
         <GitHubIcon />
         ESMeta

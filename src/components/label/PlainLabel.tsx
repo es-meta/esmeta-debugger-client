@@ -13,7 +13,7 @@ export default function PlainLabel({ children, className }: Props) {
         "flex flex-row items-center gap-[2px] px-1 py-1",
         "transition-all",
         "[&>svg]:size-4",
-        "uppercase text-xs font-500 text-neutral-600",
+        "uppercase text-xs font-500 text-neutral-600 dark:text-neutral-200",
         className,
       )}
     >

@@ -100,7 +100,6 @@ export default function MonacoEditor({
 
   return (
     <Editor
-      className="bg-neutral-100"
       loading={<Loading />}
       language="javascript"
       value={code}

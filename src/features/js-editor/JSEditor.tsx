@@ -53,7 +53,7 @@ export default function JSEditor() {
         </div> */}
       </CardHeader>
 
-      <div className="overflow-hidden size-full border-t rounded flex flex-col">
+      <div className="overflow-hidden size-full rounded flex flex-col">
         <MonacoEditor
           code={code}
           onChange={handleCodeChange}

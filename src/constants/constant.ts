@@ -13,7 +13,7 @@ export const SPEC_URL = "https://tc39.es/ecma262/2024/"
 // TODO refactor? maybe too specific?
 export const EXECUTION_STACK_ADDR = "#EXECUTION_STACK";
 
-export const USE_VERBOSE_LOG = true;
+export const USE_VERBOSE_LOG = false;
 
 
 type LoggerType = {

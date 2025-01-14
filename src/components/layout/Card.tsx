@@ -13,7 +13,7 @@ export default forwardRef(function Card({ className, children }: Props, ref: Ref
     <div
       ref={ref}
       className={twMerge(
-        "flex flex-col bg-white relative border-b",
+        "flex flex-col bg-white dark:bg-neutral-950 relative",
         className,
       )}
     >
