@@ -28,7 +28,7 @@ function Info({ algorithm, irToSpecMapping }: { algorithm: Algorithm, irToSpecMa
       <TooltipContent>
         This function is written by the ESMeta project, not directly from the ECMAScript standard.
         <br />
-      It may serve as an auxiliary or implement an implementation-defined aspect of the specification.
+        It may serve as an auxiliary or implement an implementation-defined aspect of the specification.
       </TooltipContent>
     </Tooltip>
   )
@@ -108,7 +108,7 @@ export default function AlgoViewerHeader({ algorithm, irToSpecMapping }: { algor
       <span className="algo-parameters">
         ({params})
       </span>
-      {/* <Info algorithm={algorithm} irToSpecMapping={irToSpecMapping} /> */}
+      <Info algorithm={algorithm} irToSpecMapping={irToSpecMapping} />
     </div>
     {isSdo &&
       <div className="px-2 flex flex-col mb-1 break-all">
