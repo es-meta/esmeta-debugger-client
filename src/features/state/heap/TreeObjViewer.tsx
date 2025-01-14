@@ -1,12 +1,19 @@
 import { HeapObj } from "@/types/heap.type";
 import TreeAddress, { ProvinenceButton } from "./TreeAddress";
-import { v4 } from "uuid";
+import tw from "tailwind-styled-components";
 
 interface Props {
   obj: HeapObj;
   singleMode?: boolean;
   address: string;
 }
+
+const Ul = tw.ul`pl-4 list-inside list-disc border-y border-y-neutral-300`
+const Li = tw.li`border-b border-b-neutral-300`
+const B = tw.b`font-600`
+// const  = tw.ul`pl-2 list-inside list-disc`
+
+
 export default function TreeObjViewer({ obj, singleMode, address }: Props) {
   const type = obj?.type;
   const typeString =
@@ -22,94 +29,100 @@ export default function TreeObjViewer({ obj, singleMode, address }: Props) {
     <>
       {obj.type === "RecordObj" && (
         // <table className="bg-white font-mono text-center text-xs">
-          <ul className="w-full">
-          <caption className="break-all w-full">{typeString}
-            {singleMode && <ProvinenceButton address={address} />}
-          </caption>
-            {Object.keys(obj.map).length === 0 ? (
-                <p>No values</p>
-            ) : (
-              Object.entries(obj.map).map(([key, value]) => (
-                // <tr key={v4()} className="even:bg-white odd:bg-neutral-100 hover:bg-neutral-200 transition-all">
-                <li className="font-mono text-wrap break-all text-center overflow-hidden flex flex-row gap-2 justify-center items-center">
-                  {key} : 
-                    {value && value.startsWith("#") ? (
-                      <TreeAddress address={value} />
-                    ) : (
-                      value
-                    )}
-                  </li>
+        <Ul>
+          <li className="break-all line-none">{typeString}
+          {singleMode && 
+            <ProvinenceButton address={address} />
+          }
+          </li>
+          {Object.keys(obj.map).length === 0 ? (
+            <p>No values</p>
+          ) : (
+            Object.entries(obj.map).map(([key, value]) => (
+              // <tr key={v4()} className="even:bg-white odd:bg-neutral-100 hover:bg-neutral-200 transition-all">
+              value && value.startsWith("#") ? (
+                <TreeAddress field={key} address={value} />
+              ) : (<Li className="font-mono text-wrap break-all overflow-hidden gap-2">
+                <B>{key}</B>&nbsp;:&nbsp;{value}
+              </Li>
+              )
+                  
                 // </tr>
               ))
             )}
-          </ul>
+          </Ul>
         // </table>
       )}
-      {obj.type === "MapObj" && (
-        <table className="bg-white font-mono text-center text-xs">
-          <caption className="break-all">{typeString}
-          {singleMode && <ProvinenceButton address={address} />}
-          </caption>
-          <thead>
+      {obj.type === "MapObj" && (<Ul>
+        {/* // <table className="bg-white font-mono text-center text-xs">
+          // <thead>
+          //   <tr>
+          //     <th className="border-r w-1/4">key</th>
+          //     <th className="w-3/4">value</th>
+          //   </tr>
+          // </thead>
+          // <tbody> */}
+          
+          <li className="break-all list-none">{typeString}
+          {singleMode && < ProvinenceButton address={address} />}
+          </li>
+          
+        {Object.keys(obj.map).length === 0 ? (
+          <>
             <tr>
-              <th className="border-r w-1/4">key</th>
-              <th className="w-3/4">value</th>
+              <td colSpan={2}>No values</td>
             </tr>
-          </thead>
-          <tbody>
-            {Object.keys(obj.map).length === 0 ? (
-              <>
-                <tr>
-                  <td colSpan={2}>No values</td>
-                </tr>
-              </>
-            ) : (
-              Object.entries(obj.map).map(([key, value]) => (
-                <tr key={v4()} className="even:bg-white odd:bg-neutral-100 hover:bg-neutral-200 transition-all">
-                  <td className="border-r">{key}</td>
-                  <td className="font-mono text-wrap break-all text-center overflow-hidden flex flex-row gap-2 justify-center items-center">
-                    {value && value.startsWith("#") ? (
-                      <TreeAddress address={value} />
-                    ) : (
-                      value
-                    )}
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      )}
+          </>
+        ) : (
+          Object.entries(obj.map).map(([key, value]) => (
+            value && value.startsWith("#") ? (
+              <TreeAddress field={key} address={value} />
+            ) : (<Li className="font-mono text-wrap break-all overflow-hidden gap-2">
+              <B>{key}</B>&nbsp;:&nbsp;{value}
+            </Li>
+            )
+                    
+            // </tr>
+          ))
+        )}
+        {/* </tbody>
+        </table> */}
+      
+      </Ul>
+      )
+      }
       {obj.type === "ListObj" && (
-        <table className="bg-white font-mono text-center text-xs">
-          <caption className="break-all">{typeString}{singleMode && <ProvinenceButton address={address} />}</caption>
-          <thead>
-            <tr>
-              <th className="border-r w-1/4">key</th>
-              <th className="w-3/4">value</th>
-            </tr>
-          </thead>
-          <tbody>
+      <Ul>
+        {/* // <table className="bg-white font-mono text-center text-xs">
+        //   <thead>
+        //     <tr>
+        //       <th className="border-r w-1/4">key</th>
+        //       <th className="w-3/4">value</th>
+        //     </tr>
+        //   </thead>
+        //   <tbody> */}
+            <li className="break-all list-none">{typeString}
+            {singleMode && <ProvinenceButton address={address} />}
+            </li>
             {Object.keys(obj.values).length === 0 ? (
-              <tr>
-                <td key={v4()} colSpan={2}>No values</td>
-              </tr>
+              <Li>
+                No values
+              </Li>
             ) : (
               obj.values.map((value, idx) => (
-                <tr className="even:bg-white odd:bg-neutral-100 hover:bg-neutral-200 transition-all">
-                  <td className="border-r">{idx}</td>
-                  <td className="font-mono text-wrap break-all text-center overflow-hidden flex flex-row gap-2 justify-center items-center">
-                    {value.startsWith("#") ? (
-                      <TreeAddress address={value} />
-                    ) : (
-                      value
-                    )}
-                  </td>
-                </tr>
-              ))
+                value && value.startsWith("#") ? (
+                  <TreeAddress field={idx.toString()} address={value} />
+                ) : (<Li className="font-mono text-wrap break-all overflow-hidden gap-2">
+                  <B>{idx}</B>&nbsp;:&nbsp;{value}
+                </Li>
+                )
+                    
+                  // </tr>
+                ))
             )}
-          </tbody>
-        </table>
+          {/* </tbody>
+        </table> */}
+        </Ul>
       )}
       {obj.type === "YetObj" && (
         <div className="font-mono p-1 text-center">

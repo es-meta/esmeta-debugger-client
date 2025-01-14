@@ -17,8 +17,10 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { HeapObj } from "@/types/heap.type";
 
 interface Props {
+  field: string;
   address: `${string}`;
   singleMode?: boolean;
   defaultFold?: boolean;
@@ -68,25 +70,41 @@ function InspectInHaepViewer({ address }: { address: string }) {
   );
 }
 
-export default function TreeAddress({ address, singleMode, defaultFold = false }: Props) {
+function getTypeString(obj: HeapObj | undefined) {
+  if (!obj) return "";
+  const type = obj?.type;
+  return type === "RecordObj"
+    ? `: Record[${obj.tname}]`
+    : type === "YetObj"
+    ? `: Yet[${obj.tname}]`
+    : type === "MapObj"
+    ? `: Map`
+    : ": List";
+}
+
+export default function TreeAddress({ field, address, singleMode, defaultFold = false }: Props) {
   const [fold, setFold] = useState(
     singleMode === undefined ? defaultFold : singleMode,
   );
   const obj = useSelector((s: ReduxState) => s.irState.heap[address]);
 
   return (
-    <div className="flex flex-col size-fit">
+    <>
       {!singleMode && (
-        <span
-          className={
-            singleMode
-              ? "p-2 flex flex-row grow items-center justify-between break-all font-mono w-full gap-2"
-              : "flex flex-row items-center justify-center break-all font-mono w-full gap-2"
-          }
-        >
-          {address}
-
-          <div className="flex flex-row items-center gap-1">
+        // <li
+        //   className={
+        //     singleMode
+        //       ? "p-2 flex flex-row grow items-center justify-between break-all font-mono gap-2"
+        //       : "flex flex-row items-center justify-center break-all font-mono gap-2"
+        //   }
+        // >
+        <li className="border-b border-b-neutral-300">
+          <b className="font-600 font-mono">
+            {field}
+          </b>&nbsp;:&nbsp;
+          {address}&nbsp;
+          {/* {getTypeString(obj)}&nbsp; */}
+          <span className=" inline-flex flex-row items-center gap-1">
             <ProvinenceButton address={address} />
             <InspectInHaepViewer address={address} />
             <a
@@ -99,11 +117,11 @@ export default function TreeAddress({ address, singleMode, defaultFold = false }
                 <ChevronDownIcon size={16} className="inline" />
               )}
             </a>
-          </div>
-        </span>
+          </span>
+        </li>
       )}
       {fold && (obj ? <TreeObjViewer address={address} singleMode={singleMode} obj={obj} /> : <div>Not found</div>)}
-    </div>
+    </>
   );
 }
 

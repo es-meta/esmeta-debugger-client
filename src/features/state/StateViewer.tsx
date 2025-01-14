@@ -26,9 +26,9 @@ export default function StateViewer() {
   const ref = useCallback((node: HTMLDivElement | null) => {
     // if node === null : unmount
 
-    const observer = new ResizeObserver(() => {
+    // const observer = new ResizeObserver(() => {
 
-    });
+    // });
 
 
 

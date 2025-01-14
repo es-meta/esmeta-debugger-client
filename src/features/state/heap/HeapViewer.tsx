@@ -7,6 +7,7 @@ import { setHeapViewerAddr } from "@/store/reducers/Client";
 import { HistoryIcon } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import Address from "./Address";
+import TreeAddress from "./TreeAddress";
 
 function HistoryViewer({ history, dispatch }: { history: string[], dispatch: Dispatch }) {
   return (
@@ -78,10 +79,12 @@ export default function HeapViewer() {
           />
           <HistoryViewer history={history} dispatch={dispatch} />
         </div>
-        {(addr !== null && obj !== null) ? <Address address={addr} singleMode /> :
-          <p className="text-center text-neutral-500 p-4 text-sm">
+        <ul className="text-sm">
+        {(addr !== null && obj !== null) ? <TreeAddress field={addr} address={addr} singleMode /> :
+          <li className="text-center text-neutral-500 p-4 text-sm">
             Address is empty. Please select an address from the combobox.
-          </p>}
+            </li>}
+        </ul>
       </div>
     </StateViewerItem>
   );
