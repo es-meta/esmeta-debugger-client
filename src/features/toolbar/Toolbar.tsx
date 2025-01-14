@@ -11,6 +11,7 @@ import {
   UndoIcon,
   OctagonIcon,
   OctagonPauseIcon,
+  FastForwardIcon,
 } from "lucide-react";
 import {
   run,
@@ -74,6 +75,8 @@ export default function Toolbar() {
     };
   }, [handleKeyPress]);
 
+  const showResume = GIVEN_SETTINGS.origin.type === "visualizer";
+
   return (
     <aside className="relative w-full backdrop-blur-sm z-[2]">
       <div className="bg-neutral-100 dark:bg-neutral-900 size-full flex-row bg-opacity-75 flex items-center min-h-full space-x-0 flex-wrap p-2 gap-y-1 gap-x-1 justify-start z-[1001]">
@@ -83,10 +86,30 @@ export default function Toolbar() {
         <SpecVersionView />
         
         <Seperator />
+
+
+        
+
         
         <ToolbarButtonGroup label="Exec">
+          {showResume && (
+            <ToolbarButton
+              bold
+              position="left"
+              disabled={disableResume}
+              className={disableResume ? "" : ""}
+              onClick={() => dispatch(resumeFromIter())}
+              icon={<FastForwardIcon />}
+              label={
+                <span>
+                  R<b>e</b>sume
+                </span>
+              }
+            />
+          )}
+
           <ToolbarButton
-            position="left"
+            position={showResume ? "center" : "left"}
             disabled={disableRun}
             onClick={() => dispatch(run())}
             icon={<PlayIcon />}
@@ -96,21 +119,6 @@ export default function Toolbar() {
               </span>
             }
           />
-
-          {GIVEN_SETTINGS.origin.type === "visualizer" && (
-            <ToolbarButton
-              bold
-              position="center"
-              disabled={disableResume}
-              onClick={() => dispatch(resumeFromIter())}
-              icon={<PlayIcon />}
-              label={
-                <span>
-                  R<b>e</b>sume&nbsp;from&nbsp;Visualizer
-                </span>
-              }
-            />
-          )}
 
           <ToolbarButton
             position="center"
