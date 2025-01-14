@@ -31,20 +31,20 @@ export default function DebuggerApp() {
           direction="horizontal"
           className="bg-white dark:bg-black rounded-xl border grow dark:border-neutral-700 border-neutral-300 flex overflow-hidden"
         >
-          <ResizablePanel minSize={24}>
+          <ResizablePanel minSize={8}>
             <JSEditor />
           </ResizablePanel>
           <ResizableHandle withHandle
             hitAreaMargins={{ coarse: 16, fine: 8 }}
           />
-          <ResizablePanel minSize={24} className="">
+          <ResizablePanel minSize={8} className="">
             <SpecViewer />
           </ResizablePanel>
           <ResizableHandle
             withHandle
             hitAreaMargins={{ coarse: 16, fine: 8 }}
           />
-          <ResizablePanel minSize={24} collapsible>
+          <ResizablePanel minSize={8} collapsible>
             <StateViewer />
           </ResizablePanel>
         </ResizablePanelGroup>

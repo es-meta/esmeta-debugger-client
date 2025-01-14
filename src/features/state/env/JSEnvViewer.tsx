@@ -55,15 +55,16 @@ export default function JSEnvViewer() {
       icon={<CodeSquareIcon size={14} />}
       // headerItems={<GuideTooltip />}
     >
-            {/* <table className="w-full text-xs">
+      {/* <table className="w-full text-xs">
         <thead className="text-sm font-200 text-neutral-500">
           <tr>
             <th className="border-r w-1/4">name</th>
             <th className="w-3/4">value</th>
           </tr>
         </thead>
-        <tbody> */}
-      <ul className="text-sm px-2 font-mono">
+        <tbody> */
+      }
+      <ul className="text-sm px-2 font-mono list-disc list-inside">
           {bindings.length === 0 ? (
             // <tr className="text-center text p-4">
             //   <td colSpan={2} className="text-center text-neutral-500 p-4 text-sm">

@@ -23,16 +23,14 @@ export default function StateViewer() {
   // const [show, setShow] = useState(shows[0]);
   const dispatch = useDispatch();
 
-  const ref = useCallback((node: HTMLDivElement | null) => {
-    // if node === null : unmount
+  // const ref = useCallback((node: HTMLDivElement | null) => {
+  //   // if node === null : unmount
 
-    // const observer = new ResizeObserver(() => {
+  //   // const observer = new ResizeObserver(() => {
 
-    // });
+  //   // });
 
-
-
-  },[]);
+  // },[]);
 
   const { disabled, targetId } = useSelector(selector);
 
@@ -41,7 +39,7 @@ export default function StateViewer() {
   return collapsed ? (
     toggle
   ) : (
-    <Card ref={ref} className="flex flex-col size-full">
+    <Card className="flex flex-col size-full">
       <CardHeader
         title="State&nbsp;Viewer"
         icon={<CpuIcon size={14} className="inline" />}

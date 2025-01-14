@@ -22,7 +22,7 @@ export interface ViewerItem {
 
 export const viewerItems: ViewerItem[] = [
   {
-    name: "Envrironment",
+    name: "Env",
     id: "env",
     icon: <ContainerIcon />,
     view: <EnvViewer />,
@@ -34,7 +34,7 @@ export const viewerItems: ViewerItem[] = [
     hiddenByDefault: false,
   },
   {
-    name: "Breakpoint",
+    name: "Breaks",
     id: "bp",
     icon: <OctagonXIcon />,
     view: <Breakpoints />,

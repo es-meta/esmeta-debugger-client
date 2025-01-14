@@ -5,7 +5,7 @@ import { v4 as uuid } from "uuid";
 import { Environment } from "@/store/reducers/IrState";
 import StateViewerItem from "../StateViewerItem";
 import clsx from "clsx";
-import Address, { GuideTooltip } from "@/features/state/heap/Address";
+// import Address, { GuideTooltip } from "@/features/state/heap/Address";
 import { useSelector } from "react-redux";
 import { ReduxState } from "@/store";
 import TreeAddress from "../heap/TreeAddress";
@@ -29,7 +29,7 @@ export default function SpecEnvViewer() {
         if (a[0] === "return") return -1;
         if (b[0] === "return") return 1;
         return a[0].localeCompare(b[0]);
-      }).map(([name, value]) => (name === 'return' ? ['<<SPECIAL: RETURN>>', value] : [name, value]),),
+      }).map(([name, value]) => (name === 'return' ? ['RETURN', value] : [name, value]),),
       // temp fix for return value name
     [env],
   );
@@ -61,11 +61,10 @@ export default function SpecEnvViewer() {
                   clsx(
                     "bg-white",
                     "text-sm font-mono",
-                    "list-item px-2",
+                    "list-inside list-disc px-2",
                     // "border-b-neutral-200 border-b",
                     // "even:bg-white odd:bg-neutral-100",
                     "hover:bg-neutral-100 transition-all",
-                    { "!bg-[#BAF7D0]": name === "<<SPECIAL: RETURN>>" },
                   ),
                 )}
               >

@@ -30,11 +30,7 @@ export default function TreeObjViewer({ obj, singleMode, address }: Props) {
       {obj.type === "RecordObj" && (
         // <table className="bg-white font-mono text-center text-xs">
         <Ul>
-          <li className="break-all line-none">{typeString}
-          {singleMode && 
-            <ProvinenceButton address={address} />
-          }
-          </li>
+          {singleMode && <li className="break-all list-none">{typeString}< ProvinenceButton address={address} /></li>}
           {Object.keys(obj.map).length === 0 ? (
             <p>No values</p>
           ) : (
@@ -63,9 +59,9 @@ export default function TreeObjViewer({ obj, singleMode, address }: Props) {
           // </thead>
           // <tbody> */}
           
-          <li className="break-all list-none">{typeString}
-          {singleMode && < ProvinenceButton address={address} />}
-          </li>
+          
+          {singleMode && <li className="break-all list-none">{typeString}< ProvinenceButton address={address} /></li>}
+          
           
         {Object.keys(obj.map).length === 0 ? (
           <>
@@ -101,9 +97,7 @@ export default function TreeObjViewer({ obj, singleMode, address }: Props) {
         //     </tr>
         //   </thead>
         //   <tbody> */}
-            <li className="break-all list-none">{typeString}
-            {singleMode && <ProvinenceButton address={address} />}
-            </li>
+            {singleMode && <li className="break-all list-none">{typeString}< ProvinenceButton address={address} /></li>}
             {Object.keys(obj.values).length === 0 ? (
               <Li>
                 No values

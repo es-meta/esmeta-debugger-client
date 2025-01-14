@@ -101,10 +101,10 @@ export default function TreeAddress({ field, address, singleMode, defaultFold = 
         <li className="border-b border-b-neutral-300">
           <b className="font-600 font-mono">
             {field}
-          </b>&nbsp;:&nbsp;
-          {address}&nbsp;
-          {/* {getTypeString(obj)}&nbsp; */}
-          <span className=" inline-flex flex-row items-center gap-1">
+          </b>&nbsp;
+          {/* {address}&nbsp; */}
+          {getTypeString(obj)}&nbsp;
+          <span className="inline-flex flex-row items-center">
             <ProvinenceButton address={address} />
             <InspectInHaepViewer address={address} />
             <a
