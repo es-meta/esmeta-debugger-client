@@ -64,7 +64,7 @@ export default connector(function Breakpoints(props: BreakpointsProps) {
     
       headerItems={
         <Tooltip>
-        <TooltipTrigger asChild>
+        <TooltipTrigger>
           <ToolbarButton
             position="single"
             disabled={disableQuit}
