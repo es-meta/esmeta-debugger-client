@@ -203,44 +203,6 @@ export default function Toolbar() {
           />
         </ToolbarButtonGroup>
 
-        <ToolbarButtonGroup label="Spec">
-          <ToolbarButton
-            position="left"
-            disabled={disableGoingForward}
-            onClick={() => dispatch(irStep())}
-            icon={<ArrowDownToDotIcon />}
-            label={
-              <span>
-                IR Step
-              </span>
-            }
-          />
-
-          <ToolbarButton
-            position="center"
-            disabled={disableGoingForward}
-            onClick={() => dispatch(irStepOver())}
-            icon={<RedoDotIcon />}
-            label={
-              <span>
-                IR Step Over
-              </span>
-            }
-          />
-
-          <ToolbarButton
-            position="right"
-            disabled={disableGoingForward}
-            onClick={() => dispatch(irStepOut())}
-            icon={<ArrowUpFromDotIcon />}
-            label={
-              <span>
-                IR Step Out
-              </span>
-            }
-          />
-        </ToolbarButtonGroup>
-
         <Seperator />
 
         <ToolbarButtonGroup label="Back">
@@ -296,20 +258,9 @@ export default function Toolbar() {
         <Seperator />
 
         <ToolbarButtonGroup label="JS">
+          
           <ToolbarButton
             position="left"
-            disabled={disableGoingForward}
-            onClick={() => dispatch(jsStepAst())}
-            icon={<ArrowDownToDotIcon />}
-            label={
-              <span>
-                Ast&nbsp;Step
-              </span>
-            }
-          />
-
-          <ToolbarButton
-            position="center"
             disabled={disableGoingForward}
             onClick={() => dispatch(jsStepStatement())}
             icon={<ArrowDownToDotIcon />}
