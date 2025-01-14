@@ -101,7 +101,7 @@ function AlgoStep(props: AlgoStepProps) {
     );
     if (highlight && isExit) className += " exit-highlight";
     else if (highlight) className += " highlight";
-    if (visited) className += " bg-neutral-100 ";
+    if (visited) className += " highlight-visited";
     return className;
   }, [steps, currentSteps, props.visitedStepList]);
 
