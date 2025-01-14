@@ -82,7 +82,7 @@ export default function JSCallStackViewer() {
   header="JavaScript&nbsp;Call&nbsp;Stack"
   headerItems={
     <div className="flex flex-row space-x-2 text-neutral-600 text-sm">
-      <Info />
+      {/* <Info /> */}
       <button
         className="flex flex-row hover:bg-neutral-200 rounded items-center gap-1 active:scale-90 transition-all"
         onClick={() => {
@@ -126,19 +126,19 @@ export default function JSCallStackViewer() {
 </StateViewerItem >;
 }
 
-function Info() {
-  return (
-    <Tooltip>
-      <TooltipTrigger>
-        <InfoIcon size={16} />
-      </TooltipTrigger>
-      <TooltipContent>
-      <p>
-          Note that this information is already lives in the mechanized specification environements and heaps,
-          <br />
-          especially on <code>{EXECUTION_STACK_ADDR}</code>, since the mechanized spec is an interpreter of JavaScript.
-      </p>
-      </TooltipContent>
-    </Tooltip>
-  );
-}
+// function Info() {
+//   return (
+//     <Tooltip>
+//       <TooltipTrigger>
+//         <InfoIcon size={16} />
+//       </TooltipTrigger>
+//       <TooltipContent>
+//       <p>
+//           Note that this information is already lives in the mechanized specification environements and heaps,
+//           <br />
+//           especially on <code>{EXECUTION_STACK_ADDR}</code>, since the mechanized spec is an interpreter of JavaScript.
+//       </p>
+//       </TooltipContent>
+//     </Tooltip>
+//   );
+// }

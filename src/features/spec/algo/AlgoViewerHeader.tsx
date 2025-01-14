@@ -21,16 +21,17 @@ function Info({ algorithm, irToSpecMapping }: { algorithm: Algorithm, irToSpecMa
       </TooltipContent>
     </Tooltip>
     :
-    <Tooltip>
-      <TooltipTrigger className="font-sans text-xs ml-2 bg-es-300 font-600 rounded-full px-1">
-        ESMeta-defined
-      </TooltipTrigger>
-      <TooltipContent>
-        This function is written by the ESMeta project, not directly from the ECMAScript standard.
-        <br />
-        It may serve as an auxiliary or implement an implementation-defined aspect of the specification.
-      </TooltipContent>
-    </Tooltip>
+    null
+    // <Tooltip>
+    //   <TooltipTrigger className="font-sans text-xs ml-2 bg-es-300 font-600 rounded-full px-1">
+    //     ESMeta-defined
+    //   </TooltipTrigger>
+    //   <TooltipContent>
+    //     This function is written by the ESMeta project, not directly from the ECMAScript standard.
+    //     <br />
+    //     It may serve as an auxiliary or implement an implementation-defined aspect of the specification.
+    //   </TooltipContent>
+    // </Tooltip>
   )
 }
 

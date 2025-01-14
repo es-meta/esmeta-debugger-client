@@ -34,7 +34,7 @@ export default function SpecEnvViewer() {
   return (
     <StateViewerItem
       header="Specification&nbsp;Environment"
-      headerItems={<GuideTooltip />}
+      // headerItems={<GuideTooltip />}
     >
       <table className="w-full text-xs">
         <thead className="text-sm font-200 text-neutral-500">

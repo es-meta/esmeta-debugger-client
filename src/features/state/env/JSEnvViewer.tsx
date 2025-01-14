@@ -47,7 +47,7 @@ export default function JSEnvViewer() {
   return (
     <StateViewerItem
       header="JavaScript&nbsp;Environment"
-      headerItems={<GuideTooltip />}
+      // headerItems={<GuideTooltip />}
     >
             <table className="w-full text-xs">
         <thead className="text-sm font-200 text-neutral-500">
