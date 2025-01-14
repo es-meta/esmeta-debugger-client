@@ -19,6 +19,7 @@ export const selector = (st: ReduxState) => {
       st.appState.state === AppState.DEBUG_READY ||
       st.appState.state === AppState.TERMINATED
     ),
+    ignoreBP: st.appState.ignoreBP,
   }
 };
 

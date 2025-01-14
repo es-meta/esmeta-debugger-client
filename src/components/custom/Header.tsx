@@ -1,6 +1,8 @@
 import {
   GITHUB_LINK_ESMETA,
 } from "@/constants/constant";
+import ConnectionSettings from "@/features/modal/connection/ConnectionSettings";
+import SpecVersionView from "@/features/spec/SpecVersionView";
 
 export default function Header() {
   return (
@@ -13,7 +15,7 @@ export default function Header() {
 
 function Left() {
   return (
-    <div className="flex flex-row items-center justify-start">
+    <div className="flex flex-row items-center justify-start gap-2">
       <span className="font-800 text-base flex flex-row items-center gap-1">
         <img
           src="/icon.jpeg"
@@ -22,11 +24,18 @@ function Left() {
           className="h-6 w-6"
         />
         ESMeta
-      </span>
       &nbsp;
       <span className="font-400 text-base flex flex-row items-center gap-1">
         Double&nbsp;Debugger&nbsp;Playground
       </span>
+      </span>
+
+      <ConnectionSettings />
+        
+        <SpecVersionView/>
+
+
+        
     </div>
   );
 }

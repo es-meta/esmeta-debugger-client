@@ -61,7 +61,7 @@ export default function SpecEnvViewer() {
                   clsx(
                     "bg-white",
                     "text-sm font-mono",
-                    "list-inside list-disc px-2",
+                    "list-inside list-disc px-1",
                     // "border-b-neutral-200 border-b",
                     // "even:bg-white odd:bg-neutral-100",
                     "hover:bg-neutral-100 transition-all",

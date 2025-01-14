@@ -64,7 +64,7 @@ export default function JSEnvViewer() {
         </thead>
         <tbody> */
       }
-      <ul className="text-sm px-2 font-mono list-disc list-inside">
+      <ul className="text-sm px-1 font-mono list-disc list-inside">
           {bindings.length === 0 ? (
             // <tr className="text-center text p-4">
             //   <td colSpan={2} className="text-center text-neutral-500 p-4 text-sm">

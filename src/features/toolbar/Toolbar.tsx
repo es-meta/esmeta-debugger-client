@@ -40,9 +40,6 @@ import ToolbarButtonGroup from "@/features/toolbar/ToolbarButtonGroup";
 import ConnectionSettings from "../modal/connection/ConnectionSettings";
 
 export default function Toolbar() {
-  const ignoreBp = useSelector(
-    (state: { appState: AppStateState }) => state.appState.ignoreBP,
-  );
   const appStateDispatch = useDispatch<Dispatch<AppStateAction>>();
   const toggleStepWithoutBreak = () => {
     appStateDispatch({ type: AppStateActionType.TOGGLE_IGNORE });
@@ -55,6 +52,7 @@ export default function Toolbar() {
     disableQuit,
     disableGoingBackward,
     disableGoingForward,
+    ignoreBP,
   } = useSelector(selector, shallowEqual);
 
   const handleKeyPress = useCallback(
@@ -64,8 +62,9 @@ export default function Toolbar() {
       disableQuit,
       disableGoingBackward,
       disableGoingForward,
+      ignoreBP,
     }),
-    [dispatch, disableRun, disableResume, disableQuit, disableGoingBackward, disableGoingForward],
+    [dispatch, disableRun, disableResume, disableQuit, disableGoingBackward, disableGoingForward, ignoreBP],
   );
 
   useEffect(() => {
@@ -80,15 +79,6 @@ export default function Toolbar() {
   return (
     <aside className="relative w-full backdrop-blur-sm z-[2]">
       <div className="bg-neutral-100 dark:bg-neutral-900 size-full flex-row bg-opacity-75 flex items-center min-h-full space-x-0 flex-wrap p-2 gap-y-1 gap-x-1 justify-start z-[1001]">
-
-        <ConnectionSettings />
-        
-        <SpecVersionView />
-        
-        <Seperator />
-
-
-        
 
         
         <ToolbarButtonGroup label="Exec">
@@ -121,7 +111,7 @@ export default function Toolbar() {
           />
 
           <ToolbarButton
-            position="center"
+            position="right"
             disabled={disableQuit}
             onClick={() => dispatch(stop())}
             icon={<SquareIcon />}
@@ -132,31 +122,6 @@ export default function Toolbar() {
             }
           />
 
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <ToolbarButton
-                position="right"
-                disabled={disableGoingForward}
-                onClick={toggleStepWithoutBreak}
-                className={
-                  ignoreBp
-                    ? "bg-blue-600 hover:bg-blue-500 text-white hover:text-white"
-                    : ""
-                }
-                icon={ignoreBp ? <OctagonIcon /> : <OctagonPauseIcon />}
-                label={
-                  ignoreBp ? (
-                    <span>skipping breakpoints</span>
-                  ) : (
-                    <span>using breakpoints</span>
-                  )
-                }
-              />
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>If this is toggled on, skip breakpoints when doing steps</p>
-            </TooltipContent>
-          </Tooltip>
         </ToolbarButtonGroup>
 
         <Seperator />
@@ -169,7 +134,7 @@ export default function Toolbar() {
             icon={<ArrowDownToDotIcon />}
             label={
               <span>
-                <b>S</b>tep
+                Spec&nbsp;<b>S</b>tep
               </span>
             }
           />
@@ -181,7 +146,7 @@ export default function Toolbar() {
             icon={<RedoDotIcon />}
             label={
               <span>
-                Step&nbsp;<b>O</b>ver
+                <b>O</b>ver
               </span>
             }
           />
@@ -193,7 +158,7 @@ export default function Toolbar() {
             icon={<ArrowUpFromDotIcon />}
             label={
               <span>
-                Step&nbsp;O<b>u</b>t
+                O<b>u</b>t
               </span>
             }
           />
@@ -221,7 +186,7 @@ export default function Toolbar() {
             icon={<UndoIcon />}
             label={
               <span>
-                Step&nbsp;<b>B</b>ack
+                Spec&nbsp;<b>B</b>ack
               </span>
             }
           />
@@ -233,7 +198,7 @@ export default function Toolbar() {
             icon={<UndoDotIcon />}
             label={
               <span>
-                Step&nbsp;B<b>a</b>ck&nbsp;Over
+                B<b>a</b>ck&nbsp;Over
               </span>
             }
           />
@@ -245,7 +210,7 @@ export default function Toolbar() {
             icon={<ArrowUpFromDotIcon />}
             label={
               <span>
-                Step&nbsp;Bac<b>k</b>&nbsp;Out
+                Bac<b>k</b>&nbsp;Out
               </span>
             }
           />
@@ -286,7 +251,7 @@ export default function Toolbar() {
             icon={<RedoDotIcon />}
             label={
               <span>
-                JS&nbsp;Step&nbsp;O<b>v</b>er
+                O<b>v</b>er
               </span>
             }
           />
@@ -298,7 +263,7 @@ export default function Toolbar() {
             icon={<ArrowUpFromDotIcon />}
             label={
               <span>
-                JS Step&nbsp;Ou<b>t</b>
+                Ou<b>t</b>
               </span>
             }
           />

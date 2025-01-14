@@ -66,6 +66,9 @@ export default function MonacoEditor({
       fontFamily: '"Fira code", "Fira Mono", monospace',
       theme: "vs",
       automaticLayout: true,
+      lineNumbersMinChars: 2,
+      glyphMargin: false,
+      folding: false,
     }),
     [readOnly],
   );

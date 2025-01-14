@@ -11,6 +11,10 @@ import BreakpointItem from "./BreakpointItem";
 import StateViewerItem from "../StateViewerItem";
 import { Dispatch } from "@/store";
 import { useDispatch } from "react-redux";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import ToolbarButton from "@/features/toolbar/ToolbarButton";
+import { OctagonIcon, OctagonPauseIcon } from "lucide-react";
+import { AppStateActionType } from "@/store/reducers/AppState";
 
 // TODO support turning off or toggling breakpoints
 export function addBreakHandler(toEnabled: true, algoName: string | null, breakpoints: Breakpoint[], algos: Record<string, number>, dispatch: Dispatch): string | null {
@@ -43,7 +47,7 @@ export function addBreakHandler(toEnabled: true, algoName: string | null, breakp
 // sort
 export default connector(function Breakpoints(props: BreakpointsProps) {
   const dispatch = useDispatch<Dispatch>();
-  const { breakpoints, algoNames } = props;
+  const { breakpoints, algoNames, ignoreBp, disableQuit } = props;
   const [algoName, setAlgoName] = useState<string | null>(null);
 
   const onAddClick = useCallback((name: string | null) => {
@@ -51,8 +55,43 @@ export default connector(function Breakpoints(props: BreakpointsProps) {
   }, [props.breakpoints, props.algos],
   );
 
+  const toggleStepWithoutBreak = useCallback(() => {
+    dispatch({ type: AppStateActionType.TOGGLE_IGNORE });
+  }, [dispatch]);
+
   return (
-    <StateViewerItem header="Breakpoints">
+    <StateViewerItem header="Breakpoints"
+    
+      headerItems={
+        <Tooltip>
+        <TooltipTrigger asChild>
+          <ToolbarButton
+            position="single"
+            disabled={disableQuit}
+            onClick={toggleStepWithoutBreak}
+            className={
+              ignoreBp
+                ? "h-6 bg-blue-600 hover:bg-blue-500 text-white hover:text-white"
+                : "h-6"
+            }
+            icon={ignoreBp ? <OctagonIcon /> : <OctagonPauseIcon />}
+            label={
+              ignoreBp ? (
+                <span>skipping breakpoints</span>
+              ) : (
+                <span>using breakpoints</span>
+              )
+            }
+          />
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>If this is toggled on, skip breakpoints when doing steps</p>
+        </TooltipContent>
+        </Tooltip>
+        
+    }>
+
+        
       <div className="flex flex-row items-center w-full text-xs">
         <MyCombobox
           value={algoName}
