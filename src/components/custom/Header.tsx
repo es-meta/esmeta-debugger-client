@@ -35,7 +35,7 @@ function Right() {
   return (
     <div className="flex flex-row gap-2">
       <a
-      className="flex flex-row gap-1 items-center text-xs font-500 hover:bg-neutral-100 hover:bg-neutral-800 rounded-lg active:scale-90 transition-all cursor-pointer p-2"
+      className="flex flex-row gap-1 items-center text-xs font-500 hover:bg-neutral-100 hover:dark:bg-neutral-800 rounded-lg active:scale-90 transition-all cursor-pointer p-2"
         href={GITHUB_LINK_ESMETA} target="_blank" rel="noopener noreferrer">
         <GitHubIcon />
         ESMeta
