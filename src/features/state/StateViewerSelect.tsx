@@ -26,7 +26,7 @@ export default function StateViewerSelect<T extends ViewerItem>({
       className="absolute right-0 bg-white h-6 mr-1 flex flex-row gap-1 text-xs text-neutral-500 overflow-scroll"
       aria-label="State Viewer Select"
     >
-      {options.map(o => ((o.hiddenByDefault && o !== selected) ? null : (
+      {options.map(o => ((o.display) ?  (
         <Radio
           key={getId(o)}
           value={o}
@@ -37,7 +37,7 @@ export default function StateViewerSelect<T extends ViewerItem>({
           {getIcon(o)}
           {getLabel(o)}
         </Radio>
-      )))}
+      ) : null))}
     </RadioGroup>
   );
 }

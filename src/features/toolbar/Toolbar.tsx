@@ -9,9 +9,7 @@ import {
   StepBackIcon,
   UndoDotIcon,
   UndoIcon,
-  OctagonIcon,
-  OctagonPauseIcon,
-  FastForwardIcon,
+  FastForwardIcon, BugPlayIcon,
 } from "lucide-react";
 import {
   run,
@@ -21,7 +19,6 @@ import {
   specStepOver,
   specStepBack,
   specStepBackOver,
-  jsStepAst,
   jsStepStatement,
   jsStepOut,
   jsStepOver,
@@ -29,21 +26,13 @@ import {
   DebuggerAction,
   resumeFromIter,
   specStepBackOut,
-  specRewind,
-  irStepOver,
-  irStep,
-  irStepOut,
+  specRewind, iterPlus, iterMinus,
 } from "@/store/reducers/Debugger";
 
 import ToolbarButton from "@/features/toolbar/ToolbarButton";
 import ToolbarButtonGroup from "@/features/toolbar/ToolbarButtonGroup";
-import ConnectionSettings from "../modal/connection/ConnectionSettings";
 
 export default function Toolbar() {
-  const appStateDispatch = useDispatch<Dispatch<AppStateAction>>();
-  const toggleStepWithoutBreak = () => {
-    appStateDispatch({ type: AppStateActionType.TOGGLE_IGNORE });
-  };
 
   const dispatch = useDispatch<Dispatch<DebuggerAction>>();
   const {
@@ -268,6 +257,36 @@ export default function Toolbar() {
             }
           />
         </ToolbarButtonGroup>
+
+        {import.meta.env.DEV && <>
+          <Seperator />
+          <ToolbarButtonGroup label="Iter">
+
+            <ToolbarButton
+              position="left"
+              disabled={disableGoingForward}
+              onClick={() => dispatch(iterPlus())}
+              icon={<BugPlayIcon />}
+              label={
+                <span>
+                Iter <b>+</b>
+              </span>
+              }
+            />
+
+            <ToolbarButton
+              position="right"
+              disabled={disableGoingBackward}
+              onClick={() => dispatch(iterMinus())}
+              icon={<BugPlayIcon />}
+              label={
+                <span>
+                Iter <b>-</b>
+              </span>
+              }
+            />
+          </ToolbarButtonGroup>
+        </>}
       </div>
     </aside>
   );
@@ -278,14 +297,6 @@ import { Dispatch } from "redux";
 import { handleKeyPressBuilder } from "./Toolbar.util";
 import { selector } from "./Toolbar.redux";
 import { GIVEN_SETTINGS } from "@/constants/settings";
-import SpecVersionView from "../spec/SpecVersionView";
-import {
-  AppStateAction,
-  AppStateActionType,
-  AppStateState,
-} from "@/store/reducers/AppState";
-import { Tooltip, TooltipContent } from "@/components/ui/tooltip";
-import { TooltipTrigger } from "@radix-ui/react-tooltip";
 
 function Seperator() {
   return (

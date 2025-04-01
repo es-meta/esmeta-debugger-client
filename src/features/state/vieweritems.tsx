@@ -2,7 +2,7 @@ import Breakpoints from "./breakpoint/Breakpoints";
 import EnvViewer from "./env/EnvViewer";
 import HeapViewer from "./heap/HeapViewer";
 import {
-  ContainerIcon,
+  ContainerIcon, FlagIcon,
   LayersIcon,
   MemoryStickIcon,
   OctagonXIcon,
@@ -17,7 +17,7 @@ export interface ViewerItem {
   id: ClientState["stateviewer"]["view"];
   icon: ReactElement<SVGElement>;
   view: ReactNode;
-  hiddenByDefault: boolean;
+  display: boolean;
 }
 
 export const viewerItems: ViewerItem[] = [
@@ -26,32 +26,32 @@ export const viewerItems: ViewerItem[] = [
     id: "env",
     icon: <ContainerIcon />,
     view: <EnvViewer />,
-    hiddenByDefault: false,
+    display: true,
   },
   {
     name: "Heap",
     id: "heap", icon: <MemoryStickIcon />, view: <HeapViewer />,
-    hiddenByDefault: false,
+    display: true,
   },
   {
     name: "Breaks",
     id: "bp",
     icon: <OctagonXIcon />,
     view: <Breakpoints />,
-    hiddenByDefault: false,
+    display: true,
   },
   {
     name: "Callstack",
     id: "callstack",
     icon: <LayersIcon />,
     view: <CallStackViewer />,
-    hiddenByDefault: false,
+    display: true,
   },
   {
     name: "Meta",
     id: "stats",
-    icon: <OctagonXIcon />,
+    icon: <FlagIcon/>,
     view: <InternalStatViewer />,
-    hiddenByDefault: true,
+    display: import.meta.env.DEV
   }
 ];

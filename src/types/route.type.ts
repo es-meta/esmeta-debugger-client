@@ -39,6 +39,8 @@ const exec = [
   "exec/esStatementStep",
   "exec/esStepOver",
   "exec/esStepOut",
+  "exec/iterPlus",
+  "exec/iterMinus",
 ] as const;
 
 export const routes = [

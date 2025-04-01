@@ -12,6 +12,8 @@ export enum DebuggerActionType {
   SPEC_STEP_BACK = "DebuggerAction/STEP_BACK",
   SPEC_STEP_BACK_OVER = "DebuggerAction/STEP_BACK_OVER",
   SPEC_STEP_BACK_OUT = "DebuggerAction/STEP_BACK_OUT",
+  ITER_PLUS = "DebuggerAction/ITER_PLUS",
+  ITER_MINUS = "DebuggerAction/ITER_MINUS",
   IR_STEP = "DebuggerAction/IR_STEP",
   IR_STEP_OVER = "DebuggerAction/IR_STEP_OVER",
   IR_STEP_OUT = "DebuggerAction/IR_STEP_OUT",
@@ -52,6 +54,12 @@ export const specStepBackOver = (): DebuggerAction => ({
 });
 export const specStepBackOut = (): DebuggerAction => ({
   type: DebuggerActionType.SPEC_STEP_BACK_OUT,
+});
+export const iterPlus = (): DebuggerAction => ({
+  type: DebuggerActionType.ITER_PLUS,
+});
+export const iterMinus = (): DebuggerAction => ({
+  type: DebuggerActionType.ITER_MINUS,
 });
 export const irStep = (): DebuggerAction => ({
   type: DebuggerActionType.IR_STEP,
@@ -112,6 +120,12 @@ export type DebuggerAction =
   | {
       type: DebuggerActionType.SPEC_STEP_BACK_OUT;
   }
+  | {
+  type: DebuggerActionType.ITER_PLUS;
+}
+  | {
+  type: DebuggerActionType.ITER_MINUS
+}
   | {
     type: DebuggerActionType.IR_STEP;
   }

@@ -1,18 +1,18 @@
 import { call, put, select, takeLatest, all } from "redux-saga/effects";
 import { toast } from "react-toastify";
 
-import { ReduxState } from "../store";
-import { AppState, AppStateActionType, move } from "../store/reducers/AppState";
-import { DebuggerActionType } from "../store/reducers/Debugger";
-import { serialize } from "../store/reducers/Breakpoint";
+import { ReduxState } from "@/store";
+import { AppState, AppStateActionType, move } from "@/store/reducers/AppState";
+import { DebuggerActionType } from "@/store/reducers/Debugger";
+import { serialize } from "@/store/reducers/Breakpoint";
 import {
   clearIrState,
   updateHeapRequest,
   updateCallStackRequest,
-} from "../store/reducers/IrState";
-import { clearJS, edit } from "../store/reducers/JS";
-import { clearAlgo } from "../store/reducers/Spec";
-import { doAPIPostRequest } from "../util/api/api";
+} from "@/store/reducers/IrState";
+import { clearJS, edit } from "@/store/reducers/JS";
+import { clearAlgo } from "@/store/reducers/Spec";
+import { doAPIPostRequest } from "@/util/api/api";
 import { Route } from "@/types/route.type";
 import { GIVEN_SETTINGS } from "@/constants/settings";
 import { updateStatRequest } from "@/store/reducers/Stats";
@@ -60,9 +60,9 @@ function* backToProvenanceSaga() {
       // const { callStack, contextIdx } = irState;
       // const env: Environment =
       //   callStack.length > 0 ? callStack[contextIdx].env : [];
-      const provenanceAddr = address; // env.filter(e => e[0] === "return")[0][1];
+      // env.filter(e => e[0] === "return")[0][1];
 
-      yield call(mkStepSaga("exec/backToProvenance", provenanceAddr));
+      yield call(mkStepSaga("exec/backToProvenance", address));
     } catch (e: unknown) {
       // show error toast
       // toast.error((e as Error).message);
@@ -179,6 +179,20 @@ function mkStepSaga(endpoint: Route, bodyObj?: unknown) {
     yield put({ type: AppStateActionType.RECEIVE });
   }
   return _stepBodySaga;
+}
+
+function* iterPlusSaga() {
+  yield takeLatest(DebuggerActionType.ITER_PLUS, function* () {
+    const state: ReduxState = yield select();
+    yield call(mkStepSaga("exec/iterPlus", state.appState.ignoreBP));
+  });
+}
+
+function* iterMinusSaga() {
+  yield takeLatest(DebuggerActionType.ITER_MINUS, function* () {
+    const state: ReduxState = yield select();
+    yield call(mkStepSaga("exec/iterMinus", state.appState.ignoreBP));
+  });
 }
 
 // ir step saga
@@ -307,6 +321,8 @@ export default function* debuggerSaga() {
     jsStatementStepSaga(),
     jsStepOverSaga(),
     jsStepOutSaga(),
+    iterPlusSaga(),
+    iterMinusSaga(),
     specContinueSaga(),
     specRewindSaga(),
   ]);
