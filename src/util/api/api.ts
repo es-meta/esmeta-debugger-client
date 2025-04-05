@@ -1,54 +1,15 @@
 import { toast } from "react-toastify";
 import type { Route } from "@/types/route.type";
 import { GIVEN_SETTINGS } from "@/constants/settings";
-import { ScalaJSFactoryInput } from "./esmeta.type";
+import { ScalaJSFactoryInput } from "./standalone.type";
 import { logger } from "@/constants/constant";
 
-function fetchFromDump(url: string): Promise<string> {
-  return fetch(url).then(response => response.text());
-}
-
 // Create worker instance
-const workerPromise = new Promise<Worker>(async (resolve) => {
-  const GIVEN_API = GIVEN_SETTINGS.api;
-  if (GIVEN_API.type === "browser") {
-
-    const w = new Worker(new URL("./esmeta.worker.ts", import.meta.url));
-
-    const input = await Promise.all([
-      fetchFromDump("/dump/funcs.json"),
-      fetchFromDump("/dump/spec.version.json"),
-      fetchFromDump("/dump/grammar.json"),
-      fetchFromDump("/dump/spec.tables.json"),
-      fetchFromDump("/dump/tyModel.decls.json"),
-      fetchFromDump("/dump/irFuncToCode.json"),
-    ]).then(
-      ([funcs, version, grammar, tables, tyModel, irFuncToCode]) =>
-        ({
-          funcs,
-          version,
-          grammar,
-          tables,
-          tyModel,
-          irFuncToCode,
-        }) satisfies ScalaJSFactoryInput,
-    );
-
-    w.postMessage({ type: "META", data: input });
-    resolve(w);
-  } else {
-    const w = new Worker(new URL("./http.worker.ts", import.meta.url));
-    w.postMessage({ type: "META", data: GIVEN_API.url });
-    resolve(w);
-  }
-});
+const workerPromise = instantiateWorker(GIVEN_SETTINGS.api);
 
 // Request counter for unique IDs
-// XXX if need better atomics const ta = new Uint8Array(new SharedArrayBuffer(1));
 var counter = 0;
 export const workingset = new Set();
-
-// Helper function to handle worker communication
 
 type ReturnTypeForApi<T extends Route> = T extends "state/heap"
   ? number
@@ -115,3 +76,46 @@ export const doAPIPutRequest = <T extends Route>(
 ): Promise<unknown> => {
   return createWorkerRequest("PUT", endpoint, bodyObj);
 };
+
+
+/** auxiliaries */
+
+function fetchFromDump(url: string): Promise<string> {
+  return fetch(url).then(response => response.text());
+}
+
+async function instantiateWorker(givenApi: typeof GIVEN_SETTINGS.api): Promise<Worker> {
+  return new Promise<Worker>(async (resolve) => {
+    if (givenApi.type === "browser") {
+  
+      const w = new Worker(new URL("./esmeta.worker.ts", import.meta.url));
+  
+      const input = await Promise.all([
+        fetchFromDump("/dump/funcs.json"),
+        fetchFromDump("/dump/spec.version.json"),
+        fetchFromDump("/dump/grammar.json"),
+        fetchFromDump("/dump/spec.tables.json"),
+        fetchFromDump("/dump/tyModel.decls.json"),
+        fetchFromDump("/dump/irFuncToCode.json"),
+      ]).then(
+        ([funcs, version, grammar, tables, tyModel, irFuncToCode]) =>
+          ({
+            funcs,
+            version,
+            grammar,
+            tables,
+            tyModel,
+            irFuncToCode,
+          }) satisfies ScalaJSFactoryInput,
+      );
+  
+      w.postMessage({ type: "META", data: input });
+      resolve(w);
+      
+    } else {
+      const w = new Worker(new URL("./http.worker.ts", import.meta.url));
+      w.postMessage({ type: "META", data: givenApi.url });
+      resolve(w);
+    }
+  });
+}

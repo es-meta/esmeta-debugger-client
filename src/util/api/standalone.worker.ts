@@ -1,10 +1,9 @@
 /// <reference lib="webworker" />
 
-// import type { ApiMessageData } from './message.type';
 import type {
   ScalaJSDebuggerService,
   ScalaJSFactoryInput,
-} from "./esmeta.type";
+} from "./standalone.type";
 
 //////////////////////// import from Scala.js /////////////////////////
 
