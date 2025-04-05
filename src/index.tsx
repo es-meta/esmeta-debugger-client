@@ -3,21 +3,14 @@ import { createRoot } from "react-dom/client";
 import "./styles/index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-// import "react-resizable/css/styles.css";
 import store from "./store";
 import { Provider } from "react-redux";
-import { BrowserRouter, Route, Routes } from "react-router";
 
 const root = createRoot(document.getElementById("root")!);
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<App />} />
-          <Route path="/doc" element={<div>Document</div>} />
-        </Routes>
-      </BrowserRouter>
+      <App />
     </Provider>
   </React.StrictMode>,
 );
