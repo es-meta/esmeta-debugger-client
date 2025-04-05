@@ -7,3 +7,6 @@
 !/target/scala-3.3.3/esmeta-worker-opt/
 !/target/scala-3.3.3/esmeta-worker-opt/main.mjs
 !/target/scala-3.3.3/esmeta-worker-opt/main.mjs.map
+
+.bloop/
+.metals/
