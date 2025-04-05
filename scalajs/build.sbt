@@ -41,7 +41,6 @@ lazy val worker = (project in file("."))
       scalaJSLinkerConfig ~= {
       
         _.withModuleKind(ModuleKind.ESModule)
-          // .withModuleSplitStyle(ModuleSplitStyle.SmallestModules)
           .withOutputPatterns(OutputPatterns.fromJSFile("%s.mjs"))
           // .withESVersion(ESVersion.ES2015)
 
@@ -57,9 +56,9 @@ lazy val worker = (project in file("."))
           .cross(CrossVersion.for3Use2_13),
         "org.typelevel" %% "cats-effect" % "3.5.7",
         "org.typelevel" %% "cats-core" % "2.12.0", // to derive recursive codecs
-        "io.circe" %%% "circe-core" % "0.14.10",
-        "io.circe" %%% "circe-generic" % "0.14.10",
-        "io.circe" %%% "circe-parser" % "0.14.10",
+        "io.circe" %%% "circe-core" % "0.14.1",
+        "io.circe" %%% "circe-generic" % "0.14.1",
+        "io.circe" %%% "circe-parser" % "0.14.1",
       )
 
 

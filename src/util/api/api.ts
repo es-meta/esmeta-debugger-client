@@ -9,11 +9,13 @@ function fetchFromDump(url: string): Promise<string> {
 }
 
 // Create worker instance
-const workerPromise = new Promise<Worker>((resolve) => {
+const workerPromise = new Promise<Worker>(async (resolve) => {
   const GIVEN_API = GIVEN_SETTINGS.api;
   if (GIVEN_API.type === "browser") {
 
-    const input = Promise.all([
+    const w = new Worker(new URL("./esmeta.worker.ts", import.meta.url));
+
+    const input = await Promise.all([
       fetchFromDump("/dump/funcs.json"),
       fetchFromDump("/dump/spec.version.json"),
       fetchFromDump("/dump/grammar.json"),
@@ -32,7 +34,6 @@ const workerPromise = new Promise<Worker>((resolve) => {
         }) satisfies ScalaJSFactoryInput,
     );
 
-    const w = new Worker(new URL("./esmeta.worker.ts", import.meta.url));
     w.postMessage({ type: "META", data: input });
     resolve(w);
   } else {

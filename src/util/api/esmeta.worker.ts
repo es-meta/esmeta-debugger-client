@@ -140,33 +140,33 @@ const doWriteRequest = async (
       );
 
     case "exec/specStep":
-      return JSON.parse((await ESMetaDebugger).exec_step());
+      return JSON.parse((await ESMetaDebugger).exec_step(coerceBoolean(bodyObj)));
     case "exec/specStepOver":
-      return JSON.parse((await ESMetaDebugger).exec_stepOver());
+      return JSON.parse((await ESMetaDebugger).exec_stepOver(coerceBoolean(bodyObj)));
 
     case "exec/specStepOut":
-      return JSON.parse((await ESMetaDebugger).exec_stepOut());
+      return JSON.parse((await ESMetaDebugger).exec_stepOut(coerceBoolean(bodyObj)));
 
     case "exec/specContinue":
-      return JSON.parse((await ESMetaDebugger).exec_continue());
+      return JSON.parse((await ESMetaDebugger).exec_continue(coerceBoolean(bodyObj)));
 
     case "exec/specStepBack":
-      return JSON.parse((await ESMetaDebugger).exec_stepBack());
+      return JSON.parse((await ESMetaDebugger).exec_stepBack(coerceBoolean(bodyObj)));
 
     case "exec/specStepBackOut":
-      return JSON.parse((await ESMetaDebugger).exec_stepBackOut());
+      return JSON.parse((await ESMetaDebugger).exec_stepBackOut(coerceBoolean(bodyObj)));
 
     case "exec/specStepBackOver":
-      return JSON.parse((await ESMetaDebugger).exec_stepBackOver());
+      return JSON.parse((await ESMetaDebugger).exec_stepBackOver(coerceBoolean(bodyObj)));
 
     // TODO
     // case "exec/esStep":
     //   return JSON.parse((await ESMetaDebugger).exec_esStep());
     case "exec/esStepOver":
-      return JSON.parse((await ESMetaDebugger).exec_esStepOver());
+      return JSON.parse((await ESMetaDebugger).exec_esStepOver(coerceBoolean(bodyObj)));
 
     case "exec/esStepOut":
-      return JSON.parse((await ESMetaDebugger).exec_esStepOut());
+      return JSON.parse((await ESMetaDebugger).exec_esStepOut(coerceBoolean(bodyObj)));
 
     default:
       throw apiError(endpoint);
@@ -207,3 +207,9 @@ self.onmessage = async (e: MessageEvent<any>) => {
     });
   }
 };
+
+function coerceBoolean(bodyObj: any): boolean {
+  if (typeof bodyObj === 'boolean') return bodyObj;
+  console.error("Invalid boolean value:", bodyObj);
+  return false;
+}

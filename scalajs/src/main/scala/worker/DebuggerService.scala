@@ -70,30 +70,30 @@ class DebuggerService(cfg: CFG, irFuncToCode: Map[String, Option[String]]) {
             for { data <- bpDatas } debugger.addBreak(data)
             "null"
     }
-    def exec_step(): String = {
-      debugger.specStep
+    def exec_step(noBreak: Boolean): String = {
+      debugger.specStep(noBreak)
     }
-    def exec_stepOver(): String = {
-      debugger.specStepOver
+    def exec_stepOver(noBreak: Boolean): String = {
+      debugger.specStepOver(noBreak)
     }
-    def exec_stepOut(): String = {
-      debugger.specStepOut
+    def exec_stepOut(noBreak: Boolean): String = {
+      debugger.specStepOut(noBreak)
     }
-    def exec_stepBack(): String = {
-      debugger.specStepBack
+    def exec_stepBack(noBreak: Boolean): String = {
+      debugger.specStepBack(noBreak)
     }
-    def exec_stepBackOver(): String = {
-      debugger.specStepBackOver
+    def exec_stepBackOver(noBreak: Boolean): String = {
+      debugger.specStepBackOver(noBreak)
     }
-    def exec_stepBackOut(): String = {
-      debugger.specStepBackOut
+    def exec_stepBackOut(noBreak: Boolean): String = {
+      debugger.specStepBackOut(noBreak)
     }
     def exec_continue(): String = {
       debugger.continue
     }
 
     def exec_esStep(): String = {
-      debugger.esStep
+      debugger.esStatementStep
     }
 
     def exec_esStepOver(): String = {
