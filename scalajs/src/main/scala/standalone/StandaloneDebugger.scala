@@ -2,11 +2,9 @@ package worker
 
 import esmeta.cfg.CFG
 import esmeta.cfgBuilder.CFGBuilder
-import esmeta.es.{Ast, Initialize, Syntactic, Lexical}
+import esmeta.es.Ast
 import esmeta.ir.*
 import esmeta.ir.util.JsonProtocol.given
-// import esmeta.lang.util.JsonProtocol.given
-import esmeta.parser.{AstFrom, ESParser}
 import esmeta.spec.*
 import esmeta.spec.util.JsonProtocol.given
 import esmeta.ty.*
@@ -17,7 +15,6 @@ import io.circe.parser.*
 
 import org.scalajs.dom
 
-import scala.concurrent.{Future, Promise as SPromise}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.scalajs.js;
 import scala.scalajs.js.annotation.{JSExport, JSExportAll, JSExportTopLevel}
@@ -62,10 +59,7 @@ class StandaloneDebugger(cfg: CFG, irFuncToCode: Map[String, Option[String]]) {
       .noSpaces
   end spec_func
 
-  def spec_version(): String =
-    println(cfg.spec.version.asJson.noSpaces)
-    cfg.spec.version.asJson.noSpaces
-  end spec_version
+  def spec_version(): String = cfg.spec.version.asJson.noSpaces
 
   def exec_run(raw: String) = {
     decode[(String, List[(Boolean, Int, List[Int], Boolean)])](
@@ -166,17 +160,21 @@ object StandaloneDebugger {
           (decodeWithMeasure[Map[String, Option[String]]]("irFuncToCode")(
             input.irFuncToCode,
           ))
-        val algoFuture = Future(Nil) // not needed for now
 
         for {
           funcs <- funcsFuture
-          algo <- algoFuture
           version <- versionFuture
           grammar <- grammarFuture
           tables <- tablesFuture
           tyModel <- tyModelFuture
           irFuncToCode <- irFuncToCodeFuture
-          spec = Spec(Some(version), grammar, algo, tables, tyModel)
+          spec = Spec(
+            Some(version),
+            grammar,
+            /* not needed for now, algo = */ Nil,
+            tables,
+            tyModel,
+          )
         } yield {
 
           val cfg = benchmark { CFGBuilder.apply(Program.apply(funcs, spec)) } {
