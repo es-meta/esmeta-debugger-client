@@ -1,7 +1,6 @@
 import { toast } from "react-toastify";
 import type { Route } from "@/types/route.type";
 import { GIVEN_SETTINGS } from "@/constants/settings";
-import { ScalaJSFactoryInput } from "./standalone.type";
 import { logger } from "@/constants/constant";
 
 // Create worker instance
@@ -79,42 +78,15 @@ export const doAPIPutRequest = <T extends Route>(
 
 
 /** auxiliaries */
-
-function fetchFromDump(url: string): Promise<string> {
-  return fetch(url).then(response => response.text());
-}
-
 async function instantiateWorker(givenApi: typeof GIVEN_SETTINGS.api): Promise<Worker> {
   return new Promise<Worker>(async (resolve) => {
     if (givenApi.type === "browser") {
-  
-      const w = new Worker(new URL("./esmeta.worker.ts", import.meta.url));
-  
-      const input = await Promise.all([
-        fetchFromDump("/dump/funcs.json"),
-        fetchFromDump("/dump/spec.version.json"),
-        fetchFromDump("/dump/grammar.json"),
-        fetchFromDump("/dump/spec.tables.json"),
-        fetchFromDump("/dump/tyModel.decls.json"),
-        fetchFromDump("/dump/irFuncToCode.json"),
-      ]).then(
-        ([funcs, version, grammar, tables, tyModel, irFuncToCode]) =>
-          ({
-            funcs,
-            version,
-            grammar,
-            tables,
-            tyModel,
-            irFuncToCode,
-          }) satisfies ScalaJSFactoryInput,
-      );
-  
-      w.postMessage({ type: "META", data: input });
+      const w = new Worker(new URL("./standalone.worker.ts", import.meta.url));
       resolve(w);
-      
     } else {
       const w = new Worker(new URL("./http.worker.ts", import.meta.url));
       w.postMessage({ type: "META", data: givenApi.url });
+      // TODO we need to await for the worker to be ready
       resolve(w);
     }
   });

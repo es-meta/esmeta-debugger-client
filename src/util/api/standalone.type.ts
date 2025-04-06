@@ -1,4 +1,7 @@
-export interface ScalaJSDebuggerService {
+export interface StandaloneDebugger {
+  meta_version: () => string;
+  meta_iter: () => number;
+  meta_debugString: () => string;
   spec_func: () => string;
   state_heap: () => string;
   state_callStack: () => string;
@@ -22,11 +25,18 @@ export interface ScalaJSDebuggerService {
   exec_run: (body: string | undefined) => string;
 }
 
-export interface ScalaJSFactoryInput {
+export interface StandaloneDebuggerInput {
   funcs: string;
   version: string;
   grammar: string;
   tables: string;
   tyModel: string;
   irFuncToCode: string;
+  irToSpecNameMap: string;
+}
+
+export interface ModuleGeneratedByScalaJS {
+  StandaloneDebugger: {
+    buildFrom: (input: StandaloneDebuggerInput) => Promise<StandaloneDebugger>;
+  };
 }

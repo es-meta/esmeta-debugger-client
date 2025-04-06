@@ -1,55 +1,37 @@
 /// <reference lib="webworker" />
 
 import type {
-  ScalaJSDebuggerService,
-  ScalaJSFactoryInput,
+  ModuleGeneratedByScalaJS,
+  StandaloneDebugger,
+  StandaloneDebuggerInput,
 } from "./standalone.type";
 
 //////////////////////// import from Scala.js /////////////////////////
 
-// suppress for now
-const module = new Promise<{
-  DebuggerServiceFactory: {
-    buildFromGiven: (input: ScalaJSFactoryInput) => Promise<ScalaJSDebuggerService>;
-  };
-}>((resolve) => resolve({
-  DebuggerServiceFactory: {
-    buildFromGiven: async (input: ScalaJSFactoryInput) => {
-      return Promise.reject(null);
-    },
-  },
-})); // import("@esmeta/main.mjs");
+const input = Promise.all([
+  fetchFromDump("/debugger/funcs.json"),
+  fetchFromDump("/debugger/spec.version.json"),
+  fetchFromDump("/debugger/grammar.json"),
+  fetchFromDump("/debugger/spec.tables.json"),
+  fetchFromDump("/debugger/tyModel.decls.json"),
+  fetchFromDump("/debugger/irFuncToCode.json"),
+  fetchFromDump("/debugger/irToSpecNameMap.json"),
+]).then(
+  ([funcs, version, grammar, tables, tyModel, irFuncToCode, irToSpecNameMap]) =>
+    ({
+      funcs,
+      version,
+      grammar,
+      tables,
+      tyModel,
+      irFuncToCode,
+      irToSpecNameMap,
+    }) satisfies StandaloneDebuggerInput,
+);
 
-let ESMetaDebugger: Promise<ScalaJSDebuggerService> = Promise.reject(null);
-
-// OLD CODE
-// (async () => {
-//   const [factory, input] = await Promise.all([
-//     import("@esmeta/main.mjs"),
-//     fetchFromDump("/dump/funcs.json"),
-//     fetchFromDump("/dump/spec.version.json"),
-//     fetchFromDump("/dump/grammar.json"),
-//     fetchFromDump("/dump/spec.tables.json"),
-//     fetchFromDump("/dump/tyModel.decls.json"),
-//     fetchFromDump("/dump/irFuncToCode.json"),
-//   ]).then(
-//     ([module, funcs, version, grammar, tables, tyModel, irFuncToCode]) =>
-//       [
-//         module.DebuggerServiceFactory,
-//         {
-//           funcs,
-//           version,
-//           grammar,
-//           tables,
-//           tyModel,
-//           irFuncToCode,
-//         },
-//       ] satisfies [unknown, ScalaJSFactoryInput],
-//   );
-
-//   const mokcing = await factory.buildFromGiven(input);
-//   return mokcing;
-// })();
+let _standaloneDebugger: Promise<StandaloneDebugger> = import("@esmeta/main.mjs").then(
+  async (m) => m.StandaloneDebugger.buildFrom(await input)
+)
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -73,21 +55,34 @@ const doGetRequest = async (
 ): Promise<unknown> => {
   switch (endpoint) {
     case "spec/func":
-      return JSON.parse((await ESMetaDebugger).spec_func());
+      return JSON.parse((await _standaloneDebugger).spec_func());
+    
+    case "meta/version":
+      return JSON.parse((await _standaloneDebugger).meta_version());
+    
+    case "meta/iter":
+      return 1;
+    
+    case "meta/debugString":
+      return "";
+  
+    
+    case "spec/irToSpecNameMap":
+      return JSON.parse((await input).irToSpecNameMap);
 
     case "spec/version":
-      return JSON.parse((await ESMetaDebugger).spec_version());
+      return JSON.parse((await _standaloneDebugger).spec_version());
 
     case "state/heap":
-      return JSON.parse((await ESMetaDebugger).state_heap());
+      return JSON.parse((await _standaloneDebugger).state_heap());
 
     case "state/callStack":
-      return JSON.parse((await ESMetaDebugger).state_callStack());
+      return JSON.parse((await _standaloneDebugger).state_callStack());
 
     default:
       if (endpoint.startsWith("state/context/")) {
         return JSON.parse(
-          (await ESMetaDebugger).state_context(
+          (await _standaloneDebugger).state_context(
             Number(endpoint.split("/").at(2)),
           ),
         );
@@ -111,19 +106,19 @@ const doWriteRequest = async (
       switch (method) {
         case "POST":
           return JSON.parse(
-            (await ESMetaDebugger).breakpoint_add(
+            (await _standaloneDebugger).breakpoint_add(
               bodyObj !== undefined ? JSON.stringify(bodyObj) : undefined,
             ),
           );
         case "DELETE":
           return JSON.parse(
-            (await ESMetaDebugger).breakpoint_remove(
+            (await _standaloneDebugger).breakpoint_remove(
               bodyObj !== undefined ? JSON.stringify(bodyObj) : undefined,
             ),
           );
         case "PUT":
           return JSON.parse(
-            (await ESMetaDebugger).breakpoint_toggle(
+            (await _standaloneDebugger).breakpoint_toggle(
               bodyObj !== undefined ? JSON.stringify(bodyObj) : undefined,
             ),
           );
@@ -133,39 +128,39 @@ const doWriteRequest = async (
 
     case "exec/run":
       return JSON.parse(
-        (await ESMetaDebugger).exec_run(
+        (await _standaloneDebugger).exec_run(
           bodyObj !== undefined ? JSON.stringify(bodyObj) : undefined,
         ),
       );
 
     case "exec/specStep":
-      return JSON.parse((await ESMetaDebugger).exec_step(coerceBoolean(bodyObj)));
+      return JSON.parse((await _standaloneDebugger).exec_step(coerceBoolean(bodyObj)));
     case "exec/specStepOver":
-      return JSON.parse((await ESMetaDebugger).exec_stepOver(coerceBoolean(bodyObj)));
+      return JSON.parse((await _standaloneDebugger).exec_stepOver(coerceBoolean(bodyObj)));
 
     case "exec/specStepOut":
-      return JSON.parse((await ESMetaDebugger).exec_stepOut(coerceBoolean(bodyObj)));
+      return JSON.parse((await _standaloneDebugger).exec_stepOut(coerceBoolean(bodyObj)));
 
     case "exec/specContinue":
-      return JSON.parse((await ESMetaDebugger).exec_continue(coerceBoolean(bodyObj)));
+      return JSON.parse((await _standaloneDebugger).exec_continue(coerceBoolean(bodyObj)));
 
     case "exec/specStepBack":
-      return JSON.parse((await ESMetaDebugger).exec_stepBack(coerceBoolean(bodyObj)));
+      return JSON.parse((await _standaloneDebugger).exec_stepBack(coerceBoolean(bodyObj)));
 
     case "exec/specStepBackOut":
-      return JSON.parse((await ESMetaDebugger).exec_stepBackOut(coerceBoolean(bodyObj)));
+      return JSON.parse((await _standaloneDebugger).exec_stepBackOut(coerceBoolean(bodyObj)));
 
     case "exec/specStepBackOver":
-      return JSON.parse((await ESMetaDebugger).exec_stepBackOver(coerceBoolean(bodyObj)));
+      return JSON.parse((await _standaloneDebugger).exec_stepBackOver(coerceBoolean(bodyObj)));
 
     // TODO
     // case "exec/esStep":
-    //   return JSON.parse((await ESMetaDebugger).exec_esStep());
+    //   return JSON.parse((await _standaloneDebugger).exec_esStep());
     case "exec/esStepOver":
-      return JSON.parse((await ESMetaDebugger).exec_esStepOver(coerceBoolean(bodyObj)));
+      return JSON.parse((await _standaloneDebugger).exec_esStepOver(coerceBoolean(bodyObj)));
 
     case "exec/esStepOut":
-      return JSON.parse((await ESMetaDebugger).exec_esStepOut(coerceBoolean(bodyObj)));
+      return JSON.parse((await _standaloneDebugger).exec_esStepOut(coerceBoolean(bodyObj)));
 
     default:
       throw apiError(endpoint);
@@ -175,14 +170,15 @@ const doWriteRequest = async (
 self.onmessage = async (e: MessageEvent<any>) => {
   const { id, type, endpoint, data } = e.data;
 
+  console.log("worker - standalone.worker.ts got e:", e);
+  console.log("worker - standalone.worker.ts got e.data:", id, type, endpoint, data);
+
   try {
     let result;
     switch (type) {
       case "META":
-        ESMetaDebugger = (
-          await module
-        ).DebuggerServiceFactory.buildFromGiven(data);
-        await ESMetaDebugger;
+        _standaloneDebugger = Promise.resolve((await module).StandaloneDebugger.buildFrom(data))
+        await _standaloneDebugger;
         break;
       case "GET":
         result = await doGetRequest(endpoint, data);
@@ -211,4 +207,9 @@ function coerceBoolean(bodyObj: any): boolean {
   if (typeof bodyObj === 'boolean') return bodyObj;
   console.error("Invalid boolean value:", bodyObj);
   return false;
+}
+
+/** auxiliaries */
+function fetchFromDump(url: string): Promise<string> {
+  return fetch(url).then(response => response.text());
 }
