@@ -1,14 +1,6 @@
 import { motion, AnimatePresence } from "motion/react";
-import {
-  CheckIcon,
-  CogIcon,
-  Loader2Icon,
-  PlugIcon,
-} from "lucide-react";
-import {
-  LoaderPinwheelIcon,
-  CircleAlertIcon,
-} from "lucide-react";
+import { CheckIcon, CogIcon, Loader2Icon, PlugIcon } from "lucide-react";
+import { LoaderPinwheelIcon, CircleAlertIcon } from "lucide-react";
 import { ReactElement } from "react";
 import { useSelector } from "react-redux";
 import { ReduxState } from "@/store";

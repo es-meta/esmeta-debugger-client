@@ -1,7 +1,7 @@
 import Card from "@/components/layout/Card";
 import CardHeader from "@/components/layout/CardHeader";
 import { CpuIcon } from "lucide-react";
-import {  useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import { ReduxState } from "@/store";
 import { AppState } from "@/store/reducers/AppState";
 import { useDispatch, useSelector } from "react-redux";
@@ -55,19 +55,21 @@ export default function StateViewer() {
           getIcon={s => s.icon}
           getLabel={s => s.name}
         />
-        </CardHeader>
-        <div className="overflow-y-scroll size-full">
-      {disabled ? (
-        <p className="text-neutral-500 p-2">Disabled. Start debugger to use.</p>
-      ) : (
-        // temp fix to preserve state in render tree - use redux later
-        viewerItems.map(s => (
-          <div key={s.name} className={targetId === s.id ? "" : "hidden"}>
-            {s.view}
-          </div>
-        ))
-          )}
-          </div>
+      </CardHeader>
+      <div className="overflow-y-scroll size-full">
+        {disabled ? (
+          <p className="text-neutral-500 p-2">
+            Disabled. Start debugger to use.
+          </p>
+        ) : (
+          // temp fix to preserve state in render tree - use redux later
+          viewerItems.map(s => (
+            <div key={s.name} className={targetId === s.id ? "" : "hidden"}>
+              {s.view}
+            </div>
+          ))
+        )}
+      </div>
     </Card>
   );
 }

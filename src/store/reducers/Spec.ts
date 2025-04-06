@@ -34,10 +34,13 @@ export const updateAlgoSuccess = (algo: Algorithm) => ({
 export const updateVersionRequest = (): SpecAction => ({
   type: SpecActionType.UPDATE_VERSION_REQUEST,
 });
-export const updateVersionSuccess = (specVersion: SpecVersion, esmetaVersion: string): SpecAction => ({
+export const updateVersionSuccess = (
+  specVersion: SpecVersion,
+  esmetaVersion: string,
+): SpecAction => ({
   type: SpecActionType.UPDATE_VERSION_SUCCESS,
   specVersion,
-  esmetaVersion, 
+  esmetaVersion,
 });
 export const clearAlgo = (): SpecAction => ({
   type: SpecActionType.CLEAR,
@@ -57,16 +60,16 @@ export type SpecAction =
     }
   | {
       type: SpecActionType.UPDATE_ALGORITHM_LIST_SUCCESS;
-    nameMap: Record<string, number>;
-    irToSpecMapping: IrToSpecMapping;
+      nameMap: Record<string, number>;
+      irToSpecMapping: IrToSpecMapping;
     }
   | {
       type: SpecActionType.UPDATE_VERSION_REQUEST;
     }
   | {
       type: SpecActionType.UPDATE_VERSION_SUCCESS;
-    specVersion: SpecVersion;
-    esmetaVersion: string | null;
+      specVersion: SpecVersion;
+      esmetaVersion: string | null;
     }
   | {
       type: SpecActionType.CLEAR;
@@ -110,7 +113,7 @@ type SpecFuncInfo = {
   isSdo: boolean;
   sdoInfo: SdoInfo | null;
   methodInfo: [string, string] | null;
-}
+};
 
 type SdoInfo = {
   method: string;
@@ -120,12 +123,11 @@ type SdoInfo = {
     j: number;
     astName: string;
     prodInfo: {
-        type: "terminal" | "nonterminal";
-        value: string;
+      type: "terminal" | "nonterminal";
+      value: string;
     }[];
   } | null;
-}
-
+};
 
 // "prodInfo" -> cfg.grammar.prods
 //                                               .find(_.name == name)
@@ -181,7 +183,7 @@ type SdoInfo = {
 //                                             //   ).map(_.asJson),
 //                                             )
 //                                           )
-                                              
+
 //                                       case _ => None
 //                                   ).asJson,
 //                                 )
@@ -195,7 +197,7 @@ export type SpecState = {
   nameMap: Record<string, number>;
   toggleMap: Record<string, boolean>; // ir function name to fold state, TODO remove
   irToSpecMapping: IrToSpecMapping;
-  version: { spec: SpecVersion, esmeta: string | null };
+  version: { spec: SpecVersion; esmeta: string | null };
 };
 const initialState: SpecState = {
   algorithm: {
@@ -207,7 +209,7 @@ const initialState: SpecState = {
     code: "",
   },
   nameMap: {}, // algoirhtm lists
-  toggleMap: {}, 
+  toggleMap: {},
   irToSpecMapping: {},
   version: {
     spec: {

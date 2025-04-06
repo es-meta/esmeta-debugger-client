@@ -9,7 +9,8 @@ import {
   StepBackIcon,
   UndoDotIcon,
   UndoIcon,
-  FastForwardIcon, BugPlayIcon,
+  FastForwardIcon,
+  BugPlayIcon,
 } from "lucide-react";
 import {
   run,
@@ -26,14 +27,15 @@ import {
   DebuggerAction,
   resumeFromIter,
   specStepBackOut,
-  specRewind, iterPlus, iterMinus,
+  specRewind,
+  iterPlus,
+  iterMinus,
 } from "@/store/reducers/Debugger";
 
 import ToolbarButton from "@/features/toolbar/ToolbarButton";
 import ToolbarButtonGroup from "@/features/toolbar/ToolbarButtonGroup";
 
 export default function Toolbar() {
-
   const dispatch = useDispatch<Dispatch<DebuggerAction>>();
   const {
     disableRun,
@@ -53,7 +55,15 @@ export default function Toolbar() {
       disableGoingForward,
       ignoreBP,
     }),
-    [dispatch, disableRun, disableResume, disableQuit, disableGoingBackward, disableGoingForward, ignoreBP],
+    [
+      dispatch,
+      disableRun,
+      disableResume,
+      disableQuit,
+      disableGoingBackward,
+      disableGoingForward,
+      ignoreBP,
+    ],
   );
 
   useEffect(() => {
@@ -68,8 +78,6 @@ export default function Toolbar() {
   return (
     <aside className="relative w-full backdrop-blur-sm z-[2]">
       <div className="bg-neutral-100 dark:bg-neutral-900 size-full flex-row bg-opacity-75 flex items-center min-h-full space-x-0 flex-wrap p-2 gap-y-1 gap-x-1 justify-start z-[1001]">
-
-        
         <ToolbarButtonGroup label="Exec">
           {showResume && (
             <ToolbarButton
@@ -110,7 +118,6 @@ export default function Toolbar() {
               </span>
             }
           />
-
         </ToolbarButtonGroup>
 
         <Seperator />
@@ -220,7 +227,6 @@ export default function Toolbar() {
         <Seperator />
 
         <ToolbarButtonGroup label="JS">
-          
           <ToolbarButton
             position="left"
             disabled={disableGoingForward}
@@ -258,35 +264,36 @@ export default function Toolbar() {
           />
         </ToolbarButtonGroup>
 
-        {import.meta.env.DEV && <>
-          <Seperator />
-          <ToolbarButtonGroup label="Iter">
+        {import.meta.env.DEV && (
+          <>
+            <Seperator />
+            <ToolbarButtonGroup label="Iter">
+              <ToolbarButton
+                position="left"
+                disabled={disableGoingForward}
+                onClick={() => dispatch(iterPlus())}
+                icon={<BugPlayIcon />}
+                label={
+                  <span>
+                    Iter <b>+</b>
+                  </span>
+                }
+              />
 
-            <ToolbarButton
-              position="left"
-              disabled={disableGoingForward}
-              onClick={() => dispatch(iterPlus())}
-              icon={<BugPlayIcon />}
-              label={
-                <span>
-                Iter <b>+</b>
-              </span>
-              }
-            />
-
-            <ToolbarButton
-              position="right"
-              disabled={disableGoingBackward}
-              onClick={() => dispatch(iterMinus())}
-              icon={<BugPlayIcon />}
-              label={
-                <span>
-                Iter <b>-</b>
-              </span>
-              }
-            />
-          </ToolbarButtonGroup>
-        </>}
+              <ToolbarButton
+                position="right"
+                disabled={disableGoingBackward}
+                onClick={() => dispatch(iterMinus())}
+                icon={<BugPlayIcon />}
+                label={
+                  <span>
+                    Iter <b>-</b>
+                  </span>
+                }
+              />
+            </ToolbarButtonGroup>
+          </>
+        )}
       </div>
     </aside>
   );

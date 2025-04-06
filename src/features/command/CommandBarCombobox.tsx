@@ -20,73 +20,51 @@ interface ComboProps {
 }
 
 function computeFiltered(query: string, st: ReduxState): Command[] {
-  
-  if (query.trimEnd() === '?') {
-    return [{
-      label: 'use # to search address. use ! to search break points.',
-      searchTarget: '',
-      actions: []
-    }]
+  if (query.trimEnd() === "?") {
+    return [
+      {
+        label: "use # to search address. use ! to search break points.",
+        searchTarget: "",
+        actions: [],
+      },
+    ];
   }
-  
+
   if (query.startsWith("#")) {
     const addrQuery = query.slice(1);
-    const heapAddrs = Object.getOwnPropertyNames(st.irState.heap)
+    const heapAddrs = Object.getOwnPropertyNames(st.irState.heap);
 
-    return fuzzyFilter(
-      heapAddrs,
-      addrQuery,
-      0.2,
-      c => c,
-    ).map(addr => ({
+    return fuzzyFilter(heapAddrs, addrQuery, 0.2, c => c).map(addr => ({
       label: `inspect: ${addr}`,
-      searchTarget: '',
-      actions: [setHeapViewerAddr(addr), chooseStateViewer("heap") ],
-
+      searchTarget: "",
+      actions: [setHeapViewerAddr(addr), chooseStateViewer("heap")],
     }));
-    
   }
 
   if (query.startsWith("!")) {
     const breakpointSearchQuery = query.slice(1);
     // const bpMap = st.breakpoint.items
     const algoNames = Object.getOwnPropertyNames(st.spec.nameMap);
-      return fuzzyFilter(
-        algoNames,
-        breakpointSearchQuery,
-        0.2,
-        c => c,
-      ).map(name => ({
+    return fuzzyFilter(algoNames, breakpointSearchQuery, 0.2, c => c).map(
+      name => ({
         label: `toggle: ${name}`,
-        searchTarget: '',
+        searchTarget: "",
         actions: [toggleBreak(name)],
-      }));
+      }),
+    );
   }
 
   if (query.startsWith("@")) {
     const envSearchQuery = query.slice(1);
-    return fuzzyFilter(
-      choose,
-      envSearchQuery,
-      0,
-      c => c.searchTarget,
-    );
+    return fuzzyFilter(choose, envSearchQuery, 0, c => c.searchTarget);
   }
 
-  if (query.startsWith('/')) {
+  if (query.startsWith("/")) {
     const cmdSearchQuery = query.slice(1);
-    return fuzzyFilter(
-      debugActions,
-      cmdSearchQuery,
-      0,
-      c => c.label,
-    )
+    return fuzzyFilter(debugActions, cmdSearchQuery, 0, c => c.label);
   }
-
 
   return [];
-
-
 
   // return query === ""
   //   ? values
@@ -129,7 +107,7 @@ export default forwardRef<HTMLInputElement, ComboProps>(
           anchor="bottom"
           className="text-sm z-[101] w-[var(--input-width)] origin-top shadow-lg transition duration-200 ease-out empty:invisible data-[closed]:scale-95 data-[closed]:opacity-0 h-96 overflow-scroll bg-white rounded-lg"
         >
-          {({ option: name }: { option: Command }) =>
+          {({ option: name }: { option: Command }) => (
             <ComboboxOption
               key={JSON.stringify(name)}
               value={name}
@@ -149,14 +127,14 @@ export default forwardRef<HTMLInputElement, ComboProps>(
                 </div>
               )}
             </ComboboxOption>
-            }
+          )}
         </ComboboxOptions>
-        {query === "" && (<p className="mt-2 text-xs text-gray-500 bg-white rounded-lg p-4">
-          Press
-          @ to see viewers,
-          # to inspect heap address,
-          / to do trigger debugger commands
-        </p>)}
+        {query === "" && (
+          <p className="mt-2 text-xs text-gray-500 bg-white rounded-lg p-4">
+            Press @ to see viewers, # to inspect heap address, / to do trigger
+            debugger commands
+          </p>
+        )}
       </Combobox>
     );
   },
@@ -168,31 +146,39 @@ const choose: Command[] = [
   {
     label: "See: Breakpoints",
     searchTarget: "breakpoints bp breakpoint break",
-    actions: [chooseStateViewer('bp')]
+    actions: [chooseStateViewer("bp")],
   },
   {
     label: "See: Call Stack",
     searchTarget: "callstack stack cs",
-    actions: [chooseStateViewer('callstack')]
+    actions: [chooseStateViewer("callstack")],
   },
   {
     label: "See: Heap",
     searchTarget: "heap",
-    actions: [chooseStateViewer('heap')]
+    actions: [chooseStateViewer("heap")],
   },
   {
     label: "See: Environment",
     searchTarget: "environment env",
-    actions: [chooseStateViewer('env')]
+    actions: [chooseStateViewer("env")],
   },
   {
     label: "See: Statistics (for debugging)",
     searchTarget: "satistics stats debug",
-    actions: [chooseStateViewer('stats')]
+    actions: [chooseStateViewer("stats")],
   },
 ];
 
-import { irStep, irStepOut, irStepOver, run, specStep, specStepOut, specStepOver } from "@/store/reducers/Debugger";
+import {
+  irStep,
+  irStepOut,
+  irStepOver,
+  run,
+  specStep,
+  specStepOut,
+  specStepOver,
+} from "@/store/reducers/Debugger";
 
 const debugActions: Command[] = [
   {
@@ -203,31 +189,31 @@ const debugActions: Command[] = [
   {
     label: "Action: Spec Step",
     searchTarget: "spec step",
-    actions: [specStep()]
+    actions: [specStep()],
   },
   {
     label: "Action: Spec Step Over",
     searchTarget: "spec step over",
-    actions: [specStepOver()]
+    actions: [specStepOver()],
   },
   {
     label: "Action: Spec Step Out",
     searchTarget: "spec step out",
-    actions: [specStepOut()]
+    actions: [specStepOut()],
   },
   {
     label: "Action: IR Step",
     searchTarget: "ir step",
-    actions: [irStep()]
+    actions: [irStep()],
   },
   {
     label: "Action: IR Step Over",
     searchTarget: "ir step over",
-    actions: [irStepOver()]
+    actions: [irStepOver()],
   },
   {
     label: "Action: IR Step Out",
     searchTarget: "ir step out",
-    actions: [irStepOut()]
+    actions: [irStepOut()],
   },
 ];

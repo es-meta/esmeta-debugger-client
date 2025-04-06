@@ -11,22 +11,19 @@ function GetBindingValue_Global(
   // S: Boolean,
 ): Binding[] {
   const arr: Binding[] = [];
-  
+
   // let DclRec = envRec.DeclarativeRecord
   const envRec = heap[envRecAddress];
-  if (!envRec || envRec.type !== 'RecordObj') return [];
-  
+  if (!envRec || envRec.type !== "RecordObj") return [];
 
-  const DclRecAddr = envRec.map['DeclarativeRecord'];
+  const DclRecAddr = envRec.map["DeclarativeRecord"];
   const DclRec = DclRecAddr ? heap[DclRecAddr] : null;
-  if (DclRecAddr && DclRec && DclRec.type === 'RecordObj') {
-
+  if (DclRecAddr && DclRec && DclRec.type === "RecordObj") {
     const fromDecls = GetBindingValue_Declarative(heap, DclRecAddr);
 
     for (const [name, value] of fromDecls) {
-      if (arr.every(([n]) => n !== name))  arr.push([name, value]);
+      if (arr.every(([n]) => n !== name)) arr.push([name, value]);
     }
-    
   }
 
   // call %0 = DclRec.HasBinding(DclRec, N)
@@ -39,23 +36,18 @@ function GetBindingValue_Global(
   //   else return %1
   // }
 
-
-  const objRecAddr = envRec.map['ObjectRecord'];
+  const objRecAddr = envRec.map["ObjectRecord"];
   const ObjRec = objRecAddr ? heap[objRecAddr] : null;
-  if (objRecAddr && ObjRec && ObjRec.type === 'RecordObj') {
-    
-    
+  if (objRecAddr && ObjRec && ObjRec.type === "RecordObj") {
     const fromObjects = GetBindingValue_Object(heap, objRecAddr);
     // let ObjRec = envRec.ObjectRecord
     // call %2 = ObjRec.GetBindingValue(ObjRec, N, S)
     // assert (? %2: Completion)
     // if (? %2: Abrupt) return %2
     // else return %2
-    
-   
-    
+
     for (const [name, value] of fromObjects) {
-      if (arr.every(([n]) => n !== name))  arr.push([name, value]);
+      if (arr.every(([n]) => n !== name)) arr.push([name, value]);
     }
   }
 
@@ -72,18 +64,20 @@ function GetBindingValue_Object(
   const arr: Binding[] = [];
 
   const envRec = heap[envRecAddress];
-  if (!envRec || envRec.type !== 'RecordObj') return [];
+  if (!envRec || envRec.type !== "RecordObj") return [];
 
   // let bindingObject = envRec.BindingObject
-  const bindingObjectAddr = envRec.map['BindingObject'];
+  const bindingObjectAddr = envRec.map["BindingObject"];
   const bindingObject = bindingObjectAddr ? heap[bindingObjectAddr] : null;
-  const subMapAddr = (bindingObject && bindingObject.type === 'RecordObj') ? bindingObject.map['__MAP__'] : null;
+  const subMapAddr =
+    bindingObject && bindingObject.type === "RecordObj"
+      ? bindingObject.map["__MAP__"]
+      : null;
   const subMap = subMapAddr ? heap[subMapAddr] : null;
 
-
-  if (subMap && subMap.type === 'MapObj') {
+  if (subMap && subMap.type === "MapObj") {
     for (const [name, value] of Object.entries(subMap.map)) {
-      if (arr.every(([n]) => n !== name))  arr.push([name, value]);
+      if (arr.every(([n]) => n !== name)) arr.push([name, value]);
     }
   }
 
@@ -94,18 +88,17 @@ function GetBindingValue_Declarative(
   heap: Heap,
   envRecAddress: string,
 ): Binding[] {
-  
   const arr: Binding[] = [];
 
   const envRec = heap[envRecAddress];
-  if (!envRec || envRec.type !== 'RecordObj') return [];
+  if (!envRec || envRec.type !== "RecordObj") return [];
   // assert (exists envRec.__MAP__[N])
 
-  const subMapAddr = envRec.map['__MAP__'];
+  const subMapAddr = envRec.map["__MAP__"];
   const subMap = subMapAddr ? heap[subMapAddr] : null;
-  if (subMapAddr && subMap && subMap.type === 'MapObj') {
+  if (subMapAddr && subMap && subMap.type === "MapObj") {
     for (const [name, value] of Object.entries(subMap.map)) {
-      if (arr.every(([n]) => n !== name))  arr.push([name, value]);
+      if (arr.every(([n]) => n !== name)) arr.push([name, value]);
     }
   }
   // if (! envRec.__MAP__[N].initialized) {
@@ -131,45 +124,52 @@ function Specialized_GetBindingThisValue(
 ): Binding[] {
   const envRec = heap[envRecAddress];
 
-  if (!envRec || envRec.type !== 'RecordObj') {
-    logger.error('Specialized_GetBindingThisValue', `envRec not found at ${envRecAddress}`);
+  if (!envRec || envRec.type !== "RecordObj") {
+    logger.error(
+      "Specialized_GetBindingThisValue",
+      `envRec not found at ${envRecAddress}`,
+    );
     return [];
   }
-  const bindingStatus = envRec.map['ThisBindingStatus'];
-  if (bindingStatus === '~uninitialized~') return [];
+  const bindingStatus = envRec.map["ThisBindingStatus"];
+  if (bindingStatus === "~uninitialized~") return [];
 
-  const thisValue = envRec.map['ThisValue'];
+  const thisValue = envRec.map["ThisValue"];
   if (thisValue) return [['"this"', thisValue]];
   return [];
 }
 
-export function GetBindingValue(
-  heap: Heap,
-  envRecAddress: string,
-): Binding[] {
+export function GetBindingValue(heap: Heap, envRecAddress: string): Binding[] {
   // logger.log('GetBindingValue', `envRecAddress: ${envRecAddress}`);
 
   const envRec = heap[envRecAddress];
-  if (!envRec || envRec.type !== 'RecordObj') {
-    logger.error('GetBindingValue', `envRec not found at ${envRecAddress}`);
-    return []
-  };
+  if (!envRec || envRec.type !== "RecordObj") {
+    logger.error("GetBindingValue", `envRec not found at ${envRecAddress}`);
+    return [];
+  }
 
   switch (envRec.tname) {
-    case 'GlobalEnvironmentRecord':
+    case "GlobalEnvironmentRecord":
       // logger.log('GetBindingValue', `GlobalEnvironmentRecord`);
       return GetBindingValue_Global(heap, envRecAddress);
-    case 'ObjectEnvironmentRecord':
+    case "ObjectEnvironmentRecord":
       // logger.log('GetBindingValue', `ObjectEnvironmentRecord`);
       return GetBindingValue_Object(heap, envRecAddress);
-    case 'DeclarativeEnvironmentRecord':
+    case "DeclarativeEnvironmentRecord":
       // logger.log('GetBindingValue', `DeclarativeEnvironmentRecord`);
       return GetBindingValue_Declarative(heap, envRecAddress);
-    case 'FunctionEnvironmentRecord':
-      return Specialized_GetBindingThisValue(heap, envRecAddress).concat(GetBindingValue_Declarative(heap, envRecAddress).filter(([name]) => name !== '"this"'));
-      // throw new Error('FunctionEnvironmentRecord not implemented');
+    case "FunctionEnvironmentRecord":
+      return Specialized_GetBindingThisValue(heap, envRecAddress).concat(
+        GetBindingValue_Declarative(heap, envRecAddress).filter(
+          ([name]) => name !== '"this"',
+        ),
+      );
+    // throw new Error('FunctionEnvironmentRecord not implemented');
     default:
-      logger.error('GetBindingValue', `Unknown environment record type: ${envRec.tname}`);
+      logger.error(
+        "GetBindingValue",
+        `Unknown environment record type: ${envRec.tname}`,
+      );
       return [];
   }
 }

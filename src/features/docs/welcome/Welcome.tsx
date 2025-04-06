@@ -85,11 +85,8 @@ export default function WelcomeModal() {
 
 ////////////////////////////////////////////////////////
 
-import  { useEffect, useRef } from "react";
-import {
-  useTransform,
-  useScroll,
-} from "motion/react";
+import { useEffect, useRef } from "react";
+import { useTransform, useScroll } from "motion/react";
 import { useInView } from "react-intersection-observer";
 
 import { Funnel1, Funnel2, Funnel3, Funnel4 } from "./funnels";

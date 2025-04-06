@@ -18,7 +18,9 @@ export function ContextVisitedViewer(props: {
   const dispatch = useDispatch();
   const { algo, breakpoints, context } = props;
 
-  const irToSpecMapping = useSelector((st: ReduxState) => st.spec.irToSpecMapping);
+  const irToSpecMapping = useSelector(
+    (st: ReduxState) => st.spec.irToSpecMapping,
+  );
 
   const currentSteps = useMemo(
     () => (context === undefined ? [] : context.steps) satisfies number[],
@@ -96,18 +98,22 @@ export function ContextVisitedViewer(props: {
   );
 }
 
-function AlgoViewerHeader({ algorithm, irToSpecMapping }: { algorithm: Algorithm, irToSpecMapping: IrToSpecMapping }) {
-
-  const specInfo = irToSpecMapping[algorithm.name]
+function AlgoViewerHeader({
+  algorithm,
+  irToSpecMapping,
+}: {
+  algorithm: Algorithm;
+  irToSpecMapping: IrToSpecMapping;
+}) {
+  const specInfo = irToSpecMapping[algorithm.name];
 
   const title = (() => {
-    
     if (specInfo?.sdoInfo && specInfo.isSdo === true) {
       return specInfo.sdoInfo.method;
     }
 
     if (specInfo?.isBuiltIn === true) {
-      return algorithm.name.substring('INTRINSICS.'.length);
+      return algorithm.name.substring("INTRINSICS.".length);
     }
 
     if (specInfo?.methodInfo) {
@@ -116,56 +122,66 @@ function AlgoViewerHeader({ algorithm, irToSpecMapping }: { algorithm: Algorithm
     }
 
     return algorithm.name;
-  }) ();
+  })();
 
   const isSdo = specInfo?.isSdo === true;
 
   const params = (
-    (specInfo?.isSdo === true || specInfo?.isMethod === true)  ?
-    algorithm.params.slice(1)
-    : 
-    algorithm.params
+    specInfo?.isSdo === true || specInfo?.isMethod === true
+      ? algorithm.params.slice(1)
+      : algorithm.params
   )
     .map(({ name, optional }) => {
-        return optional ? name + "?" : name;
-      })
+      return optional ? name + "?" : name;
+    })
     .join(", ");
-  
-  
+
   const prodInfo = specInfo?.sdoInfo?.prod?.prodInfo;
 
-  return (<>
-    <div className="pt-2 px-2 font-es font-600 text-lg bg-white">
-      <b>{title}</b>
-      <span className="algo-parameters">
-        ({params})
-      </span>
-      {/* <Info algorithm={algorithm} irToSpecMapping={irToSpecMapping} /> */}
-    </div>
-    {isSdo &&
-      <div className="px-2 flex flex-col mb-1 break-all">
-      {prodInfo && <p className="ml-4"><b className="inline font-300 italic">
-          {specInfo.sdoInfo?.prod?.astName}
-        </b><b className="inline font-700">&nbsp;:</b>{prodInfo.map((prod, idx) => (<b key={idx} className={
-          twMerge(
-          "inline",
-          prod.type === 'terminal' && 'font-700 font-mono text-sm',
-          prod.type === 'nonterminal' && 'font-300 italic',
-        )
-      }>
-        &nbsp;{prod.value}
-      </b>))}
-      </p>}
-        </div>
-    }
-    {
-      specInfo?.methodInfo &&
-      <div className="px-2 flex flex-col mb-1 break-all">
-      <p className="px-2 font-300">
-          <b className="size-14 text-[#2aa198] italic font-es">{algorithm.params[0].name}</b> : <b className="size-14 text-black font-es">{specInfo?.methodInfo[0]}</b>
-      </p>
+  return (
+    <>
+      <div className="pt-2 px-2 font-es font-600 text-lg bg-white">
+        <b>{title}</b>
+        <span className="algo-parameters">({params})</span>
+        {/* <Info algorithm={algorithm} irToSpecMapping={irToSpecMapping} /> */}
       </div>
-    }
+      {isSdo && (
+        <div className="px-2 flex flex-col mb-1 break-all">
+          {prodInfo && (
+            <p className="ml-4">
+              <b className="inline font-300 italic">
+                {specInfo.sdoInfo?.prod?.astName}
+              </b>
+              <b className="inline font-700">&nbsp;:</b>
+              {prodInfo.map((prod, idx) => (
+                <b
+                  key={idx}
+                  className={twMerge(
+                    "inline",
+                    prod.type === "terminal" && "font-700 font-mono text-sm",
+                    prod.type === "nonterminal" && "font-300 italic",
+                  )}
+                >
+                  &nbsp;{prod.value}
+                </b>
+              ))}
+            </p>
+          )}
+        </div>
+      )}
+      {specInfo?.methodInfo && (
+        <div className="px-2 flex flex-col mb-1 break-all">
+          <p className="px-2 font-300">
+            <b className="size-14 text-[#2aa198] italic font-es">
+              {algorithm.params[0].name}
+            </b>{" "}
+            :{" "}
+            <b className="size-14 text-black font-es">
+              {specInfo?.methodInfo[0]}
+            </b>
+          </p>
+        </div>
+      )}
     </>
   );
 }

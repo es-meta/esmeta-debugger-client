@@ -22,7 +22,8 @@ export default function ObjectView({ obj, singleMode, address }: Props) {
     <>
       {obj.type === "RecordObj" && (
         <table className="bg-white font-mono text-center text-xs">
-          <caption className="break-all">{typeString}
+          <caption className="break-all">
+            {typeString}
             {singleMode && <ProvinenceButton address={address} />}
           </caption>
           <thead>
@@ -38,7 +39,10 @@ export default function ObjectView({ obj, singleMode, address }: Props) {
               </tr>
             ) : (
               Object.entries(obj.map).map(([key, value]) => (
-                <tr key={v4()} className="even:bg-white odd:bg-neutral-100 hover:bg-neutral-200 transition-all">
+                <tr
+                  key={v4()}
+                  className="even:bg-white odd:bg-neutral-100 hover:bg-neutral-200 transition-all"
+                >
                   <td className="border-r">{key}</td>
                   <td className="font-mono text-wrap break-all text-center overflow-hidden flex flex-row gap-2 justify-center items-center">
                     {value && value.startsWith("#") ? (
@@ -55,8 +59,9 @@ export default function ObjectView({ obj, singleMode, address }: Props) {
       )}
       {obj.type === "MapObj" && (
         <table className="bg-white font-mono text-center text-xs">
-          <caption className="break-all">{typeString}
-          {singleMode && <ProvinenceButton address={address} />}
+          <caption className="break-all">
+            {typeString}
+            {singleMode && <ProvinenceButton address={address} />}
           </caption>
           <thead>
             <tr>
@@ -73,7 +78,10 @@ export default function ObjectView({ obj, singleMode, address }: Props) {
               </>
             ) : (
               Object.entries(obj.map).map(([key, value]) => (
-                <tr key={v4()} className="even:bg-white odd:bg-neutral-100 hover:bg-neutral-200 transition-all">
+                <tr
+                  key={v4()}
+                  className="even:bg-white odd:bg-neutral-100 hover:bg-neutral-200 transition-all"
+                >
                   <td className="border-r">{key}</td>
                   <td className="font-mono text-wrap break-all text-center overflow-hidden flex flex-row gap-2 justify-center items-center">
                     {value && value.startsWith("#") ? (
@@ -90,7 +98,10 @@ export default function ObjectView({ obj, singleMode, address }: Props) {
       )}
       {obj.type === "ListObj" && (
         <table className="bg-white font-mono text-center text-xs">
-          <caption className="break-all">{typeString}{singleMode && <ProvinenceButton address={address} />}</caption>
+          <caption className="break-all">
+            {typeString}
+            {singleMode && <ProvinenceButton address={address} />}
+          </caption>
           <thead>
             <tr>
               <th className="border-r w-1/4">key</th>
@@ -100,7 +111,9 @@ export default function ObjectView({ obj, singleMode, address }: Props) {
           <tbody>
             {Object.keys(obj.values).length === 0 ? (
               <tr>
-                <td key={v4()} colSpan={2}>No values</td>
+                <td key={v4()} colSpan={2}>
+                  No values
+                </td>
               </tr>
             ) : (
               obj.values.map((value, idx) => (

@@ -26,28 +26,23 @@ export default function DebuggerApp() {
 
   return (
     <main className="relative px-4 xl:px-12 grow flex flex-col overflow-hidden">
-      <Toolbar />      
-        <ResizablePanelGroup
-          direction="horizontal"
-          className="bg-white dark:bg-black rounded-xl border grow dark:border-neutral-700 border-neutral-300 flex overflow-hidden"
-        >
-          <ResizablePanel minSize={8}>
-            <JSEditor />
-          </ResizablePanel>
-          <ResizableHandle withHandle
-            hitAreaMargins={{ coarse: 16, fine: 8 }}
-          />
-          <ResizablePanel minSize={8} className="">
-            <SpecViewer />
-          </ResizablePanel>
-          <ResizableHandle
-            withHandle
-            hitAreaMargins={{ coarse: 16, fine: 8 }}
-          />
-          <ResizablePanel minSize={8} collapsible>
-            <StateViewer />
-          </ResizablePanel>
-        </ResizablePanelGroup>
+      <Toolbar />
+      <ResizablePanelGroup
+        direction="horizontal"
+        className="bg-white dark:bg-black rounded-xl border grow dark:border-neutral-700 border-neutral-300 flex overflow-hidden"
+      >
+        <ResizablePanel minSize={8}>
+          <JSEditor />
+        </ResizablePanel>
+        <ResizableHandle withHandle hitAreaMargins={{ coarse: 16, fine: 8 }} />
+        <ResizablePanel minSize={8} className="">
+          <SpecViewer />
+        </ResizablePanel>
+        <ResizableHandle withHandle hitAreaMargins={{ coarse: 16, fine: 8 }} />
+        <ResizablePanel minSize={8} collapsible>
+          <StateViewer />
+        </ResizablePanel>
+      </ResizablePanelGroup>
     </main>
   );
 }

@@ -7,7 +7,7 @@ interface StateViewerItemProps {
   header: string;
   headerItems?: ReactNode;
   children?: ReactNode;
-  icon?: ReactElement<SVGElement>
+  icon?: ReactElement<SVGElement>;
 }
 
 export default function StateViewerItem(props: StateViewerItemProps) {

@@ -68,7 +68,11 @@ function InspectInHaepViewer({ address }: { address: string }) {
   );
 }
 
-export default function Address({ address, singleMode, defaultFold = false }: Props) {
+export default function Address({
+  address,
+  singleMode,
+  defaultFold = false,
+}: Props) {
   const [fold, setFold] = useState(
     singleMode === undefined ? defaultFold : singleMode,
   );
@@ -102,7 +106,12 @@ export default function Address({ address, singleMode, defaultFold = false }: Pr
           </div>
         </span>
       )}
-      {fold && (obj ? <ObjectView address={address} singleMode={singleMode} obj={obj} /> : <div>Not found</div>)}
+      {fold &&
+        (obj ? (
+          <ObjectView address={address} singleMode={singleMode} obj={obj} />
+        ) : (
+          <div>Not found</div>
+        ))}
     </div>
   );
 }

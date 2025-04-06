@@ -3,7 +3,6 @@ function toAlpha(num: number): string {
 }
 
 function toRoman(num: number): string {
-
   const roman = [
     ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"],
     ["", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"],
@@ -20,7 +19,7 @@ function toRoman(num: number): string {
 }
 
 export function toStepString(steps: number[]) {
-  let str = '';
+  let str = "";
   for (let i = 0; i < steps.length; i++) {
     switch (i % 3) {
       case 0:
@@ -33,7 +32,7 @@ export function toStepString(steps: number[]) {
         str += toRoman(steps[i]);
         break;
     }
-    if (i !== steps.length - 1) str += '.';
+    if (i !== steps.length - 1) str += ".";
   }
   return str;
 }

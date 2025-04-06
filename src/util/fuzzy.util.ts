@@ -6,7 +6,6 @@ export const fuzzyFilter = <T>(
   threshold: number,
   extractor: (item: T) => string,
 ): T[] => {
-
   // is this a good way to handle empty query?
   if (query === "") return source;
 

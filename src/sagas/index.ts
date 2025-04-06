@@ -7,5 +7,11 @@ import specSaga from "./Spec";
 import statSaga from "./Stats";
 
 export default function* rootSaga() {
-  yield all([debuggerSaga(), breakpointSaga(), irStateSaga(), specSaga(), statSaga()]);
+  yield all([
+    debuggerSaga(),
+    breakpointSaga(),
+    irStateSaga(),
+    specSaga(),
+    statSaga(),
+  ]);
 }

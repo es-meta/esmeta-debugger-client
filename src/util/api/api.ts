@@ -19,32 +19,32 @@ const createWorkerRequest = async <T extends Route>(
   endpoint: T,
   data?: unknown,
 ): Promise<ReturnTypeForApi<T>> => {
-    const worker = await workerPromise;
-    return new Promise((resolve, reject) => {
-      const id = counter++;
-      workingset.add(id);
+  const worker = await workerPromise;
+  return new Promise((resolve, reject) => {
+    const id = counter++;
+    workingset.add(id);
 
-      logger.log(id, type, endpoint, data);
+    logger.log(id, type, endpoint, data);
 
-      const handler = (e: MessageEvent) => {
-        const response = e.data;
-        if (response.id === id) {
-          worker.removeEventListener("message", handler);
-          logger.log(id, response);
-          if (response.success) {
-            resolve(response.data);
-          } else {
-            const error = new Error(response.error);
-            toast.error(error.message);
-            reject(error);
-          }
-          workingset.delete(id);
+    const handler = (e: MessageEvent) => {
+      const response = e.data;
+      if (response.id === id) {
+        worker.removeEventListener("message", handler);
+        logger.log(id, response);
+        if (response.success) {
+          resolve(response.data);
+        } else {
+          const error = new Error(response.error);
+          toast.error(error.message);
+          reject(error);
         }
-      };
+        workingset.delete(id);
+      }
+    };
 
-      worker.addEventListener("message", handler);
-      worker.postMessage({ id, type, endpoint, data });
-    });
+    worker.addEventListener("message", handler);
+    worker.postMessage({ id, type, endpoint, data });
+  });
 };
 
 // Modified API request functions
@@ -76,10 +76,11 @@ export const doAPIPutRequest = <T extends Route>(
   return createWorkerRequest("PUT", endpoint, bodyObj);
 };
 
-
 /** auxiliaries */
-async function instantiateWorker(givenApi: typeof GIVEN_SETTINGS.api): Promise<Worker> {
-  return new Promise<Worker>(async (resolve) => {
+async function instantiateWorker(
+  givenApi: typeof GIVEN_SETTINGS.api,
+): Promise<Worker> {
+  return new Promise<Worker>(async resolve => {
     if (givenApi.type === "browser") {
       const w = new Worker(new URL("./standalone.worker.ts", import.meta.url));
       resolve(w);

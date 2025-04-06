@@ -11,13 +11,13 @@ export default function SpecCallStackViewer() {
   const dispatch = useDispatch();
   const [globalExpand, setGlobalExpand] = useState<boolean | null>(null);
 
-  const {
-    callStack,
-    breakpoints,
-  } = useSelector((st: ReduxState) => ({
-    callStack: st.irState.callStack,
-    breakpoints: st.breakpoint.items,
-  }), shallowEqual);
+  const { callStack, breakpoints } = useSelector(
+    (st: ReduxState) => ({
+      callStack: st.irState.callStack,
+      breakpoints: st.breakpoint.items,
+    }),
+    shallowEqual,
+  );
 
   const onItemClick = useCallback(
     (idx: number) => {

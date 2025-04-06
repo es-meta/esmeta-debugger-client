@@ -21,7 +21,7 @@ type ContextItemProps = {
 function replacedName(name: string, irToSpecMapping: IrToSpecMapping): string {
   const specInfo = irToSpecMapping[name];
   if (specInfo?.isBuiltIn) {
-    return name.substring('INTRINSICS.'.length);
+    return name.substring("INTRINSICS.".length);
   }
   if (specInfo?.isSdo && specInfo?.sdoInfo && specInfo?.sdoInfo.prod) {
     return `${specInfo.sdoInfo.method} of ${specInfo.sdoInfo.prod?.astName}`;
@@ -35,10 +35,13 @@ function replacedName(name: string, irToSpecMapping: IrToSpecMapping): string {
 export default function SpecContextItem(props: ContextItemProps) {
   const [expand, setExpand] = useState<boolean>(false);
 
-  const {highlight, irToSpecMapping} = useSelector((s: ReduxState) => ({
-    highlight: s.irState.contextIdx === props.idx,
-    irToSpecMapping: s.spec.irToSpecMapping,
-  }), shallowEqual);
+  const { highlight, irToSpecMapping } = useSelector(
+    (s: ReduxState) => ({
+      highlight: s.irState.contextIdx === props.idx,
+      irToSpecMapping: s.spec.irToSpecMapping,
+    }),
+    shallowEqual,
+  );
 
   const className = useMemo(() => {
     return twMerge(
@@ -48,10 +51,11 @@ export default function SpecContextItem(props: ContextItemProps) {
     );
   }, [highlight]);
 
-  const { data, idx, onItemClick, breakpoints, globalExpand, setGlobalExpand } = props;
+  const { data, idx, onItemClick, breakpoints, globalExpand, setGlobalExpand } =
+    props;
   const { name, steps } = data;
   // TODO beautify steps
-  const stepString = steps.length === 0 ? '' : toStepString(steps);
+  const stepString = steps.length === 0 ? "" : toStepString(steps);
 
   useEffect(() => {
     if (globalExpand !== null) {
@@ -59,8 +63,10 @@ export default function SpecContextItem(props: ContextItemProps) {
     }
   }, [globalExpand]);
 
-
-  const specName = useMemo(() => replacedName(name, irToSpecMapping), [name, irToSpecMapping]);
+  const specName = useMemo(
+    () => replacedName(name, irToSpecMapping),
+    [name, irToSpecMapping],
+  );
 
   return (
     <>
@@ -77,11 +83,15 @@ export default function SpecContextItem(props: ContextItemProps) {
             className="size-full text-black/50 hover:text-black/25 flex items-center justify-center"
             onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
               e.stopPropagation();
-              setExpand((prev) => !prev);
+              setExpand(prev => !prev);
               setGlobalExpand(null);
             }}
           >
-            {expand ? <ChevronUpIcon size={14} /> : <ChevronDownIcon size={14} />}
+            {expand ? (
+              <ChevronUpIcon size={14} />
+            ) : (
+              <ChevronDownIcon size={14} />
+            )}
           </button>
         </td>
       </tr>

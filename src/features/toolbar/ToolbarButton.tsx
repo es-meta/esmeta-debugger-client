@@ -38,7 +38,9 @@ const ToolbarButton = forwardRef(function (
         "[&>svg]:size-3",
         "uppercase text-xs text-neutral-700 dark:text-neutral-200 font-500",
         disabled ? "active:border-red-500" : "active:scale-90",
-        disabled ? "opacity-75 cursor-not-allowed" : "hover:z-[1] hover:bg-neutral-200 hover:dark:bg-neutral-700",
+        disabled
+          ? "opacity-75 cursor-not-allowed"
+          : "hover:z-[1] hover:bg-neutral-200 hover:dark:bg-neutral-700",
 
         position === "left" ? "md:rounded-l-md" : "",
         position === "right" ? "md:rounded-r-md" : "",

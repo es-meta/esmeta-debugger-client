@@ -19,16 +19,13 @@ interface BreakpointItemProp {
 }
 
 export default function BreakpointItem(props: BreakpointItemProp) {
-  const {
-    idx,
-    onToggleClick,
-    onRemoveClick,
-    data,
-  } = props;
+  const { idx, onToggleClick, onRemoveClick, data } = props;
 
   const isEven = useMemo(() => idx % 2 === 0, [idx]);
 
-  const irToSpecMapping = useSelector((st: ReduxState) => st.spec.irToSpecMapping);
+  const irToSpecMapping = useSelector(
+    (st: ReduxState) => st.spec.irToSpecMapping,
+  );
 
   const { name, enabled } = data;
 
@@ -47,27 +44,32 @@ export default function BreakpointItem(props: BreakpointItemProp) {
 
   return (
     <>
-      <tr className={twMerge(
-        " hover:bg-neutral-200 transition-all",
-        isEven ? "bg-white" : "bg-neutral-100",
-      )}>
-      <td className="lowercase border-r overflow-hidden font-mono text-wrap break-all text-center">
-        {toStepString(data.steps)}
-      </td>
-      <td className="border-r overflow-hidden font-mono text-wrap break-all pb-1">
-        <AlgoViewerHeaderUsingOnlyName name={name} irToSpecMapping={irToSpecMapping} />
-      </td>
-      <td className="border-r text-center">
-        <MySwitch checked={enabled} onChange={() => handleToggleClick()} />
-      </td>
-      <td className="">
-        <button
-          className="h-full size-full items-center flex justify-center hover:text-red-600 active:scale-90 transition-all"
-          onClick={() => handleRemoveClick()}
-        >
-          <XIcon />
-        </button>
-      </td>
+      <tr
+        className={twMerge(
+          " hover:bg-neutral-200 transition-all",
+          isEven ? "bg-white" : "bg-neutral-100",
+        )}
+      >
+        <td className="lowercase border-r overflow-hidden font-mono text-wrap break-all text-center">
+          {toStepString(data.steps)}
+        </td>
+        <td className="border-r overflow-hidden font-mono text-wrap break-all pb-1">
+          <AlgoViewerHeaderUsingOnlyName
+            name={name}
+            irToSpecMapping={irToSpecMapping}
+          />
+        </td>
+        <td className="border-r text-center">
+          <MySwitch checked={enabled} onChange={() => handleToggleClick()} />
+        </td>
+        <td className="">
+          <button
+            className="h-full size-full items-center flex justify-center hover:text-red-600 active:scale-90 transition-all"
+            onClick={() => handleRemoveClick()}
+          >
+            <XIcon />
+          </button>
+        </td>
       </tr>
     </>
   );

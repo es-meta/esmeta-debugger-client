@@ -22,12 +22,15 @@ export default function CommandBar() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  const handleCommand = useCallback((command: Command | null) => {
-    if (command === null) return;
-    command.actions.forEach(dispatch);
-    setIsVisible(false);
-    toast.info('command bar called ' + command.label);
-  }, [dispatch]);
+  const handleCommand = useCallback(
+    (command: Command | null) => {
+      if (command === null) return;
+      command.actions.forEach(dispatch);
+      setIsVisible(false);
+      toast.info("command bar called " + command.label);
+    },
+    [dispatch],
+  );
 
   return (
     <AnimatePresence initial={false}>
@@ -70,7 +73,7 @@ const variants = {
 };
 
 const variantsBg = {
-  initial: { opacity: 0,  },
-  animate: { opacity: 1, },
-  exit: { opacity: 0, },
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  exit: { opacity: 0 },
 };

@@ -54,7 +54,7 @@ export default function JSContextItem(props: Props) {
 
   return (
     <>
-      <tr className={className} onClick={() => /* onItemClick(idx) */ { }}>
+      <tr className={className} onClick={() => /* onItemClick(idx) */ {}}>
         <td className="py-1 border-r text-center">{props.idx}</td>
         <td className="border-r text-center text-wrap break-all">
           {props.type}
@@ -67,15 +67,21 @@ export default function JSContextItem(props: Props) {
               setExpand(expand => !expand);
             }}
           >
-            {expand ? <ChevronUpIcon size={14} /> : <ChevronDownIcon size={14} />}
+            {expand ? (
+              <ChevronUpIcon size={14} />
+            ) : (
+              <ChevronDownIcon size={14} />
+            )}
           </button>
         </td>
       </tr>
-      {expand && <tr>
-        <td colSpan={4}>
-        <Address address={props.address}  singleMode />
-      </td>
-      </tr>}
+      {expand && (
+        <tr>
+          <td colSpan={4}>
+            <Address address={props.address} singleMode />
+          </td>
+        </tr>
+      )}
     </>
   );
 }

@@ -26,19 +26,21 @@ export default function SpecViewer() {
       : algo.code === ""
         ? SpecViewType.GRAPH
         : SpecViewType.ALGORITHM;
-  
+
   if (viewType === SpecViewType.DEFAULT) {
-    return <Card className="size-full flex flex-col">
-    <CardHeader
-      title="ECMAScript Specification"
-      icon={<BookMarkedIcon size={14} className="inline" />}
-    />
-    <div className="grow overflow-y-scroll">
-      <p className="text-neutral-500 p-2">
-        Please write JavaScript code and press the run button.
-      </p>
-      </div>
-  </Card>
+    return (
+      <Card className="size-full flex flex-col">
+        <CardHeader
+          title="ECMAScript Specification"
+          icon={<BookMarkedIcon size={14} className="inline" />}
+        />
+        <div className="grow overflow-y-scroll">
+          <p className="text-neutral-500 p-2">
+            Please write JavaScript code and press the run button.
+          </p>
+        </div>
+      </Card>
+    );
   }
 
   return (
@@ -53,7 +55,7 @@ export default function SpecViewer() {
         ) : (
           <Graphviz dot={props.algo.dot} />
         )}
-        </div>
+      </div>
     </Card>
   );
 }

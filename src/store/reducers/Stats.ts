@@ -20,8 +20,8 @@ export type StatAction =
       type: StatActionType.UPDATE_STAT_REQUEST;
     }
   | {
-    type: StatActionType.UPDATE_STAT_SUCCESS;
-    debugString: string;
+      type: StatActionType.UPDATE_STAT_SUCCESS;
+      debugString: string;
     };
 
 // redux state

@@ -8,7 +8,10 @@ interface Props {
 }
 
 // TODO : remove forwardRef when upgrading to React 19
-export default forwardRef(function Card({ className, children }: Props, ref: Ref<HTMLDivElement>) {
+export default forwardRef(function Card(
+  { className, children }: Props,
+  ref: Ref<HTMLDivElement>,
+) {
   return (
     <div
       ref={ref}

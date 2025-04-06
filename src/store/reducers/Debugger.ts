@@ -119,22 +119,22 @@ export type DebuggerAction =
     }
   | {
       type: DebuggerActionType.SPEC_STEP_BACK_OUT;
-  }
+    }
   | {
-  type: DebuggerActionType.ITER_PLUS;
-}
+      type: DebuggerActionType.ITER_PLUS;
+    }
   | {
-  type: DebuggerActionType.ITER_MINUS
-}
+      type: DebuggerActionType.ITER_MINUS;
+    }
   | {
-    type: DebuggerActionType.IR_STEP;
-  }
+      type: DebuggerActionType.IR_STEP;
+    }
   | {
-    type: DebuggerActionType.IR_STEP_OVER;
-  }
+      type: DebuggerActionType.IR_STEP_OVER;
+    }
   | {
-    type: DebuggerActionType.IR_STEP_OUT;
-  }
+      type: DebuggerActionType.IR_STEP_OUT;
+    }
   | {
       type: DebuggerActionType.JS_STEP_AST;
     }

@@ -20,7 +20,12 @@ export default function App() {
           <DebuggerApp />
           <CommandBar />
         </div>
-        <ToastContainer autoClose={1000} transition={Slide} position="bottom-right" stacked />
+        <ToastContainer
+          autoClose={1000}
+          transition={Slide}
+          position="bottom-right"
+          stacked
+        />
       </TooltipProvider>
     </>
   );

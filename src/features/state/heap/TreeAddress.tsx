@@ -76,13 +76,18 @@ function getTypeString(obj: HeapObj | undefined) {
   return type === "RecordObj"
     ? `: Record[${obj.tname}]`
     : type === "YetObj"
-    ? `: Yet[${obj.tname}]`
-    : type === "MapObj"
-    ? `: Map`
-    : ": List";
+      ? `: Yet[${obj.tname}]`
+      : type === "MapObj"
+        ? `: Map`
+        : ": List";
 }
 
-export default function TreeAddress({ field, address, singleMode, defaultFold = false }: Props) {
+export default function TreeAddress({
+  field,
+  address,
+  singleMode,
+  defaultFold = false,
+}: Props) {
   const [fold, setFold] = useState(
     singleMode === undefined ? defaultFold : singleMode,
   );
@@ -99,9 +104,7 @@ export default function TreeAddress({ field, address, singleMode, defaultFold = 
         //   }
         // >
         <li className="border-b border-b-neutral-300">
-          <b className="font-600 font-mono">
-            {field}
-          </b>&nbsp;
+          <b className="font-600 font-mono">{field}</b>&nbsp;
           {/* {address}&nbsp; */}
           {getTypeString(obj)}&nbsp;
           <span className="inline-flex flex-row items-center">
@@ -120,7 +123,12 @@ export default function TreeAddress({ field, address, singleMode, defaultFold = 
           </span>
         </li>
       )}
-      {fold && (obj ? <TreeObjViewer address={address} singleMode={singleMode} obj={obj} /> : <div>Not found</div>)}
+      {fold &&
+        (obj ? (
+          <TreeObjViewer address={address} singleMode={singleMode} obj={obj} />
+        ) : (
+          <div>Not found</div>
+        ))}
     </>
   );
 }

@@ -1,6 +1,4 @@
-import {
-  GITHUB_LINK_ESMETA,
-} from "@/constants/constant";
+import { GITHUB_LINK_ESMETA } from "@/constants/constant";
 import ConnectionSettings from "@/features/modal/connection/ConnectionSettings";
 import SpecVersionView from "@/features/spec/SpecVersionView";
 
@@ -23,19 +21,15 @@ function Left() {
           alt="ESMeta Logo"
           className="h-6 w-6"
         />
-        ESMeta
-      &nbsp;
-      <span className="font-400 text-base flex flex-row items-center gap-1">
-        Double&nbsp;Debugger&nbsp;Playground
-      </span>
+        ESMeta &nbsp;
+        <span className="font-400 text-base flex flex-row items-center gap-1">
+          Double&nbsp;Debugger&nbsp;Playground
+        </span>
       </span>
 
       <ConnectionSettings />
-        
-        <SpecVersionView/>
 
-
-        
+      <SpecVersionView />
     </div>
   );
 }
@@ -44,8 +38,11 @@ function Right() {
   return (
     <div className="flex flex-row gap-2">
       <a
-      className="flex flex-row gap-1 items-center text-xs font-500 hover:bg-neutral-100 hover:dark:bg-neutral-800 rounded-lg active:scale-90 transition-all cursor-pointer p-2"
-        href={GITHUB_LINK_ESMETA} target="_blank" rel="noopener noreferrer">
+        className="flex flex-row gap-1 items-center text-xs font-500 hover:bg-neutral-100 hover:dark:bg-neutral-800 rounded-lg active:scale-90 transition-all cursor-pointer p-2"
+        href={GITHUB_LINK_ESMETA}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         <GitHubIcon />
         ESMeta
       </a>

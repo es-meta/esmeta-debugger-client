@@ -70,7 +70,7 @@ const GIVEN_API:
         `Invalid API URL: ${api}. Using fallback URL: ${FALLBACK_API_URl}`,
       );
       return { type: "http", url: FALLBACK_API_URl, error: true, rawUrl: api };
-  }
+    }
   }
 })();
 

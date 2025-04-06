@@ -1,4 +1,4 @@
-import { useCallback, } from "react";
+import { useCallback } from "react";
 import "@/styles/JSEditor.css";
 import MonacoEditor from "./MonacoEditor";
 import Card from "@/components/layout/Card";

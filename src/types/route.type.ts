@@ -1,24 +1,10 @@
-const meta = [
-  'meta/iter',
-  'meta/debugString',
-  'meta/version',
-] as const;
+const meta = ["meta/iter", "meta/debugString", "meta/version"] as const;
 
-const state = [
-  'state/heap',
-  'state/context',
-  'state/callStack',
-] as const;
+const state = ["state/heap", "state/context", "state/callStack"] as const;
 
-const spec = [
-  'spec/func',
-  'spec/version',
-  'spec/irToSpecNameMap',
-] as const;
+const spec = ["spec/func", "spec/version", "spec/irToSpecNameMap"] as const;
 
-const breakpoint = [
-  'breakpoint',
-] as const;
+const breakpoint = ["breakpoint"] as const;
 
 const exec = [
   "exec/run",

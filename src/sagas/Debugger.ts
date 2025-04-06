@@ -28,7 +28,9 @@ function* runSaga() {
 
       // run server debugger with js code and breakpoints
       yield put({ type: AppStateActionType.SEND });
-      const reprinted: string | null = yield call(() => doAPIPostRequest("exec/run", [code, breakpoints]));
+      const reprinted: string | null = yield call(() =>
+        doAPIPostRequest("exec/run", [code, breakpoints]),
+      );
       if (reprinted !== null) {
         yield put(edit(reprinted));
       }
@@ -276,13 +278,18 @@ function* specRewindSaga() {
 
 // js ast step saga
 function* jsAstStepSaga() {
-  yield takeLatest(DebuggerActionType.JS_STEP_AST, mkStepSaga("exec/esAstStep"));
+  yield takeLatest(
+    DebuggerActionType.JS_STEP_AST,
+    mkStepSaga("exec/esAstStep"),
+  );
 }
-
 
 // js statement step saga
 function* jsStatementStepSaga() {
-  yield takeLatest(DebuggerActionType.JS_STEP_STATEMENT, mkStepSaga("exec/esStatementStep"));
+  yield takeLatest(
+    DebuggerActionType.JS_STEP_STATEMENT,
+    mkStepSaga("exec/esStatementStep"),
+  );
 }
 
 // js step over saga

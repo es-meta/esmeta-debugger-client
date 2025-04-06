@@ -1,7 +1,7 @@
 import { call, put, takeLatest, all } from "redux-saga/effects";
 import { toast } from "react-toastify";
 
-import { AppStateActionType, } from "../store/reducers/AppState";
+import { AppStateActionType } from "../store/reducers/AppState";
 import { doAPIGetRequest } from "../util/api/api";
 import { StatActionType, updateStatSuccess } from "@/store/reducers/Stats";
 
@@ -10,9 +10,7 @@ function* updateStat() {
   function* _updateVersionInfo() {
     try {
       yield put({ type: AppStateActionType.SEND });
-      const iter: string = yield call(() =>
-        doAPIGetRequest(`meta/iter`),
-      );
+      const iter: string = yield call(() => doAPIGetRequest(`meta/iter`));
       const cursor: string = yield call(() =>
         doAPIGetRequest(`meta/debugString`),
       );

@@ -151,7 +151,7 @@ function AlgoStep(props: AlgoStepProps) {
           value={idxSelf}
         />
       ) : null}
-      {(visited || myDescendantsVisitedOrVisiting) ? (
+      {visited || myDescendantsVisitedOrVisiting ? (
         sublist === null || sublist.name === "ul" ? null : (
           <AlgoVisitedStepList
             listNode={sublist}

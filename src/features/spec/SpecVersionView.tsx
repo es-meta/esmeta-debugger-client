@@ -5,11 +5,7 @@ import {
   Transition,
   TransitionChild,
 } from "@headlessui/react";
-import {
-  GitCommitIcon,
-  InfoIcon,
-  TagIcon,
-} from "lucide-react";
+import { GitCommitIcon, InfoIcon, TagIcon } from "lucide-react";
 import { Fragment, useCallback, useState } from "react";
 import { GitBranchIcon } from "lucide-react";
 
@@ -23,11 +19,14 @@ import { CLIENT_VERSION } from "@/constants/constant";
 export default function SpecVersionView() {
   let [isOpen, setIsOpen] = useState(false);
 
-  const { specVersion, isInit, esmetaVersion } = useSelector((state: ReduxState) => ({
-    specVersion: state.spec.version.spec,
-    isInit: state.appState.state === AppState.INIT,
-    esmetaVersion: state.spec.version.esmeta,
-  }), shallowEqual);
+  const { specVersion, isInit, esmetaVersion } = useSelector(
+    (state: ReduxState) => ({
+      specVersion: state.spec.version.spec,
+      isInit: state.appState.state === AppState.INIT,
+      esmetaVersion: state.spec.version.esmeta,
+    }),
+    shallowEqual,
+  );
 
   const versionString = versionStringBuilder(specVersion, isInit);
 
@@ -110,7 +109,7 @@ export default function SpecVersionView() {
                   <h4 className="mt-4 text-lg font-700">ESMeta Version</h4>
                   <PlainLabel>
                     <InfoIcon />
-                    {esmetaVersion ?? 'unknown version'}
+                    {esmetaVersion ?? "unknown version"}
                   </PlainLabel>
                   <h4 className="mt-4 text-lg font-700">
                     ESMeta Debugger Client Version

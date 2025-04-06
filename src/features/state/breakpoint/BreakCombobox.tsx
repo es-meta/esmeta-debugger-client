@@ -26,11 +26,13 @@ interface Option {
   view: ReactElement;
 }
 
-
-function alternativeName(name: string, irToSpecMapping: IrToSpecMapping): string {
+function alternativeName(
+  name: string,
+  irToSpecMapping: IrToSpecMapping,
+): string {
   const specInfo = irToSpecMapping[name];
   if (specInfo?.isBuiltIn) {
-    return `${name} ${name.substring('INTRINSICS.'.length)}`;
+    return `${name} ${name.substring("INTRINSICS.".length)}`;
   }
   if (specInfo?.isSdo && specInfo?.sdoInfo && specInfo?.sdoInfo.prod) {
     return `${name} ${specInfo.sdoInfo.method} of ${specInfo.sdoInfo.prod?.astName}`;
@@ -50,15 +52,27 @@ export default function MyCombobox({
 }: ComboProps<string>) {
   const [query, setQuery] = useState("");
 
-  const { irToSpecMapping } = useSelector((s: ReduxState) => ({
-    irToSpecMapping: s.spec.irToSpecMapping,
-  }), shallowEqual);
+  const { irToSpecMapping } = useSelector(
+    (s: ReduxState) => ({
+      irToSpecMapping: s.spec.irToSpecMapping,
+    }),
+    shallowEqual,
+  );
 
-  const options = useMemo(() => values.map(name => ({
-    name,
-    search: alternativeName(name, irToSpecMapping),
-    view: <AlgoViewerHeaderUsingOnlyName name={name} irToSpecMapping={irToSpecMapping} />,
-  })), [values, irToSpecMapping]);
+  const options = useMemo(
+    () =>
+      values.map(name => ({
+        name,
+        search: alternativeName(name, irToSpecMapping),
+        view: (
+          <AlgoViewerHeaderUsingOnlyName
+            name={name}
+            irToSpecMapping={irToSpecMapping}
+          />
+        ),
+      })),
+    [values, irToSpecMapping],
+  );
 
   const filtered = useMemo(
     () => computeFiltered(options, query),

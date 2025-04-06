@@ -4,42 +4,60 @@ import { v4 as uuid } from "uuid";
 
 import MyCombobox from "./BreakCombobox";
 
-import { addBreak, Breakpoint, BreakpointType } from "@/store/reducers/Breakpoint";
+import {
+  addBreak,
+  Breakpoint,
+  BreakpointType,
+} from "@/store/reducers/Breakpoint";
 
 import { connector, type BreakpointsProps } from "./Breakpoints.redux";
 import BreakpointItem from "./BreakpointItem";
 import StateViewerItem from "../StateViewerItem";
 import { Dispatch } from "@/store";
 import { useDispatch } from "react-redux";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import ToolbarButton from "@/features/toolbar/ToolbarButton";
 import { OctagonIcon, OctagonPauseIcon } from "lucide-react";
 import { AppStateActionType } from "@/store/reducers/AppState";
 
 // TODO support turning off or toggling breakpoints
-export function addBreakHandler(toEnabled: true, algoName: string | null, breakpoints: Breakpoint[], algos: Record<string, number>, dispatch: Dispatch): string | null {
-    if (algoName === null) {
-      return algoName;
-    }
+export function addBreakHandler(
+  toEnabled: true,
+  algoName: string | null,
+  breakpoints: Breakpoint[],
+  algos: Record<string, number>,
+  dispatch: Dispatch,
+): string | null {
+  if (algoName === null) {
+    return algoName;
+  }
 
-    const steps: number[] = [1];
+  const steps: number[] = [1];
 
-    const bpName = `${steps} @ ${algoName}`;
-    const duplicated = breakpoints.some(({ duplicateCheckId }) => duplicateCheckId === bpName);
-    const valid = algos.hasOwnProperty(algoName);
-    if (valid && !duplicated)
-      dispatch(addBreak({
+  const bpName = `${steps} @ ${algoName}`;
+  const duplicated = breakpoints.some(
+    ({ duplicateCheckId }) => duplicateCheckId === bpName,
+  );
+  const valid = algos.hasOwnProperty(algoName);
+  if (valid && !duplicated)
+    dispatch(
+      addBreak({
         type: BreakpointType.Spec,
         fid: algos[algoName],
         duplicateCheckId: bpName,
         name: algoName,
         steps: steps,
         enabled: true,
-      }));
-    else if (duplicated) toast.warning(`Breakpoint already set: ${bpName}`);
-    else toast.warning(`Wrong algorithm name: ${algoName}`);
+      }),
+    );
+  else if (duplicated) toast.warning(`Breakpoint already set: ${bpName}`);
+  else toast.warning(`Wrong algorithm name: ${algoName}`);
   return algoName;
-};
+}
 
 // TODO add util buttons
 // delete all
@@ -50,9 +68,13 @@ export default connector(function Breakpoints(props: BreakpointsProps) {
   const { breakpoints, algoNames, ignoreBp, disableQuit } = props;
   const [algoName, setAlgoName] = useState<string | null>(null);
 
-  const onAddClick = useCallback((name: string | null) => {
-    setAlgoName(addBreakHandler(true, name, breakpoints, props.algos, dispatch));
-  }, [props.breakpoints, props.algos],
+  const onAddClick = useCallback(
+    (name: string | null) => {
+      setAlgoName(
+        addBreakHandler(true, name, breakpoints, props.algos, dispatch),
+      );
+    },
+    [props.breakpoints, props.algos],
   );
 
   const toggleStepWithoutBreak = useCallback(() => {
@@ -60,38 +82,36 @@ export default connector(function Breakpoints(props: BreakpointsProps) {
   }, [dispatch]);
 
   return (
-    <StateViewerItem header="Breakpoints"
-    
+    <StateViewerItem
+      header="Breakpoints"
       headerItems={
         <Tooltip>
-        <TooltipTrigger>
-          <ToolbarButton
-            position="single"
-            disabled={disableQuit}
-            onClick={toggleStepWithoutBreak}
-            className={
-              ignoreBp
-                ? "h-6 bg-blue-600 hover:bg-blue-500 text-white hover:text-white"
-                : "h-6"
-            }
-            icon={ignoreBp ? <OctagonIcon /> : <OctagonPauseIcon />}
-            label={
-              ignoreBp ? (
-                <span>skipping breakpoints</span>
-              ) : (
-                <span>using breakpoints</span>
-              )
-            }
-          />
-        </TooltipTrigger>
-        <TooltipContent>
-          <p>If this is toggled on, skip breakpoints when doing steps</p>
-        </TooltipContent>
+          <TooltipTrigger>
+            <ToolbarButton
+              position="single"
+              disabled={disableQuit}
+              onClick={toggleStepWithoutBreak}
+              className={
+                ignoreBp
+                  ? "h-6 bg-blue-600 hover:bg-blue-500 text-white hover:text-white"
+                  : "h-6"
+              }
+              icon={ignoreBp ? <OctagonIcon /> : <OctagonPauseIcon />}
+              label={
+                ignoreBp ? (
+                  <span>skipping breakpoints</span>
+                ) : (
+                  <span>using breakpoints</span>
+                )
+              }
+            />
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>If this is toggled on, skip breakpoints when doing steps</p>
+          </TooltipContent>
         </Tooltip>
-        
-    }>
-
-        
+      }
+    >
       <div className="flex flex-row items-center w-full text-xs">
         <MyCombobox
           value={algoName}
@@ -121,8 +141,11 @@ export default connector(function Breakpoints(props: BreakpointsProps) {
               />
             ))
           ) : (
-                <tr >
-            <td colSpan={4} className="text-center text-neutral-500 p-4 text-sm">
+            <tr>
+              <td
+                colSpan={4}
+                className="text-center text-neutral-500 p-4 text-sm"
+              >
                 No breakpoints. Add Breakpoint by clicking on steps in spec
                 viewer or by searching name
               </td>

@@ -2,7 +2,8 @@ import Breakpoints from "./breakpoint/Breakpoints";
 import EnvViewer from "./env/EnvViewer";
 import HeapViewer from "./heap/HeapViewer";
 import {
-  ContainerIcon, FlagIcon,
+  ContainerIcon,
+  FlagIcon,
   LayersIcon,
   MemoryStickIcon,
   OctagonXIcon,
@@ -30,7 +31,9 @@ export const viewerItems: ViewerItem[] = [
   },
   {
     name: "Heap",
-    id: "heap", icon: <MemoryStickIcon />, view: <HeapViewer />,
+    id: "heap",
+    icon: <MemoryStickIcon />,
+    view: <HeapViewer />,
     display: true,
   },
   {
@@ -50,8 +53,8 @@ export const viewerItems: ViewerItem[] = [
   {
     name: "Meta",
     id: "stats",
-    icon: <FlagIcon/>,
+    icon: <FlagIcon />,
     view: <InternalStatViewer />,
-    display: import.meta.env.DEV
-  }
+    display: import.meta.env.DEV,
+  },
 ];
