@@ -1,48 +1,29 @@
 package worker
 
 import esmeta.cfg.CFG
-import esmeta.es.{Ast, Initialize}
-import esmeta.web.Debugger
-
-import io.circe.*, io.circe.syntax.*, io.circe.parser.*
-import io.circe.generic.semiauto.*
-import scala.scalajs.js
-import scala.scalajs.js.annotation.*
-import worker.util.*
-import esmeta.spec.util.JsonProtocol.given
-
 import esmeta.cfgBuilder.CFGBuilder
-import esmeta.es.{Syntactic, Lexical, Initialize}
+import esmeta.es.{Ast, Initialize, Syntactic, Lexical}
 import esmeta.ir.*
 import esmeta.ir.util.JsonProtocol.given
-
+// import esmeta.lang.util.JsonProtocol.given
 import esmeta.parser.{AstFrom, ESParser}
 import esmeta.spec.*
 import esmeta.spec.util.JsonProtocol.given
-
-import esmeta.lang.Type
-import esmeta.lang.util.JsonProtocol.given
-
 import esmeta.ty.*
+import esmeta.web.Debugger
 
-import esmeta.util.BaseUtils.debug
-import esmeta.web.{Debugger}
-
-import io.circe.*, io.circe.syntax.*, io.circe.generic.semiauto.*;
-import io.circe.parser.decode
+import io.circe.*, io.circe.syntax.*, io.circe.generic.semiauto.*
+import io.circe.parser.*
 
 import org.scalajs.dom
 
 import scala.concurrent.{Future, Promise as SPromise}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.scalajs.js;
-// to convert scala future to js promise
-import scala.scalajs.js.JSConverters.*
 import scala.scalajs.js.annotation.{JSExport, JSExportAll, JSExportTopLevel}
-import scala.util.{Success, Failure}
-import scala.util.ChainingOps.*
+import scala.scalajs.js.JSConverters.*
 
-import esmeta.ir.util.UnitWalker
+import worker.util.*
 
 @JSExportAll
 class StandaloneDebugger(cfg: CFG, irFuncToCode: Map[String, Option[String]]) {
