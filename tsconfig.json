@@ -20,10 +20,16 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "paths": {
-			"@/*": ["./src/*"],
-			"@esmeta/*": ["./scalajs/target/scala-3.3.3/esmeta-worker-opt/*"],
-			"@esmeta-debug/*": ["./scalajs/target/scala-3.3.3/esmeta-worker-fastopt/*"],
-		}
+      "@/*": [
+        "./src/*"
+      ],
+      "@esmeta/*": [
+        "../worker/target/scala-3.3.3/esmeta-worker-opt/*"
+      ],
+      "@esmeta-debug/*": [
+        "../worker/target/scala-3.3.3/esmeta-worker-fastopt/*"
+      ],
+    }
   },
   "include": [
     "src"
