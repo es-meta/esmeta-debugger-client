@@ -23,7 +23,7 @@ import scala.scalajs.js.JSConverters.*
 import worker.util.*
 
 @JSExportAll
-class StandaloneDebugger(cfg: CFG, irFuncToCode: Map[String, Option[String]]) {
+class StandaloneDebugger(cfg: CFG, irFuncToCode: Map[String, String]) {
 
   var _debugger: Option[Debugger] = None
   var _lastParsed: Option[(String, Ast)] = None
@@ -157,7 +157,7 @@ object StandaloneDebugger {
         val tyModelFuture =
           (decodeWithMeasure[TyModel]("TyModel")(input.tyModel))
         val irFuncToCodeFuture =
-          (decodeWithMeasure[Map[String, Option[String]]]("irFuncToCode")(
+          (decodeWithMeasure[Map[String, String]]("irFuncToCode")(
             input.irFuncToCode,
           ))
 
