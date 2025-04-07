@@ -27,13 +27,12 @@ const input = Promise.all([
     }) satisfies StandaloneDebuggerInput,
 );
 
-let _standaloneDebugger: Promise<StandaloneDebugger> = import(
-  "@esmeta/main.mjs"
-).then(async m =>
-  (m satisfies ModuleGeneratedByScalaJS).StandaloneDebugger.buildFrom(
-    await input,
-  ),
-);
+let _standaloneDebugger: Promise<StandaloneDebugger> =
+  // import("@esmeta/main.mjs").then(async m =>
+  // (m as ModuleGeneratedByScalaJS).StandaloneDebugger.buildFrom(
+  //   await input,
+  // ));
+  Promise.reject(null);
 
 // HTTP methods
 type HTTPMethod =
