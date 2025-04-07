@@ -1,3 +1,0 @@
-[submodule "scalajs/esmeta"]
-	path = scalajs/esmeta
-	url = https://github.com/es-meta/esmeta
