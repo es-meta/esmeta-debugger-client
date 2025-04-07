@@ -4,7 +4,7 @@ import SpecVersionView from "@/features/spec/SpecVersionView";
 
 export default function Header() {
   return (
-    <nav className="bg-white dark:text-white dark:bg-neutral-900 border-b border-b-neutral-300 dark:border-b-neutral-700 bg-opacity-75 min-h-12 max-h-12 h-12 w-full text-sm xl:px-24 flex flex-row justify-between gap-3 items-center px-4">
+    <nav className="bg-white dark:text-white dark:bg-neutral-900 border-b border-b-neutral-300 dark:border-b-neutral-700 bg-opacity-75 min-h-12 max-h-12 h-12 w-full text-sm xl:px-12 flex flex-row justify-between gap-3 items-center px-4">
       <Left />
       <Right />
     </nav>
@@ -14,17 +14,17 @@ export default function Header() {
 function Left() {
   return (
     <div className="flex flex-row items-center justify-start gap-2">
-      <span className="font-800 text-base flex flex-row items-center gap-1">
+      <span className="font-400 text-base text-ellipsis overflow-hidden line-clamp-1">
         <img
           src="/icon.jpeg"
           aria-hidden
           alt="ESMeta Logo"
-          className="h-6 w-6"
+          className="h-6 w-6 inline-block mr-1"
         />
-        ESMeta &nbsp;
-        <span className="font-400 text-base flex flex-row items-center gap-1">
-          Double&nbsp;Debugger&nbsp;Playground
-        </span>
+        <b className="font-800">
+          ESMeta{' '}
+        </b>
+        Double Debugger Playground
       </span>
 
       <ConnectionSettings />
@@ -44,7 +44,6 @@ function Right() {
         rel="noopener noreferrer"
       >
         <GitHubIcon />
-        ESMeta
       </a>
     </div>
   );

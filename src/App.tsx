@@ -15,7 +15,7 @@ export default function App() {
   return (
     <>
       <TooltipProvider delayDuration={0} skipDelayDuration={10000}>
-        <div className="max-h-dvh h-dvh min-h-dvh bg-neutral-100 dark:bg-neutral-900 pb-4 flex flex-col ">
+        <div className="max-h-dvh h-dvh min-h-dvh bg-neutral-100 dark:bg-neutral-900 xl:pb-4 flex flex-col">
           <Header />
           <DebuggerApp />
           <CommandBar />

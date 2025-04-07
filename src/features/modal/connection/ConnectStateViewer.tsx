@@ -23,7 +23,7 @@ function Single({ className, icon, text }: Props) {
       )}
     >
       {icon}
-      <span className="w-11 truncate text-left">{text}</span>
+      <span className="w-11 truncate text-left hidden md:inline">{text}</span>
     </div>
   );
 }
@@ -111,7 +111,7 @@ export default function ConnectStateViewer() {
   const state = useSelector(matchAppstate);
 
   return (
-    <div className="relative w-[4.25rem] h-5 my-1 mx-1">
+    <div className="relative w-[1.25rem] md:w-[4.25rem] h-5 my-1 mx-1">
       <AnimatePresence initial={false}>
         <motion.div
           key={state}

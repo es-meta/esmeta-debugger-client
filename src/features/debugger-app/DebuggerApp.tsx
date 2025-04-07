@@ -25,11 +25,11 @@ export default function DebuggerApp() {
   useDebuggerAppInitializers();
 
   return (
-    <main className="relative px-4 xl:px-12 grow flex flex-col overflow-hidden">
+    <main className="relative xl:px-12 grow flex flex-col overflow-hidden">
       <Toolbar />
       <ResizablePanelGroup
         direction="horizontal"
-        className="bg-white dark:bg-black rounded-xl border grow dark:border-neutral-700 border-neutral-300 flex overflow-hidden"
+        className="bg-white dark:bg-black xl:rounded-xl border grow dark:border-neutral-700 border-neutral-300 flex overflow-hidden"
       >
         <ResizablePanel minSize={8}>
           <JSEditor />
