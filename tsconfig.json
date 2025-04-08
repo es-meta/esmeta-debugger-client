@@ -24,10 +24,10 @@
         "./src/*"
       ],
       "@esmeta/*": [
-        "../worker/target/scala-3.3.3/esmeta-worker-opt/*"
+        "./worker/esmeta-worker-opt/*"
       ],
       "@esmeta-debug/*": [
-        "../worker/target/scala-3.3.3/esmeta-worker-fastopt/*"
+        "./worker/esmeta-worker-fastopt/*"
       ],
     }
   },
