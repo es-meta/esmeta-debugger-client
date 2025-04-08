@@ -41,7 +41,7 @@ const doGetRequest = async (
       return "";
 
     case "spec/irToSpecNameMap":
-      return JSON.parse((await input).irToSpecNameMap);
+      return JSON.parse(((await input) as StandaloneDebuggerInput).irToSpecNameMap);
 
     case "spec/version":
       return JSON.parse((await _standaloneDebugger).spec_version());
