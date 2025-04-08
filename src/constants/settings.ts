@@ -53,7 +53,7 @@ const GIVEN_API:
   }
     
     const genBrowserApi = () => ({ type: "browser" } as const);
-    const getHttpApi = () => {
+    const genHttpApi = () => {
       try {
         logger.warn(api);
         return {
@@ -70,13 +70,13 @@ const GIVEN_API:
       }
     };
 
-    const defaultApi = getHttpApi;
+    const defaultApi = genHttpApi;
 
   if (api === null) return defaultApi();
   if (api === "browser") {
     return genBrowserApi();
   } else  {
-    return getHttpApi();
+    return genHttpApi();
   }
 })();
 
