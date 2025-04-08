@@ -2,7 +2,7 @@
 
 /// <reference lib="webworker" />
 
-const API_HOST = "http://localhost:8080";
+let API_HOST = "http://localhost:8080";
 
 // json header
 const mkJSONHeader = (): Record<string, string> => {
@@ -101,6 +101,10 @@ self.onmessage = async (e: MessageEvent) => {
   try {
     let result;
     switch (type) {
+      case "META":
+        void new URL(data); // check if it's a valid URL
+        API_HOST = data;
+        break;
       case "GET":
         result = await doGetRequest(API_HOST, endpoint, data);
         break;
