@@ -207,14 +207,14 @@ self.onmessage = async (e: MessageEvent<any>) => {
     switch (type) {
       case "META":
         input = data as StandaloneDebuggerInput;
-        // await import("@esmeta/main.mjs").then(async m =>
-        //   resolve(
-        //     await (m as ModuleGeneratedByScalaJS).StandaloneDebugger
-        //       .buildFrom(
-        //       input as StandaloneDebuggerInput,
-        //     ),
-        //   ),
-        // );
+        await import("@esmeta/main.mjs").then(async m =>
+          resolve(
+            await (m as ModuleGeneratedByScalaJS).StandaloneDebugger
+              .buildFrom(
+              input as StandaloneDebuggerInput,
+            ),
+          ),
+        );
         await _standaloneDebugger;
         break;
       case "GET":
