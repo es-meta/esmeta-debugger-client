@@ -70,7 +70,7 @@ const GIVEN_API:
       }
     };
 
-    const defaultApi = genHttpApi;
+    const defaultApi = genBrowserApi;
 
   if (api === null) return defaultApi();
   if (api === "browser") {
