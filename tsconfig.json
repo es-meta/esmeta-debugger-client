@@ -23,6 +23,9 @@
       "@/*": [
         "./src/*"
       ],
+      "@dumps/*": [
+        "./dumps/*"
+      ],
       "@esmeta/*": [
         "./worker/esmeta-worker-opt/*"
       ],

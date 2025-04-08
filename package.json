@@ -34,7 +34,8 @@
   "scripts": {
     "start": "vite build && vite preview",
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build:root": "tsc -b && vite build --base=/",
+    "build:playground": "tsc -b && vite build --base=/playground",
     "lint": "eslint .",
     "format": "npx prettier --write 'src/**/*.{js,ts,tsx,mjs,cjs,json}' | grep -v '(unchanged)'",
     "preview": "vite preview"

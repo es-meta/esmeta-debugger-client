@@ -6,33 +6,10 @@ import type {
   StandaloneDebuggerInput,
 } from "./standalone.type";
 
-const input = Promise.all([
-  fetchFromDump("/debugger/funcs.json"),
-  fetchFromDump("/debugger/spec.version.json"),
-  fetchFromDump("/debugger/grammar.json"),
-  fetchFromDump("/debugger/spec.tables.json"),
-  fetchFromDump("/debugger/tyModel.decls.json"),
-  fetchFromDump("/debugger/irFuncToCode.json"),
-  fetchFromDump("/debugger/irToSpecNameMap.json"),
-]).then(
-  ([funcs, version, grammar, tables, tyModel, irFuncToCode, irToSpecNameMap]) =>
-    ({
-      funcs,
-      version,
-      grammar,
-      tables,
-      tyModel,
-      irFuncToCode,
-      irToSpecNameMap,
-    }) satisfies StandaloneDebuggerInput,
-);
+let input: StandaloneDebuggerInput | null = null;
 
-let _standaloneDebugger: Promise<StandaloneDebugger> =
-  // import("@esmeta/main.mjs").then(async m =>
-  // (m as ModuleGeneratedByScalaJS).StandaloneDebugger.buildFrom(
-  //   await input,
-  // ));
-  Promise.reject(null);
+
+let _standaloneDebugger: Promise<StandaloneDebugger> = Promise.reject(null);
 
 // HTTP methods
 type HTTPMethod =
@@ -186,6 +163,12 @@ self.onmessage = async (e: MessageEvent<any>) => {
   try {
     let result;
     switch (type) {
+      case "META":
+        // input = data as StandaloneDebuggerInput;
+        // _standaloneDebugger = import("@esmeta/main.mjs").then(async m =>
+        //   (m as ModuleGeneratedByScalaJS).StandaloneDebugger.buildFrom(input as StandaloneDebuggerInput));
+        await _standaloneDebugger;
+        break;
       case "GET":
         result = await doGetRequest(endpoint, data);
         break;
@@ -214,10 +197,6 @@ function coerceBoolean(bodyObj: any): boolean {
   if (typeof bodyObj === "boolean") return bodyObj;
   console.error("Invalid boolean value:", bodyObj);
   return false;
-}
-
-function fetchFromDump(url: string): Promise<string> {
-  return fetch(url).then(response => response.text());
 }
 
 function apiError(s: string) {

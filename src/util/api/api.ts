@@ -2,6 +2,7 @@ import { toast } from "react-toastify";
 import type { Route } from "@/types/route.type";
 import { GIVEN_SETTINGS } from "@/constants/settings";
 import { logger } from "@/constants/constant";
+import { StandaloneDebuggerInput } from "./standalone.type";
 
 // Create worker instance
 const workerPromise = instantiateWorker(GIVEN_SETTINGS.api);
@@ -83,12 +84,53 @@ async function instantiateWorker(
   return new Promise<Worker>(async resolve => {
     if (givenApi.type === "browser") {
       const w = new Worker(new URL("./standalone.worker.ts", import.meta.url));
+
+      const input = await Promise.all([
+        fetchText(new URL("@dumps/funcs.json", import.meta.url)),
+        fetchText(new URL("@dumps/spec.version.json", import.meta.url)),
+        fetchText(new URL("@dumps/grammar.json", import.meta.url)),
+        fetchText(new URL("@dumps/spec.tables.json", import.meta.url)),
+        fetchText(new URL("@dumps/tyModel.decls.json", import.meta.url)),
+        fetchText(new URL("@dumps/irFuncToCode.json", import.meta.url)),
+        fetchText(new URL("@dumps/irToSpecNameMap.json", import.meta.url)),
+      ]).then(
+        ([funcs, version, grammar, tables, tyModel, irFuncToCode, irToSpecNameMap]) =>
+          ({
+            funcs,
+            version,
+            grammar,
+            tables,
+            tyModel,
+            irFuncToCode,
+            irToSpecNameMap,
+          }) satisfies StandaloneDebuggerInput,
+      );
+
+      function firstEventHandlerStandalone() {
+        w.removeEventListener("message", firstEventHandlerStandalone);
+        resolve(w);
+      }
+
+      w.addEventListener("message", firstEventHandlerStandalone);
+      w.postMessage({ type: "META", data: input });
+      
       resolve(w);
     } else {
       const w = new Worker(new URL("./http.worker.ts", import.meta.url));
+
+      function firstEventHandlerHttp() {
+        w.removeEventListener("message", firstEventHandlerHttp);
+        resolve(w);
+      }
+
+      w.addEventListener("message", firstEventHandlerHttp);
       w.postMessage({ type: "META", data: givenApi.url });
       // TODO we need to await for the worker to be ready
-      resolve(w);
     }
   });
+}
+
+
+function fetchText(url: URL): Promise<string> {
+  return fetch(url).then(response => response.text());
 }
