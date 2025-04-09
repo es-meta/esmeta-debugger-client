@@ -86,13 +86,13 @@ async function instantiateWorker(
       const w = new Worker(new URL("./standalone.worker.ts", import.meta.url));
 
       const input = await Promise.all([
-        fetchText(new URL("@dumps/funcs.json", import.meta.url)),
-        fetchText(new URL("@dumps/spec.version.json", import.meta.url)),
-        fetchText(new URL("@dumps/grammar.json", import.meta.url)),
-        fetchText(new URL("@dumps/spec.tables.json", import.meta.url)),
-        fetchText(new URL("@dumps/tyModel.decls.json", import.meta.url)),
-        fetchText(new URL("@dumps/irFuncToCode.json", import.meta.url)),
-        fetchText(new URL("@dumps/irToSpecNameMap.json", import.meta.url)),
+        fetchText(new URL("@resources/dumps/funcs.json", import.meta.url)),
+        fetchText(new URL("@resources/dumps/spec.version.json", import.meta.url)),
+        fetchText(new URL("@resources/dumps/grammar.json", import.meta.url)),
+        fetchText(new URL("@resources/dumps/spec.tables.json", import.meta.url)),
+        fetchText(new URL("@resources/dumps/tyModel.decls.json", import.meta.url)),
+        fetchText(new URL("@resources/dumps/irFuncToCode.json", import.meta.url)),
+        fetchText(new URL("@resources/dumps/irToSpecNameMap.json", import.meta.url)),
       ]).then(
         ([funcs, version, grammar, tables, tyModel, irFuncToCode, irToSpecNameMap]) =>
           ({

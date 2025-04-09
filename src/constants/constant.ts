@@ -1,3 +1,4 @@
+export const HOMEPAGE_LINK_ESMETA = "https://es-meta.github.io";
 export const GITHUB_LINK_ESMETA = "https://github.com/es-meta/esmeta";
 export const GITHUB_LINK_ESMETA_DEBUGGER =
   "https://github.com/es-meta/esmeta-debugger-client";

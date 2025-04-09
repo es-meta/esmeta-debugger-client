@@ -1,6 +1,7 @@
-import { GITHUB_LINK_ESMETA } from "@/constants/constant";
+import { GITHUB_LINK_ESMETA, HOMEPAGE_LINK_ESMETA } from "@/constants/constant";
 import ConnectionSettings from "@/features/modal/connection/ConnectionSettings";
 import SpecVersionView from "@/features/spec/SpecVersionView";
+import { HomeIcon, HouseIcon } from "lucide-react";
 
 export default function Header() {
   return (
@@ -16,7 +17,7 @@ function Left() {
     <div className="flex flex-row items-center justify-start gap-2">
       <span className="font-400 text-base text-ellipsis overflow-hidden line-clamp-1">
         <img
-          src="/icon.jpeg"
+          src={new URL("@resources/icon.jpeg", import.meta.url).href}
           aria-hidden
           alt="ESMeta Logo"
           className="h-6 w-6 inline-block mr-1"
@@ -36,12 +37,22 @@ function Left() {
 
 function Right() {
   return (
-    <div className="flex flex-row gap-2">
+    <div className="flex flex-row gap-1">
       <a
-        className="flex flex-row gap-1 items-center text-xs font-500 hover:bg-neutral-100 hover:dark:bg-neutral-800 rounded-lg active:scale-90 transition-all cursor-pointer p-2"
+        className="flex flex-row gap-1 items-center text-xl font-500 hover:bg-neutral-100 hover:dark:bg-neutral-800 rounded-lg active:scale-90 transition-all cursor-pointer p-2"
+        href={HOMEPAGE_LINK_ESMETA}
+        target="_blank"
+        rel="noopener noreferrer"
+        title="Open ESMeta Official Homepage"
+      >
+          <HouseIcon className="size-[1em]" />
+      </a>
+      <a 
+        className="flex flex-row gap-1 items-center text-xl font-500 hover:bg-neutral-100 hover:dark:bg-neutral-800 rounded-lg active:scale-90 transition-all cursor-pointer p-2"
         href={GITHUB_LINK_ESMETA}
         target="_blank"
         rel="noopener noreferrer"
+        title="Discover ESMeta Project on GitHub"
       >
         <GitHubIcon />
       </a>
@@ -54,8 +65,7 @@ function GitHubIcon() {
     <svg
       aria-disabled
       fill="currentColor"
-      width={18}
-      height={18}
+      className="size-[1em]"
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
     >

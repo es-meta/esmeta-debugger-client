@@ -23,8 +23,8 @@
       "@/*": [
         "./src/*"
       ],
-      "@dumps/*": [
-        "./dumps/*"
+      "@resources/*": [
+        "./resources/*"
       ],
       "@esmeta/*": [
         "./worker/esmeta-worker-opt/*"

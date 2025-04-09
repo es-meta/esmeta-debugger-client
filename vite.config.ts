@@ -27,7 +27,7 @@ export default defineConfig({
 	resolve: {
 		alias: {
       "@": path.resolve(__dirname, "./src"),
-      "@dumps": path.resolve(__dirname, "./dumps"),
+      "@resources": path.resolve(__dirname, "./resources"),
       "@esmeta": path.resolve(__dirname, "./worker/esmeta-worker-opt"),
       "@esmeta-debug": path.resolve(__dirname, "./worker/esmeta-worker-fastopt"),
 		},
