@@ -104,6 +104,20 @@ const doWriteRequest = async (
           bodyObj !== undefined ? JSON.stringify(bodyObj) : undefined,
         ),
       );
+    
+  case "exec/resumeFromIter":
+    return JSON.parse(
+      (await _standaloneDebugger).exec_resumeFromIter(
+        bodyObj !== undefined ? JSON.stringify(bodyObj) : undefined,
+      ),
+    );
+
+    case "exec/backToProvenance":
+      return JSON.parse(
+        (await _standaloneDebugger).exec_backToProvenance(
+          bodyObj !== undefined ? JSON.stringify(bodyObj) : undefined,
+        ),
+      );
 
     case "exec/specStep":
       return JSON.parse(
@@ -121,7 +135,12 @@ const doWriteRequest = async (
 
     case "exec/specContinue":
       return JSON.parse(
-        (await _standaloneDebugger).exec_continue(coerceBoolean(bodyObj)),
+        (await _standaloneDebugger).exec_continue(),
+      );
+    
+    case "exec/specRewind": 
+      return JSON.parse(
+        (await _standaloneDebugger).exec_rewind(),
       );
 
     case "exec/specStepBack":
@@ -139,24 +158,53 @@ const doWriteRequest = async (
         (await _standaloneDebugger).exec_stepBackOver(coerceBoolean(bodyObj)),
       );
 
-    // TODO
-    // case "exec/esStep":
-    //   return JSON.parse((await _standaloneDebugger).exec_esStep());
+    case "exec/esAstStep":
+      return JSON.parse((await _standaloneDebugger).exec_esAstStep());
+    
+    case "exec/esStatementStep":
+      return JSON.parse((await _standaloneDebugger).exec_esStatementStep());
+    
     case "exec/esStepOver":
       return JSON.parse(
-        (await _standaloneDebugger).exec_esStepOver(coerceBoolean(bodyObj)),
+        (await _standaloneDebugger).exec_esStepOver(),
       );
 
     case "exec/esStepOut":
       return JSON.parse(
-        (await _standaloneDebugger).exec_esStepOut(coerceBoolean(bodyObj)),
+        (await _standaloneDebugger).exec_esStepOut(),
       );
-
+    
+    case "exec/irStep":
+      return JSON.parse(
+        (await _standaloneDebugger).exec_irStep(coerceBoolean(bodyObj)),
+      );
+    
+    case "exec/irStepOver":
+      return JSON.parse(
+        (await _standaloneDebugger).exec_irStepOver(coerceBoolean(bodyObj)),
+      );
+    
+    case "exec/irStepOut":
+      return JSON.parse(
+        (await _standaloneDebugger).exec_irStepOut(coerceBoolean(bodyObj)),
+      );
+    
+    case "exec/iterPlus":
+      return JSON.parse(
+        (await _standaloneDebugger).exec_iterPlus(coerceBoolean(bodyObj)),
+      );
+    
+    case "exec/iterMinus":
+      return JSON.parse(
+        (await _standaloneDebugger).exec_iterMinus(coerceBoolean(bodyObj)),
+      );
+  
     default:
       throw apiError(endpoint);
   }
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 self.onmessage = async (e: MessageEvent<any>) => {
   const { id, type, endpoint, data } = e.data;
 
@@ -193,6 +241,7 @@ self.onmessage = async (e: MessageEvent<any>) => {
 };
 
 /** auxiliaries */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function coerceBoolean(bodyObj: any): boolean {
   if (typeof bodyObj === "boolean") return bodyObj;
   console.error("Invalid boolean value:", bodyObj);
