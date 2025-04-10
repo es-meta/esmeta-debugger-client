@@ -12,6 +12,9 @@ import type {
   TildeNode,
   PipeNode,
 } from "ecmarkdown";
+// XXX check if this is the correct import
+import { DoubleBracketsNode } from "ecmarkdown/dist/node-types";
+import { SPEC_URL } from "@/constants/constant";
 
 export class Emitter {
   emit(node: Node[]) {
@@ -43,6 +46,8 @@ export class Emitter {
       case "tag":
       case "opaqueTag":
         return this.emitTag(node);
+      case "double-brackets":
+        return this.emitFields(node);
       default:
         throw new Error("Can't emit " + node.name);
     }
@@ -53,13 +58,20 @@ export class Emitter {
   }
 
   emitUnderscore(node: UnderscoreNode) {
-    return this.wrapFragment("var", node.contents);
+    return e("var", { key: uuid() }, node.contents);
+  }
+
+  emitFields(node: DoubleBracketsNode) {
+    return e(
+      "var",
+      { key: uuid(), className: "field" },
+      `[[${node.contents}]]`,
+    );
   }
 
   emitTag(tag: OpaqueTagNode | CommentNode | TagNode) {
     if (tag.name === "tag") {
       if (tag.contents.startsWith("<emu-xref")) {
-        const specURL = "https://tc39.es/ecma262/";
         const regex = /href="#([a-zA-Z-]*)"/;
 
         // first element is the first complete match,
@@ -70,7 +82,7 @@ export class Emitter {
         // capturing group exists
         if (href) {
           // NOTE: href does NOT contain "#"
-          const anchorProps = { href: `${specURL}#${href}`, target: "_blank" };
+          const anchorProps = { href: `${SPEC_URL}#${href}`, target: "_blank" };
           const anchor = e("a", anchorProps, href + " ");
           return e("emu-xref", { key: uuid() }, anchor);
         }

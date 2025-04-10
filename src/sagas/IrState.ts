@@ -4,21 +4,28 @@ import { toast } from "react-toastify";
 // import { ReduxState } from "../store";
 import {
   Environment,
-  Heap,
   CallStack,
   IrStateActionType,
   updateContextIdx,
   updateHeapSuccess,
   updateCallStackSuccess,
 } from "../store/reducers/IrState";
-import { updateAlgoByCidRequset } from "../store/reducers/Spec";
-import { doAPIGetRequest } from "../util/api";
+import {
+  Algorithm,
+  AlgorithmKind,
+  updateAlgoByCidRequset,
+} from "../store/reducers/Spec";
+import { doAPIGetRequest } from "../util/api/api";
+import { AppStateActionType } from "@/store/reducers/AppState";
+import { Heap } from "@/types/heap.type";
 
 // heap saga
 function* updateHeapSaga() {
   function* _updateHeap() {
     try {
+      yield put({ type: AppStateActionType.SEND });
       const heap: Heap = yield call(() => doAPIGetRequest("state/heap"));
+      yield put({ type: AppStateActionType.RECEIVE });
       yield put(updateHeapSuccess(heap));
     } catch (e: unknown) {
       // show error toast
@@ -33,15 +40,46 @@ function* updateHeapSaga() {
 function* updateCallStackSaga() {
   function* _updateCallStack() {
     try {
-      const raw: [number, string, number[], Environment][] = yield call(() =>
-        doAPIGetRequest("state/callStack"),
+      const raw: [
+        number,
+        string,
+        number[],
+        boolean,
+        Environment,
+        number[][],
+      ][] = yield call(() => doAPIGetRequest("state/callStack"));
+      const callStack: CallStack = raw.map(
+        ([fid, name, steps, isExit, env, visited]) => ({
+          fid,
+          name,
+          steps,
+          isExit,
+          env,
+          algo: null as unknown as Algorithm,
+          visited,
+        }),
       );
-      const callStack: CallStack = raw.map(([fid, name, steps, env]) => ({
-        fid,
-        name,
-        steps,
-        env,
-      }));
+
+      for (let i = 0; i < callStack.length; i++) {
+        const [fid, kind, name, rawParams, dot, code]: [
+          number,
+          AlgorithmKind,
+          string,
+          [string, boolean, string][],
+          string,
+          string,
+          [number, number],
+        ] = yield call(() => doAPIGetRequest(`state/context/${i}`));
+        yield put({ type: AppStateActionType.RECEIVE });
+        const params = rawParams.map(([name, optional, type]) => ({
+          name,
+          optional,
+          type,
+        }));
+        const algo = { fid, kind, name, params, dot, code };
+        callStack[i].algo = algo;
+        ///
+      }
       yield put(updateCallStackSuccess(callStack));
       yield put(updateContextIdx(0));
     } catch (e: unknown) {

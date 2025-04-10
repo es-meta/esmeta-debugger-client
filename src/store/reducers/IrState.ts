@@ -1,4 +1,6 @@
+import { Heap } from "@/types/heap.type";
 import produce from "immer";
+import { Algorithm } from "./Spec";
 
 // redux actions
 export enum IrStateActionType {
@@ -40,10 +42,6 @@ export type IrStateAction =
   | { type: IrStateActionType.UPDATE_CALL_STACK_REQUEST }
   | { type: IrStateActionType.UPDATE_CALL_STACK_SUCCESS; callStack: CallStack };
 
-// types for ir state
-// beautified addr and value
-export type Heap = { [addr: string]: string };
-
 // name, beautified value
 export type Environment = [string, string][];
 // context name, current step number, env data
@@ -51,7 +49,10 @@ export type Context = {
   fid: number;
   name: string;
   steps: number[];
+  isExit: boolean;
   env: Environment;
+  algo: Algorithm;
+  visited: number[][];
 };
 export type CallStack = Context[];
 

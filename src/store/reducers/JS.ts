@@ -1,3 +1,4 @@
+import { GIVEN_SETTINGS } from "@/constants/settings";
 import produce from "immer";
 
 // redux actions
@@ -40,32 +41,7 @@ type JSState = {
   end: number;
 };
 const initialState: JSState = {
-  code: `var x = 1;
-var y = 2;
-var z = x + y;
-var w = z + x;
-
-function f () {
-  let a = 42;
-  g(a);
-  return 0;
-}
-
-function g(a) {
-  a = 1;
-  a = 1;
-  a = 1;
-  a = 1;
-  a = 1;
-  a = 1;
-  a = 1;
-  a = 1;
-  a = 1;
-  a = 1;
-  a = 1;
-}
-
-f();`,
+  code: GIVEN_SETTINGS.code,
   start: -1,
   end: -1,
 };

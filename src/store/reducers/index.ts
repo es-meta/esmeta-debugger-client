@@ -5,6 +5,8 @@ import webDebugger from "./Debugger";
 import irState from "./IrState";
 import breakpoint from "./Breakpoint";
 import spec from "./Spec";
+import client from "./Client";
+import stats from "./Stats";
 
 export default combineReducers({
   appState,
@@ -13,4 +15,6 @@ export default combineReducers({
   breakpoint,
   irState,
   spec,
+  client,
+  stats,
 });

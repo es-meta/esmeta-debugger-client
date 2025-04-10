@@ -19,3 +19,4 @@ export default store;
 export type Store = typeof store;
 export type ReduxState = ReturnType<typeof store.getState>;
 export type Dispatch = typeof store.dispatch;
+export type Action = Parameters<Dispatch>[0];

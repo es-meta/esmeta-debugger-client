@@ -15,7 +15,7 @@ npm-debug.log*
 .vscode/
 
 # TypeScript
-lib/
+./lib/
 tsconfig.tsbuildinfo
 
 # dev
@@ -25,3 +25,8 @@ tsconfig.tsbuildinfo
 /playwright/.cache/
 
 /dist/
+
+.bloop/
+.bsp/
+/target/
+.metals/

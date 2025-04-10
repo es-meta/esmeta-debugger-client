@@ -40,6 +40,7 @@ export enum BreakpointType {
 export type Breakpoint = SpecBreakpoint | JsBreakpoint;
 export interface SpecBreakpoint {
   type: BreakpointType.Spec;
+  duplicateCheckId: string;
   fid: number;
   name: string;
   steps: number[];
@@ -47,6 +48,7 @@ export interface SpecBreakpoint {
 }
 export interface JsBreakpoint {
   type: BreakpointType.Js;
+  duplicateCheckId: string;
   name: string;
   line: number;
   enabled: boolean;

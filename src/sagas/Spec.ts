@@ -6,10 +6,15 @@ import {
   SpecActionType,
   updateAlgoSuccess,
   updateAlgoListSuccess,
+  SpecVersion,
+  updateVersionSuccess,
+  IrToSpecMapping,
 } from "../store/reducers/Spec";
 import { updateRange } from "../store/reducers/JS";
-import { AppState, move } from "../store/reducers/AppState";
-import { doAPIGetRequest } from "../util/api";
+import { AppState, AppStateActionType, move } from "../store/reducers/AppState";
+import { doAPIGetRequest } from "../util/api/api";
+
+type ValueOf<T> = T[keyof T];
 
 // get algorithm by cid
 function* updateByCidSaga() {
@@ -20,6 +25,7 @@ function* updateByCidSaga() {
     cid: number;
   }) {
     try {
+      yield put({ type: AppStateActionType.SEND });
       const [fid, kind, name, rawParams, dot, code, [start, end]]: [
         number,
         AlgorithmKind,
@@ -29,6 +35,7 @@ function* updateByCidSaga() {
         string,
         [number, number],
       ] = yield call(() => doAPIGetRequest(`state/context/${cid}`));
+      yield put({ type: AppStateActionType.RECEIVE });
       const params = rawParams.map(([name, optional, type]) => ({
         name,
         optional,
@@ -50,14 +57,23 @@ function* updateByCidSaga() {
 function* updateAlgoListSaga() {
   function* _updateAlgoList() {
     try {
+      yield put({ type: AppStateActionType.SEND });
       const raw: [number, string][] = yield call(() =>
         doAPIGetRequest(`spec/func`),
       );
+      const raw2: [string, ValueOf<IrToSpecMapping>][] = yield call(() =>
+        doAPIGetRequest(`spec/irToSpecNameMap`),
+      );
+      yield put({ type: AppStateActionType.RECEIVE });
       const nameMap: Record<string, number> = {};
       raw.forEach(([fid, name]) => {
         nameMap[name] = fid;
       });
-      yield put(updateAlgoListSuccess(nameMap));
+      const irToSpecMapping: IrToSpecMapping = {};
+      raw2.forEach(([ir, info]) => {
+        irToSpecMapping[ir] = info !== undefined ? info : undefined;
+      });
+      yield put(updateAlgoListSuccess(nameMap, irToSpecMapping));
       yield put(move(AppState.JS_INPUT));
     } catch (e: unknown) {
       // show error toast
@@ -71,7 +87,29 @@ function* updateAlgoListSaga() {
   );
 }
 
+// update algorithm list
+function* updateVersionInfo() {
+  function* _updateVersionInfo() {
+    try {
+      yield put({ type: AppStateActionType.SEND });
+      const rawSpec: SpecVersion = yield call(() =>
+        doAPIGetRequest(`spec/version`),
+      );
+      const rawESMeta: string = yield call(() =>
+        doAPIGetRequest(`meta/version`),
+      );
+      yield put({ type: AppStateActionType.RECEIVE });
+      yield put(updateVersionSuccess(rawSpec, rawESMeta));
+    } catch (e: unknown) {
+      // show error toast
+      toast.error((e as Error).message);
+      console.error(e);
+    }
+  }
+  yield takeLatest(SpecActionType.UPDATE_VERSION_REQUEST, _updateVersionInfo);
+}
+
 // spec sagas
 export default function* specSaga() {
-  yield all([updateByCidSaga(), updateAlgoListSaga()]);
+  yield all([updateByCidSaga(), updateAlgoListSaga(), updateVersionInfo()]);
 }
