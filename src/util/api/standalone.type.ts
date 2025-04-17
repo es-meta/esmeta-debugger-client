@@ -49,7 +49,6 @@ export interface StandaloneDebuggerInput {
   grammar: string;
   tables: string;
   tyModel: string;
-  irFuncToCode: string;
   irToSpecNameMap: string;
 }
 

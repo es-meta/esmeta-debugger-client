@@ -91,17 +91,15 @@ async function instantiateWorker(
         fetchText(new URL("@resources/dumps/grammar.json", import.meta.url)),
         fetchText(new URL("@resources/dumps/spec.tables.json", import.meta.url)),
         fetchText(new URL("@resources/dumps/tyModel.decls.json", import.meta.url)),
-        fetchText(new URL("@resources/dumps/irFuncToCode.json", import.meta.url)),
         fetchText(new URL("@resources/dumps/irToSpecNameMap.json", import.meta.url)),
       ]).then(
-        ([funcs, version, grammar, tables, tyModel, irFuncToCode, irToSpecNameMap]) =>
+        ([funcs, version, grammar, tables, tyModel, irToSpecNameMap]) =>
           ({
             funcs,
             version,
             grammar,
             tables,
             tyModel,
-            irFuncToCode,
             irToSpecNameMap,
           }) satisfies StandaloneDebuggerInput,
       );
