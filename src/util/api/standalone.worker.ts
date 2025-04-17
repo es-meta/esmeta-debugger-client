@@ -8,8 +8,8 @@ import type {
 
 let input: StandaloneDebuggerInput | null = null;
 
-
-let _standaloneDebugger: Promise<StandaloneDebugger> = Promise.reject(null);
+let { resolve, promise: _standaloneDebugger } =
+  Promise.withResolvers<StandaloneDebugger>();
 
 // HTTP methods
 type HTTPMethod =
@@ -41,7 +41,9 @@ const doGetRequest = async (
       return "";
 
     case "spec/irToSpecNameMap":
-      return JSON.parse(((await input) as StandaloneDebuggerInput).irToSpecNameMap);
+      return JSON.parse(
+        ((await input) as StandaloneDebuggerInput).irToSpecNameMap,
+      );
 
     case "spec/version":
       return JSON.parse((await _standaloneDebugger).spec_version());
@@ -104,13 +106,13 @@ const doWriteRequest = async (
           bodyObj !== undefined ? JSON.stringify(bodyObj) : undefined,
         ),
       );
-    
-  case "exec/resumeFromIter":
-    return JSON.parse(
-      (await _standaloneDebugger).exec_resumeFromIter(
-        bodyObj !== undefined ? JSON.stringify(bodyObj) : undefined,
-      ),
-    );
+
+    case "exec/resumeFromIter":
+      return JSON.parse(
+        (await _standaloneDebugger).exec_resumeFromIter(
+          bodyObj !== undefined ? JSON.stringify(bodyObj) : undefined,
+        ),
+      );
 
     case "exec/backToProvenance":
       return JSON.parse(
@@ -134,14 +136,10 @@ const doWriteRequest = async (
       );
 
     case "exec/specContinue":
-      return JSON.parse(
-        (await _standaloneDebugger).exec_continue(),
-      );
-    
-    case "exec/specRewind": 
-      return JSON.parse(
-        (await _standaloneDebugger).exec_rewind(),
-      );
+      return JSON.parse((await _standaloneDebugger).exec_continue());
+
+    case "exec/specRewind":
+      return JSON.parse((await _standaloneDebugger).exec_rewind());
 
     case "exec/specStepBack":
       return JSON.parse(
@@ -160,45 +158,41 @@ const doWriteRequest = async (
 
     case "exec/esAstStep":
       return JSON.parse((await _standaloneDebugger).exec_esAstStep());
-    
+
     case "exec/esStatementStep":
       return JSON.parse((await _standaloneDebugger).exec_esStatementStep());
-    
+
     case "exec/esStepOver":
-      return JSON.parse(
-        (await _standaloneDebugger).exec_esStepOver(),
-      );
+      return JSON.parse((await _standaloneDebugger).exec_esStepOver());
 
     case "exec/esStepOut":
-      return JSON.parse(
-        (await _standaloneDebugger).exec_esStepOut(),
-      );
-    
+      return JSON.parse((await _standaloneDebugger).exec_esStepOut());
+
     case "exec/irStep":
       return JSON.parse(
         (await _standaloneDebugger).exec_irStep(coerceBoolean(bodyObj)),
       );
-    
+
     case "exec/irStepOver":
       return JSON.parse(
         (await _standaloneDebugger).exec_irStepOver(coerceBoolean(bodyObj)),
       );
-    
+
     case "exec/irStepOut":
       return JSON.parse(
         (await _standaloneDebugger).exec_irStepOut(coerceBoolean(bodyObj)),
       );
-    
+
     case "exec/iterPlus":
       return JSON.parse(
         (await _standaloneDebugger).exec_iterPlus(coerceBoolean(bodyObj)),
       );
-    
+
     case "exec/iterMinus":
       return JSON.parse(
         (await _standaloneDebugger).exec_iterMinus(coerceBoolean(bodyObj)),
       );
-  
+
     default:
       throw apiError(endpoint);
   }
@@ -212,9 +206,15 @@ self.onmessage = async (e: MessageEvent<any>) => {
     let result;
     switch (type) {
       case "META":
-        // input = data as StandaloneDebuggerInput;
-        // _standaloneDebugger = import("@esmeta/main.mjs").then(async m =>
-        //   (m as ModuleGeneratedByScalaJS).StandaloneDebugger.buildFrom(input as StandaloneDebuggerInput));
+        input = data as StandaloneDebuggerInput;
+        // await import("@esmeta/main.mjs").then(async m =>
+        //   resolve(
+        //     await (m as ModuleGeneratedByScalaJS).StandaloneDebugger
+        //       .buildFrom(
+        //       input as StandaloneDebuggerInput,
+        //     ),
+        //   ),
+        // );
         await _standaloneDebugger;
         break;
       case "GET":
