@@ -206,10 +206,11 @@ self.onmessage = async (e: MessageEvent<any>) => {
     let result;
     switch (type) {
       case "META":
-        // input = data as StandaloneDebuggerInput;
+        input = data as StandaloneDebuggerInput;
         // await import("@esmeta/main.mjs").then(async m =>
         //   resolve(
-        //     await (m as ModuleGeneratedByScalaJS).StandaloneDebugger.// buildFrom(
+        //     await (m as ModuleGeneratedByScalaJS).StandaloneDebugger
+        //       .buildFrom(
         //       input as StandaloneDebuggerInput,
         //     ),
         //   ),
