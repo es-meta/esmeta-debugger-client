@@ -7,8 +7,7 @@ export function RegisterAtoms() {
 
   useEffect(() => {
     // Register atoms here
-    
   }, []);
-  
+
   return null;
 }
