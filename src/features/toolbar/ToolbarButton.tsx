@@ -31,30 +31,22 @@ const ToolbarButton = forwardRef(function (
     <Button
       ref={ref}
       className={twMerge(
-        "flex flex-row items-center gap-[1px] px-2 py-2",
-        "bg-white border md:w-fit md:rounded-none",
+        "flex flex-row items-center gap-[1px] px-2 py-[6px]",
+        "bg-white border",
         "dark:bg-neutral-900",
         "transition-all",
-        "[&>svg]:size-3",
+        "[&>svg]:hidden [&>svg]:size-3 md:[&>svg]:block",
         "uppercase text-xs text-neutral-700 dark:text-neutral-200 font-500",
         disabled ? "active:border-red-500" : "active:scale-90",
         disabled
           ? "opacity-25 cursor-not-allowed"
           : "hover:z-[1] hover:bg-neutral-200 hover:dark:bg-neutral-700",
-
-        position === "left" ? "md:rounded-l-md" : "",
-        position === "right" ? "md:rounded-r-md" : "",
-        position === "center" ? "md:rounded-none" : "",
-        position === "single" ? "md:rounded-md" : "",
-        "rounded-md w-full justify-between", // button group scenario
+        position === "left" ? "rounded-l-md" : "",
+        position === "right" ? "rounded-r-md" : "",
+        position === "center" ? "rounded-none" : "",
+        position === "single" ? "rounded-md" : "",
+        // "rounded-md w-full justify-between", // button group scenario
         "[&>span>b]:text-es-900",
-
-        // bold
-        bold &&
-          `md:bg-gradient-to-r md:from-es-100 md:to-es-200 md:border-es-200 md:hover:bg-es-300 
-        bg-gradient-to-r from-es-100 to-es-200 border-es-200 hover:bg-es-300
-        z-[1]`,
-
         className,
       )}
       disabled={disabled}

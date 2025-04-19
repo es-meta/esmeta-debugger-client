@@ -77,7 +77,7 @@ export default function Toolbar() {
 
   return (
     <aside className="relative w-full backdrop-blur-sm z-[2]">
-      <div className="bg-neutral-100 dark:bg-neutral-900 size-full flex-row bg-opacity-75 flex items-center min-h-full space-x-0 flex-wrap p-2 gap-y-1 gap-x-1 justify-start z-[1001]">
+      <div className="bg-neutral-100 dark:bg-neutral-900 size-full flex-row bg-opacity-75 flex items-center min-h-full space-x-0 flex-wrap p-2 gap-y-1 justify-start z-[1001]">
         <ToolbarButtonGroup label="Exec">
           {showResume && (
             <ToolbarButton
@@ -307,8 +307,10 @@ import { GIVEN_SETTINGS } from "@/constants/settings";
 
 function Seperator() {
   return (
+    <div className="px-1">
     <div className="h-6 min-w-[1px] max-w-[1px] bg-neutral-200 dark:bg-neutral-700 block">
       &nbsp;
+    </div>
     </div>
   );
 }
