@@ -8,12 +8,13 @@ import DebuggerApp from "@/features/debugger-app/DebuggerApp";
 import { IS_DEBUG } from "./constants/constant";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 import CommandBar from "./features/command/CommandBar";
+import { Provider } from "jotai";
+import { RegisterAtoms } from "./atoms/register";
 
 export default function App() {
-  useAppInitializer();
 
   return (
-    <>
+    <Provider>
       <TooltipProvider delayDuration={0} skipDelayDuration={10000}>
         <div className="max-h-dvh h-dvh min-h-dvh bg-neutral-100 dark:bg-neutral-900 xl:pb-4 flex flex-col">
           <Header />
@@ -26,13 +27,15 @@ export default function App() {
           position="bottom-right"
           stacked
         />
+        <AppInitializer  />
+        <RegisterAtoms />
       </TooltipProvider>
-    </>
+    </Provider>
   );
 }
 
-function useAppInitializer() {
-  return useEffect(() => {
+function AppInitializer() {
+  useEffect(() => {
     if (IS_DEBUG)
       toast.warn(
         <p>
@@ -41,4 +44,6 @@ function useAppInitializer() {
         </p>,
       );
   }, []);
+
+  return null;
 }
