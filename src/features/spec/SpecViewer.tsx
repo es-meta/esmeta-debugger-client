@@ -35,7 +35,7 @@ export default function SpecViewer() {
           icon={<BookMarkedIcon size={14} className="inline" />}
         />
         <div className="grow overflow-y-scroll">
-          <p className="text-neutral-500 p-2">
+          <p className="text-neutral-500 dark:text-neutral-400 p-2">
             Please write JavaScript code and press the run button.
           </p>
         </div>

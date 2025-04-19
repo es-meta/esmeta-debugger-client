@@ -11,6 +11,14 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #000;
+    color: #fff;
+  }
+}
+
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
@@ -73,10 +81,19 @@ code {
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
   body {
     @apply bg-background text-foreground;
   }
+}
+
+@layer base {
+  *,
+  ::before,
+  ::after {
+    @apply dark:border-neutral-700;
+  }
+}
+
+.Toastify__toast {
+  @apply dark:bg-neutral-800 dark:text-white;
 }

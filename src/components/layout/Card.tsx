@@ -13,13 +13,7 @@ export default forwardRef(function Card(
   ref: Ref<HTMLDivElement>,
 ) {
   return (
-    <div
-      ref={ref}
-      className={twMerge(
-        "flex flex-col bg-white dark:bg-neutral-950 relative",
-        className,
-      )}
-    >
+    <div ref={ref} className={twMerge("flex flex-col relative", className)}>
       {children}
     </div>
   );

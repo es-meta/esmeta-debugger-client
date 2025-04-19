@@ -44,17 +44,9 @@ export default function SpecEnvViewer() {
     <StateViewerItem
       header="Specification&nbsp;Environment"
       icon={<BookTextIcon size={14} />}
-      // headerItems={<GuideTooltip />}
     >
-      {/* <table className="w-full text-xs">
-        <thead className="text-sm font-200 text-neutral-500">
-          <tr>
-            <th className="border-r w-1/4">Spec Environment</th>
-          </tr>
-        </thead> */}
-      {/* <tbody> */}
       {sorted.length === 0 ? (
-        <p className="text-center text-neutral-500 p-4 text-sm">
+        <p className="text-center text-neutral-500 dark:text-neutral-400 p-4 text-sm">
           No environment variables.
         </p>
       ) : (
@@ -65,19 +57,16 @@ export default function SpecEnvViewer() {
             key={uuid()}
             className={twJoin(
               clsx(
-                "bg-white",
                 "text-sm font-mono",
                 "list-inside list-disc px-1",
-                // "border-b-neutral-200 border-b",
-                // "even:bg-white odd:bg-neutral-100",
-                "hover:bg-neutral-100 transition-all",
+                "hover:bg-neutral-500/25 transition-all",
               ),
             )}
           >
             {value.startsWith("#") ? (
               <TreeAddress field={name} address={value} />
             ) : (
-              <li className="border-b-neutral-200 border-b text-wrap break-all text-left overflow-hidden gap-2 justify-center items-center">
+              <li className="border-b text-wrap break-all text-left overflow-hidden gap-2 justify-center items-center">
                 <b className="font-600">{name}</b>&nbsp;:&nbsp;{value}
               </li>
             )}

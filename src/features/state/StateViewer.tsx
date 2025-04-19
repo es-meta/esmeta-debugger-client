@@ -1,7 +1,7 @@
 import Card from "@/components/layout/Card";
 import CardHeader from "@/components/layout/CardHeader";
 import { CpuIcon } from "lucide-react";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { ReduxState } from "@/store";
 import { AppState } from "@/store/reducers/AppState";
 import { useDispatch, useSelector } from "react-redux";
@@ -58,7 +58,7 @@ export default function StateViewer() {
       </CardHeader>
       <div className="overflow-y-scroll size-full">
         {disabled ? (
-          <p className="text-neutral-500 p-2">
+          <p className="text-neutral-500 dark:text-neutral-400 p-2">
             Disabled. Start debugger to use.
           </p>
         ) : (

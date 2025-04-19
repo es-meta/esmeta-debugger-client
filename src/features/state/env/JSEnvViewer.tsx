@@ -28,7 +28,7 @@ import { CodeIcon, CodeSquareIcon } from "lucide-react";
 //   return eStack.values.at(0) || null;
 // }
 
-const Li = tw.li`border-b border-b-neutral-300`;
+const Li = tw.li`border-b`;
 
 function computeBindings(heap: Heap): Binding[] {
   const stack = heap[EXECUTION_STACK_ADDR];
@@ -84,9 +84,7 @@ export default function JSEnvViewer() {
         ) : (
           bindings.map(
             ([name, value]) =>
-              value === undefined ? null : //   key={v4()} // <tr
-              //   className={twJoin(
-              //     clsx(
+              value === undefined ? null : //     clsx( //   className={twJoin( //   key={v4()} // <tr
               //       "even:bg-white odd:bg-neutral-100 font-500",
               //       "hover:bg-neutral-200 transition-all",
               //       { "!bg-[#BAF7D0]": name === "return" },

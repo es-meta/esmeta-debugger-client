@@ -15,7 +15,7 @@ export default function ToolbarButtonGroup({ icon, label, children }: Props) {
         <Menu>
           {({ open }) => (
             <>
-              <MenuButton className="[&>svg]:size-4 dark:text-white [&>svg]:inline-block gap-[2px] flex flex-row items-center uppercase text-xs font-500 px-2 py-2 bg-white dark:bg-neutral-900 hover:bg-neutral-100 hover:dark:bg-neutral-800 active:bg-neutral-200 active:dark:bg-neutral-700 border border-neutral-300 dark:border-neutral-700 rounded-md transition-all">
+              <MenuButton className="[&>svg]:size-4 dark:text-white [&>svg]:inline-block gap-[2px] flex flex-row items-center uppercase text-xs font-500 px-2 py-2 bg-white dark:bg-neutral-900 hover:bg-neutral-100 hover:dark:bg-neutral-800 active:bg-neutral-200 active:dark:bg-neutral-700 border rounded-md transition-all">
                 {icon || <MenuIcon />}
                 {label}
               </MenuButton>
@@ -36,7 +36,7 @@ export default function ToolbarButtonGroup({ icon, label, children }: Props) {
                       transition: { duration: 0.0625 },
                     }}
                     anchor="bottom end"
-                    className="z-[1002] origin-top-right bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-md shadow-lg m-1 w-64 text-sm"
+                    className="z-[1002] origin-top-right bg-white dark:bg-neutral-900 border rounded-md shadow-lg m-1 w-64 text-sm"
                   >
                     {children
                       .filter(v => typeof v !== "boolean")

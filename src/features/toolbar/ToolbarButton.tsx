@@ -32,22 +32,20 @@ const ToolbarButton = forwardRef(function (
       ref={ref}
       className={twMerge(
         "flex flex-row items-center gap-[1px] px-2 py-2",
-        "bg-white border md:w-fit md:border-neutral-200 md:rounded-none",
-        "dark:bg-neutral-900 md:dark:border-neutral-700",
+        "bg-white border md:w-fit md:rounded-none",
+        "dark:bg-neutral-900",
         "transition-all",
         "[&>svg]:size-3",
         "uppercase text-xs text-neutral-700 dark:text-neutral-200 font-500",
         disabled ? "active:border-red-500" : "active:scale-90",
         disabled
-          ? "opacity-75 cursor-not-allowed"
+          ? "opacity-25 cursor-not-allowed"
           : "hover:z-[1] hover:bg-neutral-200 hover:dark:bg-neutral-700",
 
         position === "left" ? "md:rounded-l-md" : "",
         position === "right" ? "md:rounded-r-md" : "",
         position === "center" ? "md:rounded-none" : "",
         position === "single" ? "md:rounded-md" : "",
-
-        "border-neutral-200/0",
         "rounded-md w-full justify-between", // button group scenario
         "[&>span>b]:text-es-900",
 

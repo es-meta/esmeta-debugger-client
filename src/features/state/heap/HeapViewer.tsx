@@ -10,7 +10,6 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import Address from "./Address";
 import TreeAddress from "./TreeAddress";
 
 function HistoryViewer({
@@ -22,7 +21,7 @@ function HistoryViewer({
 }) {
   return (
     <Tooltip>
-      <TooltipTrigger className="aspect-square h-full flex items-center justify-center px-1 text-neutral-500">
+      <TooltipTrigger className="aspect-square h-full flex items-center justify-center px-1 text-neutral-500 dark:text-neutral-400">
         <HistoryIcon size={18} />
       </TooltipTrigger>
       <TooltipContent>
@@ -102,7 +101,7 @@ export default function HeapViewer() {
           {addr !== null && obj !== null ? (
             <TreeAddress field={addr} address={addr} singleMode />
           ) : (
-            <li className="text-center text-neutral-500 p-4 text-sm">
+            <li className="text-center text-neutral-500 dark:text-neutral-400 p-4 text-sm">
               Address is empty. Please select an address from the combobox.
             </li>
           )}

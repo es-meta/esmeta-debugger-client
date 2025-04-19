@@ -5,7 +5,7 @@ import { HomeIcon, HouseIcon } from "lucide-react";
 
 export default function Header() {
   return (
-    <nav className="bg-white dark:text-white dark:bg-neutral-900 border-b border-b-neutral-300 dark:border-b-neutral-700 bg-opacity-75 min-h-12 max-h-12 h-12 w-full text-sm xl:px-12 flex flex-row justify-between gap-3 items-center px-4">
+    <nav className="bg-white dark:text-white dark:bg-neutral-900 border-b bg-opacity-75 min-h-12 max-h-12 h-12 w-full text-sm xl:px-12 flex flex-row justify-between gap-3 items-center px-4">
       <Left />
       <Right />
     </nav>

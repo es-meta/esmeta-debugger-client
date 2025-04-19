@@ -82,10 +82,10 @@ export default function SpecVersionView() {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <DialogPanel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all space-y-3">
+                <DialogPanel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-neutral-800 p-6 text-left align-middle shadow-xl transition-all space-y-3">
                   <DialogTitle
                     as="h3"
-                    className="text-xl font-700 leading-6 text-gray-900"
+                    className="text-xl font-700 leading-6 text-neutral-900 dark:text-white"
                   >
                     Versions
                   </DialogTitle>

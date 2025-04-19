@@ -93,7 +93,7 @@ export default connector(function Breakpoints(props: BreakpointsProps) {
               onClick={toggleStepWithoutBreak}
               className={
                 ignoreBp
-                  ? "h-6 bg-blue-600 hover:bg-blue-500 text-white hover:text-white"
+                  ? "h-6 bg-blue-600 hover:bg-blue-500 dark:bg-blue-600 hover:dark:bg-blue-500 text-white hover:text-white"
                   : "h-6"
               }
               icon={ignoreBp ? <OctagonIcon /> : <OctagonPauseIcon />}
@@ -121,7 +121,7 @@ export default connector(function Breakpoints(props: BreakpointsProps) {
         />
       </div>
       <table className="w-full text-xs">
-        <thead className="font-200 text-neutral-500">
+        <thead className="font-200 text-neutral-500 dark:text-neutral-400">
           <tr>
             <th className="border-r">Step</th>
             <th className="border-r w-auto">Name</th>
@@ -144,7 +144,7 @@ export default connector(function Breakpoints(props: BreakpointsProps) {
             <tr>
               <td
                 colSpan={4}
-                className="text-center text-neutral-500 p-4 text-sm"
+                className="text-center text-neutral-500 dark:text-neutral-400 p-4 text-sm"
               >
                 No breakpoints. Add Breakpoint by clicking on steps in spec
                 viewer or by searching name

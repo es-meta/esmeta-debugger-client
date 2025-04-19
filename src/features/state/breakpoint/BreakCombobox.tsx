@@ -94,13 +94,13 @@ export default function MyCombobox({
     >
       <ComboboxInput
         placeholder={placeholder}
-        className="font-mono text-sm w-full p-2 focus:outline focus:outline-blue-300 bg-neutral-50"
+        className="font-mono text-sm w-full p-2 focus:outline focus:outline-blue-300 focus:dark:outline-blue-700 bg-neutral-50 dark:bg-neutral-900"
         onChange={event => setQuery(event.target.value)}
       />
       <ComboboxOptions
         transition
         anchor="bottom"
-        className="font-mono text-sm z-[101] shadow-lg w-[var(--input-width)] origin-top border transition duration-200 ease-out empty:invisible data-[closed]:scale-95 data-[closed]:opacity-0 h-96 overflow-scroll bg-white rounded-lg"
+        className="font-mono text-sm z-[101] shadow-lg w-[var(--input-width)] origin-top transition duration-200 ease-out empty:invisible data-[closed]:scale-95 data-[closed]:opacity-0 h-96 overflow-scroll rounded-lg"
       >
         {({ option }) => (
           <ComboboxOption key={option.name} value={option} as={Fragment}>
@@ -108,8 +108,10 @@ export default function MyCombobox({
               <div
                 className={twMerge(
                   "even:bg-white odd:bg-neutral-50",
+                  "dark:even:bg-neutral-800 dark:odd:bg-neutral-900",
                   "p-2 cursor-pointer w-full break-all",
-                  focus && "even:bg-blue-200 odd:bg-blue-200",
+                  focus &&
+                    "even:bg-blue-200 odd:bg-blue-200 dark:even:bg-blue-950 dark:odd:bg-blue-950",
                 )}
                 title={option.name}
               >

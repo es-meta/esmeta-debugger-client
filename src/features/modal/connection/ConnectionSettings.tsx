@@ -9,9 +9,8 @@ import { Fragment, useCallback, useState } from "react";
 import { GlobeIcon, MonitorIcon } from "lucide-react";
 
 import RadioGroupExample from "./RadioGroup";
-import SaveButton, { opts } from "./SaveButton";
 import { GIVEN_SETTINGS, QUERY_API } from "@/constants/settings";
-import { buildSearchParams, setLocalStorage } from "@/util/query.util";
+import { buildSearchParams } from "@/util/query.util";
 import ConnectStateViewer from "@/features/modal/connection/ConnectStateViewer";
 
 export default function ConnectionSettings() {
@@ -23,7 +22,6 @@ export default function ConnectionSettings() {
   const [url, setUrl] = useState(
     GIVEN_SETTINGS.api.type === "http" ? GIVEN_SETTINGS.api.url : "",
   );
-  const [saveOption, setSaveOption] = useState(opts[0]);
 
   const closeModalWithReset = useCallback(() => {
     setIsOpen(false);
@@ -38,16 +36,11 @@ export default function ConnectionSettings() {
   }, []);
 
   const saveToLocal = useCallback(
-    (to: "params" | "storage") => {
+    (to: "params") => {
       const set = selected.id === "browser" ? "browser" : url;
       switch (to) {
         case "params":
           window.location.search = buildSearchParams(QUERY_API, set);
-          break;
-        case "storage":
-          setLocalStorage(QUERY_API, set);
-          window.location.search = buildSearchParams(QUERY_API, null);
-          // window.location.reload();
           break;
       }
     },
@@ -103,11 +96,8 @@ export default function ConnectionSettings() {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <DialogPanel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all space-y-4">
-                  <DialogTitle
-                    as="h3"
-                    className="text-xl font-700 leading-6 text-gray-900"
-                  >
+                <DialogPanel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-neutral-800 p-6 text-left align-middle shadow-xl transition-all space-y-4">
+                  <DialogTitle as="h3" className="text-xl font-700 leading-6">
                     ESMeta Debugger Settings
                   </DialogTitle>
 
@@ -124,22 +114,27 @@ export default function ConnectionSettings() {
                   <h4 className="mt-4 text-lg font-700">API Address</h4>
                   <input
                     type="text"
-                    className="border border-gray-300 rounded-md w-full p-2"
+                    className="border bg-white dark:bg-neutral-900 rounded-md w-full p-2"
                     placeholder="http://localhost:8080"
                     disabled={selected.id === "browser"}
                     value={url}
                     onChange={e => setUrl(e.target.value)}
                   />
-
                   <div className="flex justify-end mt-4 gap-2">
-                    <button className="h-8 px-3 text-xs rounded-lg bg-es-100 font-500 hover:bg-es-200 active:scale-95 transition-all">
+                    <button
+                      className="h-8 px-3 text-xs rounded-lg bg-es-500/30 font-500 hover:bg-es-500/70 active:scale-95 transition-all"
+                      onClick={closeModalWithReset}
+                    >
                       Cancel
                     </button>
-                    <SaveButton
-                      value={saveOption}
-                      setValue={setSaveOption}
-                      save={saveToLocal}
-                    />
+                    <button
+                      className="h-8 px-3 text-xs rounded-lg bg-es-500/30 font-500 hover:bg-es-500/70 active:scale-95 transition-all"
+                      onClick={() => {
+                        saveToLocal("params");
+                      }}
+                    >
+                      Save for this Tab (Refresh)
+                    </button>
                   </div>
                 </DialogPanel>
               </TransitionChild>

@@ -8,8 +8,8 @@ interface Props {
   address: string;
 }
 
-const Ul = tw.ul`pl-4 list-inside list-disc border-y border-y-neutral-300`;
-const Li = tw.li`border-b border-b-neutral-300`;
+const Ul = tw.ul`pl-4 list-inside list-disc border-y`;
+const Li = tw.li`border-b`;
 const B = tw.b`font-600`;
 // const  = tw.ul`pl-2 list-inside list-disc`
 
