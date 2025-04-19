@@ -1,7 +1,5 @@
 import { useEffect } from "react";
 import { toast, ToastContainer, Slide } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import "@/styles/ReactToastify.css";
 
 import Header from "@/components/custom/Header";
 import DebuggerApp from "@/features/debugger-app/DebuggerApp";
