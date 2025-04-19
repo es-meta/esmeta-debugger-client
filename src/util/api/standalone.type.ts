@@ -11,7 +11,6 @@ export interface StandaloneDebugger {
   spec_version: () => string;
   spec_irToSpecNameMap: () => never; // handle this in the frontend
 
-
   breakpoint_add: (body: string | undefined) => string;
   breakpoint_remove: (body: string | undefined) => string;
   breakpoint_toggle: (body: string | undefined) => string;
@@ -33,7 +32,6 @@ export interface StandaloneDebugger {
   exec_irStepOver: (noBreak: boolean) => string;
   exec_irStepOut: (noBreak: boolean) => string;
 
-  
   exec_esAstStep: () => string;
   exec_esStatementStep: () => string;
   exec_esStepOver: () => string;

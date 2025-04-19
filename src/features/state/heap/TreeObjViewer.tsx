@@ -38,15 +38,16 @@ export default function TreeObjViewer({ obj, singleMode, address }: Props) {
           {Object.keys(obj.map).length === 0 ? (
             <p>No values</p>
           ) : (
-            Object.entries(obj.map).map(([key, value]) =>
-              // <tr key={v4()} className="even:bg-white odd:bg-neutral-100 hover:bg-neutral-200 transition-all">
-              value && value.startsWith("#") ? (
-                <TreeAddress field={key} address={value} />
-              ) : (
-                <Li className="font-mono text-wrap break-all overflow-hidden gap-2">
-                  <B>{key}</B>&nbsp;:&nbsp;{value}
-                </Li>
-              ),
+            Object.entries(obj.map).map(
+              ([key, value]) =>
+                // <tr key={v4()} className="even:bg-white odd:bg-neutral-100 hover:bg-neutral-200 transition-all">
+                value && value.startsWith("#") ? (
+                  <TreeAddress field={key} address={value} />
+                ) : (
+                  <Li className="font-mono text-wrap break-all overflow-hidden gap-2">
+                    <B>{key}</B>&nbsp;:&nbsp;{value}
+                  </Li>
+                ),
 
               // </tr>
             )
@@ -79,14 +80,15 @@ export default function TreeObjViewer({ obj, singleMode, address }: Props) {
               </tr>
             </>
           ) : (
-            Object.entries(obj.map).map(([key, value]) =>
-              value && value.startsWith("#") ? (
-                <TreeAddress field={key} address={value} />
-              ) : (
-                <Li className="font-mono text-wrap break-all overflow-hidden gap-2">
-                  <B>{key}</B>&nbsp;:&nbsp;{value}
-                </Li>
-              ),
+            Object.entries(obj.map).map(
+              ([key, value]) =>
+                value && value.startsWith("#") ? (
+                  <TreeAddress field={key} address={value} />
+                ) : (
+                  <Li className="font-mono text-wrap break-all overflow-hidden gap-2">
+                    <B>{key}</B>&nbsp;:&nbsp;{value}
+                  </Li>
+                ),
 
               // </tr>
             )
@@ -114,14 +116,15 @@ export default function TreeObjViewer({ obj, singleMode, address }: Props) {
           {Object.keys(obj.values).length === 0 ? (
             <Li>No values</Li>
           ) : (
-            obj.values.map((value, idx) =>
-              value && value.startsWith("#") ? (
-                <TreeAddress field={idx.toString()} address={value} />
-              ) : (
-                <Li className="font-mono text-wrap break-all overflow-hidden gap-2">
-                  <B>{idx}</B>&nbsp;:&nbsp;{value}
-                </Li>
-              ),
+            obj.values.map(
+              (value, idx) =>
+                value && value.startsWith("#") ? (
+                  <TreeAddress field={idx.toString()} address={value} />
+                ) : (
+                  <Li className="font-mono text-wrap break-all overflow-hidden gap-2">
+                    <B>{idx}</B>&nbsp;:&nbsp;{value}
+                  </Li>
+                ),
 
               // </tr>
             )

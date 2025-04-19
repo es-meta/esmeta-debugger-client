@@ -87,11 +87,19 @@ async function instantiateWorker(
 
       const input = await Promise.all([
         fetchText(new URL("@resources/dumps/funcs.json", import.meta.url)),
-        fetchText(new URL("@resources/dumps/spec.version.json", import.meta.url)),
+        fetchText(
+          new URL("@resources/dumps/spec.version.json", import.meta.url),
+        ),
         fetchText(new URL("@resources/dumps/grammar.json", import.meta.url)),
-        fetchText(new URL("@resources/dumps/spec.tables.json", import.meta.url)),
-        fetchText(new URL("@resources/dumps/tyModel.decls.json", import.meta.url)),
-        fetchText(new URL("@resources/dumps/irToSpecNameMap.json", import.meta.url)),
+        fetchText(
+          new URL("@resources/dumps/spec.tables.json", import.meta.url),
+        ),
+        fetchText(
+          new URL("@resources/dumps/tyModel.decls.json", import.meta.url),
+        ),
+        fetchText(
+          new URL("@resources/dumps/irToSpecNameMap.json", import.meta.url),
+        ),
       ]).then(
         ([funcs, version, grammar, tables, tyModel, irToSpecNameMap]) =>
           ({
@@ -111,7 +119,7 @@ async function instantiateWorker(
 
       w.addEventListener("message", firstEventHandlerStandalone);
       w.postMessage({ type: "META", data: input });
-      
+
       resolve(w);
     } else {
       const w = new Worker(new URL("./http.worker.ts", import.meta.url));
@@ -127,7 +135,6 @@ async function instantiateWorker(
     }
   });
 }
-
 
 function fetchText(url: URL): Promise<string> {
   return fetch(url).then(response => response.text());

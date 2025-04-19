@@ -82,29 +82,29 @@ export default function JSEnvViewer() {
             No environment variables.
           </p>
         ) : (
-          bindings.map(([name, value]) =>
-            value === undefined ? null : // <tr
-            //   key={v4()}
-            //   className={twJoin(
-            //     clsx(
-            //       "even:bg-white odd:bg-neutral-100 font-500",
-            //       "hover:bg-neutral-200 transition-all",
-            //       { "!bg-[#BAF7D0]": name === "return" },
-            //     ),
-            //   )}
-            // >
-            //   <td className="border-r font-mono text-wrap py-1 break-all text-center overflow-hidden">
+          bindings.map(
+            ([name, value]) =>
+              value === undefined ? null : //   key={v4()} // <tr
+              //   className={twJoin(
+              //     clsx(
+              //       "even:bg-white odd:bg-neutral-100 font-500",
+              //       "hover:bg-neutral-200 transition-all",
+              //       { "!bg-[#BAF7D0]": name === "return" },
+              //     ),
+              //   )}
+              // >
+              //   <td className="border-r font-mono text-wrap py-1 break-all text-center overflow-hidden">
 
-            //   </td>
-            //   <td className="font-mono text-wrap break-all text-center overflow-hidden flex flex-row gap-2 justify-center items-center">
-            //     {
-            value.startsWith("#") ? (
-              <TreeAddress field={name} address={value} defaultFold />
-            ) : (
-              <Li>
-                <B>{name}</B>&nbsp;:&nbsp;{value}
-              </Li>
-            ),
+              //   </td>
+              //   <td className="font-mono text-wrap break-all text-center overflow-hidden flex flex-row gap-2 justify-center items-center">
+              //     {
+              value.startsWith("#") ? (
+                <TreeAddress field={name} address={value} defaultFold />
+              ) : (
+                <Li>
+                  <B>{name}</B>&nbsp;:&nbsp;{value}
+                </Li>
+              ),
             //       }
             //   </td>
             // </tr>
