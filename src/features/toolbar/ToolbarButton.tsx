@@ -11,8 +11,6 @@ interface Props {
   label: ReactNode;
   onClick?: () => void;
   className?: string;
-  // children: ReactNode;
-  bold?: boolean;
 }
 
 const ToolbarButton = forwardRef(function (
@@ -23,7 +21,6 @@ const ToolbarButton = forwardRef(function (
     onClick,
     position = "single",
     className = "",
-    bold = false,
   }: Props,
   ref?: React.ForwardedRef<HTMLButtonElement> | undefined,
 ) {
@@ -31,15 +28,15 @@ const ToolbarButton = forwardRef(function (
     <Button
       ref={ref}
       className={twMerge(
-        "flex flex-row items-center gap-[1px] px-2 py-[6px]",
+        "inline-flex flex-row items-center gap-[2px] px-2 py-[6px]",
         "bg-white border",
-        "dark:bg-neutral-900",
+        "dark:bg-neutral-950",
         "transition-all",
-        "[&>svg]:hidden [&>svg]:size-3 md:[&>svg]:block",
-        "uppercase text-xs text-neutral-700 dark:text-neutral-200 font-500",
+        "[&>svg]:hidden [&>svg]:size-[10px] md:[&>svg]:block",
+        "uppercase text-xs text-neutral-700 dark:text-neutral-300 font-400",
         disabled ? "active:border-red-500" : "active:scale-90",
         disabled
-          ? "opacity-25 cursor-not-allowed"
+          ? "opacity-50 cursor-not-allowed line-through"
           : "hover:z-[1] hover:bg-neutral-200 hover:dark:bg-neutral-700",
         position === "left" ? "rounded-l-md" : "",
         position === "right" ? "rounded-r-md" : "",

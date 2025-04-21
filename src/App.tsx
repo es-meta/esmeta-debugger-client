@@ -16,7 +16,7 @@ export default function App() {
         <CommandBar />
       </main>
       <ToastContainer
-        autoClose={1000}
+        autoClose={2000}
         transition={Slide}
         position="bottom-right"
         stacked

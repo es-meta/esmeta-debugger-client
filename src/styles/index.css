@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -13,7 +14,7 @@ body {
 
 @media (prefers-color-scheme: dark) {
   body {
-    background-color: #000;
+    background-color: #0a0a0a;
     color: #fff;
   }
 }
@@ -90,10 +91,14 @@ code {
   *,
   ::before,
   ::after {
-    @apply dark:border-neutral-700;
+    @apply border-neutral-300 dark:border-neutral-700;
   }
 }
 
 .Toastify__toast {
-  @apply dark:bg-neutral-800 dark:text-white;
+  @apply dark:bg-neutral-800 dark:text-white rounded-xl overflow-hidden;
+}
+
+.Toastify__toast button svg {
+  @apply fill-black dark:fill-white;
 }
