@@ -67,7 +67,7 @@ const doGetRequest = async (
   }
 };
 
-import { Route } from "@/types/route.type";
+import { Route } from "@/types/route.types";
 
 // raw POST-like request
 const doWriteRequest = async (

@@ -1,4 +1,4 @@
-import { HeapObj } from "@/types/heap.type";
+import { HeapObj } from "@/types/heap.types";
 import TreeAddress, { ProvinenceButton } from "./TreeAddress";
 import tw from "tailwind-styled-components";
 

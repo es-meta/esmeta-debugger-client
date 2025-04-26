@@ -8,7 +8,7 @@ import { Binding, GetBindingValue } from "./getBindings";
 import { v4 } from "uuid";
 import clsx from "clsx";
 import { twJoin } from "tailwind-merge";
-import { Heap } from "@/types/heap.type";
+import { Heap } from "@/types/heap.types";
 import { useMemo } from "react";
 import tw from "tailwind-styled-components";
 import TreeAddress from "../heap/TreeAddress";

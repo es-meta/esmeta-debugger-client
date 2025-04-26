@@ -1,4 +1,4 @@
-import { HeapObj } from "@/types/heap.type";
+import { HeapObj } from "@/types/heap.types";
 import Address, { ProvinenceButton } from "./Address";
 import { v4 } from "uuid";
 

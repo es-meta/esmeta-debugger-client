@@ -17,7 +17,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { HeapObj } from "@/types/heap.type";
+import { HeapObj } from "@/types/heap.types";
 
 interface Props {
   field: string;

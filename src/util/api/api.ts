@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import type { Route } from "@/types/route.type";
+import type { Route } from "@/types/route.types";
 import { GIVEN_SETTINGS } from "@/constants/settings";
 import { logger } from "@/constants/constant";
 import { StandaloneDebuggerInput } from "./standalone.type";

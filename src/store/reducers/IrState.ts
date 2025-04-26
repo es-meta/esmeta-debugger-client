@@ -1,4 +1,4 @@
-import { Heap } from "@/types/heap.type";
+import { Heap } from "@/types/heap.types";
 import produce from "immer";
 import { Algorithm } from "./Spec";
 
