@@ -94,7 +94,6 @@ export default function MyCombobox({
     >
       <ComboboxInput
         placeholder={placeholder}
-        className="font-mono text-sm w-full p-2 focus:outline focus:outline-blue-300 focus:dark:outline-blue-700 bg-neutral-50 dark:bg-neutral-900"
         onChange={event => setQuery(event.target.value)}
       />
       <ComboboxOptions

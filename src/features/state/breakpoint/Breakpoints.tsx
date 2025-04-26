@@ -120,7 +120,7 @@ export default connector(function Breakpoints(props: BreakpointsProps) {
           placeholder="search by name"
         />
       </div>
-      <table className="w-full text-xs">
+      <table className="w-full text-xs border-t">
         <thead className="font-200 text-neutral-500 dark:text-neutral-400">
           <tr>
             <th className="border-r">Step</th>

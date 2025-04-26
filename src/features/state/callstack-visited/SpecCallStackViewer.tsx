@@ -50,7 +50,7 @@ export default function SpecCallStackViewer() {
         </div>
       }
     >
-      <table className="w-full">
+      <table className="w-full border-t">
         <thead className="text-sm font-200">
           <tr>
             <th className="border-r w-8">#</th>

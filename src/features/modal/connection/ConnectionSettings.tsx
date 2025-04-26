@@ -114,7 +114,6 @@ export default function ConnectionSettings() {
                   <h4 className="mt-4 text-lg font-700">API Address</h4>
                   <input
                     type="text"
-                    className="border bg-white dark:bg-neutral-900 rounded-md w-full p-2"
                     placeholder="http://localhost:8080"
                     disabled={selected.id === "browser"}
                     value={url}
