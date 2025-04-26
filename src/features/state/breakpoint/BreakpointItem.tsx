@@ -46,8 +46,10 @@ export default function BreakpointItem(props: BreakpointItemProp) {
     <>
       <tr
         className={twMerge(
-          " hover:bg-neutral-200 transition-all",
-          isEven ? "bg-white" : "bg-neutral-100",
+          " hover:bg-neutral-500/25 transition-all",
+          isEven
+            ? "bg-white dark:bg-neutral-900"
+            : "bg-neutral-100 dark:bg-neutral-800",
         )}
       >
         <td className="lowercase border-r overflow-hidden font-mono text-wrap break-all text-center">

@@ -13,7 +13,7 @@ import {
 import { clearJS, edit } from "@/store/reducers/JS";
 import { clearAlgo } from "@/store/reducers/Spec";
 import { doAPIPostRequest } from "@/util/api/api";
-import { Route } from "@/types/route.type";
+import { Route } from "@/types/route.types";
 import { GIVEN_SETTINGS } from "@/constants/settings";
 import { updateStatRequest } from "@/store/reducers/Stats";
 

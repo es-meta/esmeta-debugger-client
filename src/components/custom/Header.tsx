@@ -5,7 +5,7 @@ import { HomeIcon, HouseIcon } from "lucide-react";
 
 export default function Header() {
   return (
-    <nav className="bg-white dark:text-white dark:bg-neutral-900 border-b border-b-neutral-300 dark:border-b-neutral-700 bg-opacity-75 min-h-12 max-h-12 h-12 w-full text-sm xl:px-12 flex flex-row justify-between gap-3 items-center px-4">
+    <nav className="bg-white dark:text-white dark:bg-neutral-900 border-b bg-opacity-75 min-h-12 max-h-12 h-12 w-full text-sm xl:px-12 flex flex-row justify-between gap-3 items-center px-4">
       <Left />
       <Right />
     </nav>
@@ -22,9 +22,7 @@ function Left() {
           alt="ESMeta Logo"
           className="h-6 w-6 inline-block mr-1"
         />
-        <b className="font-800">
-          ESMeta{' '}
-        </b>
+        <b className="font-800">ESMeta </b>
         Double Debugger Playground
       </span>
 
@@ -45,9 +43,9 @@ function Right() {
         rel="noopener noreferrer"
         title="Open ESMeta Official Homepage"
       >
-          <HouseIcon className="size-[1em]" />
+        <HouseIcon className="size-[1em]" />
       </a>
-      <a 
+      <a
         className="flex flex-row gap-1 items-center text-xl font-500 hover:bg-neutral-100 hover:dark:bg-neutral-800 rounded-lg active:scale-90 transition-all cursor-pointer p-2"
         href={GITHUB_LINK_ESMETA}
         target="_blank"

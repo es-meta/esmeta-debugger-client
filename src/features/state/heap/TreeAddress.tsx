@@ -17,7 +17,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { HeapObj } from "@/types/heap.type";
+import { HeapObj } from "@/types/heap.types";
 
 interface Props {
   field: string;
@@ -103,7 +103,7 @@ export default function TreeAddress({
         //       : "flex flex-row items-center justify-center break-all font-mono gap-2"
         //   }
         // >
-        <li className="border-b border-b-neutral-300">
+        <li className="border-b">
           <b className="font-600 font-mono">{field}</b>&nbsp;
           {/* {address}&nbsp; */}
           {getTypeString(obj)}&nbsp;

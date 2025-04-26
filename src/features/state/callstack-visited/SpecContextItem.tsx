@@ -45,9 +45,10 @@ export default function SpecContextItem(props: ContextItemProps) {
 
   const className = useMemo(() => {
     return twMerge(
-      "even:bg-white odd:bg-neutral-50 text-xs",
-      "hover:bg-neutral-100 active:bg-green-100 transition-all cursor-pointer",
-      highlight && "even:bg-green-200 odd:bg-green-200 hover:bg-green-300",
+      "even:bg-neutral-400/10 odd:bg-neutral-400/5 text-xs",
+      "hover:bg-neutral-400/5 active:bg-green-500/25 transition-all cursor-pointer",
+      highlight &&
+        "even:bg-green-500/25 odd:bg-green-500/25 hover:bg-green-500/50",
     );
   }, [highlight]);
 
@@ -80,7 +81,7 @@ export default function SpecContextItem(props: ContextItemProps) {
         </td>
         <td className="">
           <button
-            className="size-full text-black/50 hover:text-black/25 flex items-center justify-center"
+            className="size-full flex items-center justify-center"
             onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
               e.stopPropagation();
               setExpand(prev => !prev);

@@ -8,7 +8,7 @@ import { Binding, GetBindingValue } from "./getBindings";
 import { v4 } from "uuid";
 import clsx from "clsx";
 import { twJoin } from "tailwind-merge";
-import { Heap } from "@/types/heap.type";
+import { Heap } from "@/types/heap.types";
 import { useMemo } from "react";
 import tw from "tailwind-styled-components";
 import TreeAddress from "../heap/TreeAddress";
@@ -28,7 +28,7 @@ import { CodeIcon, CodeSquareIcon } from "lucide-react";
 //   return eStack.values.at(0) || null;
 // }
 
-const Li = tw.li`border-b border-b-neutral-300`;
+const Li = tw.li`border-b`;
 
 function computeBindings(heap: Heap): Binding[] {
   const stack = heap[EXECUTION_STACK_ADDR];
@@ -82,29 +82,27 @@ export default function JSEnvViewer() {
             No environment variables.
           </p>
         ) : (
-          bindings.map(([name, value]) =>
-            value === undefined ? null : // <tr
-            //   key={v4()}
-            //   className={twJoin(
-            //     clsx(
-            //       "even:bg-white odd:bg-neutral-100 font-500",
-            //       "hover:bg-neutral-200 transition-all",
-            //       { "!bg-[#BAF7D0]": name === "return" },
-            //     ),
-            //   )}
-            // >
-            //   <td className="border-r font-mono text-wrap py-1 break-all text-center overflow-hidden">
+          bindings.map(
+            ([name, value]) =>
+              value === undefined ? null : //     clsx( //   className={twJoin( //   key={v4()} // <tr
+              //       "even:bg-white odd:bg-neutral-100 font-500",
+              //       "hover:bg-neutral-200 transition-all",
+              //       { "!bg-[#BAF7D0]": name === "return" },
+              //     ),
+              //   )}
+              // >
+              //   <td className="border-r font-mono text-wrap py-1 break-all text-center overflow-hidden">
 
-            //   </td>
-            //   <td className="font-mono text-wrap break-all text-center overflow-hidden flex flex-row gap-2 justify-center items-center">
-            //     {
-            value.startsWith("#") ? (
-              <TreeAddress field={name} address={value} defaultFold />
-            ) : (
-              <Li>
-                <B>{name}</B>&nbsp;:&nbsp;{value}
-              </Li>
-            ),
+              //   </td>
+              //   <td className="font-mono text-wrap break-all text-center overflow-hidden flex flex-row gap-2 justify-center items-center">
+              //     {
+              value.startsWith("#") ? (
+                <TreeAddress field={name} address={value} defaultFold />
+              ) : (
+                <Li>
+                  <B>{name}</B>&nbsp;:&nbsp;{value}
+                </Li>
+              ),
             //       }
             //   </td>
             // </tr>

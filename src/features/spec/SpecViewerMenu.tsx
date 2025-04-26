@@ -7,7 +7,7 @@ export default function SpecViewerMenu() {
     <Menu>
       {({ open }) => (
         <>
-          <MenuButton className="p-2 bg-white hover:bg-neutral-100 active:bg-neutral-200 border border-neutral-300 rounded-md transition-all">
+          <MenuButton className="p-2 bg-white hover:bg-neutral-100 active:bg-neutral-200 border rounded-md transition-all">
             <MenuIcon size={18} />
           </MenuButton>
           <AnimatePresence>
@@ -27,7 +27,7 @@ export default function SpecViewerMenu() {
                   transition: { duration: 0.0625 },
                 }}
                 anchor="bottom end"
-                className="origin-top-right bg-white p-1 border border-neutral-300 rounded-md shadow-lg m-1 w-48 text-sm"
+                className="origin-top-right bg-white p-1 border rounded-md shadow-lg m-1 w-48 text-sm"
               >
                 <MenuItem disabled>
                   <a

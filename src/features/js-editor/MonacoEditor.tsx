@@ -3,7 +3,11 @@ import Editor, { type Monaco } from "@monaco-editor/react";
 import { editor } from "monaco-editor";
 import * as monaco_editor from "monaco-editor";
 import { createRangeFromIndices } from "./JSEditor.util";
-import { LoaderIcon } from "lucide-react";
+import { LoaderCircleIcon } from "lucide-react";
+import {
+  currentMode,
+  usePreferredColorScheme,
+} from "@/hooks/usePreferredColorScheme";
 
 interface Props {
   code: string;
@@ -52,8 +56,8 @@ export default function MonacoEditor({
     [],
   );
 
-  const options: editor.IStandaloneEditorConstructionOptions = useMemo(
-    () => ({
+  const options: editor.IStandaloneEditorConstructionOptions = useMemo(() => {
+    return {
       scrollbar: {
         alwaysConsumeMouseWheel: false,
       },
@@ -64,14 +68,12 @@ export default function MonacoEditor({
       fontSize: 14,
       tabSize: 2,
       fontFamily: '"Fira code", "Fira Mono", monospace',
-      theme: "vs",
       automaticLayout: true,
-      lineNumbersMinChars: 2,
+      lineNumbersMinChars: 4,
       glyphMargin: false,
       folding: false,
-    }),
-    [readOnly],
-  );
+    };
+  }, [readOnly]);
 
   useEffect(() => {
     if (!monacoRef.current || !decorations.current || !editorRef.current) {
@@ -101,18 +103,28 @@ export default function MonacoEditor({
     }
   }, [code, start, end]);
 
+  usePreferredColorScheme((mode: "light" | "dark") => {
+    if (monacoRef.current) {
+      monacoRef.current.editor.setTheme(mode === "dark" ? "vs-dark" : "light");
+    }
+  });
+
   return (
     <Editor
       loading={<Loading />}
+      // className={showAfterMount ? "" : "invisible"}
       language="javascript"
       value={code}
       onChange={s => onChange(s || "")}
       onMount={monacoDidMount}
+      theme={currentMode() === "light" ? "light" : "vs-dark"}
       options={options}
     />
   );
 }
 
 function Loading() {
-  return <LoaderIcon className="animate-spin text-blue-500" size={32} />;
+  return (
+    <LoaderCircleIcon className="animate-spin text-neutral-500" size={32} />
+  );
 }

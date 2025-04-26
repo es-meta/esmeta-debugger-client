@@ -4,11 +4,6 @@ import { useSelector } from "react-redux";
 import { EXECUTION_STACK_ADDR } from "@/constants/constant";
 import { ReduxState } from "@/store";
 import { toast } from "react-toastify";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import JSContextItem, { JSContext } from "./JSContextItem";
 
 function readJSExecutionStack(state: ReduxState): JSContext[] {
@@ -91,7 +86,7 @@ export default function JSCallStackViewer() {
     <StateViewerItem
       header="JavaScript&nbsp;Call&nbsp;Stack"
       headerItems={
-        <div className="flex flex-row space-x-2 text-neutral-600 text-sm">
+        <div className="flex flex-row space-x-2 text-sm">
           {/* <Info /> */}
           <button
             className="flex flex-row hover:bg-neutral-200 rounded items-center gap-1 active:scale-90 transition-all"
@@ -115,7 +110,7 @@ export default function JSCallStackViewer() {
       }
     >
       <table className="w-full">
-        <thead className="text-sm font-200 text-neutral-500">
+        <thead className="text-sm font-200">
           <tr>
             <th className="border-r w-8">#</th>
             <th className="border-r w-fit">type</th>
@@ -125,10 +120,7 @@ export default function JSCallStackViewer() {
         <tbody>
           {executionStack.length === 0 ? (
             <tr>
-              <td
-                colSpan={3}
-                className="text-center text-neutral-500 p-4 text-sm"
-              >
+              <td colSpan={3} className="text-center p-4 text-sm">
                 JavaScript call stack is empty, maybe evaluating script not yet
                 started or already finished.
               </td>

@@ -180,8 +180,7 @@ function AlgoStepCore({ className, contents, handleClick, value }: CoreProps) {
     <li
       className={twJoin(
         className,
-        "hover:scale-[1.015625] hover:bg-neutral-100 active:scale-95 transition-all cursor-pointer",
-        "text-black",
+        "hover:scale-[1.015625] hover:bg-neutral-400/20 active:scale-95 transition-all cursor-pointer",
       )}
       onClick={handleClick}
       value={value}

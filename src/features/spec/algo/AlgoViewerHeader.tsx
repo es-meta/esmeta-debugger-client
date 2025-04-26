@@ -119,7 +119,7 @@ export default function AlgoViewerHeader({
 
   return (
     <>
-      <div className="pt-2 px-2 font-es font-600 text-lg bg-white">
+      <div className="pt-2 px-2 font-es font-600 text-lg">
         <b>{title}</b>
         <span className="algo-parameters">({params})</span>
         <Info algorithm={algorithm} irToSpecMapping={irToSpecMapping} />
@@ -154,10 +154,7 @@ export default function AlgoViewerHeader({
             <b className="size-14 text-[#2aa198] italic font-es">
               {algorithm.params[0].name}
             </b>{" "}
-            :{" "}
-            <b className="size-14 text-black font-es">
-              {specInfo?.methodInfo[0]}
-            </b>
+            : <b className="size-14 font-es">{specInfo?.methodInfo[0]}</b>
           </p>
         </div>
       )}

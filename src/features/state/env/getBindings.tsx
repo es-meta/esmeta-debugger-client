@@ -1,5 +1,5 @@
 import { logger } from "@/constants/constant";
-import { Heap } from "@/types/heap.type";
+import { Heap } from "@/types/heap.types";
 
 export type Binding = [string, string | undefined];
 

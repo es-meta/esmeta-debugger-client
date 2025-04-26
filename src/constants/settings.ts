@@ -51,31 +51,36 @@ const GIVEN_API:
   if (api === null) {
     api = getLocalStorage(QUERY_API);
   }
-    
-    const genBrowserApi = () => ({ type: "browser" } as const);
-    const genHttpApi = () => {
-      try {
-        logger.warn(api);
-        return {
-          type: "http",
-          url: api || FALLBACK_API_URl,
-          error: false,
-          rawUrl: api,
-        } as const;
-      } catch {
-        logger.error(
-          `Invalid API URL: ${api}. Using fallback URL: ${FALLBACK_API_URl}`,
-        );
-        return { type: "http", url: FALLBACK_API_URl, error: true, rawUrl: api } as const;
-      }
-    };
 
-    const defaultApi = genHttpApi;
+  const genBrowserApi = () => ({ type: "browser" }) as const;
+  const genHttpApi = () => {
+    try {
+      logger.warn(api);
+      return {
+        type: "http",
+        url: api || FALLBACK_API_URl,
+        error: false,
+        rawUrl: api,
+      } as const;
+    } catch {
+      logger.error(
+        `Invalid API URL: ${api}. Using fallback URL: ${FALLBACK_API_URl}`,
+      );
+      return {
+        type: "http",
+        url: FALLBACK_API_URl,
+        error: true,
+        rawUrl: api,
+      } as const;
+    }
+  };
+
+  const defaultApi = genHttpApi;
 
   if (api === null) return defaultApi();
   if (api === "browser") {
     return genBrowserApi();
-  } else  {
+  } else {
     return genHttpApi();
   }
 })();

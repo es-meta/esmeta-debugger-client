@@ -14,13 +14,11 @@ export default function StateViewerItem(props: StateViewerItemProps) {
   const { header, children, headerItems, icon } = props;
 
   return (
-    <Card className="bg-white rounded-none">
+    <Card className="rounded-none border-b">
       <CardHeader icon={icon ?? null} title={header}>
         {headerItems}
       </CardHeader>
-      <div className="relative size-full overflow-y-scroll bg-white">
-        {children}
-      </div>
+      <div className="relative size-full overflow-y-scroll ">{children}</div>
     </Card>
   );
 }
