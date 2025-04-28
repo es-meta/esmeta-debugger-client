@@ -1,4 +1,4 @@
-import { logger } from "@/constants/constant";
+import { logger } from "./logger.utils";
 
 export function getSearchQuery(name: string): string | null {
   const x = new URLSearchParams(location.search).get(name);

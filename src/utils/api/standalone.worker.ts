@@ -1,5 +1,5 @@
 /// <reference lib="webworker" />
-
+import type { Route } from "@/types";
 import type {
   ModuleGeneratedByScalaJS,
   StandaloneDebugger,
@@ -66,8 +66,6 @@ const doGetRequest = async (
       throw apiError(endpoint);
   }
 };
-
-import { Route } from "@/types/route.types";
 
 // raw POST-like request
 const doWriteRequest = async (

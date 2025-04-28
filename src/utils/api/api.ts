@@ -1,29 +1,34 @@
 import { toast } from "react-toastify";
-import type { Route } from "@/types/route.types";
+import type { Route } from "@/types";
 import { GIVEN_SETTINGS } from "@/constants/settings";
-import { logger } from "@/constants/constant";
-import { StandaloneDebuggerInput } from "./standalone.type";
+import type { StandaloneDebuggerInput } from "./standalone.type";
+import { jotaiStore } from "@/atoms/store";
+import { recieveAtom, sentAtom } from "@/atoms/defs";
+import { createIdGenerator, logger } from "@/utils";
 
 // Create worker instance
 const workerPromise = instantiateWorker(GIVEN_SETTINGS.api);
 
 // Request counter for unique IDs
-var counter = 0;
+const newId = createIdGenerator();
+
 export const workingset = new Set();
 
 type ReturnTypeForApi<T extends Route> = T extends "state/heap"
   ? number
   : unknown;
 
-const createWorkerRequest = async <T extends Route>(
-  type: string,
+export const createWorkerRequest = async <T extends Route>(
+  workerPromise: Promise<Worker>,
+  type: "GET" | "POST" | "DELETE" | "PUT",
   endpoint: T,
   data?: unknown,
 ): Promise<ReturnTypeForApi<T>> => {
   const worker = await workerPromise;
   return new Promise((resolve, reject) => {
-    const id = counter++;
+    const id = newId();
     workingset.add(id);
+    jotaiStore.set(sentAtom);
 
     logger.log(id, type, endpoint, data);
 
@@ -34,12 +39,15 @@ const createWorkerRequest = async <T extends Route>(
         logger.log(id, response);
         if (response.success) {
           resolve(response.data);
+          workingset.delete(id);
+          jotaiStore.set(recieveAtom, workingset.size);
         } else {
+          workingset.delete(id);
+          jotaiStore.set(recieveAtom, Number.MIN_SAFE_INTEGER);
           const error = new Error(response.error);
           toast.error(error.message);
           reject(error);
         }
-        workingset.delete(id);
       }
     };
 
@@ -53,32 +61,32 @@ export const doAPIGetRequest = <T extends Route>(
   endpoint: T,
   queryObj?: { [key: string]: unknown },
 ) => {
-  return createWorkerRequest<T>("GET", endpoint, queryObj);
+  return createWorkerRequest<T>(workerPromise, "GET", endpoint, queryObj);
 };
 
 export const doAPIPostRequest = <T extends Route>(
   endpoint: T,
   bodyObj?: unknown,
 ): Promise<unknown> => {
-  return createWorkerRequest<T>("POST", endpoint, bodyObj);
+  return createWorkerRequest<T>(workerPromise, "POST", endpoint, bodyObj);
 };
 
 export const doAPIDeleteRequest = <T extends Route>(
   endpoint: T,
   bodyObj?: unknown,
 ): Promise<unknown> => {
-  return createWorkerRequest("DELETE", endpoint, bodyObj);
+  return createWorkerRequest(workerPromise, "DELETE", endpoint, bodyObj);
 };
 
 export const doAPIPutRequest = <T extends Route>(
   endpoint: T,
   bodyObj?: unknown,
 ): Promise<unknown> => {
-  return createWorkerRequest("PUT", endpoint, bodyObj);
+  return createWorkerRequest(workerPromise, "PUT", endpoint, bodyObj);
 };
 
 /** auxiliaries */
-async function instantiateWorker(
+export async function instantiateWorker(
   givenApi: typeof GIVEN_SETTINGS.api,
 ): Promise<Worker> {
   return new Promise<Worker>(async resolve => {
