@@ -24,14 +24,28 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
+    <!-- TODO style tag not needed after SSG -->
+    <style>
+      body {
+        background-color: #f2f2f2;
+        color: #000;
+      }
+      @media (prefers-color-scheme: dark) {
+        body {
+          background-color: #171717;
+          color: #fff;
+        }
+      }
+    </style>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
-    <script src="https://unpkg.com/@hpcc-js/wasm/dist/graphviz.umd.js" type="javascript/worker"></script>
-    <title>ECMAScript Debugger</title>
+    <title>ECMAScript Double Debugger</title>
+    <!-- TODO add OpenGraph -->
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script src="https://unpkg.com/@hpcc-js/wasm/dist/graphviz.umd.js" type="javascript/worker"></script>
   </body>
 </html>
