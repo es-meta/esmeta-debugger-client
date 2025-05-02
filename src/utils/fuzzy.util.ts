@@ -1,5 +1,6 @@
 import { Fzf } from "fzf";
 
+// TODO search in worker
 export const fuzzyFilter = <T>(
   source: T[],
   query: string,

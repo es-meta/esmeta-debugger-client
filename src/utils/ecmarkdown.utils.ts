@@ -16,7 +16,7 @@ import type {
 import { DoubleBracketsNode } from "ecmarkdown/dist/node-types";
 import { SPEC_URL } from "@/constants";
 
-export class Emitter {
+class Emitter {
   emit(node: Node[]) {
     return this.emitNode(node);
   }
@@ -128,4 +128,8 @@ export class Emitter {
     // react element with no props and children
     return e(wrapping, { key: uuid() }, children);
   }
+}
+
+export function emit(node: Node[]) {
+  return Emitter.emit(node);
 }

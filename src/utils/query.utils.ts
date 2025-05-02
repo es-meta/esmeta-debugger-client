@@ -25,6 +25,9 @@ export function buildSearchParams(name: string, value: string | null): string {
 //   return `${prefix}${name}`;
 // }
 
+/**
+ * @deprecated
+ */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function setLocalStorage(name: string, value: string): boolean {
   return false;
@@ -37,6 +40,9 @@ export function setLocalStorage(name: string, value: string): boolean {
   // }
 }
 
+/**
+ * @deprecated
+ */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function getLocalStorage(name: string): string | null {
   return null;

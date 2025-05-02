@@ -1,13 +1,14 @@
 import { toast } from "react-toastify";
 import type { Route } from "@/types";
-import { GIVEN_SETTINGS } from "@/constants/settings";
 import type { StandaloneDebuggerInput } from "./standalone.type";
 import { jotaiStore } from "@/atoms/store";
 import { recieveAtom, sentAtom } from "@/atoms/defs";
 import { createIdGenerator, logger } from "@/utils";
+import type { ExtractAtomValue } from "jotai";
+import { givenConfigAtom } from "@/atoms/defs/config";
 
 // Create worker instance
-const workerPromise = instantiateWorker(GIVEN_SETTINGS.api);
+const workerPromise = instantiateWorker(jotaiStore.get(givenConfigAtom).api);
 
 // Request counter for unique IDs
 const newId = createIdGenerator();
@@ -87,7 +88,7 @@ export const doAPIPutRequest = <T extends Route>(
 
 /** auxiliaries */
 export async function instantiateWorker(
-  givenApi: typeof GIVEN_SETTINGS.api,
+  givenApi: ExtractAtomValue<typeof givenConfigAtom>["api"],
 ): Promise<Worker> {
   return new Promise<Worker>(async resolve => {
     if (givenApi.type === "browser") {
