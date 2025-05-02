@@ -14,7 +14,7 @@ import type {
 } from "ecmarkdown";
 // XXX check if this is the correct import
 import { DoubleBracketsNode } from "ecmarkdown/dist/node-types";
-import { SPEC_URL } from "@/constants/constant";
+import { SPEC_URL } from "@/constants";
 
 export class Emitter {
   emit(node: Node[]) {
