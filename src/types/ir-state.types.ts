@@ -11,5 +11,6 @@ export type Context = {
   env: Environment;
   algo: Algorithm;
   visited: number[][];
+  jsRange: [number, number]; // start and end of the context
 };
 export type CallStack = Context[];

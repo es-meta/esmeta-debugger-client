@@ -50,3 +50,9 @@ type SdoInfo = {
     }[];
   } | null;
 };
+
+export type Version = {
+  spec: SpecVersion;
+  esmeta: string | null;
+  client: string;
+};
