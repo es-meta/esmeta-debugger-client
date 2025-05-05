@@ -2,7 +2,6 @@ import { call, put, takeLatest, all } from "redux-saga/effects";
 import { toast } from "react-toastify";
 import { doAPIGetRequest } from "@/api";
 import {
-  Algorithm,
   AlgorithmKind,
   Environment,
   CallStack,
@@ -41,37 +40,35 @@ function* updateCallStackSaga() {
         boolean,
         Environment,
         number[][],
+        AlgorithmKind,
+        [string, boolean, string][],
+        string,
+        string,
+        [number, number],
       ][] = yield call(() => doAPIGetRequest("state/callStack"));
-      const callStack = raw.map(([fid, name, steps, isExit, env, visited]) => ({
+      const callStack = raw.map(([fid, name, steps, isExit, env, visited, kind, rawParams, dot, code, [start, end]]) => ({
         fid,
         name,
         steps,
         isExit,
         env,
-        algo: null as unknown as Algorithm,
-        visited,
-      }));
-
-      for (let i = 0; i < callStack.length; i++) {
-        const [fid, kind, name, rawParams, dot, code, [start, end]]: [
-          number,
-          AlgorithmKind,
-          string,
-          [string, boolean, string][],
-          string,
-          string,
-          [number, number],
-        ] = yield call(() => doAPIGetRequest(`state/context/${i}`));
-        const params = rawParams.map(([name, optional, type]) => ({
+        algo: {
+          fid,
+          kind,
           name,
-          optional,
-          type,
-        }));
-        const algo = { fid, kind, name, params, dot, code };
-        callStack[i].algo = algo;
-        (callStack[i] as Context).jsRange = [start, end]; // add jsRange to callStack
-        ///
-      }
+          params: rawParams.map(([name, optional, type]) => ({
+            name,
+            optional,
+            type,
+          })),
+          dot,
+          code,
+        },
+        visited,
+        jsRange: [start, end],
+      } satisfies Context));
+
+     
       yield put(updateCallStackSuccess(callStack as CallStack));
       yield put(updateContextIdx(0));
     } catch (e: unknown) {
