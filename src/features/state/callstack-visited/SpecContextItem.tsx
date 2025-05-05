@@ -1,9 +1,9 @@
 import type { Breakpoint, Context, IrToSpecMapping } from "@/types";
 import { useEffect, useMemo, useState } from "react";
-import { ContextVisitedViewer } from "./algo/AlgoVisitedViewer";
 import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import { cn, toStepString } from "@/utils";
 import { useAppSelector, shallowEqual } from "@/hooks";
+import { ContextViewer } from "@/features/spec/ContextViewer";
 
 type ContextItemProps = {
   data: Context;
@@ -97,11 +97,7 @@ export default function SpecContextItem(props: ContextItemProps) {
         (data.algo.code !== "" ? (
           <tr>
             <td colSpan={4}>
-              <ContextVisitedViewer
-                context={data}
-                algo={data.algo}
-                breakpoints={breakpoints}
-              />
+              <ContextViewer embed context={data} />
             </td>
           </tr>
         ) : (

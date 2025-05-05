@@ -11,7 +11,7 @@ const CLASSNAME = cn(
 );
 
 export default function SpecVersionViewContent() {
-  const { spec, esmeta, client } = useAtomValue(atoms.stats.versionAtom);
+  const { spec, esmeta, client } = useAtomValue(atoms.client.versionAtom);
 
   return (
     <>

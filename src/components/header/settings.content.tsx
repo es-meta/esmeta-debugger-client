@@ -1,21 +1,26 @@
 import { useCallback } from "react";
 import { Field, Label } from "@headlessui/react";
 import { Switch } from "../button/switch";
-import { useAppDispatch, useAppSelector } from "@/hooks";
-import { toggleDevMode } from "@/store/reducers/app-state";
+import { useAtom } from "jotai";
+import { atoms } from "@/atoms";
 
 export default function SettingsContent() {
-  const dispatch = useAppDispatch();
-  const devMode = useAppSelector(state => state.appState.devMode);
+  const [devMode, setDevMode] = useAtom(atoms.app.devModeAtom);
+  const [showVisited, setShowVisited] = useAtom(atoms.app.highlightVisitedAtom);
 
-  const toggle = useCallback(() => dispatch(toggleDevMode()), [dispatch]);
+  const toggleDevMode = useCallback(() => setDevMode(d => !d), []);
+  const toggleShowVisited = useCallback(() => setShowVisited(s => !s), []);
 
   return (
     <div className="space-y-6">
       <article className="space-y-2">
         <Field>
-          <Label className="font-500 text-xl">Internal Mode&nbsp;</Label>
-          <Switch checked={devMode} onChange={toggle} />
+          <Label className="font-500 text-xl">Developer Mode&nbsp;</Label>
+          <Switch checked={devMode} onChange={toggleDevMode} />
+        </Field>
+        <Field>
+          <Label className="font-500 text-xl">Show Visited Steps&nbsp;</Label>
+          <Switch checked={showVisited} onChange={toggleShowVisited} />
         </Field>
 
         <aside>

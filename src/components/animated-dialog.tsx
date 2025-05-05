@@ -7,22 +7,24 @@ import { SuspenseBoundary } from "./suspense-boundary";
 
 const LazyComps = {
   Dialog: lazy(() =>
-    import("@headlessui/react").then(m => ({ default: m.Dialog })),
+    import("./animated-dialog.lazy").then(m => ({ default: m.Dialog })),
   ),
   DialogBackdrop: lazy(() =>
-    import("@headlessui/react").then(m => ({ default: m.DialogBackdrop })),
+    import("./animated-dialog.lazy").then(m => ({ default: m.DialogBackdrop })),
   ),
   DialogPanel: lazy(() =>
-    import("@headlessui/react").then(m => ({ default: m.DialogPanel })),
+    import("./animated-dialog.lazy").then(m => ({ default: m.DialogPanel })),
   ),
   DialogTitle: lazy(() =>
-    import("@headlessui/react").then(m => ({ default: m.DialogTitle })),
+    import("./animated-dialog.lazy").then(m => ({ default: m.DialogTitle })),
   ),
   Transition: lazy(() =>
-    import("@headlessui/react").then(m => ({ default: m.Transition })),
+    import("./animated-dialog.lazy").then(m => ({ default: m.Transition })),
   ),
   TransitionChild: lazy(() =>
-    import("@headlessui/react").then(m => ({ default: m.TransitionChild })),
+    import("./animated-dialog.lazy").then(m => ({
+      default: m.TransitionChild,
+    })),
   ),
 };
 
@@ -82,7 +84,7 @@ export function AnimatedDialog({
   );
 
   const handleMouseEnter = useCallback(() => {
-    import("@headlessui/react");
+    import("./animated-dialog.lazy");
     if (onPreload) {
       onPreload();
     }

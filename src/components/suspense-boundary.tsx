@@ -6,12 +6,6 @@ import {
 } from "react";
 import { logger } from "@/utils";
 
-type DisjointBooleanFlag<K extends string> = {
-  [Key in K]: {
-    [P in Key]: true;
-  } & Partial<Record<Exclude<K, Key>, undefined>>;
-}[K];
-
 type ErrorLevel = DisjointBooleanFlag<
   "intentional" | "recoverable" | "unexpected" | "fatal"
 >;

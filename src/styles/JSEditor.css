@@ -2,7 +2,7 @@
   background-color: #ffff00;
 }
 
-
+/* issue: https://github.com/microsoft/monaco-editor/issues/4455 */
 .monaco-editor {
   --vscode-focusBorder: #000000 !important; 
 }

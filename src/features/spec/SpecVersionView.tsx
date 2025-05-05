@@ -58,7 +58,7 @@ function SpecVersionViewButton() {
 }
 
 function VersionShortAsync() {
-  const { spec: version } = useAtomValue(atoms.stats.versionAtom);
+  const { spec: version } = useAtomValue(atoms.client.versionAtom);
 
   if (version.tag) {
     return (

@@ -23,5 +23,5 @@ export const irToSpecNameMapAtom = atom(async () => {
     irToSpecMapping[ir] = info !== undefined ? info : undefined;
   });
 
-  return raw2;
+  return irToSpecMapping;
 });

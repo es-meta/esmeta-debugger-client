@@ -7,7 +7,7 @@ import { givenConfigAtom } from "@/atoms/defs/config";
 
 export default function Toolbar() {
   const dispatch = useAppDispatch();
-  const devMode = useAppSelector(st => st.appState.devMode);
+  const devMode = useAtomValue(atoms.app.devModeAtom);
   const {
     disableRun,
     disableResume,
@@ -315,3 +315,4 @@ import {
   specStepOverAction,
   stopAction,
 } from "@/actions";
+import { atoms } from "@/atoms";

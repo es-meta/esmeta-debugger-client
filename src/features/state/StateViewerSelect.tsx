@@ -1,7 +1,7 @@
 import { Radio, RadioGroup } from "@headlessui/react";
 import React from "react";
 import { ViewerItem } from "./vieweritems";
-import { useAppSelector } from "@/hooks";
+import { atoms, useAtomValue } from "@/atoms";
 
 interface Props<T> {
   selected: T;
@@ -20,7 +20,7 @@ export default function StateViewerSelect<T extends ViewerItem>({
   getIcon,
   getLabel,
 }: Props<T>) {
-  const devMode = useAppSelector(st => st.appState.devMode);
+  const devMode = useAtomValue(atoms.app.devModeAtom);
 
   return (
     <RadioGroup

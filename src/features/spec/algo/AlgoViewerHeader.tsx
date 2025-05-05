@@ -1,3 +1,4 @@
+import { atoms, useAtomValue } from "@/atoms";
 import {
   Tooltip,
   TooltipContent,
@@ -15,19 +16,18 @@ function Info({
   algorithm: Algorithm;
   irToSpecMapping: IrToSpecMapping;
 }) {
+  const devMode = useAtomValue(atoms.app.devModeAtom);
   const specInfo = irToSpecMapping[algorithm.name];
   const CONTAINS = specInfo !== undefined;
 
-  console.log("irToSpecMapping", irToSpecMapping);
-
-  const [, handleClick] = useCopyCallback(algorithm.code);
+  const [isCopied, handleClick] = useCopyCallback(algorithm.code);
 
   return CONTAINS ? (
     <>
       <Tooltip>
         <TooltipTrigger
           asChild
-          className="font-sans text-xs ml-2 font-600 rounded-full px-1"
+          className="font-sans text-xs ml-1 font-600 px-1"
         >
           <a href={`${SPEC_URL}#${specInfo.htmlId}`} target="_blank">
             🔗
@@ -35,56 +35,13 @@ function Info({
         </TooltipTrigger>
         <TooltipContent>{`${SPEC_URL}#${specInfo.htmlId}`}</TooltipContent>
       </Tooltip>
-      <button className="inline" onClick={handleClick}>
-        raw
-      </button>
+      {devMode && (
+        <button className={"font-sans text-xs ml-1 px-1"} onClick={handleClick}>
+          {isCopied ? "✅" : "📃"}
+        </button>
+      )}
     </>
   ) : null;
-  // <Tooltip>
-  //   <TooltipTrigger className="font-sans text-xs ml-2 bg-es-300 font-600 rounded-full px-1">
-  //     ESMeta-defined
-  //   </TooltipTrigger>
-  //   <TooltipContent>
-  //     This function is written by the ESMeta project, not directly from the ECMAScript standard.
-  //     <br />
-  //     It may serve as an auxiliary or implement an implementation-defined aspect of the specification.
-  //   </TooltipContent>
-  // </Tooltip>
-}
-
-function Sdo({
-  algorithm,
-  irToSpecMapping,
-}: {
-  algorithm: Algorithm;
-  irToSpecMapping: IrToSpecMapping;
-}) {
-  const specInfo = irToSpecMapping[algorithm.name];
-  const CONTAINS = specInfo !== undefined;
-
-  return CONTAINS ? (
-    <Tooltip>
-      <TooltipTrigger
-        asChild
-        className="font-sans text-xs ml-2 font-600 rounded-full px-1"
-      >
-        <a href={`${SPEC_URL}#${specInfo.htmlId}`} target="_blank">
-          🔗
-        </a>
-      </TooltipTrigger>
-      <TooltipContent>{`${SPEC_URL}#${specInfo.htmlId}`}</TooltipContent>
-    </Tooltip>
-  ) : (
-    <Tooltip>
-      <TooltipTrigger className="font-sans text-xs ml-2 bg-es-300 font-600 rounded-full px-1">
-        SDO
-      </TooltipTrigger>
-      <TooltipContent>
-        This is a syntax-directed operation. this function takes AST as `this`
-        implicitly.
-      </TooltipContent>
-    </Tooltip>
-  );
 }
 
 export default function AlgoViewerHeader({
@@ -217,7 +174,7 @@ export function AlgoViewerHeaderUsingOnlyName({
     <>
       <div className="pt-2 px-2 font-es font-600 text-lg">
         <b>{title}</b>
-        {/* <Info algorithm={algorithm} irToSpecMapping={irToSpecMapping} /> */}
+        <Info algorithm={algorithm} irToSpecMapping={irToSpecMapping} />
       </div>
       {isSdo && (
         <div className="px-2 flex flex-col mb-1 break-all font-es">

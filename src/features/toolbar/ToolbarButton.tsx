@@ -38,7 +38,7 @@ const ToolbarButton = forwardRef(function (
           : "active:scale-90",
         disabled
           ? "opacity-25 cursor-not-allowed line-through"
-          : "hover:bg-neutral-300 dark:hover:bg-neutral-700",
+          : "hover:bg-neutral-300 dark:hover:bg-neutral-700 cursor-pointer",
         position === "left" ? "rounded-l-md" : "",
         position === "right" ? "rounded-r-md" : "",
         position === "center" ? "rounded-none" : "",

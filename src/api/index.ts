@@ -4,8 +4,7 @@ import type { Route } from "@/types";
 import type { StandaloneDebuggerInput } from "./standalone.type";
 import { atoms, jotaiStore } from "@/atoms";
 import { createIdGenerator, logger } from "@/utils";
-import { reduxStore } from "@/store";
-import { setBusy } from "@/store/reducers/app-state";
+import { busyAtom } from "@/atoms/defs/app";
 
 // Create worker instance
 const workerPromise = instantiateWorker(
@@ -31,7 +30,7 @@ export const createWorkerRequest = async <T extends Route>(
   return new Promise((resolve, reject) => {
     const id = newId();
     workingset.add(id);
-    reduxStore.dispatch(setBusy(workingset.size));
+    jotaiStore.set(busyAtom, workingset.size);
 
     logger.log?.(id, type, endpoint, data);
 
@@ -43,10 +42,10 @@ export const createWorkerRequest = async <T extends Route>(
         if (response.success) {
           resolve(response.data);
           workingset.delete(id);
-          reduxStore.dispatch(setBusy(workingset.size));
+          jotaiStore.set(busyAtom, workingset.size);
         } else {
           workingset.delete(id);
-          reduxStore.dispatch(setBusy(Number.MIN_SAFE_INTEGER));
+          jotaiStore.set(busyAtom, Number.MIN_SAFE_INTEGER);
           const error = new Error(response.error);
           toast.error(error.message);
           reject(error);

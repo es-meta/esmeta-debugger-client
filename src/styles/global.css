@@ -173,6 +173,10 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  table {
+    @apply border-separate border-spacing-0;
+  }
 }
 
 @layer utilities {

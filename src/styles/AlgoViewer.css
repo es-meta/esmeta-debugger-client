@@ -6,8 +6,13 @@
   font-family: Cambria, Palatino Linotype, Palatino, Liberation Serif, serif;
 }
 
+.algo-container ol { list-style-type: decimal; }
+.algo-container ol ol { list-style-type: lower-alpha; }
+.algo-container ol ol ol { list-style-type: lower-roman; }
+
 .algo-container ol {
   padding-inline-start: 20px;
+  list-style-position: inside;
 }
 
 .algo-parameters {

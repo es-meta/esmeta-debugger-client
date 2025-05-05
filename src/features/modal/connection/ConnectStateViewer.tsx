@@ -10,15 +10,8 @@ import {
 } from "lucide-react";
 import { ReactElement } from "react";
 import { twJoin } from "tailwind-merge";
-import { useAtomValue } from "jotai";
-import { atoms } from "@/atoms";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { busyStateSelector } from "@/store/selectors";
-import { useAppSelector } from "@/hooks";
+import { atoms, useAtomValue } from "@/atoms";
+import { ExtractAtomValue } from "jotai";
 
 interface SingleProps {
   adaptive?: boolean;
@@ -28,33 +21,20 @@ interface SingleProps {
   content: string;
 }
 
-function Single({
-  adaptive = false,
-  className,
-  icon,
-  text,
-  content,
-}: SingleProps) {
+function Single({ adaptive = false, className, icon, text }: SingleProps) {
   return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <button
-          className={twJoin(
-            "size-full flex flex-row gap-[0.1em] [&>svg]:size-[1em] [&>svg]:text-lg items-center rounded-lg text-xs uppercase font-700 font-mono",
-            className,
-            adaptive
-              ? "justify-center md:justify-start"
-              : "justify-start md:justify-start",
-          )}
-        >
-          {icon}
-          <span className="grow truncate text-center hidden md:inline">
-            {text}
-          </span>
-        </button>
-      </TooltipTrigger>
-      <TooltipContent>{content}</TooltipContent>
-    </Tooltip>
+    <div
+      className={twJoin(
+        "size-full flex flex-row gap-[0.1em] [&>svg]:size-[1em] [&>svg]:text-lg items-center rounded-lg text-xs uppercase font-700 font-mono",
+        className,
+        adaptive
+          ? "justify-center md:justify-start"
+          : "justify-start md:justify-start",
+      )}
+    >
+      {icon}
+      <span className="grow truncate text-center hidden md:inline">{text}</span>
+    </div>
   );
 }
 
@@ -64,7 +44,7 @@ function ConnectState({
   adaptive = false,
 }: {
   type: string;
-  busyState: ReturnType<typeof busyStateSelector>;
+  busyState: ExtractAtomValue<typeof atoms.app.busyStateGetter>;
   adaptive?: boolean;
 }) {
   if (type === "http")
@@ -168,7 +148,7 @@ interface Props {
 
 export default function ConnectStateViewer({ adaptive = false }: Props) {
   const config = useAtomValue(atoms.config.givenConfigAtom);
-  const state = useAppSelector(busyStateSelector);
+  const state = useAtomValue(atoms.app.busyStateGetter);
 
   return (
     <div className="relative w-8 md:w-16 h-7">
