@@ -1,5 +1,5 @@
-import { logger } from "@/constants/constant";
-import { Heap } from "@/types/heap.types";
+import type { Heap } from "@/types";
+import { logger } from "@/utils";
 
 export type Binding = [string, string | undefined];
 
@@ -125,7 +125,7 @@ function Specialized_GetBindingThisValue(
   const envRec = heap[envRecAddress];
 
   if (!envRec || envRec.type !== "RecordObj") {
-    logger.error(
+    logger.error?.(
       "Specialized_GetBindingThisValue",
       `envRec not found at ${envRecAddress}`,
     );
@@ -140,23 +140,23 @@ function Specialized_GetBindingThisValue(
 }
 
 export function GetBindingValue(heap: Heap, envRecAddress: string): Binding[] {
-  // logger.log('GetBindingValue', `envRecAddress: ${envRecAddress}`);
+  // logger.log?.('GetBindingValue', `envRecAddress: ${envRecAddress}`);
 
   const envRec = heap[envRecAddress];
   if (!envRec || envRec.type !== "RecordObj") {
-    logger.error("GetBindingValue", `envRec not found at ${envRecAddress}`);
+    logger.error?.("GetBindingValue", `envRec not found at ${envRecAddress}`);
     return [];
   }
 
   switch (envRec.tname) {
     case "GlobalEnvironmentRecord":
-      // logger.log('GetBindingValue', `GlobalEnvironmentRecord`);
+      // logger.log?.('GetBindingValue', `GlobalEnvironmentRecord`);
       return GetBindingValue_Global(heap, envRecAddress);
     case "ObjectEnvironmentRecord":
-      // logger.log('GetBindingValue', `ObjectEnvironmentRecord`);
+      // logger.log?.('GetBindingValue', `ObjectEnvironmentRecord`);
       return GetBindingValue_Object(heap, envRecAddress);
     case "DeclarativeEnvironmentRecord":
-      // logger.log('GetBindingValue', `DeclarativeEnvironmentRecord`);
+      // logger.log?.('GetBindingValue', `DeclarativeEnvironmentRecord`);
       return GetBindingValue_Declarative(heap, envRecAddress);
     case "FunctionEnvironmentRecord":
       return Specialized_GetBindingThisValue(heap, envRecAddress).concat(
@@ -166,7 +166,7 @@ export function GetBindingValue(heap: Heap, envRecAddress: string): Binding[] {
       );
     // throw new Error('FunctionEnvironmentRecord not implemented');
     default:
-      logger.error(
+      logger.error?.(
         "GetBindingValue",
         `Unknown environment record type: ${envRec.tname}`,
       );

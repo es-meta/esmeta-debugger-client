@@ -1,55 +1,56 @@
-import { useState, useMemo, Fragment, forwardRef, Ref, Dispatch } from "react";
+import { Fragment, forwardRef, Ref } from "react";
 import {
   Combobox,
   ComboboxInput,
   ComboboxOption,
   ComboboxOptions,
 } from "@headlessui/react";
-import { fuzzyFilter } from "@/util/fuzzy.util";
+import { cn, fuzzyFilter } from "@/utils";
 import { CheckIcon } from "lucide-react";
-import { twMerge } from "tailwind-merge";
-import type { Command } from "./command.type";
-import { useSelector } from "react-redux";
-import { ReduxState } from "@/store";
-import { toggleBreak } from "@/store/reducers/Breakpoint";
-import { chooseStateViewer, setHeapViewerAddr } from "@/store/reducers/Client";
+import type { Command } from "./command.types";
 
 interface ComboProps {
   value: Command | null;
   setValue: (value: Command | null) => void;
 }
 
-function computeFiltered(query: string, st: ReduxState): Command[] {
+function computeFiltered(get: Getter): Command[] {
+  const query = get(queryAtom);
+  const { heap, nameMap } = useAppSelector(
+    st => ({ heap: st.ir.heap, nameMap: st.spec.nameMap }),
+    shallowEqual,
+  );
+
   if (query.trimEnd() === "?") {
     return [
       {
         label: "use # to search address. use ! to search break points.",
         searchTarget: "",
-        actions: [],
+        action: null,
       },
     ];
   }
 
   if (query.startsWith("#")) {
     const addrQuery = query.slice(1);
-    const heapAddrs = Object.getOwnPropertyNames(st.irState.heap);
+    const heapAddrs = Object.getOwnPropertyNames(heap);
 
     return fuzzyFilter(heapAddrs, addrQuery, 0.2, c => c).map(addr => ({
       label: `inspect: ${addr}`,
       searchTarget: "",
-      actions: [setHeapViewerAddr(addr), chooseStateViewer("heap")],
+      action: null,
     }));
   }
 
   if (query.startsWith("!")) {
     const breakpointSearchQuery = query.slice(1);
     // const bpMap = st.breakpoint.items
-    const algoNames = Object.getOwnPropertyNames(st.spec.nameMap);
+    const algoNames = Object.getOwnPropertyNames(nameMap);
     return fuzzyFilter(algoNames, breakpointSearchQuery, 0.2, c => c).map(
       name => ({
         label: `toggle: ${name}`,
         searchTarget: "",
-        actions: [toggleBreak(name)],
+        action: null,
       }),
     );
   }
@@ -61,7 +62,7 @@ function computeFiltered(query: string, st: ReduxState): Command[] {
 
   if (query.startsWith("/")) {
     const cmdSearchQuery = query.slice(1);
-    return fuzzyFilter(debugActions, cmdSearchQuery, 0, c => c.label);
+    return fuzzyFilter(debugAction, cmdSearchQuery, 0, c => c.label);
   }
 
   return [];
@@ -76,17 +77,14 @@ function computeFiltered(query: string, st: ReduxState): Command[] {
   //   );
 }
 
+const queryAtom = atom<string>("");
+const filteredAtom = atom<Command[]>(computeFiltered);
+
 export default forwardRef<HTMLInputElement, ComboProps>(
   function CommandBarCombobox(props: ComboProps, ref: Ref<HTMLInputElement>) {
     const { value, setValue } = props;
-    const [query, setQuery] = useState("");
-
-    const st = useSelector((st: ReduxState) => st);
-
-    const filtered: Command[] = useMemo(
-      () => computeFiltered(query, st),
-      [query, st],
-    );
+    const [query, setQuery] = useAtom(queryAtom);
+    const filtered = useAtomValue(filteredAtom);
 
     return (
       <Combobox<Command>
@@ -115,10 +113,12 @@ export default forwardRef<HTMLInputElement, ComboProps>(
             >
               {({ focus }) => (
                 <div
-                  className={twMerge(
+                  className={cn(
                     "even:bg-white odd:bg-neutral-50",
                     "dark:even:bg-neutral-900 dark:odd:bg-neutral-800",
-                    focus ? "even:bg-blue-300 odd:bg-blue-300 even:dark:bg-blue-900 odd:dark:bg-blue-900" : "",
+                    focus
+                      ? "even:bg-blue-300 odd:bg-blue-300 even:dark:bg-blue-900 odd:dark:bg-blue-900"
+                      : "",
                     "p-2 cursor-pointer w-full",
                   )}
                   title={JSON.stringify(name)}
@@ -147,74 +147,71 @@ const choose: Command[] = [
   {
     label: "See: Breakpoints",
     searchTarget: "breakpoints bp breakpoint break",
-    actions: [chooseStateViewer("bp")],
+    action: null,
   },
   {
     label: "See: Call Stack",
     searchTarget: "callstack stack cs",
-    actions: [chooseStateViewer("callstack")],
+    action: null,
   },
   {
     label: "See: Heap",
     searchTarget: "heap",
-    actions: [chooseStateViewer("heap")],
+    action: null,
   },
   {
     label: "See: Environment",
     searchTarget: "environment env",
-    actions: [chooseStateViewer("env")],
+    action: null,
   },
   {
     label: "See: Statistics (for debugging)",
     searchTarget: "satistics stats debug",
-    actions: [chooseStateViewer("stats")],
+    action: null,
   },
 ];
 
-import {
-  irStep,
-  irStepOut,
-  irStepOver,
-  run,
-  specStep,
-  specStepOut,
-  specStepOver,
-} from "@/store/reducers/Debugger";
+// import {
+//   clientActiveAddrAtom,
+//   clientActiveViewerAtom,
+// } from "@/atoms/defs/client";
+import { atom, Getter, useAtom, useAtomValue } from "jotai";
+import { shallowEqual, useAppSelector } from "@/hooks";
 
-const debugActions: Command[] = [
+const debugAction: Command[] = [
   {
     label: "Action: Run Javascript",
     searchTarget: "run",
-    actions: [run()],
+    action: null, //runThunk(),
   },
   {
     label: "Action: Spec Step",
     searchTarget: "spec step",
-    actions: [specStep()],
+    action: null, //stepSpecThunk(),
   },
   {
     label: "Action: Spec Step Over",
     searchTarget: "spec step over",
-    actions: [specStepOver()],
+    action: null, //stepSpecOverThunk(),
   },
   {
     label: "Action: Spec Step Out",
     searchTarget: "spec step out",
-    actions: [specStepOut()],
+    action: null, //stepSpecOutThunk(),
   },
   {
     label: "Action: IR Step",
     searchTarget: "ir step",
-    actions: [irStep()],
+    action: null, //stepIrThunk(),
   },
   {
     label: "Action: IR Step Over",
     searchTarget: "ir step over",
-    actions: [irStepOver()],
+    action: null, //stepIrOverThunk(),
   },
   {
     label: "Action: IR Step Out",
     searchTarget: "ir step out",
-    actions: [irStepOut()],
+    action: null, //stepIrOutThunk(),
   },
 ];

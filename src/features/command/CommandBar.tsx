@@ -1,15 +1,19 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import CommandBarCombobox from "./CommandBarCombobox";
-import type { Command } from "./command.type";
+import { useState, useEffect, useRef, useCallback, lazy } from "react";
+import type { Command } from "./command.types";
+import { AnimatePresence, motion } from "motion/react";
+import { toast } from "react-toastify";
+import { useAppDispatch } from "@/hooks";
+
+const CommandBarCombobox = lazy(() => import("./CommandBarCombobox"));
 
 export default function CommandBar() {
-  const dispatch = useDispatch<Dispatch>();
+  const dispatch = useAppDispatch();
   const [isVisible, setIsVisible] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === "k" && (event.metaKey || event.ctrlKey)) {
-      // event.preventDefault();
+      event.preventDefault();
       setIsVisible(true);
       inputRef.current?.focus();
     } else if (event.key === "Escape") {
@@ -25,7 +29,8 @@ export default function CommandBar() {
   const handleCommand = useCallback(
     (command: Command | null) => {
       if (command === null) return;
-      command.actions.forEach(dispatch);
+      const { action } = command;
+      if (action) dispatch(action);
       setIsVisible(false);
       toast.info("command bar called " + command.label);
     },
@@ -36,7 +41,7 @@ export default function CommandBar() {
     <AnimatePresence initial={false}>
       {isVisible && (
         <motion.div
-          className="flex-col fixed top-0 touch-none left-0 w-full h-full bg-black bg-opacity-5 flex items-center justify-start z-50"
+          className="flex-col fixed top-0 touch-none left-0 w-full h-full bg-black/25 backdrop-blur-md flex items-center justify-start z-50"
           onClick={() => setIsVisible(false)}
           initial={variantsBg.initial}
           animate={variantsBg.animate}
@@ -60,11 +65,6 @@ export default function CommandBar() {
     </AnimatePresence>
   );
 }
-
-import { AnimatePresence, motion } from "motion/react";
-import { useDispatch } from "react-redux";
-import { Dispatch } from "@/store";
-import { toast } from "react-toastify";
 
 const variants = {
   initial: { opacity: 0, scale: 0.9 },

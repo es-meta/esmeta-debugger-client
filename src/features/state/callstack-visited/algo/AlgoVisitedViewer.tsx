@@ -1,26 +1,27 @@
 import React, { useCallback, useMemo } from "react";
+import {
+  Breakpoint,
+  BreakpointType,
+  Context,
+  Algorithm,
+  IrToSpecMapping,
+} from "@/types";
 import { parseAlgorithm } from "ecmarkdown";
-import { Algorithm, IrToSpecMapping } from "@/store/reducers/Spec";
 import { AlgoVisitedStepList } from "./AlgoVisitedStep";
 import "@/styles/AlgoViewer.css";
-import { Breakpoint, BreakpointType } from "@/store/reducers/Breakpoint";
-import { addBreak, rmBreak } from "@/store/reducers/Breakpoint";
-import { useDispatch, useSelector } from "react-redux";
-import { Context } from "@/store/reducers/IrState";
-import { twMerge } from "tailwind-merge";
-import { ReduxState } from "@/store";
+import { addBreak, rmBreak } from "@/store/reducers/breapoint";
+import { cn } from "@/utils";
+import { useAppDispatch, useAppSelector } from "@/hooks";
 
 export function ContextVisitedViewer(props: {
   context: Context;
   algo: Algorithm;
   breakpoints: Breakpoint[];
 }) {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { algo, breakpoints, context } = props;
 
-  const irToSpecMapping = useSelector(
-    (st: ReduxState) => st.spec.irToSpecMapping,
-  );
+  const irToSpecMapping = useAppSelector(st => st.spec.irToSpecMapping);
 
   const currentSteps = useMemo(
     () => (context === undefined ? [] : context.steps) satisfies number[],
@@ -156,7 +157,7 @@ function AlgoViewerHeader({
               {prodInfo.map((prod, idx) => (
                 <b
                   key={idx}
-                  className={twMerge(
+                  className={cn(
                     "inline",
                     prod.type === "terminal" && "font-700 font-mono text-sm",
                     prod.type === "nonterminal" && "font-300 italic",

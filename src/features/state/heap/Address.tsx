@@ -1,6 +1,5 @@
-import { ReduxState } from "@/store";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "@/hooks";
 import ObjectView from "./ObjViewer";
 import {
   ChevronDownIcon,
@@ -9,14 +8,18 @@ import {
   RewindIcon,
   SearchIcon,
 } from "lucide-react";
-import { backToProvenance } from "@/store/reducers/Debugger";
-import { chooseStateViewer, setHeapViewerAddr } from "@/store/reducers/Client";
+import { backToProvenanceAction } from "@/actions";
 
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useSetAtom } from "jotai";
+import {
+  clientActiveAddrAtom,
+  clientActiveViewerAtom,
+} from "@/atoms/defs/client";
 
 interface Props {
   address: `${string}`;
@@ -25,7 +28,7 @@ interface Props {
 }
 
 export function ProvinenceButton({ address }: { address?: string }) {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   return (
     address &&
@@ -35,7 +38,7 @@ export function ProvinenceButton({ address }: { address?: string }) {
         <TooltipTrigger
           className=" text-blue-400 inline cursor-pointer hover:text-blue-600 active:scale-75 transition-all"
           onClick={() => {
-            dispatch(backToProvenance(address));
+            dispatch(backToProvenanceAction(address));
           }}
         >
           <RewindIcon size={16} className="inline" />
@@ -47,7 +50,8 @@ export function ProvinenceButton({ address }: { address?: string }) {
 }
 
 function InspectInHaepViewer({ address }: { address: string }) {
-  const dispatch = useDispatch();
+  const setView = useSetAtom(clientActiveViewerAtom);
+  const setAddr = useSetAtom(clientActiveAddrAtom);
 
   return (
     <Tooltip>
@@ -55,8 +59,8 @@ function InspectInHaepViewer({ address }: { address: string }) {
         className="text-es-500 inline cursor-pointer hover:text-es-900 active:scale-75 transition-all"
         content={address}
         onClick={() => {
-          dispatch(setHeapViewerAddr(address));
-          dispatch(chooseStateViewer("heap"));
+          setAddr(address);
+          setView("heap");
         }}
       >
         <SearchIcon size={16} />
@@ -76,7 +80,8 @@ export default function Address({
   const [fold, setFold] = useState(
     singleMode === undefined ? defaultFold : singleMode,
   );
-  const obj = useSelector((s: ReduxState) => s.irState.heap[address]);
+  const heap = useAppSelector(st => st.ir.heap);
+  const obj = heap[address];
 
   return (
     <div className="flex flex-col size-full">

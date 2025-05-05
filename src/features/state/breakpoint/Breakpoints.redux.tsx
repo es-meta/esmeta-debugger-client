@@ -1,12 +1,7 @@
 import { connect, ConnectedProps } from "react-redux";
-import { ReduxState, Dispatch } from "@/store";
-import {
-  Breakpoint,
-  addBreak,
-  rmBreak,
-  toggleBreak,
-} from "@/store/reducers/Breakpoint";
-import { AppState } from "@/store/reducers/AppState";
+import { AppState, Breakpoint } from "@/types";
+import { ReduxState, AppDispatch } from "@/store";
+import { addBreak, rmBreak, toggleBreak } from "@/store/reducers/breapoint";
 
 // connect redux store
 const mapStateToProps = (st: ReduxState) => ({
@@ -18,7 +13,7 @@ const mapStateToProps = (st: ReduxState) => ({
     st.appState.state === AppState.INIT ||
     st.appState.state === AppState.JS_INPUT,
 });
-const mapDispatchToProps = (dispatch: Dispatch) => ({
+const mapDispatchToProps = (dispatch: AppDispatch) => ({
   addBreak: (bp: Breakpoint) => dispatch(addBreak(bp)),
   rmBreak: (opt: string | number) => dispatch(rmBreak(opt)),
   toggleBreak: (opt: string | number) => dispatch(toggleBreak(opt)),

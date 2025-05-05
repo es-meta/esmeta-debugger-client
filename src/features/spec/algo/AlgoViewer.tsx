@@ -1,18 +1,29 @@
+import { BreakpointType } from "@/types";
 import React, { useCallback, useMemo } from "react";
 import { parseAlgorithm } from "ecmarkdown";
 // import { Algorithm } from "@/store/reducers/Spec";
 import AlgoStepList from "./AlgoStepList";
 import "@/styles/AlgoViewer.css";
-import { BreakpointType } from "@/store/reducers/Breakpoint";
-import { SpecViewerProps } from "../SpecViewer.redux";
-import { addBreak, rmBreak } from "@/store/reducers/Breakpoint";
-import { useDispatch } from "react-redux";
-import { Context } from "@/store/reducers/IrState";
+import { addBreak, rmBreak } from "@/store/reducers/breapoint";
 import AlgoViewerHeader from "./AlgoViewerHeader";
+import { shallowEqual, useAppDispatch, useAppSelector } from "@/hooks";
 
-function ContextViewer(props: SpecViewerProps & { context: Context }) {
-  const dispatch = useDispatch();
-  const { algo, breakpoints, context, irToSpecMapping } = props;
+export default function ContextViewer() {
+  const dispatch = useAppDispatch();
+
+  const { breakpoints, callStack, contextIdx, irToSpecMapping } =
+    useAppSelector(
+      st => ({
+        breakpoints: st.breakpoint.items,
+        callStack: st.ir.callStack,
+        contextIdx: st.ir.contextIdx,
+        irToSpecMapping: st.spec.irToSpecMapping,
+      }),
+      shallowEqual,
+    );
+
+  const context = callStack[contextIdx];
+  const algo = context?.algo;
 
   const currentSteps = useMemo(
     () => (context === undefined ? [] : context.steps) satisfies number[],
@@ -89,12 +100,4 @@ function ContextViewer(props: SpecViewerProps & { context: Context }) {
       />
     </div>
   );
-}
-
-export default function AlgoViewer(props: SpecViewerProps) {
-  const { irState } = props;
-
-  const context = irState.callStack[irState.contextIdx];
-
-  return <ContextViewer {...props} context={context} />;
 }

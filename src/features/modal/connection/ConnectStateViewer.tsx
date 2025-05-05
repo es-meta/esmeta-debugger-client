@@ -1,104 +1,159 @@
 import { motion, AnimatePresence } from "motion/react";
-import { CheckIcon, CogIcon, Loader2Icon, PlugIcon } from "lucide-react";
-import { LoaderPinwheelIcon, CircleAlertIcon } from "lucide-react";
+import {
+  CheckIcon,
+  CogIcon,
+  Loader2Icon,
+  LoaderPinwheelIcon,
+  CircleAlertIcon,
+  ServerIcon,
+  ServerOffIcon,
+} from "lucide-react";
 import { ReactElement } from "react";
-import { useSelector } from "react-redux";
-import { ReduxState } from "@/store";
-import { AppState } from "@/store/reducers/AppState";
-import { GIVEN_SETTINGS } from "@/constants/settings";
 import { twJoin } from "tailwind-merge";
+import { useAtomValue } from "jotai";
+import { atoms } from "@/atoms";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { busyStateSelector } from "@/store/selectors";
+import { useAppSelector } from "@/hooks";
 
-interface Props {
+interface SingleProps {
+  adaptive?: boolean;
   className?: string;
   icon: ReactElement<SVGElement>;
   text: string;
+  content: string;
 }
 
-function Single({ className, icon, text }: Props) {
+function Single({
+  adaptive = false,
+  className,
+  icon,
+  text,
+  content,
+}: SingleProps) {
   return (
-    <div
-      className={twJoin(
-        "flex flex-row justify-start gap-1 [&>svg]:size-5 items-center rounded-lg text-xs uppercase font-800",
-        className,
-      )}
-    >
-      {icon}
-      <span className="w-11 truncate text-left hidden md:inline">{text}</span>
-    </div>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          className={twJoin(
+            "size-full flex flex-row gap-[0.1em] [&>svg]:size-[1em] [&>svg]:text-lg items-center rounded-lg text-xs uppercase font-700 font-mono",
+            className,
+            adaptive
+              ? "justify-center md:justify-start"
+              : "justify-start md:justify-start",
+          )}
+        >
+          {icon}
+          <span className="grow truncate text-center hidden md:inline">
+            {text}
+          </span>
+        </button>
+      </TooltipTrigger>
+      <TooltipContent>{content}</TooltipContent>
+    </Tooltip>
   );
 }
 
-const GIVEN_API = GIVEN_SETTINGS.api;
-
-const connectState =
-  GIVEN_API.type === "http"
-    ? ({
-        init: (
+function ConnectState({
+  type,
+  busyState,
+  adaptive = false,
+}: {
+  type: string;
+  busyState: ReturnType<typeof busyStateSelector>;
+  adaptive?: boolean;
+}) {
+  if (type === "http")
+    switch (busyState) {
+      case "init":
+        return (
           <Single
+            adaptive={adaptive}
             className="text-yellow-500"
             icon={<Loader2Icon className="animate-spin" />}
-            text="Lost"
+            text="Init"
+            content="Loading..."
           />
-        ),
-        connected: (
-          <Single className="text-green-500" icon={<PlugIcon />} text="Ready" />
-        ),
-        busy: (
+        );
+      case "connected":
+        return (
           <Single
-            className="text-blue-500"
-            icon={<LoaderPinwheelIcon className="animate-spin" />}
-            text="Busy"
-          />
-        ),
-        not_connected: (
-          <Single
-            className="text-red-500"
-            icon={<CircleAlertIcon />}
-            text="Lost"
-          />
-        ),
-      } as const)
-    : ({
-        init: (
-          <Single
-            className="text-yellow-500"
-            icon={<CogIcon className="animate-spin" />}
-            text="Build"
-          />
-        ),
-        connected: (
-          <Single
+            adaptive={adaptive}
             className="text-green-500"
-            icon={<CheckIcon />}
+            icon={<ServerIcon />}
             text="Ready"
+            content="Connected to ESMeta backend"
           />
-        ),
-        busy: (
+        );
+      case "busy":
+        return (
           <Single
+            adaptive={adaptive}
             className="text-blue-500"
             icon={<LoaderPinwheelIcon className="animate-spin" />}
             text="Busy"
+            content="ESMeta backend is working"
           />
-        ),
-        not_connected: (
+        );
+      case "not_connected":
+        return (
           <Single
+            adaptive={adaptive}
             className="text-red-500"
-            icon={<CircleAlertIcon />}
+            icon={<ServerOffIcon />}
             text="Lost"
+            content="Lost connection to ESMeta backend"
           />
-        ),
-      } as const);
+        );
+    }
 
-function matchAppstate(st: ReduxState) {
-  const x = st.appState.busy;
-  const isInit = st.appState.state === AppState.INIT;
-  if (x === 0) {
-    return "connected";
+  switch (busyState) {
+    case "init":
+      return (
+        <Single
+          adaptive={adaptive}
+          className="text-yellow-500"
+          icon={<CogIcon className="animate-spin" />}
+          text="Build"
+          content="Preparing ESMeta backend on Web Worker"
+        />
+      );
+
+    case "connected":
+      return (
+        <Single
+          adaptive={adaptive}
+          className="text-green-500"
+          icon={<CheckIcon />}
+          text="Ready"
+          content="ESMeta backend is ready"
+        />
+      );
+    case "busy":
+      return (
+        <Single
+          adaptive={adaptive}
+          className="text-blue-500"
+          icon={<LoaderPinwheelIcon className="animate-spin" />}
+          text="Busy"
+          content="ESMeta backend is working"
+        />
+      );
+    case "not_connected":
+      return (
+        <Single
+          adaptive={adaptive}
+          className="text-red-500"
+          icon={<CircleAlertIcon />}
+          text="Lost"
+          content="ESMeta backend is not available; maybe crashed"
+        />
+      );
   }
-  if (x > 0) {
-    return isInit ? "init" : "busy";
-  }
-  return "not_connected";
 }
 
 const variants = {
@@ -107,25 +162,34 @@ const variants = {
   exit: { opacity: 0, y: 8 },
 };
 
-export default function ConnectStateViewer() {
-  const state = useSelector(matchAppstate);
+interface Props {
+  adaptive?: boolean;
+}
+
+export default function ConnectStateViewer({ adaptive = false }: Props) {
+  const config = useAtomValue(atoms.config.givenConfigAtom);
+  const state = useAppSelector(busyStateSelector);
 
   return (
-    <div className="relative w-[1.25rem] md:w-[4.25rem] h-5 my-1 mx-1">
+    <div className="relative w-8 md:w-16 h-7">
       <AnimatePresence initial={false}>
         <motion.div
           key={state}
-          className="absolute"
+          className="absolute size-full"
           initial={variants.initial}
           animate={variants.animate}
           exit={variants.exit}
           transition={{
             type: "tween",
-            ease: "easeIn",
+            ease: "easeInOut",
             duration: 0.0625,
           }}
         >
-          {connectState[state]}
+          <ConnectState
+            adaptive={adaptive}
+            busyState={state}
+            type={config.api.type}
+          />
         </motion.div>
       </AnimatePresence>
     </div>

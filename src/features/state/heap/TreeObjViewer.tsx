@@ -1,4 +1,4 @@
-import { HeapObj } from "@/types/heap.types";
+import type { HeapObj } from "@/types";
 import TreeAddress, { ProvinenceButton } from "./TreeAddress";
 import tw from "tailwind-styled-components";
 
@@ -10,8 +10,7 @@ interface Props {
 
 const Ul = tw.ul`pl-4 list-inside list-disc border-y`;
 const Li = tw.li`border-b`;
-const B = tw.b`font-600`;
-// const  = tw.ul`pl-2 list-inside list-disc`
+const B = tw.span`font-600`;
 
 export default function TreeObjViewer({ obj, singleMode, address }: Props) {
   const type = obj?.type;

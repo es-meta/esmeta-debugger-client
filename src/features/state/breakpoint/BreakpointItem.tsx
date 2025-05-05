@@ -1,15 +1,11 @@
 import { useCallback, useMemo } from "react";
-
-import { Breakpoint } from "@/store/reducers/Breakpoint";
 import { XIcon } from "lucide-react";
 
-import MySwitch from "@/components/button/MySwitch";
-import { toStepString } from "@/util/numbering.util";
-import { logger } from "@/constants/constant";
-import { twMerge } from "tailwind-merge";
+import { Breakpoint } from "@/types";
+import { Switch } from "@/components/button/switch";
+import { cn, logger, toStepString } from "@/utils";
 import { AlgoViewerHeaderUsingOnlyName } from "@/features/spec/algo/AlgoViewerHeader";
-import { useSelector } from "react-redux";
-import { ReduxState } from "@/store";
+import { useAppSelector } from "@/hooks";
 
 interface BreakpointItemProp {
   data: Breakpoint;
@@ -23,9 +19,7 @@ export default function BreakpointItem(props: BreakpointItemProp) {
 
   const isEven = useMemo(() => idx % 2 === 0, [idx]);
 
-  const irToSpecMapping = useSelector(
-    (st: ReduxState) => st.spec.irToSpecMapping,
-  );
+  const irToSpecMapping = useAppSelector(st => st.spec.irToSpecMapping);
 
   const { name, enabled } = data;
 
@@ -38,14 +32,14 @@ export default function BreakpointItem(props: BreakpointItemProp) {
   }, [onRemoveClick, idx]);
 
   if (data.type === "BreakpointType/Js") {
-    logger.error("Js breakpoint is not supported");
+    logger.error?.("Js breakpoint is not supported");
     return null;
   }
 
   return (
     <>
       <tr
-        className={twMerge(
+        className={cn(
           " hover:bg-neutral-500/25 transition-all",
           isEven
             ? "bg-white dark:bg-neutral-900"
@@ -62,7 +56,7 @@ export default function BreakpointItem(props: BreakpointItemProp) {
           />
         </td>
         <td className="border-r text-center">
-          <MySwitch checked={enabled} onChange={() => handleToggleClick()} />
+          <Switch checked={enabled} onChange={() => handleToggleClick()} />
         </td>
         <td className="">
           <button

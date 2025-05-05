@@ -1,9 +1,14 @@
-import { useSelector } from "react-redux";
-import AlgoViewer from "./algo/AlgoViewer";
-import Graphviz from "./Graphviz";
+import { lazy, Suspense } from "react";
+
 import Card from "@/components/layout/Card";
 import CardHeader from "@/components/layout/CardHeader";
-// import { LinkIcon, LockIcon, LockOpenIcon } from "lucide-react";
+
+import { BookMarkedIcon } from "lucide-react";
+import { shallowEqual, useAppSelector } from "@/hooks";
+import type { Algorithm } from "@/types";
+
+const AlgoViewer = lazy(() => import("./algo/AlgoViewer"));
+const Graphviz = lazy(() => import("./Graphviz"));
 
 // view type of spec
 enum SpecViewType {
@@ -12,16 +17,15 @@ enum SpecViewType {
   DEFAULT,
 }
 
-import { selector } from "./SpecViewer.redux";
-import { BookMarkedIcon } from "lucide-react";
-
 export default function SpecViewer() {
-  // TODO optimize
-  const props = useSelector(selector);
-  const algo = props.algo;
+  const { callStack, contextIdx } = useAppSelector(
+    st => ({ callStack: st.ir.callStack, contextIdx: st.ir.contextIdx }),
+    shallowEqual,
+  );
+  const algo: Algorithm | undefined = callStack[contextIdx]?.algo;
 
   const viewType: SpecViewType =
-    algo.fid === -1
+    algo === undefined || algo.fid === -1
       ? SpecViewType.DEFAULT
       : algo.code === ""
         ? SpecViewType.GRAPH
@@ -49,13 +53,19 @@ export default function SpecViewer() {
         title="ECMAScript Specification"
         icon={<BookMarkedIcon size={14} className="inline" />}
       />
-      <div className="grow overflow-y-scroll">
-        {viewType === SpecViewType.ALGORITHM ? (
-          <AlgoViewer {...props} />
-        ) : (
-          <Graphviz dot={props.algo.dot} />
-        )}
-      </div>
+      <Suspense fallback={null}>
+        <div className="grow overflow-y-scroll">
+          {viewType === SpecViewType.ALGORITHM ? (
+            <Suspense fallback={null}>
+              <AlgoViewer />
+            </Suspense>
+          ) : (
+            <Suspense fallback={null}>
+              <Graphviz dot={algo.dot} />
+            </Suspense>
+          )}
+        </div>
+      </Suspense>
     </Card>
   );
 }

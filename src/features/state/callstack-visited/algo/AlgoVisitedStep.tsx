@@ -1,9 +1,6 @@
 import React, { useCallback, useMemo } from "react";
 import { v4 as uuid } from "uuid";
-import {
-  Emitter,
-  // FragmentNode
-} from "@/util/ecmarkdown";
+import { emit } from "@/utils";
 import type { ListNode, OrderedListNode, FragmentNode } from "ecmarkdown";
 import { twJoin } from "tailwind-merge";
 import "@/styles/AlgoViewer.css";
@@ -185,7 +182,7 @@ function AlgoStepCore({ className, contents, handleClick, value }: CoreProps) {
       onClick={handleClick}
       value={value}
     >
-      {Emitter.emit(contents)}
+      {emit(contents)}
     </li>
   );
 }

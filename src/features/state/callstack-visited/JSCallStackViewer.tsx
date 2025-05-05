@@ -1,14 +1,16 @@
 import { FoldVerticalIcon, UnfoldVerticalIcon } from "lucide-react";
 import StateViewerItem from "../StateViewerItem";
-import { useSelector } from "react-redux";
-import { EXECUTION_STACK_ADDR } from "@/constants/constant";
-import { ReduxState } from "@/store";
+import { EXECUTION_STACK_ADDR } from "@/constants";
+import { logger } from "@/utils";
 import { toast } from "react-toastify";
-import JSContextItem, { JSContext } from "./JSContextItem";
+import JSContextItem from "./JSContextItem";
+import { useAppSelector } from "@/hooks";
+import { Heap } from "@/types";
+import { useMemo } from "react";
 
-function readJSExecutionStack(state: ReduxState): JSContext[] {
+function readJSExecutionStack(heap: Heap) {
   try {
-    const execStack = state.irState.heap[EXECUTION_STACK_ADDR];
+    const execStack = heap[EXECUTION_STACK_ADDR];
     if (execStack?.type !== "ListObj") {
       return [];
     }
@@ -16,7 +18,7 @@ function readJSExecutionStack(state: ReduxState): JSContext[] {
     return execStack.values.map(addr => {
       if (!addr.startsWith("#"))
         throw new Error("Invalid address in execution stack");
-      const jsContext = state.irState.heap[addr];
+      const jsContext = heap[addr];
       if (!jsContext) throw new Error("Invalid address in execution stack");
       if (jsContext.type !== "RecordObj")
         throw new Error("Invalid type in execution stack");
@@ -32,14 +34,14 @@ function readJSExecutionStack(state: ReduxState): JSContext[] {
       }
 
       if (f !== "null" && f !== undefined) {
-        const funcVal = state.irState.heap[f];
+        const funcVal = heap[f];
         if (!funcVal || funcVal.type !== "RecordObj")
           throw new Error("Invalid address in execution stack");
 
         const subMapAddr = funcVal.map["__MAP__"];
         if (!subMapAddr) throw new Error("Invalid address in execution stack");
 
-        const subMap = state.irState.heap[subMapAddr];
+        const subMap = heap[subMapAddr];
         if (!subMap || subMap.type !== "MapObj")
           throw new Error("Invalid address in execution stack");
 
@@ -48,7 +50,7 @@ function readJSExecutionStack(state: ReduxState): JSContext[] {
         if (!nameDescriptorAddr)
           throw new Error("Invalid address in execution stack");
 
-        const nameDescriptor = state.irState.heap[nameDescriptorAddr];
+        const nameDescriptor = heap[nameDescriptorAddr];
 
         if (!nameDescriptor || nameDescriptor.type !== "RecordObj")
           throw new Error("Invalid address in execution stack");
@@ -71,7 +73,7 @@ function readJSExecutionStack(state: ReduxState): JSContext[] {
       };
     });
   } catch (e) {
-    console.error("Assertion related to JavaScript failed:", e);
+    logger.error?.("Assertion related to JavaScript failed:", e);
     toast.error(
       "Failed to read JavaScript Execution Stack : is the program running?",
     );
@@ -80,7 +82,8 @@ function readJSExecutionStack(state: ReduxState): JSContext[] {
 }
 
 export default function JSCallStackViewer() {
-  const executionStack = useSelector(readJSExecutionStack);
+  const heap = useAppSelector(st => st.ir.heap);
+  const executionStack = useMemo(() => readJSExecutionStack(heap), [heap]);
 
   return (
     <StateViewerItem
@@ -135,20 +138,3 @@ export default function JSCallStackViewer() {
     </StateViewerItem>
   );
 }
-
-// function Info() {
-//   return (
-//     <Tooltip>
-//       <TooltipTrigger>
-//         <InfoIcon size={16} />
-//       </TooltipTrigger>
-//       <TooltipContent>
-//       <p>
-//           Note that this information is already lives in the mechanized specification environements and heaps,
-//           <br />
-//           especially on <code>{EXECUTION_STACK_ADDR}</code>, since the mechanized spec is an interpreter of JavaScript.
-//       </p>
-//       </TooltipContent>
-//     </Tooltip>
-//   );
-// }

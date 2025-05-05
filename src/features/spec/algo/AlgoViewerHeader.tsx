@@ -3,9 +3,10 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { SPEC_URL } from "@/constants/constant";
-import { Algorithm, IrToSpecMapping } from "@/store/reducers/Spec";
-import { twMerge } from "tailwind-merge";
+import { SPEC_URL } from "@/constants";
+import { useCopyCallback } from "@/hooks/use-copy-callback";
+import { Algorithm, IrToSpecMapping } from "@/types";
+import { cn } from "@/utils";
 
 function Info({
   algorithm,
@@ -17,18 +18,27 @@ function Info({
   const specInfo = irToSpecMapping[algorithm.name];
   const CONTAINS = specInfo !== undefined;
 
+  console.log("irToSpecMapping", irToSpecMapping);
+
+  const [, handleClick] = useCopyCallback(algorithm.code);
+
   return CONTAINS ? (
-    <Tooltip>
-      <TooltipTrigger
-        asChild
-        className="font-sans text-xs ml-2 font-600 rounded-full px-1"
-      >
-        <a href={`${SPEC_URL}#${specInfo.htmlId}`} target="_blank">
-          🔗
-        </a>
-      </TooltipTrigger>
-      <TooltipContent>{`${SPEC_URL}#${specInfo.htmlId}`}</TooltipContent>
-    </Tooltip>
+    <>
+      <Tooltip>
+        <TooltipTrigger
+          asChild
+          className="font-sans text-xs ml-2 font-600 rounded-full px-1"
+        >
+          <a href={`${SPEC_URL}#${specInfo.htmlId}`} target="_blank">
+            🔗
+          </a>
+        </TooltipTrigger>
+        <TooltipContent>{`${SPEC_URL}#${specInfo.htmlId}`}</TooltipContent>
+      </Tooltip>
+      <button className="inline" onClick={handleClick}>
+        raw
+      </button>
+    </>
   ) : null;
   // <Tooltip>
   //   <TooltipTrigger className="font-sans text-xs ml-2 bg-es-300 font-600 rounded-full px-1">
@@ -135,7 +145,7 @@ export default function AlgoViewerHeader({
               {prodInfo.map((prod, idx) => (
                 <b
                   key={idx}
-                  className={twMerge(
+                  className={cn(
                     "inline",
                     prod.type === "terminal" && "font-700 font-mono text-sm",
                     prod.type === "nonterminal" && "font-300 italic",
@@ -220,7 +230,7 @@ export function AlgoViewerHeaderUsingOnlyName({
               {prodInfo.map((prod, idx) => (
                 <b
                   key={idx}
-                  className={twMerge(
+                  className={cn(
                     "inline",
                     prod.type === "terminal" && "font-700 font-mono text-sm",
                     prod.type === "nonterminal" && "font-300 italic",

@@ -3,9 +3,6 @@ export const GITHUB_LINK_ESMETA = "https://github.com/es-meta/esmeta";
 
 export const IS_DEBUG = import.meta.env.DEV;
 
-// NOTE please also update package.json
-export const CLIENT_VERSION = "0.1.0";
-
 // TODO use api to have fine grained control over the spec version
 export const SPEC_URL = "https://tc39.es/ecma262/2024/";
 

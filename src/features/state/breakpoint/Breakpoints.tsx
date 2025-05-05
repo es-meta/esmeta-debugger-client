@@ -4,17 +4,15 @@ import { v4 as uuid } from "uuid";
 
 import MyCombobox from "./BreakCombobox";
 
-import {
-  addBreak,
-  Breakpoint,
-  BreakpointType,
-} from "@/store/reducers/Breakpoint";
+import { Breakpoint, BreakpointType } from "@/types";
+
+import { addBreak } from "@/store/reducers/breapoint";
 
 import { connector, type BreakpointsProps } from "./Breakpoints.redux";
 import BreakpointItem from "./BreakpointItem";
 import StateViewerItem from "../StateViewerItem";
-import { Dispatch } from "@/store";
-import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store";
+import { useAppDispatch } from "@/hooks";
 import {
   Tooltip,
   TooltipContent,
@@ -22,7 +20,7 @@ import {
 } from "@/components/ui/tooltip";
 import ToolbarButton from "@/features/toolbar/ToolbarButton";
 import { OctagonIcon, OctagonPauseIcon } from "lucide-react";
-import { AppStateActionType } from "@/store/reducers/AppState";
+import { toggleIgnore } from "@/store/reducers/app-state";
 
 // TODO support turning off or toggling breakpoints
 export function addBreakHandler(
@@ -30,7 +28,7 @@ export function addBreakHandler(
   algoName: string | null,
   breakpoints: Breakpoint[],
   algos: Record<string, number>,
-  dispatch: Dispatch,
+  dispatch: AppDispatch,
 ): string | null {
   if (algoName === null) {
     return algoName;
@@ -64,7 +62,7 @@ export function addBreakHandler(
 // disable all
 // sort
 export default connector(function Breakpoints(props: BreakpointsProps) {
-  const dispatch = useDispatch<Dispatch>();
+  const dispatch = useAppDispatch();
   const { breakpoints, algoNames, ignoreBp, disableQuit } = props;
   const [algoName, setAlgoName] = useState<string | null>(null);
 
@@ -78,7 +76,7 @@ export default connector(function Breakpoints(props: BreakpointsProps) {
   );
 
   const toggleStepWithoutBreak = useCallback(() => {
-    dispatch({ type: AppStateActionType.TOGGLE_IGNORE });
+    dispatch(toggleIgnore());
   }, [dispatch]);
 
   return (
@@ -86,7 +84,7 @@ export default connector(function Breakpoints(props: BreakpointsProps) {
       header="Breakpoints"
       headerItems={
         <Tooltip>
-          <TooltipTrigger>
+          <TooltipTrigger asChild>
             <ToolbarButton
               position="single"
               disabled={disableQuit}

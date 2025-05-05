@@ -1,35 +1,33 @@
-// layouts
-import SpecViewer from "@/features/spec/SpecViewer";
-import Toolbar from "@/features/toolbar/Toolbar";
-import JSEditor from "@/features/js-editor/JSEditor";
 // import "react-resizable/css/styles.css";
 
 // hooks
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { ReduxState } from "@/store";
-import { AppState } from "@/store/reducers/AppState";
-import {
-  updateAlgoListRequest,
-  updateVersionRequest,
-} from "@/store/reducers/Spec";
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import StateViewer from "../state/StateViewer";
+import JSEditor from "@/features/js-editor/JSEditor";
+import StateViewer from "@/features/state/StateViewer";
+import SpecViewer from "@/features/spec/SpecViewer";
+import Toolbar from "@/features/toolbar/Toolbar";
+import { IS_DEBUG } from "@/constants";
+import { toast } from "react-toastify";
+import { SuspenseBoundary } from "@/components/suspense-boundary";
+import { useAtomValue } from "jotai";
+import { atoms } from "@/atoms";
+import { logger } from "@/utils";
+import { useAppDispatch } from "@/hooks";
+import { move } from "@/store/reducers/app-state";
+import { AppState } from "@/types";
 
-// App component
 export default function DebuggerApp() {
-  useDebuggerAppInitializers();
-
   return (
-    <main className="relative xl:px-12 grow flex flex-col overflow-hidden border-none">
+    <main className="relative grow flex flex-col px-2 xl:px-12 pb-2 transition-[padding] overflow-hidden border-none">
       <Toolbar />
       <ResizablePanelGroup
         direction="horizontal"
-        className="bg-white dark:bg-neutral-900 xl:rounded-xl border grow flex overflow-hidden"
+        className="bg-white dark:bg-neutral-900 rounded-lg border grow flex overflow-hidden"
       >
         <ResizablePanel minSize={8}>
           <JSEditor />
@@ -43,20 +41,37 @@ export default function DebuggerApp() {
           <StateViewer />
         </ResizablePanel>
       </ResizablePanelGroup>
+      <SuspenseBoundary unexpected error={null} loading={null}>
+        <MountDebuggerAppInitializers />
+      </SuspenseBoundary>
     </main>
   );
 }
 
-export function useDebuggerAppInitializers() {
-  const dispatch = useDispatch();
-
-  const { appState } = useSelector((st: ReduxState) => ({
-    appState: st.appState.state,
-  }));
+export function MountDebuggerAppInitializers() {
+  const dispatch = useAppDispatch();
+  const irToSpecMapping = useAtomValue(atoms.spec.irToSpecNameMapAtom);
+  const nameMap = useAtomValue(atoms.spec.nameMapAtom);
 
   useEffect(() => {
-    if (appState !== AppState.INIT) return;
-    dispatch(updateAlgoListRequest());
-    dispatch(updateVersionRequest());
-  }, [appState, dispatch]);
+    if (IS_DEBUG)
+      toast.warn(
+        <p>
+          This app is running in development mode. Please use{" "}
+          <code>npm start</code> instead.
+        </p>,
+      );
+  }, []);
+
+  useEffect(() => {
+    dispatch(move(AppState.JS_INPUT));
+  }, []);
+
+  useEffect(
+    () =>
+      logger.info?.("Welcome to the Debugger App!", irToSpecMapping, nameMap),
+    [],
+  );
+
+  return null;
 }

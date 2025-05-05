@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
-import { twMerge } from "tailwind-merge";
 import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
+import { cn } from "@/utils";
 import Address from "../heap/Address";
 
 export interface JSContext {
@@ -40,7 +40,7 @@ export default function JSContextItem(props: Props) {
   const className = useMemo(() => {
     // const { highlight } = props;
     const highlight = false;
-    return twMerge(
+    return cn(
       "even:bg-neutral-400/10 odd:bg-neutral-400/5 text-xs",
       "hover:bg-neutral-400/5 active:bg-green-500/25 transition-all cursor-pointer",
       highlight &&

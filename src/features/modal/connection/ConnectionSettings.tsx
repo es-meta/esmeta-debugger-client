@@ -1,10 +1,13 @@
-import { useCallback, useState } from "react";
+import { lazy, useCallback, useState } from "react";
 import { GlobeIcon, MonitorIcon } from "lucide-react";
-import RadioGroupExample from "./RadioGroup";
 import ConnectStateViewer from "@/features/modal/connection/ConnectStateViewer";
 import { useAtomValue, useSetAtom } from "jotai";
 import { givenConfigAtom, setApiAtom } from "@/atoms/defs/config";
-import { AnimatedDialog } from "@/components/dialog";
+import { AnimatedDialog } from "@/components/animated-dialog";
+
+const ConnectionSettingsContent = lazy(
+  () => import("./ConnectionSettings.content"),
+);
 
 export default function ConnectionSettings() {
   const givenConfig = useAtomValue(givenConfigAtom);
@@ -17,10 +20,7 @@ export default function ConnectionSettings() {
   const [url, setUrl] = useState(givenApi.type === "http" ? givenApi.url : "");
 
   const resetOnClose = useCallback(() => {
-    setTimeout(
-      () => setSelected(givenApi.type === "browser" ? plans[1] : plans[0]),
-      0,
-    );
+    setSelected(givenApi.type === "browser" ? plans[1] : plans[0]);
   }, []);
 
   const saveToLocal = useCallback(
@@ -37,6 +37,8 @@ export default function ConnectionSettings() {
 
   return (
     <AnimatedDialog
+      className="p-6"
+      title="ESMeta Connection Settings"
       onClose={resetOnClose}
       buttonContent={
         <div
@@ -45,44 +47,17 @@ export default function ConnectionSettings() {
       flex-row rounded-md text-sm font-medium text-white hover:bg-neutral-500/25 bg-neutral-500/0
       "
         >
-          <ConnectStateViewer />
+          <ConnectStateViewer adaptive />
         </div>
       }
     >
-      <h4 className="mt-4 text-lg font-700">Connection Mode</h4>
-      <RadioGroupExample
+      <ConnectionSettingsContent
         selected={selected}
         setSelected={setSelected}
-        options={plans}
-        getId={p => p.id}
-        getIcon={p => p.icon}
-        getLabel={p => p.name}
-        getDescription={p => p.description}
+        saveToLocal={saveToLocal}
+        url={url}
+        setUrl={setUrl}
       />
-      <h4 className="mt-4 text-lg font-700">API Address</h4>
-      <input
-        type="text"
-        placeholder="http://localhost:8080"
-        disabled={selected.id === "browser"}
-        value={url}
-        onChange={e => setUrl(e.target.value)}
-      />
-      <div className="flex justify-end mt-4 gap-2">
-        <button
-          className="h-8 px-3 text-xs rounded-lg bg-es-500/30 font-500 hover:bg-es-500/70 active:scale-95 transition-all"
-          data-dialog-control="close"
-        >
-          Cancel
-        </button>
-        <button
-          className="h-8 px-3 text-xs rounded-lg bg-es-500/30 font-500 hover:bg-es-500/70 active:scale-95 transition-all"
-          onClick={() => {
-            saveToLocal("params");
-          }}
-        >
-          Save for this Tab (Refresh)
-        </button>
-      </div>
     </AnimatedDialog>
   );
 }

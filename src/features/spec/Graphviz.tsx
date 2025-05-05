@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { type Graphviz, graphviz, GraphvizOptions } from "d3-graphviz";
+import { useEffect, useId, useState } from "react";
+import { graphviz, GraphvizOptions } from "d3-graphviz";
 import { twJoin } from "tailwind-merge";
-import { Loader2Icon } from "lucide-react";
-import { useSelector } from "react-redux";
-import { ReduxState } from "@/store";
+import { Loading } from "./Graphviz.load";
+import { useAppSelector } from "@/hooks";
+import { busyStateSelector } from "@/store/selectors";
 
 interface Props {
   dot: string;
@@ -16,36 +16,23 @@ const defaultOptions: GraphvizOptions = {
 
 export default function Graphviz({ dot }: Props) {
   const [completed, setCompleted] = useState<string | null>(null);
-  const ref = useRef<HTMLDivElement>(null);
-
-  const notify = useCallback(() => {
-    setCompleted(dot);
-  }, [dot]);
+  const id = useId();
 
   useEffect(() => {
-    graphviz(ref.current, defaultOptions).renderDot(dot, notify);
+    graphviz(`#${CSS.escape(id)}`, defaultOptions).renderDot(dot, () =>
+      setCompleted(dot),
+    );
   }, [dot]);
 
-  const busy = useSelector((st: ReduxState) => st.appState.busy);
+  const busy = useAppSelector(busyStateSelector);
 
   const isLoading = completed !== dot || busy;
 
   return (
     <div className="relative [&>&>svg]:size-full size-full">
-      {isLoading ? (
-        <div
-          className={twJoin(
-            "absolute",
-            "top-1/2 left-1/2",
-            "-translate-x-1/2",
-            "-translate-y-1/2",
-          )}
-        >
-          <Loader2Icon className="animate-spin text-black z-50" />
-        </div>
-      ) : null}
+      {isLoading ? <Loading /> : null}
       <div
-        ref={ref}
+        id={id}
         className={twJoin(
           "size-full overflow-hidden [&>svg]:size-full transition-opacity duration-100",
           isLoading && "opacity-90",

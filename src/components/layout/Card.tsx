@@ -1,5 +1,5 @@
 import { forwardRef, Ref, type ReactNode } from "react";
-import { twMerge } from "tailwind-merge";
+import { cn } from "@/utils";
 
 interface Props {
   className?: string;
@@ -13,8 +13,8 @@ export default forwardRef(function Card(
   ref: Ref<HTMLDivElement>,
 ) {
   return (
-    <div ref={ref} className={twMerge("flex flex-col relative", className)}>
+    <article ref={ref} className={cn("flex flex-col relative", className)}>
       {children}
-    </div>
+    </article>
   );
 });

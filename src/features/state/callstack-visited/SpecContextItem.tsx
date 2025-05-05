@@ -1,13 +1,9 @@
+import type { Breakpoint, Context, IrToSpecMapping } from "@/types";
 import { useEffect, useMemo, useState } from "react";
-import { Context } from "@/store/reducers/IrState";
-import { twMerge } from "tailwind-merge";
 import { ContextVisitedViewer } from "./algo/AlgoVisitedViewer";
-import { Breakpoint } from "@/store/reducers/Breakpoint";
 import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
-import { shallowEqual, useSelector } from "react-redux";
-import { ReduxState } from "@/store";
-import { IrToSpecMapping } from "@/store/reducers/Spec";
-import { toStepString } from "@/util/numbering.util";
+import { cn, toStepString } from "@/utils";
+import { useAppSelector, shallowEqual } from "@/hooks";
 
 type ContextItemProps = {
   data: Context;
@@ -35,16 +31,17 @@ function replacedName(name: string, irToSpecMapping: IrToSpecMapping): string {
 export default function SpecContextItem(props: ContextItemProps) {
   const [expand, setExpand] = useState<boolean>(false);
 
-  const { highlight, irToSpecMapping } = useSelector(
-    (s: ReduxState) => ({
-      highlight: s.irState.contextIdx === props.idx,
-      irToSpecMapping: s.spec.irToSpecMapping,
+  const { contextIdx, irToSpecMapping } = useAppSelector(
+    st => ({
+      contextIdx: st.ir.contextIdx,
+      irToSpecMapping: st.spec.irToSpecMapping,
     }),
     shallowEqual,
   );
+  const highlight = contextIdx === props.idx;
 
   const className = useMemo(() => {
-    return twMerge(
+    return cn(
       "even:bg-neutral-400/10 odd:bg-neutral-400/5 text-xs",
       "hover:bg-neutral-400/5 active:bg-green-500/25 transition-all cursor-pointer",
       highlight &&

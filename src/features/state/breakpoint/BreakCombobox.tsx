@@ -1,17 +1,14 @@
-import { useState, useMemo, Fragment, ReactNode, ReactElement } from "react";
+import { useState, useMemo, Fragment, ReactElement } from "react";
 import {
   Combobox,
   ComboboxInput,
   ComboboxOption,
   ComboboxOptions,
 } from "@headlessui/react";
-import { fuzzyFilter } from "@/util/fuzzy.util";
-import { CheckIcon } from "lucide-react";
-import { twJoin, twMerge } from "tailwind-merge";
-import { shallowEqual, useSelector } from "react-redux";
-import { IrToSpecMapping } from "@/store/reducers/Spec";
-import { ReduxState } from "@/store";
+import { cn, fuzzyFilter } from "@/utils";
+import { IrToSpecMapping } from "@/types";
 import { AlgoViewerHeaderUsingOnlyName } from "@/features/spec/algo/AlgoViewerHeader";
+import { useAppSelector } from "@/hooks";
 
 interface ComboProps<T> {
   values: T[];
@@ -52,12 +49,7 @@ export default function MyCombobox({
 }: ComboProps<string>) {
   const [query, setQuery] = useState("");
 
-  const { irToSpecMapping } = useSelector(
-    (s: ReduxState) => ({
-      irToSpecMapping: s.spec.irToSpecMapping,
-    }),
-    shallowEqual,
-  );
+  const irToSpecMapping = useAppSelector(st => st.spec.irToSpecMapping);
 
   const options = useMemo(
     () =>
@@ -105,7 +97,7 @@ export default function MyCombobox({
           <ComboboxOption key={option.name} value={option} as={Fragment}>
             {({ focus }) => (
               <div
-                className={twMerge(
+                className={cn(
                   "even:bg-white odd:bg-neutral-50",
                   "dark:even:bg-neutral-800 dark:odd:bg-neutral-900",
                   "p-2 cursor-pointer w-full break-all",

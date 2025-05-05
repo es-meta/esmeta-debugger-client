@@ -1,9 +1,6 @@
-import { useCallback, useEffect, useState } from "react";
-import MyCombobox from "@/components/combobox/MyCombobox";
+import { useEffect, useState } from "react";
+import Combobox from "@/components/button/combobox";
 import StateViewerItem from "../StateViewerItem";
-import { shallowEqual, useDispatch, useSelector } from "react-redux";
-import { Dispatch, ReduxState } from "@/store";
-import { setHeapViewerAddr } from "@/store/reducers/Client";
 import { HistoryIcon } from "lucide-react";
 import {
   Tooltip,
@@ -11,14 +8,13 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import TreeAddress from "./TreeAddress";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { clientActiveAddrAtom } from "@/atoms/defs/client";
+import { useAppSelector } from "@/hooks";
 
-function HistoryViewer({
-  history,
-  dispatch,
-}: {
-  history: string[];
-  dispatch: Dispatch;
-}) {
+function HistoryViewer({ history }: { history: string[] }) {
+  const setAddr = useSetAtom(clientActiveAddrAtom);
+
   return (
     <Tooltip>
       <TooltipTrigger className="aspect-square h-full flex items-center justify-center px-1 text-neutral-500 dark:text-neutral-400">
@@ -32,7 +28,7 @@ function HistoryViewer({
                 <button
                   key={addr}
                   className="active:scale-95 transition-all hover:opacity-50"
-                  onClick={() => dispatch(setHeapViewerAddr(addr))}
+                  onClick={() => setAddr(addr)}
                 >
                   {addr}
                 </button>
@@ -44,26 +40,13 @@ function HistoryViewer({
 }
 
 export default function HeapViewer() {
-  const dispatch = useDispatch();
   const [history, setHistory] = useState<string[]>([]);
+  const [addr, setAddr] = useAtom(clientActiveAddrAtom);
 
-  const { heap, addr } = useSelector(
-    (s: ReduxState) => ({
-      heap: s.irState.heap,
-      addr: s.client.stateviewer.addr,
-    }),
-    shallowEqual,
-  );
+  const heap = useAppSelector(st => st.ir.heap);
 
   const obj = addr !== null ? (heap[addr] ?? null) : null;
   const addrs = Object.keys(heap);
-
-  const setAddr = useCallback(
-    (newAddr: string | null) => {
-      dispatch(setHeapViewerAddr(newAddr));
-    },
-    [dispatch],
-  );
 
   useEffect(() => {
     if (addr !== null) {
@@ -86,7 +69,7 @@ export default function HeapViewer() {
     >
       <div className="w-full">
         <div className="flex flex-row items-center w-full">
-          <MyCombobox
+          <Combobox
             values={addrs}
             value={addr}
             placeholder="Select an address"
@@ -95,7 +78,7 @@ export default function HeapViewer() {
               setAddr(newAddr);
             }}
           />
-          <HistoryViewer history={history} dispatch={dispatch} />
+          <HistoryViewer history={history} />
         </div>
         <ul className="text-sm">
           {addr !== null && obj !== null ? (
