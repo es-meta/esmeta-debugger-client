@@ -1,42 +1,39 @@
 import { call, takeLatest, all } from "redux-saga/effects";
-//
+
+import { doAPIPostRequest, doAPIDeleteRequest, doAPIPutRequest } from "@/api";
 import {
-  BreakpointAction,
-  BreakpointActionType,
+  addBreak,
+  rmBreak,
   serialize,
-} from "../store/reducers/Breakpoint";
-import {
-  doAPIPostRequest,
-  doAPIDeleteRequest,
-  doAPIPutRequest,
-} from "../util/api/api";
+  toggleBreak,
+} from "@/store/reducers/breapoint";
 
 // add breakpoint saga
 // TODO add steps
 function* addBreakSaga() {
-  function* _addBreakSaga(action: BreakpointAction) {
-    if (action.type !== BreakpointActionType.ADD_BREAK) return;
-    yield call(() => doAPIPostRequest("breakpoint", serialize(action.bp)));
+  function* _addBreakSaga(action: ReturnType<typeof addBreak>) {
+    if (action.type !== addBreak.type) return;
+    yield call(() => doAPIPostRequest("breakpoint", serialize(action.payload)));
   }
-  yield takeLatest(BreakpointActionType.ADD_BREAK, _addBreakSaga);
+  yield takeLatest(addBreak.type, _addBreakSaga);
 }
 
 // remove breakpoint saga
 function* rmBreakSaga() {
-  function* _rmBreakSaga(action: BreakpointAction) {
-    if (action.type !== BreakpointActionType.RM_BREAK) return;
-    yield call(() => doAPIDeleteRequest("breakpoint", action.opt));
+  function* _rmBreakSaga(action: ReturnType<typeof rmBreak>) {
+    if (action.type !== rmBreak.type) return;
+    yield call(() => doAPIDeleteRequest("breakpoint", action.payload));
   }
-  yield takeLatest(BreakpointActionType.RM_BREAK, _rmBreakSaga);
+  yield takeLatest(rmBreak.type, _rmBreakSaga);
 }
 
 // toggle breakpoint saga
 function* toggleBreakSaga() {
-  function* _toggleBreakSaga(action: BreakpointAction) {
-    if (action.type !== BreakpointActionType.TOGGLE_BREAK) return;
-    yield call(() => doAPIPutRequest("breakpoint", action.opt));
+  function* _toggleBreakSaga(action: ReturnType<typeof toggleBreak>) {
+    if (action.type !== toggleBreak.type) return;
+    yield call(() => doAPIPutRequest("breakpoint", action.payload));
   }
-  yield takeLatest(BreakpointActionType.TOGGLE_BREAK, _toggleBreakSaga);
+  yield takeLatest(toggleBreak.type, _toggleBreakSaga);
 }
 
 // breakpoint sagas

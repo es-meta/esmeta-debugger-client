@@ -1,55 +1,66 @@
+import { AppDispatch } from "@/store";
+import { Selected } from "./Toolbar.atom";
+import { logger } from "@/utils";
 import {
-  run,
-  resumeFromIter,
-  stop,
-  specStep,
-  specStepOut,
-  specStepOver,
-  specStepBack,
-  specStepBackOver,
-  jsStepAst,
-  jsStepStatement,
-  jsStepOut,
-  jsStepOver,
-  specContinue,
-} from "@/store/reducers/Debugger";
-import { Dispatch } from "@/store";
-import { Selected } from "./Toolbar.redux";
+  continueAction,
+  jsStepAstAction,
+  jsStepOutAction,
+  jsStepOverAction,
+  jsStepStatemmentAction,
+  resumeFromIterAction,
+  rewindAction,
+  runAction,
+  specStepAction,
+  specStepBackAction,
+  specStepBackOutAction,
+  specStepBackOverAction,
+  specStepOutAction,
+  specStepOverAction,
+  stopAction,
+} from "@/actions";
 
-const map = (key: string, cond: Selected) => {
+const map = (key: string, cond: Selected, devMode: boolean) => {
   switch (key) {
     case "r":
-      return cond.disableRun ? null : run();
+      return cond.disableRun ? null : runAction();
     case "e":
-      return cond.disableRun ? null : resumeFromIter();
+      return cond.disableRun ? null : resumeFromIterAction();
     case "q":
-      return cond.disableQuit ? null : stop();
+      return cond.disableQuit ? null : stopAction();
     case "c":
-      return cond.disableGoingForward ? null : specContinue();
+      return cond.disableGoingForward ? null : continueAction();
     case "s":
-      return cond.disableGoingForward ? null : specStep();
+      return cond.disableGoingForward ? null : specStepAction();
     case "o":
-      return cond.disableGoingForward ? null : specStepOver();
+      return cond.disableGoingForward ? null : specStepOverAction();
     case "u":
-      return cond.disableGoingForward ? null : specStepOut();
+      return cond.disableGoingForward ? null : specStepOutAction();
     case "b":
-      return cond.disableGoingBackward ? null : specStepBack();
+      return cond.disableGoingBackward ? null : specStepBackAction();
+    case "a":
+      return cond.disableGoingBackward ? null : specStepBackOverAction();
     case "k":
-      return cond.disableGoingBackward ? null : specStepBackOver();
-    // case "j":
-    //   return cond.disableGoingForward ? null : jsStepAst();
+      return cond.disableGoingBackward ? null : specStepBackOutAction();
+    case "w":
+      return cond.disableGoingBackward ? null : rewindAction();
     case "j":
-      return cond.disableGoingForward ? null : jsStepStatement();
+      return cond.disableGoingForward ? null : jsStepStatemmentAction();
+    case "p":
+      return cond.disableGoingForward || !devMode ? null : jsStepAstAction();
     case "v":
-      return cond.disableGoingForward ? null : jsStepOver();
+      return cond.disableGoingForward ? null : jsStepOverAction();
     case "t":
-      return cond.disableGoingForward ? null : jsStepOut();
+      return cond.disableGoingForward ? null : jsStepOutAction();
     default:
       return null;
   }
 };
 
-export const handleKeyPressBuilder = (dispatch: Dispatch, cond: Selected) =>
+export const handleKeyPressBuilder = (
+  dispatch: AppDispatch,
+  cond: Selected,
+  devMode: boolean,
+) =>
   function keyPressHandler(event: KeyboardEvent) {
     const focusedElement = document.activeElement;
 
@@ -63,12 +74,12 @@ export const handleKeyPressBuilder = (dispatch: Dispatch, cond: Selected) =>
     const isComplex =
       event.ctrlKey || event.metaKey || event.altKey || event.shiftKey;
 
-    const action = map(event.key, cond);
+    const action = map(event.key, cond, devMode);
 
     if (action && !isComplex) {
       dispatch(action);
       return;
     } else {
-      console.log(`other: ${event.key}`);
+      logger.log?.(`other: ${event.key}`);
     }
   };

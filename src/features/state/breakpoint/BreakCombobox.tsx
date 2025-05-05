@@ -1,17 +1,16 @@
-import { useState, useMemo, Fragment, ReactNode, ReactElement } from "react";
+import { useState, useMemo, Fragment, ReactElement } from "react";
 import {
   Combobox,
   ComboboxInput,
   ComboboxOption,
   ComboboxOptions,
 } from "@headlessui/react";
-import { fuzzyFilter } from "@/util/fuzzy.util";
-import { CheckIcon } from "lucide-react";
-import { twJoin, twMerge } from "tailwind-merge";
-import { shallowEqual, useSelector } from "react-redux";
-import { IrToSpecMapping } from "@/store/reducers/Spec";
-import { ReduxState } from "@/store";
-import { AlgoViewerHeaderUsingOnlyName } from "@/features/spec/algo/AlgoViewerHeader";
+import { cn, fuzzyFilter } from "@/utils";
+import { IrToSpecMapping } from "@/types";
+import { AlgoViewerHeaderUsingAlgoName } from "@/features/spec/algo/AlgoViewerHeader";
+import { useAppSelector } from "@/hooks";
+import { useAtomValue } from "jotai";
+import { atoms } from "@/atoms";
 
 interface ComboProps<T> {
   values: T[];
@@ -51,25 +50,14 @@ export default function MyCombobox({
   placeholder,
 }: ComboProps<string>) {
   const [query, setQuery] = useState("");
-
-  const { irToSpecMapping } = useSelector(
-    (s: ReduxState) => ({
-      irToSpecMapping: s.spec.irToSpecMapping,
-    }),
-    shallowEqual,
-  );
+  const irToSpecMapping = useAtomValue(atoms.spec.irToSpecNameMapAtom);
 
   const options = useMemo(
     () =>
       values.map(name => ({
         name,
         search: alternativeName(name, irToSpecMapping),
-        view: (
-          <AlgoViewerHeaderUsingOnlyName
-            name={name}
-            irToSpecMapping={irToSpecMapping}
-          />
-        ),
+        view: <AlgoViewerHeaderUsingAlgoName name={name} />,
       })),
     [values, irToSpecMapping],
   );
@@ -94,19 +82,18 @@ export default function MyCombobox({
     >
       <ComboboxInput
         placeholder={placeholder}
-        className="font-mono text-sm w-full p-2 focus:outline focus:outline-blue-300 focus:dark:outline-blue-700 bg-neutral-50 dark:bg-neutral-900"
         onChange={event => setQuery(event.target.value)}
       />
       <ComboboxOptions
         transition
         anchor="bottom"
-        className="font-mono text-sm z-[101] shadow-lg w-[var(--input-width)] origin-top transition duration-200 ease-out empty:invisible data-[closed]:scale-95 data-[closed]:opacity-0 h-96 overflow-scroll rounded-lg"
+        className="font-mono text-sm z-101 shadow-lg w-(--input-width) origin-top transition duration-200 ease-out empty:invisible data-closed:scale-95 data-closed:opacity-0 h-96 overflow-scroll rounded-lg"
       >
         {({ option }) => (
           <ComboboxOption key={option.name} value={option} as={Fragment}>
             {({ focus }) => (
               <div
-                className={twMerge(
+                className={cn(
                   "even:bg-white odd:bg-neutral-50",
                   "dark:even:bg-neutral-800 dark:odd:bg-neutral-900",
                   "p-2 cursor-pointer w-full break-all",

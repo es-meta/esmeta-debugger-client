@@ -1,28 +1,25 @@
 import { useCallback, useMemo, useState } from "react";
 import SpecContextItem from "./SpecContextItem";
 import StateViewerItem from "../StateViewerItem";
-import { shallowEqual, useDispatch, useSelector } from "react-redux";
-import { ReduxState } from "@/store";
-import { updateContextIdx } from "@/store/reducers/IrState";
+import { updateContextIdx } from "@/store/reducers/ir";
 import { FoldVerticalIcon, UnfoldVerticalIcon } from "lucide-react";
 import { v4 } from "uuid";
+import { useAppSelector, useAppDispatch, shallowEqual } from "@/hooks";
 
 export default function SpecCallStackViewer() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [globalExpand, setGlobalExpand] = useState<boolean | null>(null);
 
-  const { callStack, breakpoints } = useSelector(
-    (st: ReduxState) => ({
-      callStack: st.irState.callStack,
+  const { callStack, breakpoints } = useAppSelector(
+    st => ({
+      callStack: st.ir.callStack,
       breakpoints: st.breakpoint.items,
     }),
     shallowEqual,
   );
 
   const onItemClick = useCallback(
-    (idx: number) => {
-      dispatch(updateContextIdx(idx));
-    },
+    (idx: number) => dispatch(updateContextIdx(idx)),
     [dispatch],
   );
 
@@ -50,7 +47,7 @@ export default function SpecCallStackViewer() {
         </div>
       }
     >
-      <table className="w-full">
+      <table className="w-full border-t">
         <thead className="text-sm font-200">
           <tr>
             <th className="border-r w-8">#</th>

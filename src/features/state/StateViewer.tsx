@@ -1,38 +1,25 @@
 import Card from "@/components/layout/Card";
 import CardHeader from "@/components/layout/CardHeader";
-import { CpuIcon } from "lucide-react";
-import { useState } from "react";
-import { ReduxState } from "@/store";
-import { AppState } from "@/store/reducers/AppState";
-import { useDispatch, useSelector } from "react-redux";
+import { Layers3Icon } from "lucide-react";
+import { Suspense, useState } from "react";
+import { AppState } from "@/types";
 import StateViewerSelect from "./StateViewerSelect";
-import { chooseStateViewer } from "@/store/reducers/Client";
 import { ViewerItem, viewerItems } from "./vieweritems";
-
-const selector = (st: ReduxState) => ({
-  disabled: !(
-    st.appState.state === AppState.DEBUG_READY_AT_FRONT ||
-    st.appState.state === AppState.DEBUG_READY ||
-    st.appState.state === AppState.TERMINATED
-  ),
-  targetId: st.client.stateviewer.view,
-});
+import { useAtom } from "jotai";
+import { atoms } from "@/atoms";
+import { useAppSelector } from "@/hooks";
 
 export default function StateViewer() {
   const [collapsed, setCollapsed] = useState(false);
-  // const [show, setShow] = useState(shows[0]);
-  const dispatch = useDispatch();
-
-  // const ref = useCallback((node: HTMLDivElement | null) => {
-  //   // if node === null : unmount
-
-  //   // const observer = new ResizeObserver(() => {
-
-  //   // });
-
-  // },[]);
-
-  const { disabled, targetId } = useSelector(selector);
+  const appState = useAppSelector(st => st.appState.state);
+  const disabled = !(
+    appState === AppState.DEBUG_READY_AT_FRONT ||
+    appState === AppState.DEBUG_READY ||
+    appState === AppState.TERMINATED
+  );
+  const [targetId, setActiveView] = useAtom(
+    atoms.client.clientActiveViewerAtom,
+  );
 
   const toggle = <div onClick={() => setCollapsed(!collapsed)}>toggle</div>;
 
@@ -42,14 +29,14 @@ export default function StateViewer() {
     <Card className="flex flex-col size-full">
       <CardHeader
         title="State&nbsp;Viewer"
-        icon={<CpuIcon size={14} className="inline" />}
+        icon={<Layers3Icon size={14} className="inline" />}
       >
         <StateViewerSelect
           selected={viewerItems.find(s => s.id === targetId) || viewerItems[0]}
           options={viewerItems}
           setSelected={(s: ViewerItem) => {
             if (!s) return;
-            dispatch(chooseStateViewer(s.id));
+            setActiveView(s.id);
           }}
           getId={s => s.name}
           getIcon={s => s.icon}
@@ -58,14 +45,16 @@ export default function StateViewer() {
       </CardHeader>
       <div className="overflow-y-scroll size-full">
         {disabled ? (
-          <p className="text-neutral-500 dark:text-neutral-400 p-2">
+          <aside className="text-center py-4">
             Disabled. Start debugger to use.
-          </p>
+          </aside>
         ) : (
           // temp fix to preserve state in render tree - use redux later
           viewerItems.map(s => (
             <div key={s.name} className={targetId === s.id ? "" : "hidden"}>
-              {s.view}
+              <Suspense fallback={null}>
+                <s.view />
+              </Suspense>
             </div>
           ))
         )}

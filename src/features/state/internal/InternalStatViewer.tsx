@@ -1,10 +1,7 @@
-import { ReduxState } from "@/store";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "@/hooks";
 
 export default function InternalStatViewer() {
-  const debugString = useSelector(
-    (state: ReduxState) => state.stats.debugString,
-  );
+  const debugString = useAppSelector(st => st.stats.debugString);
 
   return (
     <div>

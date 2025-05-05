@@ -37,4 +37,4 @@ export const routes = [
   ...meta,
 ] as const;
 
-export type Route = (typeof routes)[number] | `state/context/${number}`;
+export type Route = (typeof routes)[number];

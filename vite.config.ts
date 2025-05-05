@@ -5,6 +5,10 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [react()],
+  define: {
+    __APP_VERSION__: JSON.stringify(process.env.npm_package_version),
+    __DEFAULT_API_IS_BROWSER__: (process.env.ESMETA_CLIENT_WORKER_AS_DEFAULT ?? '').toLowerCase() === 'true',
+  },  
 	server: {
     port: 3000,
     open: '/',

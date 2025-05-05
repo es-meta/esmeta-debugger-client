@@ -1,20 +1,17 @@
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import { v4 as uuid } from "uuid";
 
 import MyCombobox from "./BreakCombobox";
 
-import {
-  addBreak,
-  Breakpoint,
-  BreakpointType,
-} from "@/store/reducers/Breakpoint";
+import { AppState, Breakpoint, BreakpointType } from "@/types";
 
-import { connector, type BreakpointsProps } from "./Breakpoints.redux";
+import { addBreak, rmBreak, toggleBreak } from "@/store/reducers/breapoint";
+
 import BreakpointItem from "./BreakpointItem";
 import StateViewerItem from "../StateViewerItem";
-import { Dispatch } from "@/store";
-import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/hooks";
 import {
   Tooltip,
   TooltipContent,
@@ -22,7 +19,19 @@ import {
 } from "@/components/ui/tooltip";
 import ToolbarButton from "@/features/toolbar/ToolbarButton";
 import { OctagonIcon, OctagonPauseIcon } from "lucide-react";
-import { AppStateActionType } from "@/store/reducers/AppState";
+import { toggleIgnore } from "@/store/reducers/app-state";
+import { atoms, useAtomValue } from "@/atoms";
+
+import { ReduxState } from "@/store";
+
+// connect redux store
+export const mapStateToProps = (st: ReduxState) => ({
+  breakpoints: st.breakpoint.items,
+  ignoreBp: st.appState.ignoreBP,
+  disableQuit:
+    st.appState.state === AppState.INIT ||
+    st.appState.state === AppState.JS_INPUT,
+});
 
 // TODO support turning off or toggling breakpoints
 export function addBreakHandler(
@@ -30,7 +39,7 @@ export function addBreakHandler(
   algoName: string | null,
   breakpoints: Breakpoint[],
   algos: Record<string, number>,
-  dispatch: Dispatch,
+  dispatch: AppDispatch,
 ): string | null {
   if (algoName === null) {
     return algoName;
@@ -63,22 +72,23 @@ export function addBreakHandler(
 // delete all
 // disable all
 // sort
-export default connector(function Breakpoints(props: BreakpointsProps) {
-  const dispatch = useDispatch<Dispatch>();
-  const { breakpoints, algoNames, ignoreBp, disableQuit } = props;
+export default function Breakpoints() {
+  const dispatch = useAppDispatch();
+  const algos = useAtomValue(atoms.spec.nameMapAtom);
+  const algoNames = useMemo(() => Object.keys(algos), [algos]);
+  const { breakpoints, ignoreBp, disableQuit } =
+    useAppSelector(mapStateToProps);
   const [algoName, setAlgoName] = useState<string | null>(null);
 
   const onAddClick = useCallback(
     (name: string | null) => {
-      setAlgoName(
-        addBreakHandler(true, name, breakpoints, props.algos, dispatch),
-      );
+      setAlgoName(addBreakHandler(true, name, breakpoints, algos, dispatch));
     },
-    [props.breakpoints, props.algos],
+    [breakpoints, algos],
   );
 
   const toggleStepWithoutBreak = useCallback(() => {
-    dispatch({ type: AppStateActionType.TOGGLE_IGNORE });
+    dispatch(toggleIgnore());
   }, [dispatch]);
 
   return (
@@ -86,14 +96,14 @@ export default connector(function Breakpoints(props: BreakpointsProps) {
       header="Breakpoints"
       headerItems={
         <Tooltip>
-          <TooltipTrigger>
+          <TooltipTrigger asChild>
             <ToolbarButton
               position="single"
               disabled={disableQuit}
               onClick={toggleStepWithoutBreak}
               className={
                 ignoreBp
-                  ? "h-6 bg-blue-600 hover:bg-blue-500 dark:bg-blue-600 hover:dark:bg-blue-500 text-white hover:text-white"
+                  ? "h-6 bg-blue-600 hover:bg-blue-500 dark:bg-blue-600 dark:hover:bg-blue-500 text-white hover:text-white"
                   : "h-6"
               }
               icon={ignoreBp ? <OctagonIcon /> : <OctagonPauseIcon />}
@@ -120,7 +130,7 @@ export default connector(function Breakpoints(props: BreakpointsProps) {
           placeholder="search by name"
         />
       </div>
-      <table className="w-full text-xs">
+      <table className="w-full text-xs border-t">
         <thead className="font-200 text-neutral-500 dark:text-neutral-400">
           <tr>
             <th className="border-r">Step</th>
@@ -136,8 +146,8 @@ export default connector(function Breakpoints(props: BreakpointsProps) {
                 key={uuid()}
                 data={bp}
                 idx={idx}
-                onRemoveClick={(idx: number) => props.rmBreak(idx)}
-                onToggleClick={(idx: number) => props.toggleBreak(idx)}
+                onRemoveClick={(idx: number) => dispatch(rmBreak(idx))}
+                onToggleClick={(idx: number) => dispatch(toggleBreak(idx))}
               />
             ))
           ) : (
@@ -155,4 +165,4 @@ export default connector(function Breakpoints(props: BreakpointsProps) {
       </table>
     </StateViewerItem>
   );
-});
+}

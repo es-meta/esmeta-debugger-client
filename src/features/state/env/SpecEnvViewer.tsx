@@ -2,23 +2,20 @@ import { useMemo } from "react";
 import { twJoin } from "tailwind-merge";
 import { v4 as uuid } from "uuid";
 
-import { Environment } from "@/store/reducers/IrState";
+import type { Environment } from "@/types";
 import StateViewerItem from "../StateViewerItem";
 import clsx from "clsx";
-// import Address, { GuideTooltip } from "@/features/state/heap/Address";
-import { useSelector } from "react-redux";
-import { ReduxState } from "@/store";
 import TreeAddress from "../heap/TreeAddress";
 import { BookTextIcon } from "lucide-react";
+import { shallowEqual, useAppSelector } from "@/hooks";
 
 export default function SpecEnvViewer() {
-  const props = useSelector((st: ReduxState) => ({
-    irState: st.irState,
-  }));
-  const { callStack, contextIdx } = props.irState;
+  const { callStack, contextIdx } = useAppSelector(
+    st => ({ callStack: st.ir.callStack, contextIdx: st.ir.contextIdx }),
+    shallowEqual,
+  );
 
-  const env: Environment =
-    callStack.length > 0 ? callStack[contextIdx].env : [];
+  const env: Environment = callStack[contextIdx]?.env ?? [];
 
   const sorted = useMemo(
     () =>
@@ -46,9 +43,7 @@ export default function SpecEnvViewer() {
       icon={<BookTextIcon size={14} />}
     >
       {sorted.length === 0 ? (
-        <p className="text-center text-neutral-500 dark:text-neutral-400 p-4 text-sm">
-          No environment variables.
-        </p>
+        <aside className="text-center py-4">No environment variables.</aside>
       ) : (
         //   <tr className="text-center text p-4">
         // </tr>

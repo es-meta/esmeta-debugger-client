@@ -1,13 +1,21 @@
 import { useEffect, useRef, useCallback, useMemo } from "react";
-import Editor, { type Monaco } from "@monaco-editor/react";
-import { editor } from "monaco-editor";
-import * as monaco_editor from "monaco-editor";
+import Editor, {
+  type BeforeMount,
+  type OnMount,
+  type Monaco,
+} from "@monaco-editor/react";
+import { logger } from "@/utils";
 import { createRangeFromIndices } from "./JSEditor.util";
-import { LoaderCircleIcon } from "lucide-react";
-import {
-  currentMode,
-  usePreferredColorScheme,
-} from "@/hooks/usePreferredColorScheme";
+import { usePreferredColorScheme } from "@/hooks/use-preferred-color-scheme";
+import { Loading } from "./MonacoEditor.load";
+
+type IStandaloneCodeEditor = Parameters<OnMount>[0];
+type IStandaloneEditorConstructionOptions = NonNullable<
+  Parameters<typeof Editor>[0]["options"]
+>;
+type IEditorDecorationsCollection = ReturnType<
+  IStandaloneCodeEditor["createDecorationsCollection"]
+>;
 
 interface Props {
   code: string;
@@ -24,39 +32,49 @@ export default function MonacoEditor({
   end,
   readOnly,
 }: Props) {
-  const monacoRef = useRef<typeof monaco_editor | null>(null);
-  const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
-  const decorations = useRef<editor.IEditorDecorationsCollection | null>(null);
+  const prefers = usePreferredColorScheme();
+  const monacoRef = useRef<Monaco | null>(null);
+  const editorRef = useRef<IStandaloneCodeEditor | null>(null);
+  const decorations = useRef<IEditorDecorationsCollection | null>(null);
 
-  const monacoDidMount = useCallback(
-    (mountedEditor: editor.IStandaloneCodeEditor, monaco: Monaco) => {
-      // TODO add basic definitions
-      // var coreDefsName = 'lib.es5.d.ts';
-      // // Import the text of your chosen def file.  This will depend on your bundler.
-      // var coreDefs = ('./' + coreDefsName);
+  const monacoBeforeMount: BeforeMount = useCallback(monaco => {
+    monaco.editor.defineTheme("my-vs-dark", {
+      base: "vs-dark",
+      inherit: true,
+      rules: [],
+      colors: {
+        // transparent background
+        "editor.background": "#00000000",
+      },
+    });
+  }, []);
 
-      monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
-        noLib: true,
-        allowNonTsExtensions: true,
-      });
-      monaco.languages.typescript.javascriptDefaults.setExtraLibs([
-        {
-          content: "declare function print(value: any): void;",
-        },
-      ]);
-      monaco.editor.addKeybindingRule({
-        keybinding: monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyK,
-        command: null,
-        when: null,
-      });
-      monacoRef.current = monaco;
-      editorRef.current = mountedEditor;
-      decorations.current = mountedEditor.createDecorationsCollection();
-    },
-    [],
-  );
+  const monacoDidMount: OnMount = useCallback((mountedEditor, monaco) => {
+    // TODO add basic definitions
+    // var coreDefsName = 'lib.es5.d.ts';
+    // // Import the text of your chosen def file.  This will depend on your bundler.
+    // var coreDefs = ('./' + coreDefsName);
 
-  const options: editor.IStandaloneEditorConstructionOptions = useMemo(() => {
+    monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
+      noLib: true,
+      allowNonTsExtensions: true,
+    });
+    monaco.languages.typescript.javascriptDefaults.setExtraLibs([
+      {
+        content: "declare function print(value: any): void;",
+      },
+    ]);
+    monaco.editor.addKeybindingRule({
+      keybinding: monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyK,
+      command: null,
+      when: null,
+    });
+    monacoRef.current = monaco;
+    editorRef.current = mountedEditor;
+    decorations.current = mountedEditor.createDecorationsCollection();
+  }, []);
+
+  const options: IStandaloneEditorConstructionOptions = useMemo(() => {
     return {
       scrollbar: {
         alwaysConsumeMouseWheel: false,
@@ -69,7 +87,7 @@ export default function MonacoEditor({
       tabSize: 2,
       fontFamily: '"Fira code", "Fira Mono", monospace',
       automaticLayout: true,
-      lineNumbersMinChars: 4,
+      lineNumbersMinChars: 3,
       glyphMargin: false,
       folding: false,
     };
@@ -77,7 +95,7 @@ export default function MonacoEditor({
 
   useEffect(() => {
     if (!monacoRef.current || !decorations.current || !editorRef.current) {
-      console.info("no monaco or decorations");
+      logger.info?.("no monaco or decorations");
       return;
     }
 
@@ -103,28 +121,16 @@ export default function MonacoEditor({
     }
   }, [code, start, end]);
 
-  usePreferredColorScheme((mode: "light" | "dark") => {
-    if (monacoRef.current) {
-      monacoRef.current.editor.setTheme(mode === "dark" ? "vs-dark" : "light");
-    }
-  });
-
   return (
     <Editor
       loading={<Loading />}
-      // className={showAfterMount ? "" : "invisible"}
       language="javascript"
       value={code}
       onChange={s => onChange(s || "")}
+      beforeMount={monacoBeforeMount}
       onMount={monacoDidMount}
-      theme={currentMode() === "light" ? "light" : "vs-dark"}
+      theme={prefers === "light" ? "light" : "my-vs-dark"}
       options={options}
     />
-  );
-}
-
-function Loading() {
-  return (
-    <LoaderCircleIcon className="animate-spin text-neutral-500" size={32} />
   );
 }

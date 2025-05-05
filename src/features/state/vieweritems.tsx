@@ -1,6 +1,14 @@
-import Breakpoints from "./breakpoint/Breakpoints";
-import EnvViewer from "./env/EnvViewer";
-import HeapViewer from "./heap/HeapViewer";
+import { type ReactElement, lazy } from "react";
+import type { ExtractAtomValue } from "jotai";
+import type { clientActiveViewerAtom } from "@/atoms/defs/client";
+const Breakpoints = lazy(() => import("./breakpoint/Breakpoints"));
+const EnvViewer = lazy(() => import("./env/EnvViewer"));
+const HeapViewer = lazy(() => import("./heap/HeapViewer"));
+const CallStackViewer = lazy(
+  () => import("./callstack-visited/CallStackViewer"),
+);
+const InternalStatViewer = lazy(() => import("./internal/InternalStatViewer"));
+
 import {
   ContainerIcon,
   FlagIcon,
@@ -8,17 +16,13 @@ import {
   MemoryStickIcon,
   OctagonXIcon,
 } from "lucide-react";
-import { ReactElement, ReactNode } from "react";
-import { ClientState } from "@/store/reducers/Client";
-import InternalStatViewer from "./internal/InternalStatViewer";
-import CallStackViewer from "./callstack-visited/CallStackViewer";
 
 export interface ViewerItem {
   name: string;
-  id: ClientState["stateviewer"]["view"];
+  id: ExtractAtomValue<typeof clientActiveViewerAtom>;
   icon: ReactElement<SVGElement>;
-  view: ReactNode;
-  display: boolean;
+  view: ReturnType<typeof lazy>;
+  devOnly: boolean;
 }
 
 export const viewerItems: ViewerItem[] = [
@@ -26,35 +30,35 @@ export const viewerItems: ViewerItem[] = [
     name: "Env",
     id: "env",
     icon: <ContainerIcon />,
-    view: <EnvViewer />,
-    display: true,
+    view: EnvViewer,
+    devOnly: false,
   },
   {
     name: "Heap",
     id: "heap",
     icon: <MemoryStickIcon />,
-    view: <HeapViewer />,
-    display: true,
+    view: HeapViewer,
+    devOnly: false,
   },
   {
     name: "Breaks",
     id: "bp",
     icon: <OctagonXIcon />,
-    view: <Breakpoints />,
-    display: true,
+    view: Breakpoints,
+    devOnly: false,
   },
   {
     name: "Callstack",
     id: "callstack",
     icon: <LayersIcon />,
-    view: <CallStackViewer />,
-    display: true,
+    view: CallStackViewer,
+    devOnly: false,
   },
   {
     name: "Meta",
     id: "stats",
     icon: <FlagIcon />,
-    view: <InternalStatViewer />,
-    display: import.meta.env.DEV,
+    view: InternalStatViewer,
+    devOnly: true,
   },
 ];

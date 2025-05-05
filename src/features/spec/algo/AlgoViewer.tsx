@@ -1,36 +1,28 @@
+import { BreakpointType, Context } from "@/types";
 import React, { useCallback, useMemo } from "react";
 import { parseAlgorithm } from "ecmarkdown";
 // import { Algorithm } from "@/store/reducers/Spec";
 import AlgoStepList from "./AlgoStepList";
 import "@/styles/AlgoViewer.css";
-import { BreakpointType } from "@/store/reducers/Breakpoint";
-import { SpecViewerProps } from "../SpecViewer.redux";
-import { addBreak, rmBreak } from "@/store/reducers/Breakpoint";
-import { useDispatch } from "react-redux";
-import { Context } from "@/store/reducers/IrState";
+import { addBreak, rmBreak } from "@/store/reducers/breapoint";
 import AlgoViewerHeader from "./AlgoViewerHeader";
+import { useAppDispatch, useAppSelector } from "@/hooks";
 
-function ContextViewer(props: SpecViewerProps & { context: Context }) {
-  const dispatch = useDispatch();
-  const { algo, breakpoints, context, irToSpecMapping } = props;
+type AlgoViewerProps = { context: Context; showOnlyVisited: boolean };
+
+export default function ContextAlgoViewer({
+  context,
+  showOnlyVisited,
+}: AlgoViewerProps) {
+  const dispatch = useAppDispatch();
+
+  const breakpoints = useAppSelector(st => st.breakpoint.items);
+
+  const algo = context.algo;
 
   const currentSteps = useMemo(
     () => (context === undefined ? [] : context.steps) satisfies number[],
     [context],
-  );
-
-  const breakedStepsList: number[][] = useMemo(
-    () =>
-      context === undefined
-        ? []
-        : (breakpoints
-            .map(bp => {
-              if (bp.type === BreakpointType.Spec && bp.fid === context.fid)
-                return bp.steps;
-              else return undefined;
-            })
-            .filter(_ => _ !== undefined) as number[][]),
-    [context, breakpoints],
   );
 
   const onPrefixClick = useCallback(
@@ -65,36 +57,41 @@ function ContextViewer(props: SpecViewerProps & { context: Context }) {
     [breakpoints, dispatch],
   );
 
-  const empty = useMemo(() => [], []);
-
-  const parsed = useMemo(() => parseAlgorithm(algo.code), [algo.code]);
-
-  const handlePrefixClick = useCallback(
-    (steps: number[]) => onPrefixClick(algo.fid, algo.name, steps),
+  const handleClick: React.MouseEventHandler<Element> = useCallback(
+    e => {
+      const target = e.target;
+      if (!(target instanceof HTMLElement)) return;
+      const stringified = target.dataset.thisStep;
+      if (stringified === undefined) return;
+      const steps = JSON.parse(stringified) as number[];
+      onPrefixClick(algo.fid, algo.name, steps);
+    },
     [onPrefixClick, algo.fid, algo.name],
   );
 
+  const empty = useMemo(() => JSON.stringify([]), []);
+
+  const parsed = useMemo(() => parseAlgorithm(algo.code), [algo.code]);
+
+  if (
+    context === undefined ||
+    context.algo === undefined ||
+    context.algo.code.trim() === ""
+  ) {
+    throw new Error("Algorithm not found");
+  }
+
   return (
-    <div className="algo-container w-full h-fit break-all">
-      <AlgoViewerHeader algorithm={algo} irToSpecMapping={irToSpecMapping} />
+    <div className="algo-container w-full h-fit" onClick={handleClick}>
+      <AlgoViewerHeader algorithm={algo} />
       <AlgoStepList
         listNode={parsed.contents}
-        steps={empty}
+        stringifiedSteps={empty}
         currentSteps={currentSteps}
         isExit={context.isExit}
-        breakedStepsList={breakedStepsList}
+        showOnlyVisited={showOnlyVisited}
         visitedStepList={context.visited}
-        onPrefixClick={handlePrefixClick}
-        level={0}
       />
     </div>
   );
-}
-
-export default function AlgoViewer(props: SpecViewerProps) {
-  const { irState } = props;
-
-  const context = irState.callStack[irState.contextIdx];
-
-  return <ContextViewer {...props} context={context} />;
 }

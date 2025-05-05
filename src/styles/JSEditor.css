@@ -1,3 +1,11 @@
 .my-highlight {
   background-color: #ffff00;
+  @media (prefers-color-scheme: dark) {
+    background-color: #ffff0088;
+  }
+}
+
+/* issue: https://github.com/microsoft/monaco-editor/issues/4455 */
+.monaco-editor {
+  --vscode-focusBorder: #000000 !important; 
 }

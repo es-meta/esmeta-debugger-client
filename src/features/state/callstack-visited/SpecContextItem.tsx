@@ -1,13 +1,11 @@
+import type { Breakpoint, Context, IrToSpecMapping } from "@/types";
 import { useEffect, useMemo, useState } from "react";
-import { Context } from "@/store/reducers/IrState";
-import { twMerge } from "tailwind-merge";
-import { ContextVisitedViewer } from "./algo/AlgoVisitedViewer";
-import { Breakpoint } from "@/store/reducers/Breakpoint";
 import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
-import { shallowEqual, useSelector } from "react-redux";
-import { ReduxState } from "@/store";
-import { IrToSpecMapping } from "@/store/reducers/Spec";
-import { toStepString } from "@/util/numbering.util";
+import { cn, toStepString } from "@/utils";
+import { useAppSelector, shallowEqual } from "@/hooks";
+import { ContextViewer } from "@/features/spec/ContextViewer";
+import { useAtomValue } from "jotai";
+import { atoms } from "@/atoms";
 
 type ContextItemProps = {
   data: Context;
@@ -35,16 +33,18 @@ function replacedName(name: string, irToSpecMapping: IrToSpecMapping): string {
 export default function SpecContextItem(props: ContextItemProps) {
   const [expand, setExpand] = useState<boolean>(false);
 
-  const { highlight, irToSpecMapping } = useSelector(
-    (s: ReduxState) => ({
-      highlight: s.irState.contextIdx === props.idx,
-      irToSpecMapping: s.spec.irToSpecMapping,
+  const irToSpecMapping = useAtomValue(atoms.spec.irToSpecNameMapAtom);
+
+  const { contextIdx } = useAppSelector(
+    st => ({
+      contextIdx: st.ir.contextIdx,
     }),
     shallowEqual,
   );
+  const highlight = contextIdx === props.idx;
 
   const className = useMemo(() => {
-    return twMerge(
+    return cn(
       "even:bg-neutral-400/10 odd:bg-neutral-400/5 text-xs",
       "hover:bg-neutral-400/5 active:bg-green-500/25 transition-all cursor-pointer",
       highlight &&
@@ -73,10 +73,10 @@ export default function SpecContextItem(props: ContextItemProps) {
     <>
       <tr className={className} onClick={() => onItemClick(idx)}>
         <td className="py-1 border-r text-center">{idx}</td>
-        <td className="border-r text-center text-wrap lowercase break-all">
+        <td className="border-r text-center text-wrap lowercase">
           {stepString}
         </td>
-        <td className="border-r text-center text-wrap break-all font-es font-700 text-sm">
+        <td className="border-r text-center text-wrap font-es font-700 text-sm">
           {specName}
         </td>
         <td className="">
@@ -100,11 +100,7 @@ export default function SpecContextItem(props: ContextItemProps) {
         (data.algo.code !== "" ? (
           <tr>
             <td colSpan={4}>
-              <ContextVisitedViewer
-                context={data}
-                algo={data.algo}
-                breakpoints={breakpoints}
-              />
+              <ContextViewer embed context={data} />
             </td>
           </tr>
         ) : (

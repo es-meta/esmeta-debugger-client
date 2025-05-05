@@ -1,66 +1,66 @@
-import { useCallback } from "react";
+import { useCallback, lazy } from "react";
 import "@/styles/JSEditor.css";
-import MonacoEditor from "./MonacoEditor";
+import { Loading } from "./MonacoEditor.load";
+import { DeferUntilIdle } from "@/components/defer-until-idle";
+import { useAppSelector } from "@/hooks";
+import { AppState } from "@/types";
+import { shallowEqual, useDispatch } from "react-redux";
+import { forceEdit } from "@/store/reducers/js";
 import Card from "@/components/layout/Card";
 import CardHeader from "@/components/layout/CardHeader";
-
-import { useDispatch, useSelector } from "react-redux";
-import { ReduxState } from "@/store";
-import { edit } from "@/store/reducers/JS";
-import { AppState } from "@/store/reducers/AppState";
 import { CodeIcon } from "lucide-react";
 
-export default function JSEditor() {
-  // size = 14;
+const MonacoEditor = lazy(() => import("./MonacoEditor"));
+
+export default function JSCodeEditor() {
   const dispatch = useDispatch();
-  const editDispatch = useCallback(
-    (code: string) => dispatch(edit(code)),
-    [dispatch],
+  const { code, contextIdx, callStack, readOnly } = useAppSelector(
+    st => ({
+      code: st.js.code,
+      contextIdx: st.ir.contextIdx,
+      callStack: st.ir.callStack,
+      readOnly: !(
+        st.appState.state === AppState.INIT ||
+        st.appState.state === AppState.JS_INPUT
+      ),
+    }),
+    shallowEqual,
   );
 
-  const {
-    appState,
-    js: { code, start, end },
-  } = useSelector((state: ReduxState) => ({
-    js: state.js,
-    appState: state.appState.state,
-  }));
+  const context = callStack[contextIdx];
+  const [start, end] = context?.jsRange ?? [-1, -1];
 
   const handleCodeChange = useCallback(
     (code: string) => {
-      if (appState === AppState.JS_INPUT) editDispatch(code);
+      if (!readOnly) {
+        dispatch(forceEdit(code));
+      }
     },
-    [appState, edit],
+    [dispatch, readOnly, forceEdit],
   );
-
-  // const [toggle, setToggle] = useState(false);
-
-  // useEffect(() => {
-  //   setToggle(t => !t);
-  // }, [code]);
 
   return (
     <Card className="h-full flex flex-col">
       <CardHeader
         title="JavaScript&nbsp;Editor"
         icon={<CodeIcon size={14} className="inline" />}
-      >
-        {/* <div className="flex flex-row px-4 justify-between">
-          <StateTransition state={toggle ? "astReady" : "loading"} />
-          <div className="flex flex-row gap-2">
-            <CopyIcon />
-          </div>
-        </div> */}
-      </CardHeader>
-
-      <div className="overflow-hidden size-full rounded flex flex-col">
-        <MonacoEditor
-          code={code}
-          onChange={handleCodeChange}
-          start={start}
-          end={end}
-          readOnly={appState !== AppState.JS_INPUT}
-        />
+      ></CardHeader>
+      <div className="overflow-hidden size-full flex flex-col">
+        <DeferUntilIdle
+          loading={
+            <div className="flex items-center justify-center size-full">
+              <Loading />
+            </div>
+          }
+        >
+          <MonacoEditor
+            code={code}
+            onChange={handleCodeChange}
+            start={start}
+            end={end}
+            readOnly={readOnly}
+          />
+        </DeferUntilIdle>
       </div>
     </Card>
   );

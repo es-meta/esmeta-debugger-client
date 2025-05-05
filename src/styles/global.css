@@ -1,0 +1,245 @@
+@import 'tailwindcss';
+
+@plugin 'tailwindcss-animate';
+
+@theme {
+  --font-weight-*: initial;
+  --font-weight-100: 100;
+  --font-weight-200: 200;
+  --font-weight-300: 300;
+  --font-weight-400: 400;
+  --font-weight-500: 500;
+  --font-weight-600: 600;
+  --font-weight-700: 700;
+  --font-weight-800: 800;
+  --font-weight-900: 900;
+
+  --font-es: Cambria, Palatino Linotype, Palatino, Liberation Serif, serif;
+
+  --color-es-50: #fffbeb;
+  --color-es-100: #fef3c7;
+  --color-es-200: #fde68a;
+  --color-es-300: #fcd34d;
+  --color-es-400: #fbbf24;
+  --color-es-500: #f59e0b;
+  --color-es-600: #d97706;
+  --color-es-700: #b45309;
+  --color-es-800: #92400e;
+  --color-es-900: #78350f;
+  --color-es-950: #451a03;
+
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  --color-chart-1: hsl(var(--chart-1));
+  --color-chart-2: hsl(var(--chart-2));
+  --color-chart-3: hsl(var(--chart-3));
+  --color-chart-4: hsl(var(--chart-4));
+  --color-chart-5: hsl(var(--chart-5));
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
+
+@layer utilities {
+  body {
+    margin: 0;
+    font-family:
+      -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: #f2f2f2;
+    color: #000;
+  }
+  @media (prefers-color-scheme: dark) {
+    body {
+      background-color: #171717;
+      color: #fff;
+    }
+  }
+
+  code {
+    font-family:
+      source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  }
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+  }
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  table {
+    @apply border-separate border-spacing-0;
+  }
+
+  aside {
+    @apply text-sm text-neutral-500 dark:text-neutral-400;
+  }
+}
+
+@layer utilities {
+  *,
+  ::before,
+  ::after {
+    @apply border-neutral-300 dark:border-neutral-700;
+  }
+}
+
+.Toastify__toast {
+  @apply dark:bg-neutral-800 dark:text-white rounded-xl overflow-hidden;
+}
+
+.Toastify__toast button svg {
+  @apply fill-black dark:fill-white;
+}
+
+input[type='text'], textarea {
+  @apply disabled:opacity-50 disabled:line-through text-black dark:text-white text-sm w-full p-2 focus:outline focus:outline-blue-300 dark:focus:outline-blue-700 bg-neutral-50 dark:bg-neutral-900;
+}
+
+.button-styled {
+  @apply rounded-lg cursor-pointer disabled:cursor-not-allowed h-8 px-3 text-sm text-white bg-es-600 font-500 hover:bg-es-600/75 active:scale-95 transition-all;
+}
+
+
+:root {
+  --bg-graph-color: #fff;
+  --border-graph-bold: rgba(0, 0, 0, 0.07);
+  --border-graph: rgba(0, 0, 0, 0.06);
+
+  @media (prefers-color-scheme: dark) {
+    --bg-graph-color: #111;
+    --border-graph-bold: rgba(255, 255, 255, 0.07);
+    --border-graph: rgba(255, 255, 255, 0.06);
+  }
+}
+
+.bg-graph {
+  background-color: var(--bg-graph-color);
+  background-image:
+    linear-gradient(var(--border-graph-bold) 2px, transparent 2px),
+    linear-gradient(90deg, var(--border-graph-bold) 2px, transparent 2px),
+    linear-gradient(var(--border-graph) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border-graph) 1px, transparent 1px);
+  background-size:
+    100px 100px,
+    100px 100px,
+    20px 20px,
+    20px 20px;
+  background-position: calc(50% + 50px) calc(50% + 50px);
+}
+
+/** Toastify styles **/
+.Toastify__toast {
+  @apply rounded-xl;
+}
+
+ul ul {
+  @apply pl-4;
+}
