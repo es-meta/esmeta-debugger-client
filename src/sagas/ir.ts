@@ -1,13 +1,7 @@
 import { call, put, takeLatest, all } from "redux-saga/effects";
 import { toast } from "react-toastify";
 import { doAPIGetRequest } from "@/api";
-import {
-  AlgorithmKind,
-  Environment,
-  CallStack,
-  Heap,
-  Context,
-} from "@/types";
+import { AlgorithmKind, Environment, CallStack, Heap, Context } from "@/types";
 import {
   updateCallStackSuccess,
   updateContextIdx,
@@ -46,29 +40,43 @@ function* updateCallStackSaga() {
         string,
         [number, number],
       ][] = yield call(() => doAPIGetRequest("state/callStack"));
-      const callStack = raw.map(([fid, name, steps, isExit, env, visited, kind, rawParams, dot, code, [start, end]]) => ({
-        fid,
-        name,
-        steps,
-        isExit,
-        env,
-        algo: {
+      const callStack = raw.map(
+        ([
           fid,
-          kind,
           name,
-          params: rawParams.map(([name, optional, type]) => ({
-            name,
-            optional,
-            type,
-          })),
+          steps,
+          isExit,
+          env,
+          visited,
+          kind,
+          rawParams,
           dot,
           code,
-        },
-        visited,
-        jsRange: [start, end],
-      } satisfies Context));
+          [start, end],
+        ]) =>
+          ({
+            fid,
+            name,
+            steps,
+            isExit,
+            env,
+            algo: {
+              fid,
+              kind,
+              name,
+              params: rawParams.map(([name, optional, type]) => ({
+                name,
+                optional,
+                type,
+              })),
+              dot,
+              code,
+            },
+            visited,
+            jsRange: [start, end],
+          }) satisfies Context,
+      );
 
-     
       yield put(updateCallStackSuccess(callStack as CallStack));
       yield put(updateContextIdx(0));
     } catch (e: unknown) {

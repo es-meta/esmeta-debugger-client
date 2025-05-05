@@ -1,5 +1,9 @@
 /////// programs ///////
-import { SEARCHPARAM_NAME_ITER, SEARCHPARAM_NAME_API } from "@/constants";
+import {
+  SEARCHPARAM_NAME_ITER,
+  SEARCHPARAM_NAME_API,
+  FALLBACK_API_URl,
+} from "@/constants";
 import {
   logger,
   buildSearchParams,
@@ -7,8 +11,6 @@ import {
   getSearchQuery,
 } from "@/utils";
 import { atom } from "jotai";
-
-const FALLBACK_API_URl = "http://localhost:8080";
 
 const givenOriginAtom = atom(
   (): { type: "visualizer"; iter: number } | { type: "none"; iter: null } => {
@@ -63,7 +65,7 @@ const givenApiAtom = atom(
       }
     };
 
-    const defaultApi = genHttpApi;
+    const defaultApi = __DEFAULT_API_IS_BROWSER__ ? genBrowserApi : genHttpApi;
 
     if (api === null) return defaultApi();
     if (api === "browser") {
