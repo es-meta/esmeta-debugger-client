@@ -45,7 +45,7 @@ function Right() {
     <div className="flex flex-row items-center justify-end md:gap-1">
       <ShareButton />
       <a
-        className="flex flex-row gap-1 items-center text-lg font-500 hover:bg-neutral-100 hover:dark:bg-neutral-800 rounded-lg active:scale-90 transition-all cursor-pointer p-2"
+        className="flex flex-row gap-1 items-center text-lg font-500 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg active:scale-90 transition-all cursor-pointer p-2"
         href={GITHUB_LINK_ESMETA}
         target="_blank"
         rel="noopener noreferrer"

@@ -1,31 +1,116 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@plugin 'tailwindcss-animate';
+
+@theme {
+  --font-weight-*: initial;
+  --font-weight-100: 100;
+  --font-weight-200: 200;
+  --font-weight-300: 300;
+  --font-weight-400: 400;
+  --font-weight-500: 500;
+  --font-weight-600: 600;
+  --font-weight-700: 700;
+  --font-weight-800: 800;
+  --font-weight-900: 900;
+
+  --font-es: Cambria, Palatino Linotype, Palatino, Liberation Serif, serif;
+
+  --color-es-50: #fffbeb;
+  --color-es-100: #fef3c7;
+  --color-es-200: #fde68a;
+  --color-es-300: #fcd34d;
+  --color-es-400: #fbbf24;
+  --color-es-500: #f59e0b;
+  --color-es-600: #d97706;
+  --color-es-700: #b45309;
+  --color-es-800: #92400e;
+  --color-es-900: #78350f;
+  --color-es-950: #451a03;
+
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  --color-chart-1: hsl(var(--chart-1));
+  --color-chart-2: hsl(var(--chart-2));
+  --color-chart-3: hsl(var(--chart-3));
+  --color-chart-4: hsl(var(--chart-4));
+  --color-chart-5: hsl(var(--chart-5));
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
 }
 
-body {
-  background-color: #f2f2f2;
-  color: #000;
-}
-@media (prefers-color-scheme: dark) {
-  body {
-    background-color: #171717;
-    color: #fff;
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
   }
 }
 
+@layer utilities {
+  body {
+    margin: 0;
+    font-family:
+      -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  body {
+    background-color: #f2f2f2;
+    color: #000;
+  }
+  @media (prefers-color-scheme: dark) {
+    body {
+      background-color: #171717;
+      color: #fff;
+    }
+  }
+
+  code {
+    font-family:
+      source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  }
 }
 
 @layer base {
@@ -107,7 +192,7 @@ code {
 }
 
 input[type='text'], textarea {
-  @apply text-black dark:text-white font-mono text-sm w-full p-2 focus:outline focus:outline-blue-300 focus:dark:outline-blue-700 bg-neutral-50 dark:bg-neutral-900;
+  @apply text-black dark:text-white font-mono text-sm w-full p-2 focus:outline focus:outline-blue-300 dark:focus:outline-blue-700 bg-neutral-50 dark:bg-neutral-900;
 }
 
 .button-styled {

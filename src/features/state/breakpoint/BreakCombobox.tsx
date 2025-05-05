@@ -91,7 +91,7 @@ export default function MyCombobox({
       <ComboboxOptions
         transition
         anchor="bottom"
-        className="font-mono text-sm z-[101] shadow-lg w-[var(--input-width)] origin-top transition duration-200 ease-out empty:invisible data-[closed]:scale-95 data-[closed]:opacity-0 h-96 overflow-scroll rounded-lg"
+        className="font-mono text-sm z-101 shadow-lg w-(--input-width) origin-top transition duration-200 ease-out empty:invisible data-closed:scale-95 data-closed:opacity-0 h-96 overflow-scroll rounded-lg"
       >
         {({ option }) => (
           <ComboboxOption key={option.name} value={option} as={Fragment}>

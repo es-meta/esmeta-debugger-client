@@ -91,7 +91,7 @@ export default connector(function Breakpoints(props: BreakpointsProps) {
               onClick={toggleStepWithoutBreak}
               className={
                 ignoreBp
-                  ? "h-6 bg-blue-600 hover:bg-blue-500 dark:bg-blue-600 hover:dark:bg-blue-500 text-white hover:text-white"
+                  ? "h-6 bg-blue-600 hover:bg-blue-500 dark:bg-blue-600 dark:hover:bg-blue-500 text-white hover:text-white"
                   : "h-6"
               }
               icon={ignoreBp ? <OctagonIcon /> : <OctagonPauseIcon />}

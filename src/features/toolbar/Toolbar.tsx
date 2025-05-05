@@ -48,14 +48,14 @@ export default function Toolbar() {
   const showResume = givenConfig.origin.type === "visualizer";
 
   return (
-    <aside className="relative w-full backdrop-blur-sm z-[2]">
-      <div className="size-full flex-row bg-opacity-75 flex items-center min-h-full flex-wrap whitespace-pre-wrap pb-2 gap-y-1 justify-start z-[1001]">
+    <aside className="relative w-full backdrop-blur-xs z-2">
+      <div className="size-full flex-row bg-opacity-75 flex items-center min-h-full flex-wrap whitespace-pre-wrap pb-2 gap-y-1 justify-start z-1001">
         <ToolbarButtonGroup label="Exec">
           {showResume && (
             <ToolbarButton
               position="left"
               disabled={disableResume}
-              className="bg-gradient-to-r from-es-900/50 to-es-900/15"
+              className="bg-linear-to-r from-es-900/50 to-es-900/15"
               onClick={() => dispatch(resumeFromIterAction())}
               icon={<FastForwardIcon />}
               label={

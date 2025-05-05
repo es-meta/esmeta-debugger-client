@@ -65,7 +65,7 @@ export default function JSEnvViewer() {
         ) : (
           bindings.map(
             ([name, value]) =>
-              value === undefined ? null : value.startsWith("#") ? ( //     { //   <td className="font-mono text-wrap break-all text-center overflow-hidden flex flex-row gap-2 justify-center items-center"> //   </td> //   <td className="border-r font-mono text-wrap py-1 break-all text-center overflow-hidden"> // > //   )} //     ), //       { "!bg-[#BAF7D0]": name === "return" }, //       "hover:bg-neutral-200 transition-all", //       "even:bg-white odd:bg-neutral-100 font-500", //     clsx( //   className={twJoin( //   key={v4()} // <tr
+              value === undefined ? null : value.startsWith("#") ? ( //     { //   <td className="font-mono text-wrap break-all text-center overflow-hidden flex flex-row gap-2 justify-center items-center"> //   </td> //   <td className="border-r font-mono text-wrap py-1 break-all text-center overflow-hidden"> // > //   )} //     ), //       { "bg-[#BAF7D0]!": name === "return" }, //       "hover:bg-neutral-200 transition-all", //       "even:bg-white odd:bg-neutral-100 font-500", //     clsx( //   className={twJoin( //   key={v4()} // <tr
                 <TreeAddress field={name} address={value} defaultFold />
               ) : (
                 <Li>

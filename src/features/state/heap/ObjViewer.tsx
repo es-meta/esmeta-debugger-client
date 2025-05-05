@@ -41,7 +41,7 @@ export default function ObjectView({ obj, singleMode, address }: Props) {
               Object.entries(obj.map).map(([key, value]) => (
                 <tr
                   key={v4()}
-                  className=" odd:bg-neutral-100 odd:dark:bg-neutral-800 hover:bg-neutral-200 hover:dark:bg-neutral-700 transition-all"
+                  className=" odd:bg-neutral-100 dark:odd:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-all"
                 >
                   <td className="border-r">{key}</td>
                   <td className="font-mono text-wrap break-all text-center overflow-hidden flex flex-row gap-2 justify-center items-center">
@@ -80,7 +80,7 @@ export default function ObjectView({ obj, singleMode, address }: Props) {
               Object.entries(obj.map).map(([key, value]) => (
                 <tr
                   key={v4()}
-                  className="odd:bg-neutral-100 odd:dark:bg-neutral-800 hover:bg-neutral-200 hover:dark:bg-neutral-700  transition-all"
+                  className="odd:bg-neutral-100 dark:odd:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700  transition-all"
                 >
                   <td className="border-r">{key}</td>
                   <td className="font-mono text-wrap break-all text-center overflow-hidden flex flex-row gap-2 justify-center items-center">
@@ -117,7 +117,7 @@ export default function ObjectView({ obj, singleMode, address }: Props) {
               </tr>
             ) : (
               obj.values.map((value, idx) => (
-                <tr className="odd:bg-neutral-100 odd:dark:bg-neutral-800 hover:bg-neutral-200 hover:dark:bg-neutral-700 transition-all">
+                <tr className="odd:bg-neutral-100 dark:odd:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-all">
                   <td className="border-r">{idx}</td>
                   <td className="font-mono text-wrap break-all text-center overflow-hidden flex flex-row gap-2 justify-center items-center">
                     {value.startsWith("#") ? (

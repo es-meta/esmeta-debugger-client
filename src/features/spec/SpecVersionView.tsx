@@ -12,7 +12,7 @@ import { useAtomValue, atoms } from "@/atoms";
 
 const CLASSNAME = `relative inset-0 justify-center
   font-medium hover:bg-neutral-500/25 bg-neutral-500/0 font-mono
-  flex flex-row gap-1 items-center text-lg font-500 hover:bg-neutral-100 hover:dark:bg-neutral-800 rounded-lg active:scale-90 transition-all cursor-pointer p-2
+  flex flex-row gap-1 items-center text-lg font-500 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg active:scale-90 transition-all cursor-pointer p-2
   `;
 
 const SpecVersionViewContent = lazy(() => import("./SpecVersionView.content"));

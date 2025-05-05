@@ -13,7 +13,7 @@ export default function WelcomeModal() {
       onClose={() => setIdx(0)}
       buttonContent={
         <div
-          className="flex flex-row gap-1 items-center text-lg font-500 hover:bg-neutral-100 hover:dark:bg-neutral-800 rounded-lg active:scale-90 transition-all cursor-pointer p-2"
+          className="flex flex-row gap-1 items-center text-lg font-500 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg active:scale-90 transition-all cursor-pointer p-2"
           title="Show Brief Introduction"
         >
           <CircleHelpIcon className="size-[1em]" />
