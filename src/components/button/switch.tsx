@@ -10,7 +10,7 @@ export function Switch({ checked, onChange }: Props) {
     <HeadlessSwitch
       checked={checked}
       onChange={onChange}
-      className="group inline-flex py-1 px-3.5 items-center rounded-full transition cursor-pointer data-checked:bg-es-500 bg-border"
+      className="group inline-flex py-1 px-3.5 items-center rounded-full transition cursor-pointer data-checked:bg-es-600 bg-neutral-300 dark:bg-neutral-700"
     >
       <span
         className="cursor-pointer size-3 rounded-full bg-white transition-transform duration-300 ease-in-out

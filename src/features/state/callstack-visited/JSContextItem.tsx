@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import { cn } from "@/utils";
-import Address from "../heap/Address";
+import TreeAddress from "../heap/TreeAddress";
 
 export interface JSContext {
   // name: string;
@@ -12,27 +12,6 @@ export interface JSContext {
 interface Props extends JSContext {
   idx: number;
 }
-
-// function toAlpha(num: number): string {
-//   return String.fromCharCode(65 + num - 1);
-// }
-
-// function toRoman(num: number): string {
-
-//   const roman = [
-//     ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"],
-//     ["", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"],
-//     ["", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"],
-//     ["", "M", "MM", "MMM", "MMMM"],
-//   ];
-
-//   const digits = num.toString().split("").reverse();
-//   let romanNum = "";
-//   for (let i = 0; i < digits.length; i++) {
-//     romanNum = roman[i][Number(digits[i])] + romanNum;
-//   }
-//   return romanNum;
-// }
 
 export default function JSContextItem(props: Props) {
   const [expand, setExpand] = useState(false);
@@ -79,7 +58,11 @@ export default function JSContextItem(props: Props) {
       {expand && (
         <tr>
           <td colSpan={4}>
-            <Address address={props.address} singleMode />
+            <TreeAddress
+              field="this is unused in singleMode, TODO - remove"
+              address={props.address}
+              singleMode
+            />
           </td>
         </tr>
       )}

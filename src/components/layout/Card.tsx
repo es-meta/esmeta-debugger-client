@@ -1,4 +1,4 @@
-import { forwardRef, Ref, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { cn } from "@/utils";
 
 interface Props {
@@ -7,14 +7,10 @@ interface Props {
   ref?: React.Ref<HTMLDivElement>;
 }
 
-// TODO : remove forwardRef when upgrading to React 19
-export default forwardRef(function Card(
-  { className, children }: Props,
-  ref: Ref<HTMLDivElement>,
-) {
+export default function Card({ className, children, ref }: Props) {
   return (
     <article ref={ref} className={cn("flex flex-col relative", className)}>
       {children}
     </article>
   );
-});
+}

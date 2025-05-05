@@ -115,17 +115,20 @@ export default function JSCallStackViewer() {
       <table className="w-full border-t">
         <thead className="text-sm font-200">
           <tr>
-            <th className="border-r w-8">#</th>
-            <th className="border-r w-fit">type</th>
-            <th className="w-4">show</th>
+            <th className="border-r w-8 border-b">#</th>
+            <th className="border-r w-fit border-b">type</th>
+            <th className="w-4 border-b">show</th>
           </tr>
         </thead>
         <tbody>
           {executionStack.length === 0 ? (
             <tr>
-              <td colSpan={3} className="text-center p-4 text-sm">
-                JavaScript call stack is empty, maybe evaluating script not yet
-                started or already finished.
+              <td colSpan={3}>
+                <aside className="text-center py-4">
+                  JavaScript call stack is empty.
+                  <br />
+                  Evaluating script not yet started or already finished.
+                </aside>
               </td>
             </tr>
           ) : (

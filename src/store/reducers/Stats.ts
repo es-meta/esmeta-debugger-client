@@ -2,10 +2,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export type StatState = {
+  iter: number | null;
   debugString: string;
 };
 
 const initialState: StatState = {
+  iter: null,
   debugString: "",
 };
 
@@ -13,8 +15,13 @@ const statSlice = createSlice({
   name: "stat",
   initialState,
   reducers: {
-    updateStatSuccess: (state, action: PayloadAction<string>) => {
-      state.debugString = action.payload;
+    updateStatSuccess: (
+      state,
+      action: PayloadAction<[number | null, string]>,
+    ) => {
+      const [iter, debugString] = action.payload;
+      state.iter = iter;
+      state.debugString = debugString;
     },
   },
 });

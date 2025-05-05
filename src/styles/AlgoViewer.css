@@ -37,15 +37,15 @@
 }
 
 .algo-step.highlight {
-  background-color: #00FF0022;
+  background-color: #00FF0066;
 }
 
 .algo-step.visited {
-  background-color: #88888822;
+  background-color: #80808066;
 }
 
 .algo-step.exit-highlight {
-  background-color: #0000FF22;
+  background-color: #0000FF66;
 }
 
 .algo-step emu-val {

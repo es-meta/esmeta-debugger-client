@@ -31,11 +31,15 @@ export default function ConnectionSettingsContent({
       <h4 className="mt-4 text-lg font-700">API Address</h4>
       <input
         type="text"
-        placeholder="http://localhost:8080"
+        className="rounded-lg"
+        placeholder="Enter API Address"
         disabled={selected.id === "browser"}
         value={url}
         onChange={e => setUrl(e.target.value)}
       />
+      <aside>
+        <p>This settings needs to be saved.</p>
+      </aside>
       <div className="flex justify-end mt-4 gap-2">
         <button className="button-styled" data-dialog-control="close">
           Cancel

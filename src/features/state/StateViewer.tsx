@@ -1,6 +1,6 @@
 import Card from "@/components/layout/Card";
 import CardHeader from "@/components/layout/CardHeader";
-import { CpuIcon } from "lucide-react";
+import { Layers3Icon } from "lucide-react";
 import { Suspense, useState } from "react";
 import { AppState } from "@/types";
 import StateViewerSelect from "./StateViewerSelect";
@@ -29,7 +29,7 @@ export default function StateViewer() {
     <Card className="flex flex-col size-full">
       <CardHeader
         title="State&nbsp;Viewer"
-        icon={<CpuIcon size={14} className="inline" />}
+        icon={<Layers3Icon size={14} className="inline" />}
       >
         <StateViewerSelect
           selected={viewerItems.find(s => s.id === targetId) || viewerItems[0]}
@@ -45,9 +45,9 @@ export default function StateViewer() {
       </CardHeader>
       <div className="overflow-y-scroll size-full">
         {disabled ? (
-          <p className="text-neutral-500 dark:text-neutral-400 p-2">
+          <aside className="text-center py-4">
             Disabled. Start debugger to use.
-          </p>
+          </aside>
         ) : (
           // temp fix to preserve state in render tree - use redux later
           viewerItems.map(s => (

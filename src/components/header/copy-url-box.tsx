@@ -5,7 +5,7 @@ import { cn } from "@/utils";
 import { ShareIconButton } from "./share-icon-button";
 
 interface Props {
-  content: URL;
+  content: string;
   className?: string;
 }
 

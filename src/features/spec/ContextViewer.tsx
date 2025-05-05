@@ -15,18 +15,18 @@ export function ContextViewer({ context, embed }: Props) {
   if (context === undefined || algo === undefined || algo.fid === -1) {
     return isEmbeded ? null : (
       <div className="grow overflow-y-scroll">
-        <p className="text-neutral-500 dark:text-neutral-400 p-2">
+        <aside className="text-center py-4">
           Please write JavaScript code and press the run button.
-        </p>
+        </aside>
       </div>
     );
   }
 
   if (algo.code.trim() === "") {
     return isEmbeded ? (
-      <p className="text-neutral-500 dark:text-neutral-400 p-2">
+      <aside className="text-center py-4">
         This context does not have an algorithm code.
-      </p>
+      </aside>
     ) : (
       <Graphviz dot={algo.code} />
     );

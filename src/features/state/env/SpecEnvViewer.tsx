@@ -43,9 +43,7 @@ export default function SpecEnvViewer() {
       icon={<BookTextIcon size={14} />}
     >
       {sorted.length === 0 ? (
-        <p className="text-center text-neutral-500 dark:text-neutral-400 p-4 text-sm">
-          No environment variables.
-        </p>
+        <aside className="text-center py-4">No environment variables.</aside>
       ) : (
         //   <tr className="text-center text p-4">
         // </tr>

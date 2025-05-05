@@ -17,7 +17,7 @@ export default function WelcomeContent({ idx, setIdx }: Props) {
           <Funnel key={i} show={idx === i} />
         ))}
       </div>
-      <div className="fixed bottom-0 w-full p-4 flex flex-row gap-2 touch-none justify-center">
+      <div className="absolute bottom-0 w-full p-4 flex flex-row gap-2 touch-none justify-center">
         <button
           className={twJoin("button-styled", idx > 0 ? "" : "invisible")}
           onClick={() => {

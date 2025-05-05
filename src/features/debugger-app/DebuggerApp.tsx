@@ -14,9 +14,7 @@ import Toolbar from "@/features/toolbar/Toolbar";
 import { IS_DEBUG } from "@/constants";
 import { toast } from "react-toastify";
 import { SuspenseBoundary } from "@/components/suspense-boundary";
-import { useAtomValue } from "jotai";
-import { atoms } from "@/atoms";
-import { logger } from "@/utils";
+import { atoms, jotaiStore } from "@/atoms";
 import { useAppDispatch } from "@/hooks";
 import { move } from "@/store/reducers/app-state";
 import { AppState } from "@/types";
@@ -50,8 +48,6 @@ export default function DebuggerApp() {
 
 export function MountDebuggerAppInitializers() {
   const dispatch = useAppDispatch();
-  const irToSpecMapping = useAtomValue(atoms.spec.irToSpecNameMapAtom);
-  const nameMap = useAtomValue(atoms.spec.nameMapAtom);
 
   useEffect(() => {
     if (IS_DEBUG)
@@ -64,14 +60,11 @@ export function MountDebuggerAppInitializers() {
   }, []);
 
   useEffect(() => {
-    dispatch(move(AppState.JS_INPUT));
+    Promise.all([
+      jotaiStore.get(atoms.spec.irToSpecNameMapAtom),
+      jotaiStore.get(atoms.spec.nameMapAtom),
+    ]).then(() => dispatch(move(AppState.JS_INPUT)));
   }, []);
-
-  useEffect(
-    () =>
-      logger.info?.("Welcome to the Debugger App!", irToSpecMapping, nameMap),
-    [],
-  );
 
   return null;
 }

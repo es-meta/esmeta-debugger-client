@@ -55,13 +55,11 @@ export default function JSEnvViewer() {
           </tr>
         </thead>
         <tbody> */}
-      <ul className="text-sm px-1 font-mono list-disc list-inside">
+      <ul className="text-sm px-1 list-disc list-inside">
         {bindings.length === 0 ? (
           // <tr className="text-center text p-4">
           //   <td colSpan={2} className="text-center text-neutral-500 p-4 text-sm">
-          <p className="text-center text-neutral-500 p-4 text-sm">
-            No environment variables.
-          </p>
+          <aside className="text-center py-4">No environment variables.</aside>
         ) : (
           bindings.map(
             ([name, value]) =>

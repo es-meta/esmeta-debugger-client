@@ -4,6 +4,8 @@ import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import { cn, toStepString } from "@/utils";
 import { useAppSelector, shallowEqual } from "@/hooks";
 import { ContextViewer } from "@/features/spec/ContextViewer";
+import { useAtomValue } from "jotai";
+import { atoms } from "@/atoms";
 
 type ContextItemProps = {
   data: Context;
@@ -31,10 +33,11 @@ function replacedName(name: string, irToSpecMapping: IrToSpecMapping): string {
 export default function SpecContextItem(props: ContextItemProps) {
   const [expand, setExpand] = useState<boolean>(false);
 
-  const { contextIdx, irToSpecMapping } = useAppSelector(
+  const irToSpecMapping = useAtomValue(atoms.spec.irToSpecNameMapAtom);
+
+  const { contextIdx } = useAppSelector(
     st => ({
       contextIdx: st.ir.contextIdx,
-      irToSpecMapping: st.spec.irToSpecMapping,
     }),
     shallowEqual,
   );
@@ -70,10 +73,10 @@ export default function SpecContextItem(props: ContextItemProps) {
     <>
       <tr className={className} onClick={() => onItemClick(idx)}>
         <td className="py-1 border-r text-center">{idx}</td>
-        <td className="border-r text-center text-wrap lowercase break-all">
+        <td className="border-r text-center text-wrap lowercase">
           {stepString}
         </td>
-        <td className="border-r text-center text-wrap break-all font-es font-700 text-sm">
+        <td className="border-r text-center text-wrap font-es font-700 text-sm">
           {specName}
         </td>
         <td className="">

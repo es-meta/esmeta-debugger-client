@@ -177,6 +177,10 @@
   table {
     @apply border-separate border-spacing-0;
   }
+
+  aside {
+    @apply text-sm text-neutral-500 dark:text-neutral-400;
+  }
 }
 
 @layer utilities {
@@ -196,11 +200,11 @@
 }
 
 input[type='text'], textarea {
-  @apply text-black dark:text-white font-mono text-sm w-full p-2 focus:outline focus:outline-blue-300 dark:focus:outline-blue-700 bg-neutral-50 dark:bg-neutral-900;
+  @apply disabled:opacity-50 disabled:line-through text-black dark:text-white text-sm w-full p-2 focus:outline focus:outline-blue-300 dark:focus:outline-blue-700 bg-neutral-50 dark:bg-neutral-900;
 }
 
 .button-styled {
-  @apply h-8 px-3 text-sm rounded-lg text-white bg-es-950/50 font-500 hover:bg-es-500/25 active:scale-95 transition-all;
+  @apply rounded-lg cursor-pointer disabled:cursor-not-allowed h-8 px-3 text-sm text-white bg-es-600 font-500 hover:bg-es-600/75 active:scale-95 transition-all;
 }
 
 
@@ -229,4 +233,13 @@ input[type='text'], textarea {
     20px 20px,
     20px 20px;
   background-position: calc(50% + 50px) calc(50% + 50px);
+}
+
+/** Toastify styles **/
+.Toastify__toast {
+  @apply rounded-xl;
+}
+
+ul ul {
+  @apply pl-4;
 }

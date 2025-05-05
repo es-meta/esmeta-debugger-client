@@ -4,8 +4,7 @@ import { XIcon } from "lucide-react";
 import { Breakpoint } from "@/types";
 import { Switch } from "@/components/button/switch";
 import { cn, logger, toStepString } from "@/utils";
-import { AlgoViewerHeaderUsingOnlyName } from "@/features/spec/algo/AlgoViewerHeader";
-import { useAppSelector } from "@/hooks";
+import { AlgoViewerHeaderUsingAlgoName } from "@/features/spec/algo/AlgoViewerHeader";
 
 interface BreakpointItemProp {
   data: Breakpoint;
@@ -18,8 +17,6 @@ export default function BreakpointItem(props: BreakpointItemProp) {
   const { idx, onToggleClick, onRemoveClick, data } = props;
 
   const isEven = useMemo(() => idx % 2 === 0, [idx]);
-
-  const irToSpecMapping = useAppSelector(st => st.spec.irToSpecMapping);
 
   const { name, enabled } = data;
 
@@ -46,14 +43,11 @@ export default function BreakpointItem(props: BreakpointItemProp) {
             : "bg-neutral-100 dark:bg-neutral-800",
         )}
       >
-        <td className="lowercase border-r overflow-hidden font-mono text-wrap break-all text-center">
+        <td className="lowercase border-r overflow-hidden text-wrap text-center">
           {toStepString(data.steps)}
         </td>
-        <td className="border-r overflow-hidden font-mono text-wrap break-all pb-1">
-          <AlgoViewerHeaderUsingOnlyName
-            name={name}
-            irToSpecMapping={irToSpecMapping}
-          />
+        <td className="border-r overflow-hidden break-before-all text-wrap pb-1">
+          <AlgoViewerHeaderUsingAlgoName name={name} />
         </td>
         <td className="border-r text-center">
           <Switch checked={enabled} onChange={() => handleToggleClick()} />

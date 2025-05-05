@@ -3,6 +3,7 @@ import { Selected } from "./Toolbar.atom";
 import { logger } from "@/utils";
 import {
   continueAction,
+  jsStepAstAction,
   jsStepOutAction,
   jsStepOverAction,
   jsStepStatemmentAction,
@@ -18,7 +19,7 @@ import {
   stopAction,
 } from "@/actions";
 
-const map = (key: string, cond: Selected) => {
+const map = (key: string, cond: Selected, devMode: boolean) => {
   switch (key) {
     case "r":
       return cond.disableRun ? null : runAction();
@@ -44,6 +45,8 @@ const map = (key: string, cond: Selected) => {
       return cond.disableGoingBackward ? null : rewindAction();
     case "j":
       return cond.disableGoingForward ? null : jsStepStatemmentAction();
+    case "p":
+      return cond.disableGoingForward || !devMode ? null : jsStepAstAction();
     case "v":
       return cond.disableGoingForward ? null : jsStepOverAction();
     case "t":
@@ -53,7 +56,11 @@ const map = (key: string, cond: Selected) => {
   }
 };
 
-export const handleKeyPressBuilder = (dispatch: AppDispatch, cond: Selected) =>
+export const handleKeyPressBuilder = (
+  dispatch: AppDispatch,
+  cond: Selected,
+  devMode: boolean,
+) =>
   function keyPressHandler(event: KeyboardEvent) {
     const focusedElement = document.activeElement;
 
@@ -67,7 +74,7 @@ export const handleKeyPressBuilder = (dispatch: AppDispatch, cond: Selected) =>
     const isComplex =
       event.ctrlKey || event.metaKey || event.altKey || event.shiftKey;
 
-    const action = map(event.key, cond);
+    const action = map(event.key, cond, devMode);
 
     if (action && !isComplex) {
       dispatch(action);

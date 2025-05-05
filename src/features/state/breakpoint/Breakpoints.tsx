@@ -1,18 +1,17 @@
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import { v4 as uuid } from "uuid";
 
 import MyCombobox from "./BreakCombobox";
 
-import { Breakpoint, BreakpointType } from "@/types";
+import { AppState, Breakpoint, BreakpointType } from "@/types";
 
-import { addBreak } from "@/store/reducers/breapoint";
+import { addBreak, rmBreak, toggleBreak } from "@/store/reducers/breapoint";
 
-import { connector, type BreakpointsProps } from "./Breakpoints.redux";
 import BreakpointItem from "./BreakpointItem";
 import StateViewerItem from "../StateViewerItem";
 import { AppDispatch } from "@/store";
-import { useAppDispatch } from "@/hooks";
+import { useAppDispatch, useAppSelector } from "@/hooks";
 import {
   Tooltip,
   TooltipContent,
@@ -21,6 +20,18 @@ import {
 import ToolbarButton from "@/features/toolbar/ToolbarButton";
 import { OctagonIcon, OctagonPauseIcon } from "lucide-react";
 import { toggleIgnore } from "@/store/reducers/app-state";
+import { atoms, useAtomValue } from "@/atoms";
+
+import { ReduxState } from "@/store";
+
+// connect redux store
+export const mapStateToProps = (st: ReduxState) => ({
+  breakpoints: st.breakpoint.items,
+  ignoreBp: st.appState.ignoreBP,
+  disableQuit:
+    st.appState.state === AppState.INIT ||
+    st.appState.state === AppState.JS_INPUT,
+});
 
 // TODO support turning off or toggling breakpoints
 export function addBreakHandler(
@@ -61,18 +72,19 @@ export function addBreakHandler(
 // delete all
 // disable all
 // sort
-export default connector(function Breakpoints(props: BreakpointsProps) {
+export default function Breakpoints() {
   const dispatch = useAppDispatch();
-  const { breakpoints, algoNames, ignoreBp, disableQuit } = props;
+  const algos = useAtomValue(atoms.spec.nameMapAtom);
+  const algoNames = useMemo(() => Object.keys(algos), [algos]);
+  const { breakpoints, ignoreBp, disableQuit } =
+    useAppSelector(mapStateToProps);
   const [algoName, setAlgoName] = useState<string | null>(null);
 
   const onAddClick = useCallback(
     (name: string | null) => {
-      setAlgoName(
-        addBreakHandler(true, name, breakpoints, props.algos, dispatch),
-      );
+      setAlgoName(addBreakHandler(true, name, breakpoints, algos, dispatch));
     },
-    [props.breakpoints, props.algos],
+    [breakpoints, algos],
   );
 
   const toggleStepWithoutBreak = useCallback(() => {
@@ -134,8 +146,8 @@ export default connector(function Breakpoints(props: BreakpointsProps) {
                 key={uuid()}
                 data={bp}
                 idx={idx}
-                onRemoveClick={(idx: number) => props.rmBreak(idx)}
-                onToggleClick={(idx: number) => props.toggleBreak(idx)}
+                onRemoveClick={(idx: number) => dispatch(rmBreak(idx))}
+                onToggleClick={(idx: number) => dispatch(toggleBreak(idx))}
               />
             ))
           ) : (
@@ -153,4 +165,4 @@ export default connector(function Breakpoints(props: BreakpointsProps) {
       </table>
     </StateViewerItem>
   );
-});
+}

@@ -7,7 +7,6 @@ import "@/styles/AlgoViewer.css";
 import { addBreak, rmBreak } from "@/store/reducers/breapoint";
 import AlgoViewerHeader from "./AlgoViewerHeader";
 import { useAppDispatch, useAppSelector } from "@/hooks";
-import { atoms, useAtomValue } from "@/atoms";
 
 type AlgoViewerProps = { context: Context; showOnlyVisited: boolean };
 
@@ -16,7 +15,6 @@ export default function ContextAlgoViewer({
   showOnlyVisited,
 }: AlgoViewerProps) {
   const dispatch = useAppDispatch();
-  const irToSpecMapping = useAtomValue(atoms.spec.irToSpecNameMapAtom);
 
   const breakpoints = useAppSelector(st => st.breakpoint.items);
 
@@ -84,11 +82,8 @@ export default function ContextAlgoViewer({
   }
 
   return (
-    <div
-      className="algo-container w-full h-fit break-all"
-      onClick={handleClick}
-    >
-      <AlgoViewerHeader algorithm={algo} irToSpecMapping={irToSpecMapping} />
+    <div className="algo-container w-full h-fit" onClick={handleClick}>
+      <AlgoViewerHeader algorithm={algo} />
       <AlgoStepList
         listNode={parsed.contents}
         stringifiedSteps={empty}

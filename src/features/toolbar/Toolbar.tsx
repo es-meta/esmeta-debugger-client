@@ -18,15 +18,20 @@ export default function Toolbar() {
   } = useAppSelector(selector);
 
   const handleKeyPress = useCallback(
-    handleKeyPressBuilder(dispatch, {
-      disableRun,
-      disableResume,
-      disableQuit,
-      disableGoingBackward,
-      disableGoingForward,
-      ignoreBP,
-    }),
+    handleKeyPressBuilder(
+      dispatch,
+      {
+        disableRun,
+        disableResume,
+        disableQuit,
+        disableGoingBackward,
+        disableGoingForward,
+        ignoreBP,
+      },
+      devMode,
+    ),
     [
+      devMode,
       dispatch,
       disableRun,
       disableResume,
@@ -55,9 +60,9 @@ export default function Toolbar() {
             <ToolbarButton
               position="left"
               disabled={disableResume}
-              className="bg-linear-to-r from-es-900/50 to-es-900/15"
+              className="bg-linear-to-r from-es-400/50 to-es-400/15 dark:from-es-900/50 dark:to-es-900/15"
               onClick={() => dispatch(resumeFromIterAction())}
-              icon={<FastForwardIcon />}
+              icon={<StepForwardIcon />}
               label={
                 <span>
                   R<b>e</b>sume
@@ -134,7 +139,7 @@ export default function Toolbar() {
             position="right"
             disabled={disableGoingForward}
             onClick={() => dispatch(continueAction())}
-            icon={<StepForwardIcon />}
+            icon={<FastForwardIcon />}
             label={
               <span>
                 <b>C</b>ontinue
@@ -186,7 +191,7 @@ export default function Toolbar() {
             position="right"
             disabled={disableGoingBackward}
             onClick={() => dispatch(rewindAction())}
-            icon={<StepBackIcon />}
+            icon={<RewindIcon />}
             label={
               <span>
                 Re<b>w</b>ind
@@ -216,7 +221,11 @@ export default function Toolbar() {
               disabled={disableGoingForward}
               onClick={() => dispatch(jsStepAstAction())}
               icon={<ArrowDownToDotIcon />}
-              label={<span>AST&nbsp;Step</span>}
+              label={
+                <span>
+                  AST&nbsp;Ste<b>p</b>
+                </span>
+              }
             />
           )}
 
@@ -274,8 +283,8 @@ export default function Toolbar() {
 
 function Seperator() {
   return (
-    <div className="h-6 px-1 flex flex-row">
-      <div className="w-[1px] h-6 bg-neutral-300 dark:bg-neutral-700" />
+    <div className="h-6 px-1 flex flex-row items-center">
+      <div className="w-[1px] h-4 bg-neutral-300 dark:bg-neutral-700" />
     </div>
   );
 }
@@ -287,11 +296,11 @@ import {
   RedoDotIcon,
   SquareIcon,
   StepForwardIcon,
-  StepBackIcon,
   UndoDotIcon,
   UndoIcon,
   FastForwardIcon,
   BugPlayIcon,
+  RewindIcon,
 } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/hooks";
 import { selector } from "./Toolbar.atom";

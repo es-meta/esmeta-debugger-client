@@ -51,7 +51,7 @@ export function ProvinenceButton({ address }: { address?: string }) {
   );
 }
 
-function InspectInHaepViewer({ address }: { address: string }) {
+function InspectInHeappViewer({ address }: { address: string }) {
   const setAddr = useSetAtom(clientActiveAddrAtom);
   const setView = useSetAtom(clientActiveViewerAtom);
 
@@ -114,7 +114,7 @@ export default function TreeAddress({
           {getTypeString(obj)}&nbsp;
           <span className="inline-flex flex-row items-center">
             <ProvinenceButton address={address} />
-            <InspectInHaepViewer address={address} />
+            <InspectInHeappViewer address={address} />
             <a
               className="inline cursor-pointer text-es-500 hover:text-es-900 active:scale-75 transition-all"
               onClick={() => setFold(f => !f)}

@@ -43,13 +43,13 @@ export default function Combobox({
     >
       <HeadlessComboboxInput
         placeholder={placeholder}
-        className="font-mono text-sm w-full p-2 focus:outline focus:outline-blue-300 dark:focus:outline-blue-800 bg-neutral-50 dark:bg-neutral-900"
+        className="text-sm w-full p-2 focus:outline focus:outline-blue-300 dark:focus:outline-blue-800 bg-neutral-50 dark:bg-neutral-900"
         onChange={event => setQuery(event.target.value)}
       />
       <HeadlessComboboxOptions
         transition
         anchor="bottom"
-        className="font-mono text-sm z-101 shadow-lg w-(--input-width) origin-top transition duration-200 ease-out empty:invisible data-closed:scale-95 data-closed:opacity-0 h-96 overflow-scroll rounded-lg"
+        className="text-sm z-101 shadow-lg w-(--input-width) origin-top transition duration-200 ease-out empty:invisible data-closed:scale-95 data-closed:opacity-0 h-96 overflow-scroll rounded-lg"
       >
         {({ option: name }) => (
           <HeadlessComboboxOption key={name} value={name} as={Fragment}>

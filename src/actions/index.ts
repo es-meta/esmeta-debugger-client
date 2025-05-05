@@ -38,3 +38,5 @@ export const updateHeapRequest = createAction("irState/updateHeapRequest");
 export const updateCallStackRequest = createAction(
   "irState/updateCallStackRequest",
 );
+
+export const updateStatRequest = createAction("irState/updateStatRequest");

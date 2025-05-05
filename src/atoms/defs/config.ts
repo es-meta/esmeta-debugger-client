@@ -1,4 +1,5 @@
 /////// programs ///////
+import { SEARCHPARAM_NAME_API } from "@/constants";
 import {
   logger,
   buildSearchParams,
@@ -7,13 +8,11 @@ import {
 } from "@/utils";
 import { atom } from "jotai";
 
-const QUERY_API = "api";
 const FALLBACK_API_URl = "http://localhost:8080";
 
-export const QUERY_ITER = "iter";
 const givenOriginAtom = atom(
   (): { type: "visualizer"; iter: number } | { type: "none"; iter: null } => {
-    const iter = Number(getSearchQuery(QUERY_ITER) || undefined);
+    const iter = Number(getSearchQuery(SEARCHPARAM_NAME_API) || undefined);
 
     if (Number.isNaN(iter)) {
       return { type: "none", iter: null };
@@ -35,10 +34,10 @@ const givenApiAtom = atom(
         readonly rawUrl: string | null;
       } => {
     // should allow empty string
-    let api = getSearchQuery(QUERY_API);
+    let api = getSearchQuery(SEARCHPARAM_NAME_API);
 
     if (api === null) {
-      api = getLocalStorage(QUERY_API);
+      api = getLocalStorage(SEARCHPARAM_NAME_API);
     }
 
     const genBrowserApi = () => ({ type: "browser" }) as const;
@@ -77,7 +76,7 @@ const givenApiAtom = atom(
 
 export const setApiAtom = atom(null, (get, set, update: string) => {
   // TODO no refresh
-  window.location.search = buildSearchParams(QUERY_API, update);
+  window.location.search = buildSearchParams(SEARCHPARAM_NAME_API, update);
 });
 
 export const givenConfigAtom = atom(get => {

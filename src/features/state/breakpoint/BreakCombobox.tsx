@@ -7,8 +7,10 @@ import {
 } from "@headlessui/react";
 import { cn, fuzzyFilter } from "@/utils";
 import { IrToSpecMapping } from "@/types";
-import { AlgoViewerHeaderUsingOnlyName } from "@/features/spec/algo/AlgoViewerHeader";
+import { AlgoViewerHeaderUsingAlgoName } from "@/features/spec/algo/AlgoViewerHeader";
 import { useAppSelector } from "@/hooks";
+import { useAtomValue } from "jotai";
+import { atoms } from "@/atoms";
 
 interface ComboProps<T> {
   values: T[];
@@ -48,20 +50,14 @@ export default function MyCombobox({
   placeholder,
 }: ComboProps<string>) {
   const [query, setQuery] = useState("");
-
-  const irToSpecMapping = useAppSelector(st => st.spec.irToSpecMapping);
+  const irToSpecMapping = useAtomValue(atoms.spec.irToSpecNameMapAtom);
 
   const options = useMemo(
     () =>
       values.map(name => ({
         name,
         search: alternativeName(name, irToSpecMapping),
-        view: (
-          <AlgoViewerHeaderUsingOnlyName
-            name={name}
-            irToSpecMapping={irToSpecMapping}
-          />
-        ),
+        view: <AlgoViewerHeaderUsingAlgoName name={name} />,
       })),
     [values, irToSpecMapping],
   );

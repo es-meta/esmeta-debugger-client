@@ -156,7 +156,7 @@ function AlgoStepCore({ className, contents, stringifiedStep }: CoreProps) {
   return (
     <li
       className={twJoin(
-        "hover:scale-[1.015625] hover:bg-neutral-400/20 active:scale-[0.99] transition-all duration-75 cursor-pointer",
+        "hover:scale-[1.015625] hover:bg-neutral-400/20 active:scale-[0.99] transition-all cursor-pointer",
         className,
       )}
       data-this-step={stringifiedStep}

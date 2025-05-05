@@ -11,6 +11,8 @@ export const EXECUTION_STACK_ADDR = "#EXECUTION_STACK";
 
 export const USE_VERBOSE_LOG = true;
 
+export const SEARCHPARAM_NAME_ITER = "iter";
+export const SEARCHPARAM_NAME_API = "api";
 export const SEARCHPARAM_NAME_PROG = "prog";
 export const FALLBACK_CODE = `var x = 1;
 var y = 2;

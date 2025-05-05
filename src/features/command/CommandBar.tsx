@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback, lazy } from "react";
+import { useStore } from "jotai";
 import type { Command } from "./command.types";
 import { AnimatePresence, motion } from "motion/react";
 import { toast } from "react-toastify";
@@ -7,6 +8,7 @@ import { useAppDispatch } from "@/hooks";
 const CommandBarCombobox = lazy(() => import("./CommandBarCombobox"));
 
 export default function CommandBar() {
+  const store = useStore();
   const dispatch = useAppDispatch();
   const [isVisible, setIsVisible] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -29,12 +31,15 @@ export default function CommandBar() {
   const handleCommand = useCallback(
     (command: Command | null) => {
       if (command === null) return;
-      const { action } = command;
-      if (action) dispatch(action);
+      const { target: action } = command;
+      if (action) {
+        if (action.type === "redux") dispatch(action);
+        else store.set(action.atom);
+      }
       setIsVisible(false);
       toast.info("command bar called " + command.label);
     },
-    [dispatch],
+    [dispatch, store],
   );
 
   return (

@@ -58,7 +58,7 @@ export function AnimatedDialog({
       shouldReduceMotion
         ? {}
         : {
-            enter: "ease-out duration-75",
+            enter: "ease-out duration-50",
             enterFrom: "opacity-0",
             enterTo: "opacity-100",
             leave: "ease-in duration-100",
@@ -84,10 +84,11 @@ export function AnimatedDialog({
   );
 
   const handleMouseEnter = useCallback(() => {
-    import("./animated-dialog.lazy");
-    if (onPreload) {
-      onPreload();
-    }
+    import("./animated-dialog.lazy").then(() => {
+      if (onPreload) {
+        onPreload();
+      }
+    });
   }, [onPreload]);
 
   const handleClose = useCallback(() => {

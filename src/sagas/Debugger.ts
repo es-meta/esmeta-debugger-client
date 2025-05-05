@@ -7,7 +7,11 @@ import { ReduxState } from "@/store";
 import { AppState, Route, StepResult } from "@/types";
 import { move } from "@/store/reducers/app-state";
 import { serialize } from "@/store/reducers/breapoint";
-import { updateHeapRequest, updateCallStackRequest } from "@/actions";
+import {
+  updateHeapRequest,
+  updateCallStackRequest,
+  updateStatRequest,
+} from "@/actions";
 import { forceEdit } from "@/store/reducers/js";
 import {
   backToProvenanceAction,
@@ -58,7 +62,7 @@ function* runSaga() {
       // update heap, call stack
       yield put(updateHeapRequest());
       yield put(updateCallStackRequest());
-      // yield put(updateStatRequest());
+      yield put(updateStatRequest());
     } catch (e: unknown) {
       // show error toast
       // toast.error((e as Error).message);
@@ -110,7 +114,7 @@ function* resumeFromIterSaga() {
       // update heap, call stack
       yield put(updateHeapRequest());
       yield put(updateCallStackRequest());
-      // yield put(updateStatRequest());
+      yield put(updateStatRequest());
     } catch (e: unknown) {
       // show error toast
       // toast.error((e as Error).message);
@@ -158,7 +162,7 @@ function mkStepSaga(endpoint: Route, bodyObj?: unknown) {
       // update heap, call stack, and stats
       yield put(updateHeapRequest());
       yield put(updateCallStackRequest());
-      // yield put(updateStatRequest());
+      yield put(updateStatRequest());
     } catch (e: unknown) {
       console.error(e);
       if (e instanceof Error) {
