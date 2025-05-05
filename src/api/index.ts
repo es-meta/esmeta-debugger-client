@@ -1,22 +1,24 @@
 import { toast } from "react-toastify";
+import type { ExtractAtomValue } from "jotai";
 import type { Route } from "@/types";
 import type { StandaloneDebuggerInput } from "./standalone.type";
-import { jotaiStore } from "@/atoms/store";
-import { recieveAtom, sentAtom } from "@/atoms/defs";
+import { atoms, jotaiStore } from "@/atoms";
 import { createIdGenerator, logger } from "@/utils";
-import type { ExtractAtomValue } from "jotai";
-import { givenConfigAtom } from "@/atoms/defs/config";
+import { reduxStore } from "@/store";
+import { setBusy } from "@/store/reducers/app-state";
 
 // Create worker instance
-const workerPromise = instantiateWorker(jotaiStore.get(givenConfigAtom).api);
+const workerPromise = instantiateWorker(
+  jotaiStore.get(atoms.config.givenConfigAtom).api,
+);
 
 // Request counter for unique IDs
 const newId = createIdGenerator();
 
-export const workingset = new Set();
+const workingset = new Set();
 
 type ReturnTypeForApi<T extends Route> = T extends "state/heap"
-  ? number
+  ? unknown
   : unknown;
 
 export const createWorkerRequest = async <T extends Route>(
@@ -29,22 +31,22 @@ export const createWorkerRequest = async <T extends Route>(
   return new Promise((resolve, reject) => {
     const id = newId();
     workingset.add(id);
-    jotaiStore.set(sentAtom);
+    reduxStore.dispatch(setBusy(workingset.size));
 
-    logger.log(id, type, endpoint, data);
+    logger.log?.(id, type, endpoint, data);
 
     const handler = (e: MessageEvent) => {
       const response = e.data;
       if (response.id === id) {
         worker.removeEventListener("message", handler);
-        logger.log(id, response);
+        logger.log?.(id, response);
         if (response.success) {
           resolve(response.data);
           workingset.delete(id);
-          jotaiStore.set(recieveAtom, workingset.size);
+          reduxStore.dispatch(setBusy(workingset.size));
         } else {
           workingset.delete(id);
-          jotaiStore.set(recieveAtom, Number.MIN_SAFE_INTEGER);
+          reduxStore.dispatch(setBusy(Number.MIN_SAFE_INTEGER));
           const error = new Error(response.error);
           toast.error(error.message);
           reject(error);
@@ -88,7 +90,7 @@ export const doAPIPutRequest = <T extends Route>(
 
 /** auxiliaries */
 export async function instantiateWorker(
-  givenApi: ExtractAtomValue<typeof givenConfigAtom>["api"],
+  givenApi: ExtractAtomValue<typeof atoms.config.givenConfigAtom>["api"],
 ): Promise<Worker> {
   return new Promise<Worker>(async resolve => {
     if (givenApi.type === "browser") {

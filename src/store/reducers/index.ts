@@ -1,20 +1,19 @@
 import { combineReducers } from "redux";
-import appState from "./AppState";
-import js from "./JS";
-import webDebugger from "./Debugger";
-import irState from "./IrState";
-import breakpoint from "./Breakpoint";
-import spec from "./Spec";
-import client from "./Client";
-import stats from "./Stats";
+import appState from "./app-state";
+import breakpoint from "./breapoint";
+import js from "./js";
+import ir from "./ir";
+import spec from "./spec";
+import stats from "./stats";
 
-export default combineReducers({
+const rootReducer = combineReducers({
   appState,
-  js,
-  webDebugger,
   breakpoint,
-  irState,
+  ir,
+  js,
   spec,
-  client,
   stats,
 });
+
+export default rootReducer;
+export type RootState = ReturnType<typeof rootReducer>;

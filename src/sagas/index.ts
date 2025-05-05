@@ -1,17 +1,9 @@
 import { all } from "redux-saga/effects";
 
-import debuggerSaga from "./Debugger";
-import breakpointSaga from "./Breakpoint";
-import irStateSaga from "./IrState";
-import specSaga from "./Spec";
-import statSaga from "./Stats";
+import breakpointSaga from "./breakpoint";
+import debuggerSaga from "./debugger";
+import irSaga from "./ir";
 
 export default function* rootSaga() {
-  yield all([
-    debuggerSaga(),
-    breakpointSaga(),
-    irStateSaga(),
-    specSaga(),
-    statSaga(),
-  ]);
+  yield all([breakpointSaga(), debuggerSaga(), irSaga()]);
 }
