@@ -1,5 +1,5 @@
 /////// programs ///////
-import { SEARCHPARAM_NAME_API } from "@/constants";
+import { SEARCHPARAM_NAME_ITER, SEARCHPARAM_NAME_API } from "@/constants";
 import {
   logger,
   buildSearchParams,
@@ -12,7 +12,7 @@ const FALLBACK_API_URl = "http://localhost:8080";
 
 const givenOriginAtom = atom(
   (): { type: "visualizer"; iter: number } | { type: "none"; iter: null } => {
-    const iter = Number(getSearchQuery(SEARCHPARAM_NAME_API) || undefined);
+    const iter = Number(getSearchQuery(SEARCHPARAM_NAME_ITER) || undefined);
 
     if (Number.isNaN(iter)) {
       return { type: "none", iter: null };
