@@ -243,3 +243,11 @@ input[type='text'], textarea {
 ul ul {
   @apply pl-4;
 }
+
+.node-syntactic {
+  @apply text-sm text-neutral-500 dark:text-neutral-400 font-serif;
+}
+
+.node-lexical {
+  @apply text-sm text-neutral-500 dark:text-neutral-400;
+}

@@ -4,5 +4,5 @@ export const requestIdleCallback =
   function (cb: () => void) {
     return setTimeout(function () {
       cb();
-    }, 8);
+    }, 0);
   };

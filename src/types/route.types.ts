@@ -2,6 +2,7 @@ import { AST } from "@/types/ast.types";
 import { StepResult } from "./debugger.types";
 // import { Heap } from "./heap.types";
 import { RawEnv } from "./ir-state.types";
+import { Heap } from "./heap.types";
 export interface StepResultAdditional {
   result: StepResult;
   callstack: [
@@ -16,13 +17,12 @@ export interface StepResultAdditional {
   // heap: Heap,
   stepCnt: number;
   instCnt: number;
+  heap: Heap;
   reprint: Maybe<string>;
   ast: Maybe<AST>;
 }
 
 const meta = ["meta/iter", "meta/debugString", "meta/version"] as const;
-
-const state = ["state/heap", "state/callStack"] as const;
 
 const spec = ["spec/func", "spec/version"] as const;
 
@@ -54,7 +54,6 @@ const exec = [
 ] as const;
 
 export const routes = [
-  ...state,
   ...spec,
   ...breakpoint,
   ...exec,
