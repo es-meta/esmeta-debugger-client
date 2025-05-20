@@ -167,5 +167,5 @@ export default function App() {
   );
 }
 
-const DURATION = 125;
-const PADDING = 0.25;
+const DURATION = 500;
+const PADDING = 0.1;

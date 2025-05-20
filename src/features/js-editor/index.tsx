@@ -1,7 +1,6 @@
 import { useCallback, lazy, useEffect, useState } from "react";
 import "@/styles/JSEditor.css";
 import { Loading } from "./monaco/monaco.load";
-import { DeferUntilIdle } from "@/components/primitives/defer-until-idle";
 import { AppState } from "@/types";
 import Card from "@/components/layout/Card";
 import { CardHeaderMultiple } from "@/components/layout/CardHeader";
@@ -68,16 +67,15 @@ export function JSCodeEditor() {
         onSelect={setShow}
       />
       <div className="overflow-hidden size-full flex flex-col">
-        <SuspenseBoundary fatal>
-          <DeferUntilIdle
-            loading={
-              <div className="flex items-center justify-center size-full">
-                <Loading />
-              </div>
-            }
-          >
-            {show === "JavaScript Editor" ? <JSEditorContent /> : <AstView />}
-          </DeferUntilIdle>
+        <SuspenseBoundary
+          fatal
+          loading={
+            <div className="flex items-center justify-center size-full">
+              <Loading />
+            </div>
+          }
+        >
+          {show === "JavaScript Editor" ? <JSEditorContent /> : <AstView />}
         </SuspenseBoundary>
       </div>
     </Card>
