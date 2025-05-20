@@ -4,7 +4,12 @@ import { doAPIDeleteRequest, doAPIPostRequest } from "@/api";
 
 const items = atom<Breakpoint[]>([]);
 
-export const bp = atom(get => get(items));
+export const bpAtom = atom(get => get(items));
+
+export const serializedBpAtom = atom(get => {
+  const breakpoints = get(items);
+  return breakpoints.map(serialize);
+});
 
 export const addAction = atom(null, (get, set, update: Breakpoint) => {
   set(items, old => [...old, update]);

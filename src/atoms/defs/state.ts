@@ -8,7 +8,6 @@ import {
 } from "@/types";
 import { atom } from "jotai";
 import { appState } from "./app";
-import { doAPIGetRequest } from "@/api";
 import { toast } from "react-toastify";
 import { es } from "@/utils";
 import { AST } from "@/types/ast.types";
@@ -20,6 +19,7 @@ const initialState: StepResultAdditional = {
   stepCnt: 0,
   result: StepResult.REACHEDFRONT,
   ast: null,
+  heap: {},
   instCnt: 0,
 };
 
@@ -117,19 +117,19 @@ export const contextAtom = atom<Context | undefined>(get => {
   return context;
 });
 
-export const heapAtom = atom<Promise<Heap>>(async get => {
+export const heapAtom = atom<Heap>(get => {
   // read inner promise atom, to make it depend on it and re-evaluate when it changes
-  const result = get(_innerPromise);
-  return doAPIGetRequest("state/heap") as Promise<Heap>;
+  const [, { heap }] = get(resultAtom);
+  return heap;
 });
 
-export const esExecutionStack = atom(async get => {
-  const heap = await get(heapAtom);
+export const esExecutionStack = atom(get => {
+  const heap = get(heapAtom);
   return es.readJSExecutionStack(heap);
 });
 
-export const esEnvAtom = atom(async get => {
-  const heap = await get(heapAtom);
+export const esEnvAtom = atom(get => {
+  const heap = get(heapAtom);
   return es.computeESEnv(heap);
 });
 
