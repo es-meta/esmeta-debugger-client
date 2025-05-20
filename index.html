@@ -7,14 +7,14 @@
     <meta name="theme-color" content="#000000" />
     <meta
       name="description"
-      content="Web site created using create-react-app"
+      content="ECMAScript Debugger is a tool for debugging ECMAScript code through the specification, line-by-line."
     />
     <link rel="apple-touch-icon" href="/logo192.png" />
     <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
-    <link rel="manifest" href="/manifest.json" />
+    <link rel="manifest" href="resources/manifest.json" />
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -24,14 +24,28 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
+    <!-- TODO style tag not needed after SSG -->
+    <style>
+      body {
+        background-color: #f2f2f2;
+        color: #000;
+      }
+      @media (prefers-color-scheme: dark) {
+        body {
+          background-color: #171717;
+          color: #fff;
+        }
+      }
+    </style>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
-    <script src="https://unpkg.com/@hpcc-js/wasm/dist/graphviz.umd.js" type="javascript/worker"></script>
-    <title>ECMAScript Debugger</title>
+    <title>ECMAScript Double Debugger</title>
+    <!-- TODO add OpenGraph -->
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
-    <script type="module" src="/src/index.tsx"></script>
+    <script type="module" src="src/main.tsx"></script>
+    <script src="https://unpkg.com/@hpcc-js/wasm/dist/graphviz.umd.js" type="javascript/worker"></script>
   </body>
 </html>

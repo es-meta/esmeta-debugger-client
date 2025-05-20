@@ -1,147 +1,90 @@
-import {
-  Dialog,
-  DialogPanel,
-  DialogTitle,
-  Transition,
-  TransitionChild,
-} from "@headlessui/react";
-import { GitCommitIcon, InfoIcon, TagIcon } from "lucide-react";
-import { Fragment, useCallback, useState } from "react";
-import { GitBranchIcon } from "lucide-react";
+import { lazy } from "react";
+import { AnimatedDialog } from "@/components/dialog/animated-dialog";
+import { SuspenseBoundary } from "@/components/primitives/suspense-boundary";
 
-import { shallowEqual, useSelector } from "react-redux";
-import { ReduxState } from "@/store";
-import PlainLabel from "@/components/label/PlainLabel";
-import { AppState } from "@/store/reducers/AppState";
-import { SpecVersion } from "@/store/reducers/Spec";
-import { CLIENT_VERSION } from "@/constants/constant";
+import {
+  CircleAlertIcon,
+  GitCommitHorizontalIcon,
+  LoaderCircleIcon,
+  TagIcon,
+} from "lucide-react";
+import { useAtomValue, atoms } from "@/atoms";
+
+const CLASSNAME = `relative inset-0 justify-center
+  font-medium hover:bg-neutral-500/25 bg-neutral-500/0 font-mono
+  flex flex-row gap-1 items-center text-lg font-500 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg active:scale-90 transition-all cursor-pointer p-2
+  `;
+
+const SpecVersionViewContent = lazy(() => import("./SpecVersionView.content"));
 
 export default function SpecVersionView() {
-  let [isOpen, setIsOpen] = useState(false);
-
-  const { specVersion, isInit, esmetaVersion } = useSelector(
-    (state: ReduxState) => ({
-      specVersion: state.spec.version.spec,
-      isInit: state.appState.state === AppState.INIT,
-      esmetaVersion: state.spec.version.esmeta,
-    }),
-    shallowEqual,
-  );
-
-  const versionString = versionStringBuilder(specVersion, isInit);
-
-  const closeModal = useCallback(() => {
-    setIsOpen(false);
-  }, []);
-
-  function openModal() {
-    setIsOpen(true);
-  }
-
   return (
-    <>
-      <div
-        className="group relative inset-0 flex items-center justify-center
-      transition-transform active:scale-90
-      "
-      >
-        <button
-          type="button"
-          onClick={openModal}
-          className="flex flex-row rounded-md text-sm font-medium text-white transition-all items-center justify-between hover:bg-neutral-500/25 bg-neutral-500/0 focus:outline-none focus-visible:ring-1 focus-visible:ring-neutral-300/75"
-        >
-          <PlainLabel>
-            <GitBranchIcon />
-            <p className="hidden md:block">{versionString}</p>
-          </PlainLabel>
-        </button>
-      </div>
-
-      <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={closeModal}>
-          <TransitionChild
-            as={Fragment}
-            enter="ease-out duration-200"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-100"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
-            <div className="fixed inset-0 bg-black/50" />
-          </TransitionChild>
-
-          <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
-              <TransitionChild
-                as={Fragment}
-                enter="ease-out duration-100"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-100"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
-              >
-                <DialogPanel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all space-y-3">
-                  <DialogTitle
-                    as="h3"
-                    className="text-xl font-700 leading-6 text-gray-900"
-                  >
-                    Versions
-                  </DialogTitle>
-
-                  <h4 className="mt-4 text-lg font-700">
-                    ECMA-262 (Specification) Version
-                  </h4>
-                  {/* <RadioGroupExample /> */}
-
-                  <div className="flex flex-col gap-1">
-                    <PlainLabel>
-                      <TagIcon />
-                      {specVersion.tag || "unknown tag"}
-                    </PlainLabel>
-                    <PlainLabel>
-                      <GitCommitIcon />
-                      {specVersion.hash || "unknown commit hash"}
-                    </PlainLabel>
-                  </div>
-
-                  <h4 className="mt-4 text-lg font-700">ESMeta Version</h4>
-                  <PlainLabel>
-                    <InfoIcon />
-                    {esmetaVersion ?? "unknown version"}
-                  </PlainLabel>
-                  <h4 className="mt-4 text-lg font-700">
-                    ESMeta Debugger Client Version
-                  </h4>
-                  <PlainLabel>
-                    <InfoIcon />
-                    {CLIENT_VERSION}
-                  </PlainLabel>
-                </DialogPanel>
-              </TransitionChild>
-            </div>
-          </div>
-        </Dialog>
-      </Transition>
-    </>
+    <AnimatedDialog
+      className="p-6"
+      title="Versions"
+      buttonContent={<SpecVersionViewButton />}
+    >
+      <SpecVersionViewContent />
+    </AnimatedDialog>
   );
 }
 
-function versionStringBuilder(version: SpecVersion, isInit: boolean) {
-  if (isInit) return "loading...";
+function SpecVersionViewButton() {
+  return (
+    <div className={CLASSNAME}>
+      <SuspenseBoundary
+        intentional
+        error={
+          <>
+            <CircleAlertIcon className="size-[1em]" />
+            <span className="hidden md:block uppercase text-xs font-700">
+              unknwn
+            </span>
+          </>
+        }
+        loading={
+          <>
+            <LoaderCircleIcon className="animate-spin size-[1em]" />
+            <span className="hidden md:block uppercase text-xs font-700">
+              {fix6("")}
+            </span>
+          </>
+        }
+      >
+        <VersionShortAsync />
+      </SuspenseBoundary>
+    </div>
+  );
+}
+
+function VersionShortAsync() {
+  const { spec: version } = useAtomValue(atoms.client.versionAtom);
 
   if (version.tag) {
-    if (version.hash) {
-      return `${version.tag} (${version.hash.substring(0, 8)})`;
-    } else {
-      return version.tag;
-    }
+    return (
+      <>
+        <TagIcon className="size-[1em]" />
+        <span className="hidden md:block uppercase text-xs font-700">
+          {fix6(version.tag)}
+        </span>
+      </>
+    );
   }
 
   if (version.hash) {
-    return version.hash.substring(0, 8);
+    return (
+      <>
+        <GitCommitHorizontalIcon className="size-[1em]" />
+        <span className="hidden md:block uppercase text-xs font-700">
+          {fix6(version.hash)}
+        </span>
+      </>
+    );
   } else {
-    return "unknown version";
+    throw new Error("No version info available");
   }
+}
+
+function fix6(str: string) {
+  return str.substring(0, 6).padEnd(6, "\u00A0");
 }

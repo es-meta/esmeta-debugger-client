@@ -1,5 +1,5 @@
-import { forwardRef, Ref, type ReactNode } from "react";
-import { twMerge } from "tailwind-merge";
+import type { ReactNode } from "react";
+import { cn } from "@/utils";
 
 interface Props {
   className?: string;
@@ -7,20 +7,10 @@ interface Props {
   ref?: React.Ref<HTMLDivElement>;
 }
 
-// TODO : remove forwardRef when upgrading to React 19
-export default forwardRef(function Card(
-  { className, children }: Props,
-  ref: Ref<HTMLDivElement>,
-) {
+export default function Card({ className, children, ref }: Props) {
   return (
-    <div
-      ref={ref}
-      className={twMerge(
-        "flex flex-col bg-white dark:bg-neutral-950 relative",
-        className,
-      )}
-    >
+    <article ref={ref} className={cn("flex flex-col relative", className)}>
       {children}
-    </div>
+    </article>
   );
-});
+}
