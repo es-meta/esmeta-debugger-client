@@ -1,8 +1,10 @@
 import { AppState } from "@/types";
-import { ReduxState } from "@/store";
+import { atom, ExtractAtomValue } from "jotai";
+import { atoms } from "@/atoms";
 
-export const selector = (st: ReduxState) => {
-  const appState = st.appState.state;
+export const selectorAtom = atom(get => {
+  const appState = get(atoms.app.appState);
+  const ignoreBP = get(atoms.app.ignoreBPAtom);
   return {
     disableRun: !(appState === AppState.JS_INPUT),
     disableResume: !(appState === AppState.JS_INPUT), //  TODO && givenConfig.origin.iter !== null,
@@ -14,8 +16,8 @@ export const selector = (st: ReduxState) => {
     disableGoingBackward: !(
       appState === AppState.DEBUG_READY || appState === AppState.TERMINATED
     ),
-    ignoreBP: st.appState.ignoreBP,
+    ignoreBP,
   };
-};
+});
 
-export type Selected = ReturnType<typeof selector>;
+export type Selected = ExtractAtomValue<typeof selectorAtom>;

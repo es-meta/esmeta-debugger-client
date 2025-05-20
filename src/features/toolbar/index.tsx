@@ -1,13 +1,29 @@
 import { useCallback, useEffect } from "react";
-import ToolbarButton from "@/features/toolbar/ToolbarButton";
-import ToolbarButtonGroup from "@/features/toolbar/ToolbarButtonGroup";
-
-import { handleKeyPressBuilder } from "./Toolbar.util";
+import ToolbarButton from "@/features/toolbar/button";
+import ToolbarButtonGroup from "@/features/toolbar/group";
+import { handleKeyPressBuilder } from "./utils";
 import { givenConfigAtom } from "@/atoms/defs/config";
+import { selectorAtom } from "./atoms";
+import { atoms, useAtomValue } from "@/atoms";
+import { useDebuggerActions } from "@/hooks/use-debugger-actions";
 
-export default function Toolbar() {
-  const dispatch = useAppDispatch();
+import {
+  ArrowDownToDotIcon,
+  ArrowUpFromDotIcon,
+  PlayIcon,
+  RedoDotIcon,
+  SquareIcon,
+  StepForwardIcon,
+  UndoDotIcon,
+  UndoIcon,
+  FastForwardIcon,
+  BugPlayIcon,
+  RewindIcon,
+} from "lucide-react";
+
+export function Toolbar() {
   const devMode = useAtomValue(atoms.app.devModeAtom);
+  const actions = useDebuggerActions();
   const {
     disableRun,
     disableResume,
@@ -15,11 +31,11 @@ export default function Toolbar() {
     disableGoingBackward,
     disableGoingForward,
     ignoreBP,
-  } = useAppSelector(selector);
+  } = useAtomValue(selectorAtom);
 
   const handleKeyPress = useCallback(
     handleKeyPressBuilder(
-      dispatch,
+      actions,
       {
         disableRun,
         disableResume,
@@ -32,7 +48,7 @@ export default function Toolbar() {
     ),
     [
       devMode,
-      dispatch,
+      actions,
       disableRun,
       disableResume,
       disableQuit,
@@ -59,9 +75,11 @@ export default function Toolbar() {
           {showResume && (
             <ToolbarButton
               position="left"
-              disabled={disableResume}
+              // disabled={disableResume}
+              disabled
               className="bg-linear-to-r from-es-400/50 to-es-400/15 dark:from-es-900/50 dark:to-es-900/15"
-              onClick={() => dispatch(resumeFromIterAction())}
+              // TODO
+              // onClick={() => dispatch(resumeFromIterAction())}
               icon={<StepForwardIcon />}
               label={
                 <span>
@@ -74,7 +92,7 @@ export default function Toolbar() {
           <ToolbarButton
             position={showResume ? "center" : "left"}
             disabled={disableRun}
-            onClick={() => dispatch(runAction())}
+            onClick={() => actions.run()}
             icon={<PlayIcon />}
             label={
               <span>
@@ -86,7 +104,7 @@ export default function Toolbar() {
           <ToolbarButton
             position="right"
             disabled={disableQuit}
-            onClick={() => dispatch(stopAction())}
+            onClick={() => actions.stop()}
             icon={<SquareIcon />}
             label={
               <span>
@@ -102,7 +120,7 @@ export default function Toolbar() {
           <ToolbarButton
             position="left"
             disabled={disableGoingForward}
-            onClick={() => dispatch(specStepAction())}
+            onClick={() => actions.specStep()}
             icon={<ArrowDownToDotIcon />}
             label={
               <span>
@@ -114,7 +132,7 @@ export default function Toolbar() {
           <ToolbarButton
             position="center"
             disabled={disableGoingForward}
-            onClick={() => dispatch(specStepOverAction())}
+            onClick={() => actions.specStepOver()}
             icon={<RedoDotIcon />}
             label={
               <span>
@@ -126,7 +144,7 @@ export default function Toolbar() {
           <ToolbarButton
             position="center"
             disabled={disableGoingForward}
-            onClick={() => dispatch(specStepOutAction())}
+            onClick={() => actions.specStepOut()}
             icon={<ArrowUpFromDotIcon />}
             label={
               <span>
@@ -138,7 +156,7 @@ export default function Toolbar() {
           <ToolbarButton
             position="right"
             disabled={disableGoingForward}
-            onClick={() => dispatch(continueAction())}
+            onClick={() => actions.specContinue()}
             icon={<FastForwardIcon />}
             label={
               <span>
@@ -154,7 +172,7 @@ export default function Toolbar() {
           <ToolbarButton
             position="left"
             disabled={disableGoingBackward}
-            onClick={() => dispatch(specStepBackAction())}
+            onClick={() => actions.specStepBack()}
             icon={<UndoIcon />}
             label={
               <span>
@@ -166,7 +184,7 @@ export default function Toolbar() {
           <ToolbarButton
             position="center"
             disabled={disableGoingBackward}
-            onClick={() => dispatch(specStepBackOverAction())}
+            onClick={() => actions.specStepBackOver()}
             icon={<UndoDotIcon />}
             label={
               <span>
@@ -178,7 +196,7 @@ export default function Toolbar() {
           <ToolbarButton
             position="center"
             disabled={disableGoingBackward}
-            onClick={() => dispatch(specStepBackOutAction())}
+            onClick={() => actions.specStepBackOut()}
             icon={<ArrowUpFromDotIcon />}
             label={
               <span>
@@ -190,7 +208,7 @@ export default function Toolbar() {
           <ToolbarButton
             position="right"
             disabled={disableGoingBackward}
-            onClick={() => dispatch(rewindAction())}
+            onClick={() => actions.specRewind()}
             icon={<RewindIcon />}
             label={
               <span>
@@ -206,7 +224,7 @@ export default function Toolbar() {
           <ToolbarButton
             position="left"
             disabled={disableGoingForward}
-            onClick={() => dispatch(jsStepStatemmentAction())}
+            onClick={() => actions.esStepStatement()}
             icon={<ArrowDownToDotIcon />}
             label={
               <span>
@@ -219,7 +237,7 @@ export default function Toolbar() {
             <ToolbarButton
               position="center"
               disabled={disableGoingForward}
-              onClick={() => dispatch(jsStepAstAction())}
+              onClick={() => actions.esStepAst()}
               icon={<ArrowDownToDotIcon />}
               label={
                 <span>
@@ -232,7 +250,7 @@ export default function Toolbar() {
           <ToolbarButton
             position="center"
             disabled={disableGoingForward}
-            onClick={() => dispatch(jsStepOverAction())}
+            onClick={() => actions.esStepOver()}
             icon={<RedoDotIcon />}
             label={
               <span>
@@ -244,7 +262,7 @@ export default function Toolbar() {
           <ToolbarButton
             position="right"
             disabled={disableGoingForward}
-            onClick={() => dispatch(jsStepOutAction())}
+            onClick={() => actions.esStepOut()}
             icon={<ArrowUpFromDotIcon />}
             label={
               <span>
@@ -261,7 +279,22 @@ export default function Toolbar() {
               <ToolbarButton
                 position="left"
                 disabled={disableGoingForward}
-                onClick={() => dispatch(iterPlusAction())}
+                onClick={() => actions.stepCntPlus()}
+                icon={<BugPlayIcon />}
+                label={<span>StepCnt +</span>}
+              />
+
+              <ToolbarButton
+                position="right"
+                disabled={disableGoingBackward}
+                onClick={() => actions.stepCntMinus()}
+                icon={<BugPlayIcon />}
+                label={<span>StepCnt -</span>}
+              />
+              <ToolbarButton
+                position="left"
+                disabled={disableGoingForward}
+                onClick={() => actions.instCntPlus()}
                 icon={<BugPlayIcon />}
                 label={<span>Iter +</span>}
               />
@@ -269,7 +302,7 @@ export default function Toolbar() {
               <ToolbarButton
                 position="right"
                 disabled={disableGoingBackward}
-                onClick={() => dispatch(iterMinusAction())}
+                onClick={() => actions.instCntMinus()}
                 icon={<BugPlayIcon />}
                 label={<span>Iter -</span>}
               />
@@ -288,40 +321,3 @@ function Seperator() {
     </div>
   );
 }
-
-import {
-  ArrowDownToDotIcon,
-  ArrowUpFromDotIcon,
-  PlayIcon,
-  RedoDotIcon,
-  SquareIcon,
-  StepForwardIcon,
-  UndoDotIcon,
-  UndoIcon,
-  FastForwardIcon,
-  BugPlayIcon,
-  RewindIcon,
-} from "lucide-react";
-import { useAppDispatch, useAppSelector } from "@/hooks";
-import { selector } from "./Toolbar.atom";
-import { useAtomValue } from "jotai";
-import {
-  continueAction,
-  iterMinusAction,
-  iterPlusAction,
-  jsStepAstAction,
-  jsStepOutAction,
-  jsStepOverAction,
-  jsStepStatemmentAction,
-  resumeFromIterAction,
-  rewindAction,
-  runAction,
-  specStepAction,
-  specStepBackAction,
-  specStepBackOutAction,
-  specStepBackOverAction,
-  specStepOutAction,
-  specStepOverAction,
-  stopAction,
-} from "@/actions";
-import { atoms } from "@/atoms";
