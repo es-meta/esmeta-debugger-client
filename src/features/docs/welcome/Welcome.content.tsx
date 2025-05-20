@@ -1,4 +1,4 @@
-import { Funnel1, Funnel2, Funnel3, Funnel4 } from "./funnels";
+import { Funnel1 } from "./funnels";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import { twJoin } from "tailwind-merge";
 
@@ -7,7 +7,7 @@ interface Props {
   setIdx: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const Funnels = [Funnel1, Funnel2, Funnel3, Funnel4];
+const Funnels = [Funnel1];
 
 export default function WelcomeContent({ idx, setIdx }: Props) {
   return (

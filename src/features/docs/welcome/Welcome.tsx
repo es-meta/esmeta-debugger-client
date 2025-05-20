@@ -1,5 +1,5 @@
 import { lazy, useState } from "react";
-import { AnimatedDialog } from "@/components/animated-dialog";
+import { AnimatedDialog } from "@/components/dialog/animated-dialog";
 import { CircleHelpIcon } from "lucide-react";
 
 const WelcomeContent = lazy(() => import("./Welcome.content"));
