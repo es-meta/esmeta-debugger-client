@@ -11,24 +11,14 @@ export enum AlgorithmKind {
   InternalMethod,
   Builtin,
 }
-export interface Algorithm {
-  fid: number;
-  kind: AlgorithmKind;
-  name: string;
-  params: Parameter[];
-  dot: string;
-  code: string;
-}
 
 export interface SpecVersion {
   hash: string | null;
   tag: string | null;
 }
 
-export type IrToSpecMapping = Record<string, SpecFuncInfo | undefined>;
-
-type SpecFuncInfo = {
-  name: string;
+export type SpecFuncInfo = {
+  normalizedName: string;
   htmlId: string;
   isBuiltIn: boolean;
   isMethod: boolean;
