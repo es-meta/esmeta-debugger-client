@@ -1,29 +1,25 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import SpecContextItem from "./SpecContextItem";
 import StateViewerItem from "../StateViewerItem";
-import { updateContextIdx } from "@/store/reducers/ir";
 import { FoldVerticalIcon, UnfoldVerticalIcon } from "lucide-react";
 import { v4 } from "uuid";
-import { useAppSelector, useAppDispatch, shallowEqual } from "@/hooks";
+import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
+import { atoms } from "@/atoms";
+import { contextIdxAtom } from "@/atoms/defs/state";
+
+const globalExpandAtom = atom<boolean | null>(null);
 
 export default function SpecCallStackViewer() {
-  const dispatch = useAppDispatch();
-  const [globalExpand, setGlobalExpand] = useState<boolean | null>(null);
+  const [globalExpand, setGlobalExpand] = useAtom(globalExpandAtom);
+  const callStack = useAtomValue(atoms.state.callstackAtom);
 
-  const { callStack, breakpoints } = useAppSelector(
-    st => ({
-      callStack: st.ir.callStack,
-      breakpoints: st.breakpoint.items,
-    }),
-    shallowEqual,
-  );
-
+  const setContextIdx = useSetAtom(contextIdxAtom);
   const onItemClick = useCallback(
-    (idx: number) => dispatch(updateContextIdx(idx)),
-    [dispatch],
+    (idx: number) => setContextIdx(idx),
+    [setContextIdx],
   );
 
-  const prefix = useMemo(() => v4(), [callStack, breakpoints]);
+  const prefix = useMemo(() => v4(), [callStack]);
 
   return (
     <StateViewerItem
@@ -32,14 +28,14 @@ export default function SpecCallStackViewer() {
         <div className="flex flex-row space-x-2 text-sm">
           <button
             className="flex flex-row hover:bg-neutral-500/25 rounded items-center gap-1 active:scale-90 transition-all"
-            onClick={() => callStack.forEach(() => setGlobalExpand(true))}
+            onClick={() => setGlobalExpand(true)}
           >
             <UnfoldVerticalIcon size={16} />
             expand
           </button>
           <button
             className="flex flex-row hover:bg-neutral-500/25 rounded items-center gap-1 active:scale-90 transition-all"
-            onClick={() => callStack.forEach(() => setGlobalExpand(false))}
+            onClick={() => setGlobalExpand(false)}
           >
             <FoldVerticalIcon size={16} />
             collapse
@@ -63,7 +59,6 @@ export default function SpecCallStackViewer() {
               data={ctxt}
               idx={idx}
               onItemClick={onItemClick}
-              breakpoints={breakpoints}
               globalExpand={globalExpand}
               setGlobalExpand={setGlobalExpand}
             />

@@ -1,62 +1,37 @@
-import type { Breakpoint, Context, IrToSpecMapping } from "@/types";
+import type { Context } from "@/types";
 import { useEffect, useMemo, useState } from "react";
 import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
-import { cn, toStepString } from "@/utils";
-import { useAppSelector, shallowEqual } from "@/hooks";
+import { asDataAttribute, toStepString } from "@/utils";
 import { ContextViewer } from "@/features/spec/ContextViewer";
-import { useAtomValue } from "jotai";
-import { atoms } from "@/atoms";
+import { atoms, useAtomValue } from "@/atoms";
 
 type ContextItemProps = {
   data: Context;
   idx: number;
   onItemClick: (idx: number) => void;
-  breakpoints: Breakpoint[];
   globalExpand: boolean | null;
   setGlobalExpand: (expand: boolean | null) => void;
 };
 
-function replacedName(name: string, irToSpecMapping: IrToSpecMapping): string {
-  const specInfo = irToSpecMapping[name];
-  if (specInfo?.isBuiltIn) {
-    return name.substring("INTRINSICS.".length);
-  }
-  if (specInfo?.isSdo && specInfo?.sdoInfo && specInfo?.sdoInfo.prod) {
-    return `${specInfo.sdoInfo.method} of ${specInfo.sdoInfo.prod?.astName}`;
-  }
-  if (specInfo?.methodInfo) {
-    return specInfo.methodInfo[1];
-  }
-  return name;
-}
+const className = `
+  even:bg-neutral-400/10 odd:bg-neutral-400/5 text-xs
+  hover:bg-neutral-400/5 active:bg-green-500/25 transition-all cursor-pointer
+  data-[highlight]:even:bg-green-500/25 data-[highlight]:odd:bg-green-500/25 data-[highlight]:hover:bg-green-500/50
+`;
 
 export default function SpecContextItem(props: ContextItemProps) {
   const [expand, setExpand] = useState<boolean>(false);
+  const contextIdx = useAtomValue(atoms.state.contextIdxAtom);
+  const highlight = asDataAttribute(contextIdx === props.idx);
 
-  const irToSpecMapping = useAtomValue(atoms.spec.irToSpecNameMapAtom);
-
-  const { contextIdx } = useAppSelector(
-    st => ({
-      contextIdx: st.ir.contextIdx,
-    }),
-    shallowEqual,
-  );
-  const highlight = contextIdx === props.idx;
-
-  const className = useMemo(() => {
-    return cn(
-      "even:bg-neutral-400/10 odd:bg-neutral-400/5 text-xs",
-      "hover:bg-neutral-400/5 active:bg-green-500/25 transition-all cursor-pointer",
-      highlight &&
-        "even:bg-green-500/25 odd:bg-green-500/25 hover:bg-green-500/50",
-    );
-  }, [highlight]);
-
-  const { data, idx, onItemClick, breakpoints, globalExpand, setGlobalExpand } =
-    props;
-  const { name, steps } = data;
-  // TODO beautify steps
+  const { data, idx, onItemClick, globalExpand, setGlobalExpand } = props;
+  const { fid, steps } = data;
   const stepString = steps.length === 0 ? "" : toStepString(steps);
+
+  const irFuncs = useAtomValue(atoms.spec.irFuncsAtom);
+  const irFunc = useMemo(() => irFuncs[fid], [irFuncs, fid]);
+  const algoCode = useMemo(() => irFuncs[fid]?.algoCode, [fid]);
+  const specName = useMemo(() => irFunc.nameForCallstack, [irFunc]);
 
   useEffect(() => {
     if (globalExpand !== null) {
@@ -64,14 +39,13 @@ export default function SpecContextItem(props: ContextItemProps) {
     }
   }, [globalExpand]);
 
-  const specName = useMemo(
-    () => replacedName(name, irToSpecMapping),
-    [name, irToSpecMapping],
-  );
-
   return (
     <>
-      <tr className={className} onClick={() => onItemClick(idx)}>
+      <tr
+        className={className}
+        data-highlight={highlight}
+        onClick={() => onItemClick(idx)}
+      >
         <td className="py-1 border-r text-center">{idx}</td>
         <td className="border-r text-center text-wrap lowercase">
           {stepString}
@@ -97,7 +71,7 @@ export default function SpecContextItem(props: ContextItemProps) {
         </td>
       </tr>
       {expand &&
-        (data.algo.code !== "" ? (
+        (algoCode !== "" ? (
           <tr>
             <td colSpan={4}>
               <ContextViewer embed context={data} />

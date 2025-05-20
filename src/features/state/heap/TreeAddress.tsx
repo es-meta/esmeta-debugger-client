@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useAppDispatch, useAppSelector } from "@/hooks";
 import TreeObjViewer from "./TreeObjViewer";
 import {
   ChevronDownIcon,
@@ -15,12 +14,13 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { HeapObj } from "@/types";
-import { useSetAtom } from "jotai";
 import {
   clientActiveAddrAtom,
   clientActiveViewerAtom,
 } from "@/atoms/defs/client";
+import { atoms, useSetAtom } from "@/atoms";
 import { backToProvenanceAction } from "@/actions";
+import { useLastResolvedAtomValue } from "@/hooks/use-atom-value-with-pending";
 
 interface Props {
   field: string;
@@ -30,7 +30,7 @@ interface Props {
 }
 
 export function ProvinenceButton({ address }: { address?: string }) {
-  const dispatch = useAppDispatch();
+  const backToProvenance = useSetAtom(backToProvenanceAction);
 
   return (
     address &&
@@ -39,9 +39,7 @@ export function ProvinenceButton({ address }: { address?: string }) {
       <Tooltip>
         <TooltipTrigger
           className=" text-blue-400 inline cursor-pointer hover:text-blue-600 active:scale-75 transition-all"
-          onClick={() => {
-            dispatch(backToProvenanceAction(address));
-          }}
+          onClick={() => backToProvenance(address)}
         >
           <RewindIcon size={16} className="inline" />
         </TooltipTrigger>
@@ -95,22 +93,14 @@ export default function TreeAddress({
   const [fold, setFold] = useState(
     singleMode === undefined ? defaultFold : singleMode,
   );
-  const heap = useAppSelector(st => st.ir.heap);
+  const [, heap] = useLastResolvedAtomValue(atoms.state.heapAtom, {});
   const obj = heap[address];
 
   return (
     <>
       {!singleMode && (
-        // <li
-        //   className={
-        //     singleMode
-        //       ? "p-2 flex flex-row grow items-center justify-between break-all font-mono gap-2"
-        //       : "flex flex-row items-center justify-center break-all font-mono gap-2"
-        //   }
-        // >
         <li className="border-b">
           <b className="font-600 font-mono">{field}</b>&nbsp;
-          {/* {address}&nbsp; */}
           {getTypeString(obj)}&nbsp;
           <span className="inline-flex flex-row items-center">
             <ProvinenceButton address={address} />

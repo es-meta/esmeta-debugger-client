@@ -1,47 +1,32 @@
 import { useCallback, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import { v4 as uuid } from "uuid";
-
 import MyCombobox from "./BreakCombobox";
-
 import { AppState, Breakpoint, BreakpointType } from "@/types";
-
-import { addBreak, rmBreak, toggleBreak } from "@/store/reducers/breapoint";
-
 import BreakpointItem from "./BreakpointItem";
 import StateViewerItem from "../StateViewerItem";
-import { AppDispatch } from "@/store";
-import { useAppDispatch, useAppSelector } from "@/hooks";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import ToolbarButton from "@/features/toolbar/ToolbarButton";
+import ToolbarButton from "@/features/toolbar/button";
 import { OctagonIcon, OctagonPauseIcon } from "lucide-react";
-import { toggleIgnore } from "@/store/reducers/app-state";
-import { atoms, useAtomValue } from "@/atoms";
-
-import { ReduxState } from "@/store";
-
-// connect redux store
-export const mapStateToProps = (st: ReduxState) => ({
-  breakpoints: st.breakpoint.items,
-  ignoreBp: st.appState.ignoreBP,
-  disableQuit:
-    st.appState.state === AppState.INIT ||
-    st.appState.state === AppState.JS_INPUT,
-});
+import { atoms, useAtomValue, useSetAtom } from "@/atoms";
+import { ExtractAtomArgs, useAtom } from "jotai";
 
 // TODO support turning off or toggling breakpoints
 export function addBreakHandler(
   toEnabled: true,
-  algoName: string | null,
+  fid: number | null,
   breakpoints: Breakpoint[],
-  algos: Record<string, number>,
-  dispatch: AppDispatch,
+  algos: Record<number, { fid: number; name: string }>,
+  addBreak: (...args: ExtractAtomArgs<typeof atoms.bp.addAction>) => void,
 ): string | null {
-  if (algoName === null) {
+  const algoName = fid !== null ? algos[fid]?.name : null;
+  const algoNames = Object.values(algos).map(algo => algo.name);
+
+  if (fid === null || algoName === null) {
     return algoName;
   }
 
@@ -51,18 +36,16 @@ export function addBreakHandler(
   const duplicated = breakpoints.some(
     ({ duplicateCheckId }) => duplicateCheckId === bpName,
   );
-  const valid = algos.hasOwnProperty(algoName);
+  const valid = algoNames.includes(algoName);
   if (valid && !duplicated)
-    dispatch(
-      addBreak({
-        type: BreakpointType.Spec,
-        fid: algos[algoName],
-        duplicateCheckId: bpName,
-        name: algoName,
-        steps: steps,
-        enabled: true,
-      }),
-    );
+    addBreak({
+      type: BreakpointType.Spec,
+      fid: fid,
+      duplicateCheckId: bpName,
+      name: algoName,
+      steps: steps,
+      enabled: true,
+    });
   else if (duplicated) toast.warning(`Breakpoint already set: ${bpName}`);
   else toast.warning(`Wrong algorithm name: ${algoName}`);
   return algoName;
@@ -73,23 +56,34 @@ export function addBreakHandler(
 // disable all
 // sort
 export default function Breakpoints() {
-  const dispatch = useAppDispatch();
-  const algos = useAtomValue(atoms.spec.nameMapAtom);
-  const algoNames = useMemo(() => Object.keys(algos), [algos]);
-  const { breakpoints, ignoreBp, disableQuit } =
-    useAppSelector(mapStateToProps);
+  const algos = useAtomValue(atoms.spec.irFuncsAtom);
+  const algoNames = useMemo(
+    () => Object.values(algos).map(algo => algo.name),
+    [algos],
+  );
+
+  const breakpoints = useAtomValue(atoms.bp.bpAtom);
+  const [ignoreBp, setIgnoreBp] = useAtom(atoms.app.ignoreBPAtom);
+  const appState = useAtomValue(atoms.app.appState);
+  const disableQuit =
+    appState === AppState.INIT || appState === AppState.JS_INPUT;
   const [algoName, setAlgoName] = useState<string | null>(null);
+
+  const rmBreak = useSetAtom(atoms.bp.rmAction);
+  const addbreak = useSetAtom(atoms.bp.addAction);
 
   const onAddClick = useCallback(
     (name: string | null) => {
-      setAlgoName(addBreakHandler(true, name, breakpoints, algos, dispatch));
+      const fid =
+        Object.values(algos).find(algo => algo.name === name)?.fid ?? null;
+      setAlgoName(addBreakHandler(true, fid, breakpoints, algos, addbreak));
     },
     [breakpoints, algos],
   );
 
   const toggleStepWithoutBreak = useCallback(() => {
-    dispatch(toggleIgnore());
-  }, [dispatch]);
+    setIgnoreBp(b => !b);
+  }, [setIgnoreBp]);
 
   return (
     <StateViewerItem
@@ -103,7 +97,7 @@ export default function Breakpoints() {
               onClick={toggleStepWithoutBreak}
               className={
                 ignoreBp
-                  ? "h-6 bg-blue-600 hover:bg-blue-500 dark:bg-blue-600 dark:hover:bg-blue-500 text-white hover:text-white"
+                  ? "h-6 bg-blue-600 hover:bg-blue-500 dark:bg-blue-600 hover:dark:bg-blue-500 text-white hover:text-white"
                   : "h-6"
               }
               icon={ignoreBp ? <OctagonIcon /> : <OctagonPauseIcon />}
@@ -146,8 +140,9 @@ export default function Breakpoints() {
                 key={uuid()}
                 data={bp}
                 idx={idx}
-                onRemoveClick={(idx: number) => dispatch(rmBreak(idx))}
-                onToggleClick={(idx: number) => dispatch(toggleBreak(idx))}
+                onRemoveClick={(idx: number) => rmBreak(idx)}
+                onToggleClick={() => null}
+                // TODO onToggleClick={(idx: number) => dispatch(toggleBreak(idx))}
               />
             ))
           ) : (

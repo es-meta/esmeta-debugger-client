@@ -1,43 +1,40 @@
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
-import { cn } from "@/utils";
+import { ESContext } from "@/types";
 import TreeAddress from "../heap/TreeAddress";
 
-export interface JSContext {
-  // name: string;
-  type: string;
-  address: string;
-}
-
-interface Props extends JSContext {
+interface Props extends ESContext {
   idx: number;
+  globalExpand: boolean | null;
+  setGlobalExpand: (expand: boolean | null) => void;
 }
 
-export default function JSContextItem(props: Props) {
+const className = `
+  even:bg-neutral-400/10 odd:bg-neutral-400/5 text-xs
+  hover:bg-neutral-400/5 active:bg-green-500/25 transition-all cursor-pointer
+  data-[highlight]:even:bg-green-500/25 data-[highlight]:odd:bg-green-500/25 data-[highlight]:hover:bg-green-500/50
+`;
+
+export default function JSContextItem({
+  idx,
+  globalExpand,
+  setGlobalExpand,
+  ...context
+}: Props) {
   const [expand, setExpand] = useState(false);
 
-  const className = useMemo(() => {
-    // const { highlight } = props;
-    const highlight = false;
-    return cn(
-      "even:bg-neutral-400/10 odd:bg-neutral-400/5 text-xs",
-      "hover:bg-neutral-400/5 active:bg-green-500/25 transition-all cursor-pointer",
-      highlight &&
-        "even:bg-green-500/25 odd:bg-green-500/25 hover:bg-green-500/50",
-    );
-  }, []);
-
-  // const { data, idx, onItemClick, breakpoints } = props;
-  // const { name, steps } = data;
-  // TODO beautify steps
-  // const stepString = steps.length === 0 ? '' : toStepString(steps);
+  useEffect(() => {
+    if (globalExpand !== null) {
+      setExpand(globalExpand);
+    }
+  }, [globalExpand]);
 
   return (
     <>
       <tr className={className} onClick={() => /* onItemClick(idx) */ {}}>
-        <td className="py-1 border-r text-center">{props.idx}</td>
+        <td className="py-1 border-r text-center">{idx}</td>
         <td className="border-r text-center text-wrap break-all">
-          {props.type}
+          {context.type}
         </td>
         <td className="">
           <button
@@ -45,6 +42,7 @@ export default function JSContextItem(props: Props) {
             onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
               e.stopPropagation();
               setExpand(expand => !expand);
+              setGlobalExpand(null);
             }}
           >
             {expand ? (
@@ -60,7 +58,7 @@ export default function JSContextItem(props: Props) {
           <td colSpan={4}>
             <TreeAddress
               field="this is unused in singleMode, TODO - remove"
-              address={props.address}
+              address={context.address}
               singleMode
             />
           </td>

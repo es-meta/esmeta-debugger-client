@@ -1,7 +1,7 @@
 import JSCallStackViewer from "./JSCallStackViewer";
 import SpecCallStackViewer from "./SpecCallStackViewer";
 
-export default function CallStackViewer() {
+export default function CallStackView() {
   return (
     <>
       <SpecCallStackViewer />

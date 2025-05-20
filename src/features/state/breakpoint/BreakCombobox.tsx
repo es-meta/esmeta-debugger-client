@@ -6,9 +6,8 @@ import {
   ComboboxOptions,
 } from "@headlessui/react";
 import { cn, fuzzyFilter } from "@/utils";
-import { IrToSpecMapping } from "@/types";
+import { IrFunc } from "@/types";
 import { AlgoViewerHeaderUsingAlgoName } from "@/features/spec/algo/AlgoViewerHeader";
-import { useAppSelector } from "@/hooks";
 import { useAtomValue } from "jotai";
 import { atoms } from "@/atoms";
 
@@ -25,18 +24,12 @@ interface Option {
   view: ReactElement;
 }
 
-function alternativeName(
+function getAlternativeName(
   name: string,
-  irToSpecMapping: IrToSpecMapping,
+  irFuncs: Record<string, IrFunc | undefined>,
 ): string {
-  const specInfo = irToSpecMapping[name];
-  if (specInfo?.isBuiltIn) {
-    return `${name} ${name.substring("INTRINSICS.".length)}`;
-  }
-  if (specInfo?.isSdo && specInfo?.sdoInfo && specInfo?.sdoInfo.prod) {
-    return `${name} ${specInfo.sdoInfo.method} of ${specInfo.sdoInfo.prod?.astName}`;
-  }
-  return name;
+  const irFunc = irFuncs[name];
+  return irFunc?.nameForCallstack ?? name;
 }
 
 function computeFiltered(values: Option[], query: string): Option[] {
@@ -50,16 +43,18 @@ export default function MyCombobox({
   placeholder,
 }: ComboProps<string>) {
   const [query, setQuery] = useState("");
-  const irToSpecMapping = useAtomValue(atoms.spec.irToSpecNameMapAtom);
+  const irFuncs = useAtomValue(atoms.spec.irFuncsAtom);
 
   const options = useMemo(
     () =>
-      values.map(name => ({
-        name,
-        search: alternativeName(name, irToSpecMapping),
-        view: <AlgoViewerHeaderUsingAlgoName name={name} />,
-      })),
-    [values, irToSpecMapping],
+      values.map(name => {
+        return {
+          name,
+          search: getAlternativeName(name, irFuncs),
+          view: <AlgoViewerHeaderUsingAlgoName name={name} />,
+        };
+      }),
+    [values, irFuncs],
   );
 
   const filtered = useMemo(
