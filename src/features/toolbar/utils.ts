@@ -11,8 +11,8 @@ const map = (
   switch (key) {
     case "r":
       return cond.disableRun ? null : actions.run;
-    // case "e":
-    //   return cond.disableRun ? null : resumeFromIterAction();
+    case "e":
+      return cond.disableResume ? null : actions.resume();
     case "q":
       return cond.disableQuit ? null : actions.stop;
     case "c":

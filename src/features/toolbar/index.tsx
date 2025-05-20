@@ -75,11 +75,9 @@ export function Toolbar() {
           {showResume && (
             <ToolbarButton
               position="left"
-              // disabled={disableResume}
-              disabled
+              disabled={disableResume}
               className="bg-linear-to-r from-es-400/50 to-es-400/15 dark:from-es-900/50 dark:to-es-900/15"
-              // TODO
-              // onClick={() => dispatch(resumeFromIterAction())}
+              onClick={() => actions.resume()}
               icon={<StepForwardIcon />}
               label={
                 <span>
