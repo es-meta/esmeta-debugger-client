@@ -3,7 +3,7 @@ import { GlobeIcon, MonitorIcon } from "lucide-react";
 import ConnectStateViewer from "@/features/modal/connection/ConnectStateViewer";
 import { useAtomValue, useSetAtom } from "jotai";
 import { givenConfigAtom, setApiAtom } from "@/atoms/defs/config";
-import { AnimatedDialog } from "@/components/animated-dialog";
+import { AnimatedDialog } from "@/components/dialog/animated-dialog";
 
 const ConnectionSettingsContent = lazy(
   () => import("./ConnectionSettings.content"),

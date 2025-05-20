@@ -10,8 +10,10 @@ import {
 } from "lucide-react";
 import { ReactElement } from "react";
 import { twJoin } from "tailwind-merge";
-import { atoms, useAtomValue } from "@/atoms";
-import { ExtractAtomValue } from "jotai";
+import { useAtomValue, ExtractAtomValue } from "jotai";
+import { givenConfigAtom } from "@/atoms/defs/config";
+import { busyStateGetter } from "@/atoms/defs/app";
+import { atoms } from "@/atoms";
 
 interface SingleProps {
   adaptive?: boolean;
@@ -147,8 +149,8 @@ interface Props {
 }
 
 export default function ConnectStateViewer({ adaptive = false }: Props) {
-  const config = useAtomValue(atoms.config.givenConfigAtom);
-  const state = useAtomValue(atoms.app.busyStateGetter);
+  const config = useAtomValue(givenConfigAtom);
+  const state = useAtomValue(busyStateGetter);
 
   return (
     <div className="relative w-8 md:w-16 h-7">
