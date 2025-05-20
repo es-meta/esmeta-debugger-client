@@ -21,10 +21,12 @@ import {
   jsStepStatementAction,
   stepCntPlusAction,
   stepCntMinusAction,
+  resumeAction,
 } from "@/actions";
 
 export function useDebuggerActions() {
   const run = useSetAtom(runAction);
+  const resume = useSetAtom(resumeAction);
   const stop = useSetAtom(stopAction);
 
   const specStep = useSetAtom(specStepAction);
@@ -55,6 +57,7 @@ export function useDebuggerActions() {
 
   return {
     run,
+    resume,
     stop,
     specStep,
     specStepOver,

@@ -3,6 +3,9 @@ import { resultAtom } from "@/atoms/defs/state";
 import { appState, ignoreBPAtom, jsCodeAtom } from "@/atoms/defs/app";
 import { AppState, Route, StepResultAdditional } from "@/types";
 import { doAPIPostRequest } from "@/api";
+import { serializedBpAtom } from "@/atoms/defs/bp";
+import { givenConfigAtom } from "@/atoms/defs/config";
+import { toast } from "react-toastify";
 
 function actionWithOpts(endpoint: Route) {
   return atom(null, async (_get, set) => {
@@ -25,15 +28,35 @@ function actionWithPayload<T>(endpoint: Route) {
 
 export const runAction = atom(null, async (get, set) => {
   const code = get(jsCodeAtom);
-  // TODO breakpoints
+  const breakpoints = get(serializedBpAtom);
   set(
     resultAtom,
-    doAPIPostRequest("exec/run", [code, []]) as Promise<StepResultAdditional>,
+    doAPIPostRequest("exec/run", [
+      code,
+      breakpoints,
+    ]) as Promise<StepResultAdditional>,
   );
 });
 
 // TODO
-export const resumeAction = atom();
+export const resumeAction = atom(null, async (get, set) => {
+  const code = get(jsCodeAtom);
+  const breakpoints = get(serializedBpAtom);
+  const config = get(givenConfigAtom);
+  const origin = config.origin;
+  if (origin.type === "visualizer") {
+    set(
+      resultAtom,
+      doAPIPostRequest("exec/resumeFromIter", [
+        code,
+        breakpoints,
+        origin.iter,
+      ]) as Promise<StepResultAdditional>,
+    );
+  } else {
+    toast.error("Invalid origin type");
+  }
+});
 
 export const backToProvenanceAction = actionWithPayload(
   "exec/backToProvenance",

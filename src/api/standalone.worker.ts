@@ -40,11 +40,6 @@ const doGetRequest = async (
     case "meta/debugString":
       return "";
 
-    case "spec/irToSpecNameMap":
-      return JSON.parse(
-        ((await input) as StandaloneDebuggerInput).irToSpecNameMap,
-      );
-
     case "spec/version":
       return JSON.parse((await _standaloneDebugger).spec_version());
 
@@ -181,12 +176,12 @@ const doWriteRequest = async (
         (await _standaloneDebugger).exec_irStepOut(coerceBoolean(bodyObj)),
       );
 
-    case "exec/iterPlus":
+    case "exec/stepCntPlus":
       return JSON.parse(
         (await _standaloneDebugger).exec_iterPlus(coerceBoolean(bodyObj)),
       );
 
-    case "exec/iterMinus":
+    case "exec/stepCntMinus":
       return JSON.parse(
         (await _standaloneDebugger).exec_iterMinus(coerceBoolean(bodyObj)),
       );

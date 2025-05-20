@@ -3,8 +3,6 @@ import { createRoot } from "react-dom/client";
 import "@/styles/global.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { reduxStore } from "./store";
-import { Provider as ReduxProvider } from "react-redux";
 import { Provider as JotaiProvider } from "jotai";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 import { ToastContainer, Zoom } from "react-toastify";
@@ -14,21 +12,19 @@ const root = createRoot(document.getElementById("root")!);
 root.render(
   <StrictMode>
     <JotaiProvider store={jotaiStore}>
-      <ReduxProvider store={reduxStore}>
-        <TooltipProvider
-          disableHoverableContent
-          delayDuration={500}
-          skipDelayDuration={500}
-        >
-          <App />
-          <ToastContainer
-            autoClose={5000}
-            transition={Zoom}
-            position="bottom-right"
-            stacked
-          />
-        </TooltipProvider>
-      </ReduxProvider>
+      <TooltipProvider
+        disableHoverableContent
+        delayDuration={500}
+        skipDelayDuration={500}
+      >
+        <App />
+        <ToastContainer
+          autoClose={5000}
+          transition={Zoom}
+          position="bottom-right"
+          stacked
+        />
+      </TooltipProvider>
     </JotaiProvider>
   </StrictMode>,
 );
