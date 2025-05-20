@@ -1,27 +1,75 @@
 import { doAPIGetRequest } from "@/api";
-import type { IrToSpecMapping } from "@/types";
+import type { AlgorithmKind, IrFunc, SpecFuncInfo } from "@/types";
 import { atom } from "jotai";
 
-export const nameMapAtom = atom<Promise<Record<string, number>>>(async () => {
-  const raw = (await doAPIGetRequest(`spec/func`)) as [number, string][];
-  const nameMap: Record<string, number> = {};
-  raw.forEach(([fid, name]) => {
-    nameMap[name] = fid;
-  });
-
-  return nameMap;
-});
-
-export const irToSpecNameMapAtom = atom(async () => {
-  const raw2 = (await doAPIGetRequest(`spec/irToSpecNameMap`)) as [
-    string,
-    IrToSpecMapping[string],
+export const irFuncsAtom = atom<Promise<Record<number, IrFunc>>>(async () => {
+  const raw = (await doAPIGetRequest(`spec/func`)) as [
+    number,
+    [
+      string,
+      AlgorithmKind,
+      [string, boolean, string][],
+      string,
+      SpecFuncInfo | undefined | null,
+    ],
   ][];
 
-  const irToSpecMapping: IrToSpecMapping = {};
-  raw2.forEach(([ir, info]) => {
-    irToSpecMapping[ir] = info !== undefined ? info : undefined;
-  });
+  const entries: [number, IrFunc][] = raw.map(
+    ([fid, [name, kind, rawParams, algoCode, info]]) => [
+      fid,
+      {
+        fid,
+        name,
+        nameForBp: alternativeName(name, info ?? undefined),
+        nameForCallstack: replacedNameForCallstackContext(
+          name,
+          info ?? undefined,
+        ),
+        kind,
+        params: rawParams.map(([name, optional, type]) => ({
+          name,
+          optional,
+          type,
+        })),
+        algoCode,
+        info: info ?? undefined,
+      },
+    ],
+  );
 
-  return irToSpecMapping;
+  return Object.fromEntries(entries);
 });
+
+export const funcNamesAtom = atom<Promise<string[]>>(async get => {
+  const irFuncs = await get(irFuncsAtom);
+  return Object.values(irFuncs).map(irFunc => irFunc.name);
+});
+
+function alternativeName(
+  name: string,
+  specInfo: SpecFuncInfo | undefined,
+): string {
+  if (specInfo?.isBuiltIn) {
+    return `${name} ${name.substring("INTRINSICS.".length)}`;
+  }
+  if (specInfo?.isSdo && specInfo?.sdoInfo && specInfo?.sdoInfo.prod) {
+    return `${name} ${specInfo.sdoInfo.method} of ${specInfo.sdoInfo.prod?.astName}`;
+  }
+  return name;
+}
+
+function replacedNameForCallstackContext(
+  name: string,
+  specInfo: SpecFuncInfo | undefined,
+): string {
+  if (specInfo?.isBuiltIn) {
+    return name.substring("INTRINSICS.".length);
+  }
+  if (specInfo?.isSdo && specInfo?.sdoInfo && specInfo?.sdoInfo.prod) {
+    return `${specInfo.sdoInfo.method} of ${specInfo.sdoInfo.prod?.astName}`;
+  }
+  if (specInfo?.methodInfo) {
+    return specInfo.methodInfo[1];
+  }
+  return name;
+}
