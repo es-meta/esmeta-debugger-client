@@ -5,6 +5,7 @@ import ShareButton from "./share-button";
 import WelcomeModal from "@/features/docs/welcome/Welcome";
 import SettingButton from "./settings";
 import { GitHubIcon } from "../icon";
+import { SuspenseBoundary } from "../primitives";
 
 export default function Header() {
   return (

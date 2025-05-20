@@ -4,21 +4,17 @@ import {
   SEARCHPARAM_NAME_ITER,
   SEARCHPARAM_NAME_PROG,
 } from "@/constants";
-import { shallowEqual, useAppSelector } from "@/hooks";
 import { useState } from "react";
 import { Switch } from "../button/switch";
 import { Field, Label } from "@headlessui/react";
-import { useAtomValue } from "jotai";
-import { atoms } from "@/atoms";
+import { atoms, useAtomValue } from "@/atoms";
 
 export default function ShareButtonContent() {
   const [include, setInclude] = useState(false);
   const config = useAtomValue(atoms.config.givenConfigAtom);
   const api = config.api;
-  const { code, iter } = useAppSelector(
-    st => ({ code: st.js.code, iter: st.stats.iter }),
-    shallowEqual,
-  );
+  const code = useAtomValue(atoms.app.jsCodeAtom);
+  const iter = useAtomValue(atoms.state.instCntAtom);
 
   const href = new URL(window.location.href);
   href.search = "";

@@ -1,6 +1,6 @@
 import { lazy } from "react";
 import { SettingsIcon } from "lucide-react";
-import { AnimatedDialog } from "../animated-dialog";
+import { AnimatedDialog } from "../dialog/animated-dialog";
 
 const SettingsContent = lazy(() => import("./settings.content"));
 

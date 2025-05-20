@@ -2,7 +2,7 @@ import { Switch as HeadlessSwitch } from "@headlessui/react";
 
 interface Props {
   checked: boolean;
-  onChange: () => void;
+  onChange: (checked: boolean) => void;
 }
 
 export function Switch({ checked, onChange }: Props) {

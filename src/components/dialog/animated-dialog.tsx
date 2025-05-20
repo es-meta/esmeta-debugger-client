@@ -1,32 +1,35 @@
 import { Fragment, Suspense, useCallback, useMemo, useState } from "react";
 import { cn } from "@/utils";
-import { lazy } from "react";
+// import { lazy } from "react";
 import { LoaderCircleIcon } from "lucide-react";
 import { useReducedMotion } from "motion/react";
-import { SuspenseBoundary } from "./suspense-boundary";
+import { SuspenseBoundary } from "@/components/primitives/suspense-boundary";
 
-const LazyComps = {
-  Dialog: lazy(() =>
-    import("./animated-dialog.lazy").then(m => ({ default: m.Dialog })),
-  ),
-  DialogBackdrop: lazy(() =>
-    import("./animated-dialog.lazy").then(m => ({ default: m.DialogBackdrop })),
-  ),
-  DialogPanel: lazy(() =>
-    import("./animated-dialog.lazy").then(m => ({ default: m.DialogPanel })),
-  ),
-  DialogTitle: lazy(() =>
-    import("./animated-dialog.lazy").then(m => ({ default: m.DialogTitle })),
-  ),
-  Transition: lazy(() =>
-    import("./animated-dialog.lazy").then(m => ({ default: m.Transition })),
-  ),
-  TransitionChild: lazy(() =>
-    import("./animated-dialog.lazy").then(m => ({
-      default: m.TransitionChild,
-    })),
-  ),
-};
+// disable lazy loading for now
+import * as LazyComps from "./animated-dialog.lazy";
+
+// const LazyComps = {
+//   Dialog: lazy(() =>
+//     import("./animated-dialog.lazy").then(m => ({ default: m.Dialog })),
+//   ),
+//   DialogBackdrop: lazy(() =>
+//     import("./animated-dialog.lazy").then(m => ({ default: m.DialogBackdrop })),
+//   ),
+//   DialogPanel: lazy(() =>
+//     import("./animated-dialog.lazy").then(m => ({ default: m.DialogPanel })),
+//   ),
+//   DialogTitle: lazy(() =>
+//     import("./animated-dialog.lazy").then(m => ({ default: m.DialogTitle })),
+//   ),
+//   Transition: lazy(() =>
+//     import("./animated-dialog.lazy").then(m => ({ default: m.Transition })),
+//   ),
+//   TransitionChild: lazy(() =>
+//     import("./animated-dialog.lazy").then(m => ({
+//       default: m.TransitionChild,
+//     })),
+//   ),
+// };
 
 interface Props {
   initialOpen?: boolean;

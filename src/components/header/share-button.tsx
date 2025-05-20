@@ -1,6 +1,6 @@
 import { lazy } from "react";
 import { ShareIcon } from "lucide-react";
-import { AnimatedDialog } from "../animated-dialog";
+import { AnimatedDialog } from "../dialog/animated-dialog";
 
 const ShareContent = lazy(() => import("./share-button.content"));
 
