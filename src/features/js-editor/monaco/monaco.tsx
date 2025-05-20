@@ -5,9 +5,9 @@ import Editor, {
   type Monaco,
 } from "@monaco-editor/react";
 import { logger } from "@/utils";
-import { createRangeFromIndices } from "./JSEditor.util";
+import { createRangeFromIndices } from "./utils";
 import { usePreferredColorScheme } from "@/hooks/use-preferred-color-scheme";
-import { Loading } from "./MonacoEditor.load";
+import { Loading } from "./monaco.load";
 
 type IStandaloneCodeEditor = Parameters<OnMount>[0];
 type IStandaloneEditorConstructionOptions = NonNullable<
@@ -36,6 +36,29 @@ export default function MonacoEditor({
   const monacoRef = useRef<Monaco | null>(null);
   const editorRef = useRef<IStandaloneCodeEditor | null>(null);
   const decorations = useRef<IEditorDecorationsCollection | null>(null);
+
+  const setDecorations = useCallback((start: number, end: number) => {
+    if (start === -1 || end === -1) {
+      decorations.current?.clear();
+      return;
+    } else if (monacoRef.current && decorations.current) {
+      const range = createRangeFromIndices(code, start, end);
+
+      decorations.current.set([
+        {
+          range: new monacoRef.current.Range(
+            range.startLineNumber,
+            range.startColumn,
+            range.endLineNumber,
+            range.endColumn,
+          ),
+          options: {
+            inlineClassName: "my-highlight",
+          },
+        },
+      ]);
+    }
+  }, []);
 
   const monacoBeforeMount: BeforeMount = useCallback(monaco => {
     monaco.editor.defineTheme("my-vs-dark", {
@@ -72,6 +95,7 @@ export default function MonacoEditor({
     monacoRef.current = monaco;
     editorRef.current = mountedEditor;
     decorations.current = mountedEditor.createDecorationsCollection();
+    setDecorations(start, end);
   }, []);
 
   const options: IStandaloneEditorConstructionOptions = useMemo(() => {
@@ -98,27 +122,7 @@ export default function MonacoEditor({
       logger.info?.("no monaco or decorations");
       return;
     }
-
-    if (start === -1 || end === -1) {
-      decorations.current?.clear();
-      return;
-    } else {
-      const range = createRangeFromIndices(code, start, end);
-
-      decorations.current?.set([
-        {
-          range: new monacoRef.current.Range(
-            range.startLineNumber,
-            range.startColumn,
-            range.endLineNumber,
-            range.endColumn,
-          ),
-          options: {
-            inlineClassName: "my-highlight",
-          },
-        },
-      ]);
-    }
+    setDecorations(start, end);
   }, [code, start, end]);
 
   return (
