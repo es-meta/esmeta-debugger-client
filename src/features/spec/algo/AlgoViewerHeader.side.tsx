@@ -6,17 +6,19 @@ import {
 } from "@/components/ui/tooltip";
 import { SPEC_URL } from "@/constants";
 import { useCopyCallback } from "@/hooks/use-copy-callback";
-import { Algorithm } from "@/types";
 
-export function AlgoHeaderRighSide({ algorithm }: { algorithm: Algorithm }) {
-  const irToSpecMapping = useAtomValue(atoms.spec.irToSpecNameMapAtom);
+export function AlgoHeaderRighSide({ fid }: { fid: number }) {
   const devMode = useAtomValue(atoms.app.devModeAtom);
-  const specInfo = irToSpecMapping[algorithm.name];
+  const irFuncs = useAtomValue(atoms.spec.irFuncsAtom);
+  const irFunc = irFuncs[fid];
+  const specInfo = irFunc.info;
   const CONTAINS = specInfo !== undefined;
 
-  const [isCopied, handleClick] = useCopyCallback(algorithm.code);
+  const [isCopied, handleClick] = useCopyCallback(irFunc.algoCode);
 
-  return CONTAINS ? (
+  if (!CONTAINS) return null;
+
+  return (
     <>
       <Tooltip>
         <TooltipTrigger
@@ -35,5 +37,5 @@ export function AlgoHeaderRighSide({ algorithm }: { algorithm: Algorithm }) {
         </button>
       )}
     </>
-  ) : null;
+  );
 }

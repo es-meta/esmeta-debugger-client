@@ -1,6 +1,6 @@
 import { lazy } from "react";
-import { AnimatedDialog } from "@/components/animated-dialog";
-import { SuspenseBoundary } from "@/components/suspense-boundary";
+import { AnimatedDialog } from "@/components/dialog/animated-dialog";
+import { SuspenseBoundary } from "@/components/primitives/suspense-boundary";
 
 import {
   CircleAlertIcon,

@@ -1,61 +1,26 @@
-import { BreakpointType, Context } from "@/types";
+import { Breakpoint, BreakpointType, Context } from "@/types";
 import React, { useCallback, useMemo } from "react";
 import { parseAlgorithm } from "ecmarkdown";
-// import { Algorithm } from "@/store/reducers/Spec";
 import AlgoStepList from "./AlgoStepList";
 import "@/styles/AlgoViewer.css";
-import { addBreak, rmBreak } from "@/store/reducers/breapoint";
+// import { addBreak, rmBreak } from "@/store/reducers/breapoint";
 import AlgoViewerHeader from "./AlgoViewerHeader";
-import { useAppDispatch, useAppSelector } from "@/hooks";
+
+import { useAtomValue, atoms, useSetAtom } from "@/atoms";
 
 type AlgoViewerProps = { context: Context; showOnlyVisited: boolean };
 
-export default function ContextAlgoViewer({
+export default function AlgoView({
   context,
   showOnlyVisited,
 }: AlgoViewerProps) {
-  const dispatch = useAppDispatch();
-
-  const breakpoints = useAppSelector(st => st.breakpoint.items);
-
-  const algo = context.algo;
-
-  const currentSteps = useMemo(
-    () => (context === undefined ? [] : context.steps) satisfies number[],
-    [context],
-  );
-
-  const onPrefixClick = useCallback(
-    (fid: number, algoName: string, steps: number[]) => {
-      // find index of breakpoints
-      const bpIdx = breakpoints.findIndex(bp => {
-        if (bp.type === BreakpointType.Spec) {
-          return (
-            bp.fid === fid &&
-            bp.steps.length === steps.length &&
-            bp.steps.every((s, idx) => s === steps[idx])
-          );
-        } else return false;
-      });
-
-      // remove breakpoints
-      if (bpIdx !== -1) dispatch(rmBreak(bpIdx));
-      else {
-        const bpName = `${steps} @ ${algoName}`;
-        dispatch(
-          addBreak({
-            type: BreakpointType.Spec,
-            fid,
-            duplicateCheckId: bpName,
-            name: algoName,
-            steps,
-            enabled: true,
-          }),
-        );
-      }
-    },
-    [breakpoints, dispatch],
-  );
+  const irFuncs = useAtomValue(atoms.spec.irFuncsAtom);
+  const breakpoints = useAtomValue(atoms.bp.bpAtom);
+  const addBreak = useSetAtom(atoms.bp.addAction);
+  const rmBreak = useSetAtom(atoms.bp.rmAction);
+  const fid = context.fid;
+  const irFunc = irFuncs[fid];
+  const currentSteps: number[] = useMemo(() => context?.steps ?? [], [context]);
 
   const handleClick: React.MouseEventHandler<Element> = useCallback(
     e => {
@@ -64,26 +29,37 @@ export default function ContextAlgoViewer({
       const stringified = target.dataset.thisStep;
       if (stringified === undefined) return;
       const steps = JSON.parse(stringified) as number[];
-      onPrefixClick(algo.fid, algo.name, steps);
+      onPrefixClick(
+        breakpoints,
+        addBreak,
+        rmBreak,
+        irFunc.fid,
+        irFunc.name,
+        steps,
+      );
     },
-    [onPrefixClick, algo.fid, algo.name],
+    [breakpoints, addBreak, rmBreak, irFunc.fid, irFunc.name],
   );
 
-  const empty = useMemo(() => JSON.stringify([]), []);
-
-  const parsed = useMemo(() => parseAlgorithm(algo.code), [algo.code]);
+  const parsed = useMemo(
+    () => parseAlgorithm(irFunc.algoCode),
+    [irFunc.algoCode],
+  );
 
   if (
     context === undefined ||
-    context.algo === undefined ||
-    context.algo.code.trim() === ""
+    irFunc.algoCode === undefined ||
+    irFunc.algoCode.trim() === ""
   ) {
     throw new Error("Algorithm not found");
   }
 
   return (
-    <div className="algo-container w-full h-fit" onClick={handleClick}>
-      <AlgoViewerHeader algorithm={algo} />
+    <div
+      className="algo-container w-full h-fit break-before-column wrap-break-word hyphens-auto"
+      onClick={handleClick}
+    >
+      <AlgoViewerHeader fid={fid} />
       <AlgoStepList
         listNode={parsed.contents}
         stringifiedSteps={empty}
@@ -94,4 +70,40 @@ export default function ContextAlgoViewer({
       />
     </div>
   );
+}
+
+const empty = JSON.stringify([]);
+
+function onPrefixClick(
+  breakpoints: Breakpoint[],
+  addBreak: (bp: Breakpoint) => void,
+  rmBreak: (bp: number | "all") => void,
+  fid: number,
+  algoName: string,
+  steps: number[],
+) {
+  // find index of breakpoints
+  const bpIdx = breakpoints.findIndex(bp => {
+    if (bp.type === BreakpointType.Spec) {
+      return (
+        bp.fid === fid &&
+        bp.steps.length === steps.length &&
+        bp.steps.every((s, idx) => s === steps[idx])
+      );
+    } else return false;
+  });
+
+  // remove breakpoints
+  if (bpIdx !== -1) rmBreak(bpIdx);
+  else {
+    const bpName = `${steps} @ ${algoName}`;
+    addBreak({
+      type: BreakpointType.Spec,
+      fid,
+      duplicateCheckId: bpName,
+      name: algoName,
+      steps,
+      enabled: true,
+    });
+  }
 }

@@ -1,16 +1,17 @@
-import { Algorithm } from "@/types";
 import { cn } from "@/utils";
 import { AlgoHeaderRighSide } from "./AlgoViewerHeader.side";
 import { atoms, useAtomValue } from "@/atoms";
 
 type Props = {
-  algorithm: Algorithm;
-  name?: undefined;
+  fid: number;
+  // algorithm: Algorithm;
+  // name?: undefined;
 };
 
-export default function AlgoViewerHeader({ algorithm }: Props) {
-  const irToSpecMapping = useAtomValue(atoms.spec.irToSpecNameMapAtom);
-  const specInfo = irToSpecMapping[algorithm.name];
+export default function AlgoViewerHeader({ fid }: Props) {
+  const irFuncs = useAtomValue(atoms.spec.irFuncsAtom);
+  const irFunc = irFuncs[fid];
+  const specInfo = irFunc.info;
 
   const title = (() => {
     if (specInfo?.sdoInfo && specInfo.isSdo === true) {
@@ -18,7 +19,7 @@ export default function AlgoViewerHeader({ algorithm }: Props) {
     }
 
     if (specInfo?.isBuiltIn === true) {
-      return algorithm.name.substring("INTRINSICS.".length);
+      return irFunc.name.substring("INTRINSICS.".length);
     }
 
     if (specInfo?.methodInfo) {
@@ -26,15 +27,15 @@ export default function AlgoViewerHeader({ algorithm }: Props) {
       return mn;
     }
 
-    return algorithm.name;
+    return irFunc.name;
   })();
 
   const isSdo = specInfo?.isSdo === true;
 
   const params = (
     specInfo?.isSdo === true || specInfo?.isMethod === true
-      ? algorithm.params.slice(1)
-      : algorithm.params
+      ? irFunc.params.slice(1)
+      : irFunc.params
   )
     .map(({ name, optional }) => {
       return optional ? name + "?" : name;
@@ -48,7 +49,7 @@ export default function AlgoViewerHeader({ algorithm }: Props) {
       <div className="pt-2 px-2 font-es font-600 text-lg">
         <b>{title}</b>
         <span className="algo-parameters">({params})</span>
-        <AlgoHeaderRighSide algorithm={algorithm} />
+        <AlgoHeaderRighSide fid={fid} />
       </div>
       {isSdo && (
         <div className="px-2 flex flex-col mb-1">
@@ -78,7 +79,7 @@ export default function AlgoViewerHeader({ algorithm }: Props) {
         <div className="px-2 flex flex-col mb-1">
           <p className="px-2 font-300">
             <b className="size-14 text-[#2aa198] italic font-es">
-              {algorithm.params[0].name}
+              {irFunc.params[0].name}
             </b>{" "}
             : <b className="size-14 font-es">{specInfo?.methodInfo[0]}</b>
           </p>
@@ -89,8 +90,9 @@ export default function AlgoViewerHeader({ algorithm }: Props) {
 }
 
 export function AlgoViewerHeaderUsingAlgoName({ name }: { name: string }) {
-  const irToSpecMapping = useAtomValue(atoms.spec.irToSpecNameMapAtom);
-  const specInfo = irToSpecMapping[name];
+  const irFuncs = useAtomValue(atoms.spec.irFuncsAtom);
+  const irFunc = Object.values(irFuncs).find(irFunc => irFunc.name === name);
+  const specInfo = irFunc?.info;
 
   const title = (() => {
     if (specInfo?.sdoInfo && specInfo.isSdo === true) {

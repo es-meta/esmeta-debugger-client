@@ -4,7 +4,6 @@ import { emit } from "@/utils";
 import type { ListNode, OrderedListNode, FragmentNode } from "ecmarkdown";
 import { twJoin } from "tailwind-merge";
 import { isSameStep } from "./algo.util";
-import { shallowEqual, useAppSelector } from "@/hooks";
 import { BreakpointType, Context } from "@/types";
 import { atoms, useAtomValue } from "@/atoms";
 
@@ -15,14 +14,9 @@ interface AlgoStepPrefixProps {
 
 function AlgoStepPrefix({ stringifiedSteps }: AlgoStepPrefixProps) {
   const steps = JSON.parse(stringifiedSteps) as number[];
-  const { breakpoints, callStack, contextIdx } = useAppSelector(
-    st => ({
-      breakpoints: st.breakpoint.items,
-      callStack: st.ir.callStack,
-      contextIdx: st.ir.contextIdx,
-    }),
-    shallowEqual,
-  );
+  const callStack = useAtomValue(atoms.state.callstackAtom);
+  const contextIdx = useAtomValue(atoms.state.contextIdxAtom);
+  const breakpoints = useAtomValue(atoms.bp.bpAtom);
 
   const context: Context | undefined = callStack[contextIdx];
 

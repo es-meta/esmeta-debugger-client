@@ -4,6 +4,7 @@ import { twJoin } from "tailwind-merge";
 import { Loading } from "./Graphviz.load";
 import { useAtomValue } from "jotai";
 import { atoms } from "@/atoms";
+import { usePreferredColorScheme } from "@/hooks/use-preferred-color-scheme";
 
 interface Props {
   dot: string;
@@ -15,6 +16,7 @@ const defaultOptions: GraphvizOptions = {
 };
 
 export default function Graphviz({ dot }: Props) {
+  const theme = usePreferredColorScheme();
   const [completed, setCompleted] = useState<string | null>(null);
   const id = useId();
 
@@ -25,7 +27,6 @@ export default function Graphviz({ dot }: Props) {
   }, [dot]);
 
   const busy = useAtomValue(atoms.app.busyStateGetter);
-
   const isLoading = completed !== dot || busy === "busy";
 
   return (
@@ -36,6 +37,7 @@ export default function Graphviz({ dot }: Props) {
         className={twJoin(
           "size-full overflow-hidden [&>svg]:size-full transition-opacity duration-100",
           isLoading ? "opacity-90" : "",
+          theme === "dark" && "invert",
         )}
       />
     </div>
