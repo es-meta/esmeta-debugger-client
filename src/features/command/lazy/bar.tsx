@@ -1,20 +1,21 @@
-import { useState, useEffect, useRef, useCallback, lazy } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useStore } from "jotai";
-import type { Command } from "./command.types";
+import type { Command } from "./types";
 import { AnimatePresence, motion } from "motion/react";
 import { toast } from "react-toastify";
-import { useAppDispatch } from "@/hooks";
+import CommandBarCombobox from "./combobox";
 
-const CommandBarCombobox = lazy(() => import("./CommandBarCombobox"));
+function isCommandBarTriggered(event: KeyboardEvent) {
+  return event.key === ":"; // && (event.metaKey || event.ctrlKey);
+}
 
 export default function CommandBar() {
   const store = useStore();
-  const dispatch = useAppDispatch();
   const [isVisible, setIsVisible] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleKeyDown = (event: KeyboardEvent) => {
-    if (event.key === "k" && (event.metaKey || event.ctrlKey)) {
+    if (isCommandBarTriggered(event)) {
       event.preventDefault();
       setIsVisible(true);
       inputRef.current?.focus();
@@ -33,36 +34,46 @@ export default function CommandBar() {
       if (command === null) return;
       const { target: action } = command;
       if (action) {
-        if (action.type === "redux") dispatch(action);
-        else store.set(action.atom);
+        if (action.type === "func") {
+          action.func();
+        } else if (action.type === "atom") {
+          store.set(action.atom);
+        }
       }
       setIsVisible(false);
       toast.info("command bar called " + command.label);
     },
-    [dispatch, store],
+    [store],
   );
+
+  const handleBackspace = useCallback(() => {
+    setIsVisible(false);
+  }, []);
 
   return (
     <AnimatePresence initial={false}>
       {isVisible && (
         <motion.div
-          className="flex-col fixed top-0 touch-none left-0 w-full h-full bg-black/25 backdrop-blur-md flex items-center justify-start z-50"
+          className="flex-col fixed top-0 touch-none left-0 w-full h-full bg-gradient-to-b from-black/0 to-black/25 flex items-center justify-start z-50"
           onClick={() => setIsVisible(false)}
           initial={variantsBg.initial}
           animate={variantsBg.animate}
           exit={variantsBg.exit}
+          transition={{ duration: 0.125 }}
         >
           <motion.div
-            className="relative mt-16 w-1/2"
+            className="absolute left-4 right-4 bottom-4"
             onClick={e => e.stopPropagation()}
             initial={variants.initial}
             animate={variants.animate}
             exit={variants.exit}
+            transition={{ duration: 0.125 }}
           >
             <CommandBarCombobox
               ref={inputRef}
               value={null}
               setValue={handleCommand}
+              close={handleBackspace}
             />
           </motion.div>
         </motion.div>
@@ -72,9 +83,9 @@ export default function CommandBar() {
 }
 
 const variants = {
-  initial: { opacity: 0, scale: 0.9 },
-  animate: { opacity: 1, scale: 1 },
-  exit: { opacity: 0, scale: 0.9 },
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: 20 },
 };
 
 const variantsBg = {

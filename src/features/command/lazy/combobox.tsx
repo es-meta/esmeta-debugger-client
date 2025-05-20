@@ -1,4 +1,4 @@
-import { Fragment, Ref, useMemo } from "react";
+import { Fragment, Ref, useEffect, useMemo, useState } from "react";
 import {
   Combobox,
   ComboboxInput,
@@ -7,30 +7,34 @@ import {
 } from "@headlessui/react";
 import { cn } from "@/utils";
 import { CheckIcon } from "lucide-react";
-import { type Command } from "./command.types";
-import { atom, useAtom, useAtomValue } from "jotai";
-import { useAppSelector } from "@/hooks";
+import { type Command } from "./types";
+import { useAtomValue } from "jotai";
 import { atoms } from "@/atoms";
-import { computeFiltered } from "./command.utils";
-
+import { computeFiltered } from "./utils";
+import { useLastResolvedAtomValue } from "@/hooks/use-atom-value-with-pending";
 interface ComboProps {
   value: Command | null;
   setValue: (value: Command | null) => void;
   ref: Ref<HTMLInputElement>;
+  close: () => void;
 }
-
-const queryAtom = atom<string>("");
 
 export default function CommandBarCombobox(props: ComboProps) {
   const { value, setValue, ref } = props;
-  const [query, setQuery] = useAtom(queryAtom);
-  const names = useAtomValue(atoms.spec.irToSpecNameMapAtom);
-  const heap = useAppSelector(st => st.ir.heap);
+  const [query, setQuery] = useState<string>(":");
+  const names = useAtomValue(atoms.spec.funcNamesAtom);
+  const [, heap] = useLastResolvedAtomValue(atoms.state.heapAtom, {});
 
   const filtered = useMemo(
     () => computeFiltered(heap, query, names),
     [query, heap],
   );
+
+  useEffect(() => {
+    if (query === "") {
+      props.close();
+    }
+  }, [query, props.close]);
 
   return (
     <Combobox<Command>
@@ -42,14 +46,22 @@ export default function CommandBarCombobox(props: ComboProps) {
       <ComboboxInput
         ref={ref}
         autoFocus
-        className="text-sm w-full rounded-lg p-4 focus:outline-hidden bg-white dark:bg-neutral-900"
+        className="text-sm w-full rounded-lg p-8 focus:outline-hidden bg-white dark:bg-neutral-900"
+        value={query}
         onChange={event => setQuery(event.target.value)}
-        // placeholder="Search command..."
+        onKeyDown={event => {
+          // additional handling for batch updates
+          if (event.key === "Backspace") {
+            if (event.currentTarget.value === "") {
+              props.close();
+            }
+          }
+        }}
       />
       <ComboboxOptions
         transition
-        anchor="bottom"
-        className="text-sm z-101 w-(--input-width) origin-top shadow-lg transition duration-200 ease-out empty:invisible data-closed:scale-95 data-closed:opacity-0 h-96 overflow-scroll rounded-lg bg-white dark:bg-neutral-900"
+        anchor="top start"
+        className="text-sm z-101 w-(--input-width) origin-bottom shadow-lg transition duration-75 ease-out empty:invisible data-closed:scale-95 data-closed:opacity-0 h-48 overflow-scroll rounded-lg bg-white/25 dark:bg-neutral-900/25 backdrop-blur-md"
       >
         {({ option: name }: { option: Command }) => (
           <ComboboxOption key={JSON.stringify(name)} value={name} as={Fragment}>
@@ -72,12 +84,6 @@ export default function CommandBarCombobox(props: ComboProps) {
           </ComboboxOption>
         )}
       </ComboboxOptions>
-      {query === "" && (
-        <p className="mt-2 text-xs bg-white dark:bg-neutral-900 rounded-lg p-4">
-          Press @ to see viewers, # to inspect heap address, / to do trigger
-          debugger commands
-        </p>
-      )}
     </Combobox>
   );
 }
