@@ -15,6 +15,12 @@ export default function CommandBar() {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleKeyDown = (event: KeyboardEvent) => {
+    if (
+      event.target instanceof HTMLInputElement ||
+      event.target instanceof HTMLTextAreaElement
+    ) {
+      return;
+    }
     if (isCommandBarTriggered(event)) {
       event.preventDefault();
       setIsVisible(true);
