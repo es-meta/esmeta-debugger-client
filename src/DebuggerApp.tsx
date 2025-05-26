@@ -16,7 +16,7 @@ export default function DebuggerApp() {
   useInitializer();
 
   return (
-    <main className="relative grow flex flex-col px-2 xl:px-12 transition-[padding] overflow-hidden border-none">
+    <main className="relative grow flex flex-col px-2 xl:px-12 pb-4 transition-[padding] overflow-hidden border-none">
       <Toolbar />
       <ResizablePanelGroup
         direction="horizontal"
