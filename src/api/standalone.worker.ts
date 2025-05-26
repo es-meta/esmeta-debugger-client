@@ -43,12 +43,6 @@ const doGetRequest = async (
     case "spec/version":
       return JSON.parse((await _standaloneDebugger).spec_version());
 
-    case "state/heap":
-      return JSON.parse((await _standaloneDebugger).state_heap());
-
-    case "state/callStack":
-      return JSON.parse((await _standaloneDebugger).state_callStack());
-
     default:
       if (endpoint.startsWith("state/context/")) {
         return JSON.parse(
