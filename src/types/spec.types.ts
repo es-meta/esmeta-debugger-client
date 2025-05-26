@@ -18,9 +18,12 @@ export interface SpecVersion {
 }
 
 export type SpecFuncInfo = {
+  name: string;
   normalizedName: string;
   htmlId: string;
   isBuiltIn: boolean;
+  isClo: boolean;
+  isCont: boolean;
   isMethod: boolean;
   isSdo: boolean;
   sdoInfo: SdoInfo | null;

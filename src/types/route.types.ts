@@ -53,11 +53,6 @@ const exec = [
   "exec/instCntMinus",
 ] as const;
 
-export const routes = [
-  ...spec,
-  ...breakpoint,
-  ...exec,
-  ...meta,
-] as const;
+export const routes = [...spec, ...breakpoint, ...exec, ...meta] as const;
 
 export type Route = (typeof routes)[number];
