@@ -3,7 +3,7 @@ import { XIcon } from "lucide-react";
 
 import { Breakpoint } from "@/types";
 import { Switch } from "@/components/button/switch";
-import { cn, logger, toStepString } from "@/utils";
+import { cn, toStepString } from "@/utils";
 import { AlgoViewerHeaderUsingAlgoName } from "@/features/spec/algo/AlgoViewerHeader";
 
 interface BreakpointItemProp {
@@ -18,7 +18,7 @@ export default function BreakpointItem(props: BreakpointItemProp) {
 
   const isEven = useMemo(() => idx % 2 === 0, [idx]);
 
-  const { name, enabled } = data;
+  const { viewName, enabled } = data;
 
   const handleToggleClick = useCallback(() => {
     onToggleClick(idx);
@@ -28,10 +28,10 @@ export default function BreakpointItem(props: BreakpointItemProp) {
     onRemoveClick(idx);
   }, [onRemoveClick, idx]);
 
-  if (data.type === "BreakpointType/Js") {
-    logger.error?.("Js breakpoint is not supported");
-    return null;
-  }
+  // if (data.type === "BreakpointType/Js") {
+  //   logger.error?.("Js breakpoint is not supported");
+  //   return null;
+  // }
 
   return (
     <>
@@ -47,7 +47,7 @@ export default function BreakpointItem(props: BreakpointItemProp) {
           {toStepString(data.steps)}
         </td>
         <td className="border-r overflow-hidden break-before-all text-wrap pb-1">
-          <AlgoViewerHeaderUsingAlgoName name={name} />
+          <AlgoViewerHeaderUsingAlgoName name={viewName} />
         </td>
         <td className="border-r text-center">
           <Switch checked={enabled} onChange={() => handleToggleClick()} />

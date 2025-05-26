@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import { v4 as uuid } from "uuid";
 import MyCombobox from "./BreakCombobox";
-import { AppState, Breakpoint, BreakpointType } from "@/types";
+import { AppState, Breakpoint, BreakpointType, SpecFuncInfo } from "@/types";
 import BreakpointItem from "./BreakpointItem";
 import StateViewerItem from "../StateViewerItem";
 import {
@@ -20,7 +20,10 @@ export function addBreakHandler(
   toEnabled: true,
   fid: number | null,
   breakpoints: Breakpoint[],
-  algos: Record<number, { fid: number; name: string }>,
+  algos: Record<
+    number,
+    { fid: number; name: string; info: SpecFuncInfo | undefined }
+  >,
   addBreak: (...args: ExtractAtomArgs<typeof atoms.bp.addAction>) => void,
 ): string | null {
   const algoName = fid !== null ? algos[fid]?.name : null;
@@ -40,9 +43,11 @@ export function addBreakHandler(
   if (valid && !duplicated)
     addBreak({
       type: BreakpointType.Spec,
-      fid: fid,
       duplicateCheckId: bpName,
-      name: algoName,
+      algoName:
+        algos[fid].info?.name ??
+        (() => (console.error("require spec info"), ""))(),
+      viewName: algoName,
       steps: steps,
       enabled: true,
     });
@@ -58,7 +63,11 @@ export function addBreakHandler(
 export default function Breakpoints() {
   const algos = useAtomValue(atoms.spec.irFuncsAtom);
   const algoNames = useMemo(
-    () => Object.values(algos).map(algo => algo.name),
+    () =>
+      new Set(Object.values(algos).map(algo => algo.info?.name ?? ""))
+        .values()
+        .toArray()
+        .filter(s => s !== ""),
     [algos],
   );
 

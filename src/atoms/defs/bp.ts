@@ -1,6 +1,7 @@
 import { atom } from "jotai";
-import { Breakpoint, BreakpointType } from "@/types";
+import { Breakpoint } from "@/types";
 import { doAPIDeleteRequest, doAPIPostRequest } from "@/api";
+import { toast } from "react-toastify";
 
 const items = atom<Breakpoint[]>([]);
 
@@ -13,7 +14,14 @@ export const serializedBpAtom = atom(get => {
 
 export const addAction = atom(null, (get, set, update: Breakpoint) => {
   set(items, old => [...old, update]);
-  doAPIPostRequest("breakpoint", serialize(update));
+  doAPIPostRequest("breakpoint", serialize(update)).then(b => {
+    if (!b) {
+      toast.warn(
+        `Unable to add break point \`${update.algoName} @ [${update.steps.join(",")}]\`. This most likely happens when the algorithm was manually modeled instead of being compiled. If you believe this isn’t the case, please report it — it could be a bug.`,
+      );
+      set(items, old => old.toSpliced(old.length - 1, 1));
+    }
+  });
 });
 
 export const rmAction = atom(null, (get, set, update: "all" | number) => {
@@ -34,13 +42,8 @@ export const rmAction = atom(null, (get, set, update: "all" | number) => {
 
 // helper functions
 export function serialize(bp: Breakpoint) {
-  let data: [boolean, number, number[], boolean];
-  if (bp.type == BreakpointType.Spec) {
-    const { fid, steps, enabled } = bp;
-    data = [false, fid, steps, enabled];
-  } else {
-    const { line, enabled } = bp;
-    data = [true, line, [], enabled];
-  }
+  let data: [boolean, string, number[], boolean];
+  const { algoName, steps, enabled } = bp;
+  data = [false, algoName, steps, enabled];
   return data;
 }
