@@ -3,18 +3,14 @@ import StateViewerItem from "../StateViewerItem";
 import tw from "tailwind-styled-components";
 import TreeAddress from "../heap/TreeAddress";
 import { CodeSquareIcon } from "lucide-react";
-import { atoms } from "@/atoms";
+import { atoms, useAtomValue } from "@/atoms";
 import { SuspenseBoundary } from "@/components/primitives/suspense-boundary";
-import { useLastResolvedAtomValue } from "@/hooks/use-atom-value-with-pending";
 
 const Li = tw.li`border-b`;
 const B = tw.span`font-600`;
 
 export default function ESEnvViewer() {
-  const [isPending, bindings] = useLastResolvedAtomValue(
-    atoms.state.esEnvAtom,
-    [],
-  );
+  const bindings = useAtomValue(atoms.state.esEnvAtom);
 
   return (
     <StateViewerItem

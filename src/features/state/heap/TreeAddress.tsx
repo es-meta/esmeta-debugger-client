@@ -18,9 +18,8 @@ import {
   clientActiveAddrAtom,
   clientActiveViewerAtom,
 } from "@/atoms/defs/client";
-import { atoms, useSetAtom } from "@/atoms";
+import { atoms, useAtomValue, useSetAtom } from "@/atoms";
 import { backToProvenanceAction } from "@/actions";
-import { useLastResolvedAtomValue } from "@/hooks/use-atom-value-with-pending";
 
 interface Props {
   field: string;
@@ -93,7 +92,7 @@ export default function TreeAddress({
   const [fold, setFold] = useState(
     singleMode === undefined ? defaultFold : singleMode,
   );
-  const [, heap] = useLastResolvedAtomValue(atoms.state.heapAtom, {});
+  const heap = useAtomValue(atoms.state.heapAtom);
   const obj = heap[address];
 
   return (

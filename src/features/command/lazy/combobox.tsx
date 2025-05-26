@@ -11,7 +11,6 @@ import { type Command } from "./types";
 import { useAtomValue } from "jotai";
 import { atoms } from "@/atoms";
 import { computeFiltered } from "./utils";
-import { useLastResolvedAtomValue } from "@/hooks/use-atom-value-with-pending";
 interface ComboProps {
   value: Command | null;
   setValue: (value: Command | null) => void;
@@ -23,7 +22,7 @@ export default function CommandBarCombobox(props: ComboProps) {
   const { value, setValue, ref } = props;
   const [query, setQuery] = useState<string>(":");
   const names = useAtomValue(atoms.spec.funcNamesAtom);
-  const [, heap] = useLastResolvedAtomValue(atoms.state.heapAtom, {});
+  const heap = useAtomValue(atoms.state.heapAtom);
 
   const filtered = useMemo(
     () => computeFiltered(heap, query, names),
