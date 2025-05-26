@@ -8,7 +8,9 @@ export const selectorAtom = atom(get => {
   const givenConfig = get(atoms.config.givenConfigAtom);
   return {
     disableRun: !(appState === AppState.JS_INPUT),
-    disableResume: !(appState === AppState.JS_INPUT && givenConfig.origin.iter !== null),
+    disableResume: !(
+      appState === AppState.JS_INPUT && givenConfig.origin.iter !== null
+    ),
     disableQuit: appState === AppState.INIT || appState === AppState.JS_INPUT,
     disableGoingForward: !(
       appState === AppState.DEBUG_READY ||

@@ -231,19 +231,17 @@ export function Toolbar() {
             }
           />
 
-          {devMode && (
-            <ToolbarButton
-              position="center"
-              disabled={disableGoingForward}
-              onClick={() => actions.esStepAst()}
-              icon={<ArrowDownToDotIcon />}
-              label={
-                <span>
-                  AST&nbsp;Ste<b>p</b>
-                </span>
-              }
-            />
-          )}
+          <ToolbarButton
+            position="center"
+            disabled={disableGoingForward}
+            onClick={() => actions.esStepAst()}
+            icon={<ArrowDownToDotIcon />}
+            label={
+              <span>
+                AST&nbsp;Ste<b>p</b>
+              </span>
+            }
+          />
 
           <ToolbarButton
             position="center"

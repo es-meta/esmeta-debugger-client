@@ -12,7 +12,7 @@ const map = (
     case "r":
       return cond.disableRun ? null : actions.run;
     case "e":
-      return cond.disableResume ? null : actions.resume();
+      return cond.disableResume ? null : actions.resume;
     case "q":
       return cond.disableQuit ? null : actions.stop;
     case "c":
@@ -34,7 +34,7 @@ const map = (
     case "j":
       return cond.disableGoingForward ? null : actions.esStepStatement;
     case "p":
-      return cond.disableGoingForward || !devMode ? null : actions.esStepAst;
+      return cond.disableGoingForward ? null : actions.esStepAst;
     case "v":
       return cond.disableGoingForward ? null : actions.esStepOver;
     case "t":
@@ -62,12 +62,11 @@ export const handleKeyPressBuilder = (
     const isComplex =
       event.ctrlKey || event.metaKey || event.altKey || event.shiftKey;
 
+    logger.log?.(`${event.key}`);
+
     const action = map(event.key, cond, devMode, actions);
 
     if (action && !isComplex) {
       action();
-      return;
-    } else {
-      logger.log?.(`other: ${event.key}`);
     }
   };
