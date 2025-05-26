@@ -138,6 +138,11 @@ export const instCntAtom = atom<number>(get => {
   return instCnt;
 });
 
+export const stepCntAtom = atom<number>(get => {
+  const [, { stepCnt }] = get(resultAtom);
+  return stepCnt;
+});
+
 function callstackFromRaw(raw: StepResultAdditional["callstack"]): CallStack {
   return raw.map(
     ([fid, steps, isExit, env, visited, dot, [start, end]]) =>
