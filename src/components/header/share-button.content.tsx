@@ -14,7 +14,8 @@ export default function ShareButtonContent() {
   const config = useAtomValue(atoms.config.givenConfigAtom);
   const api = config.api;
   const code = useAtomValue(atoms.app.jsCodeAtom);
-  const iter = useAtomValue(atoms.state.instCntAtom);
+  // TODO use better count in spec
+  const stepCnt = useAtomValue(atoms.state.stepCntAtom);
 
   const href = new URL(window.location.href);
   href.search = "";
@@ -32,9 +33,10 @@ export default function ShareButtonContent() {
 
   const withCode = href.toString();
 
-  if (iter !== null) href.searchParams.set(SEARCHPARAM_NAME_ITER, String(iter));
+  if (stepCnt !== null)
+    href.searchParams.set(SEARCHPARAM_NAME_ITER, String(stepCnt));
 
-  const withMoment = iter === null ? null : href.toString();
+  const withMoment = stepCnt === null ? null : href.toString();
 
   return (
     <div className="space-y-6">
