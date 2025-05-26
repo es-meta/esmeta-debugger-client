@@ -20,7 +20,7 @@ export const irFuncsAtom = atom<Promise<Record<number, IrFunc>>>(async () => {
       {
         fid,
         name,
-        nameForBp: alternativeName(name, info ?? undefined),
+        nameForContext: replacedNameForContext(name, info ?? undefined),
         nameForCallstack: replacedNameForCallstackContext(
           name,
           info ?? undefined,
@@ -45,31 +45,53 @@ export const funcNamesAtom = atom<Promise<string[]>>(async get => {
   return Object.values(irFuncs).map(irFunc => irFunc.name);
 });
 
-function alternativeName(
-  name: string,
-  specInfo: SpecFuncInfo | undefined,
-): string {
-  if (specInfo?.isBuiltIn) {
-    return `${name} ${name.substring("INTRINSICS.".length)}`;
-  }
-  if (specInfo?.isSdo && specInfo?.sdoInfo && specInfo?.sdoInfo.prod) {
-    return `${name} ${specInfo.sdoInfo.method} of ${specInfo.sdoInfo.prod?.astName}`;
-  }
-  return name;
-}
-
 function replacedNameForCallstackContext(
   name: string,
   specInfo: SpecFuncInfo | undefined,
 ): string {
   if (specInfo?.isBuiltIn) {
-    return name.substring("INTRINSICS.".length);
+    return withPrefixRemoved(name);
   }
   if (specInfo?.isSdo && specInfo?.sdoInfo && specInfo?.sdoInfo.prod) {
     return `${specInfo.sdoInfo.method} of ${specInfo.sdoInfo.prod?.astName}`;
   }
   if (specInfo?.methodInfo) {
     return specInfo.methodInfo[1];
+  }
+  if (specInfo?.isClo) {
+    return `Abstract Closure captured at ${withPrefixRemoved(specInfo.normalizedName)}`;
+  }
+  if (specInfo?.isCont) {
+    return `Continuation captured at ${withPrefixRemoved(specInfo.normalizedName)}`;
+  }
+  return name;
+}
+
+function replacedNameForContext(
+  name: string,
+  specInfo: SpecFuncInfo | undefined,
+): string {
+  if (specInfo?.sdoInfo && specInfo.isSdo === true) {
+    return specInfo.sdoInfo.method;
+  }
+
+  if (specInfo?.isBuiltIn === true) {
+    return withPrefixRemoved(name);
+  }
+
+  if (specInfo?.methodInfo) {
+    const [, mn] = specInfo.methodInfo;
+    return mn;
+  }
+  if (specInfo?.isClo || specInfo?.isCont) {
+    return withPrefixRemoved(specInfo.normalizedName);
+  }
+  return name;
+}
+
+function withPrefixRemoved(name: string): string {
+  if (name.startsWith("INTRINSICS.")) {
+    return name.substring("INTRINSICS.".length);
   }
   return name;
 }
