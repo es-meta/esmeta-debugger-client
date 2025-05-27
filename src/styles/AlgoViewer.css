@@ -52,9 +52,11 @@
   font-weight: bold;
 }
 
+/* replaced to use tailwind */
+/*
 .algo-step var {
   color: #2aa198;
-}
+} */
 
 .algo-step var.field {
   color: currentColor;
