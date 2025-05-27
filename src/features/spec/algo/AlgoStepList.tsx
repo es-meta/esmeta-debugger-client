@@ -1,82 +1,86 @@
-import React, { useCallback, useMemo } from "react";
-import { v4 as uuid } from "uuid";
-import {
-  Emitter,
-  // FragmentNode
-} from "@/util/ecmarkdown";
+import "@/styles/AlgoViewer.css";
+import { useEffect, useMemo, useRef } from "react";
+import { emit } from "@/utils";
 import type { ListNode, OrderedListNode, FragmentNode } from "ecmarkdown";
 import { twJoin } from "tailwind-merge";
-import "@/styles/AlgoViewer.css";
 import { isSameStep } from "./algo.util";
+import { BreakpointType, Context } from "@/types";
+import { atoms, useAtomValue } from "@/atoms";
 
 // algo steps prefix
 interface AlgoStepPrefixProps {
-  steps: number[];
-  breakedStepsList: number[][];
-  onPrefixClick: (steps: number[]) => void;
+  stringifiedSteps: string;
 }
 
-function AlgoStepPrefix(props: AlgoStepPrefixProps) {
-  const { breakedStepsList, steps, onPrefixClick } = props;
+function AlgoStepPrefix({ stringifiedSteps }: AlgoStepPrefixProps) {
+  const steps = useMemo(() => JSON.parse(stringifiedSteps) as number[], [stringifiedSteps]);
+  const callStack = useAtomValue(atoms.state.callstackAtom);
+  const contextIdx = useAtomValue(atoms.state.contextIdxAtom);
+  const breakpoints = useAtomValue(atoms.bp.bpAtom);
+  const irFuncs = useAtomValue(atoms.spec.irFuncsAtom);
+  const context: Context | undefined = callStack[contextIdx];
+  const irFunc = irFuncs[context.fid];
+
+  const breakedStepsList: number[][] = useMemo(
+    () =>
+      context === undefined
+        ? []
+        : (breakpoints
+            .map(bp => {
+              if (
+                bp.type === BreakpointType.Spec &&
+                bp.algoName === irFunc.info?.name
+              )
+                return bp.steps;
+              else return undefined;
+            })
+            .filter(_ => _ !== undefined) as number[][]),
+    [context, breakpoints],
+  );
+
   const isBreaked = breakedStepsList.some(breakedSteps =>
     isSameStep(steps, breakedSteps),
   );
   return (
-    <div className="algo-step-prefix" onClick={() => onPrefixClick(steps)}>
+    <div className="algo-step-prefix" data-this-step={stringifiedSteps}>
       {isBreaked ? "\u25CF" : "\u00A0"}
     </div>
   );
 }
 
-// algo steps
-interface AlgoStepProps {
-  contents: FragmentNode[];
-  sublist: ListNode | null;
-  steps: number[];
+interface AlgoStepListProps {
+  listNode: OrderedListNode;
+  stringifiedSteps: string;
   currentSteps: number[];
   isExit: boolean;
-  breakedStepsList: number[][];
+  showOnlyVisited?: boolean;
   visitedStepList: number[][];
-  onPrefixClick: (steps: number[]) => void;
-  level: number;
+  scrollOnHighlight: boolean;
 }
 
-export default function AlgoStepList(props: {
-  listNode: OrderedListNode;
-  steps: number[];
-  currentSteps: number[];
-  isExit: boolean;
-  breakedStepsList: number[][];
-  visitedStepList: number[][];
-  onPrefixClick: (steps: number[]) => void;
-  level: number;
-}) {
+export default function AlgoStepList({
+  listNode,
+  stringifiedSteps,
+  currentSteps,
+  isExit,
+  showOnlyVisited,
+  visitedStepList,
+  scrollOnHighlight,
+}: AlgoStepListProps) {
+  const steps = JSON.parse(stringifiedSteps) as number[];
   return (
-    <ol
-      className={twJoin(
-        props.level % 3 === 0 && "list-decimal",
-        props.level % 3 === 1 && "list-[lower-alpha]",
-        props.level % 3 === 2 && "list-[lower-roman]",
-        "list-inside",
-      )}
-    >
-      {props.listNode.contents.map((listItemNode, idx) => {
-        const a = uuid();
+    <ol>
+      {listNode.contents.map((listItemNode, idx) => {
         return (
           <AlgoStep
-            key={
-              a
-              // `${props.steps.join(',')}`
-            }
             contents={listItemNode.contents}
             sublist={listItemNode.sublist}
-            steps={props.steps.concat([idx + 1])}
-            isExit={props.isExit}
-            currentSteps={props.currentSteps}
-            breakedStepsList={props.breakedStepsList}
-            visitedStepList={props.visitedStepList}
-            onPrefixClick={props.onPrefixClick}
-            level={(props.level + 1) % 3}
+            stringifiedSteps={JSON.stringify(steps.concat([idx + 1]))}
+            isExit={isExit}
+            currentSteps={currentSteps}
+            showOnlyVisited={showOnlyVisited}
+            visitedStepList={visitedStepList}
+            scrollOnHighlight={scrollOnHighlight}
           />
         );
       })}
@@ -84,76 +88,97 @@ export default function AlgoStepList(props: {
   );
 }
 
-// algorithm steps
-function AlgoStep(props: AlgoStepProps) {
-  const { steps, currentSteps, isExit } = props;
-  const { contents, breakedStepsList, onPrefixClick } = props;
-  const { sublist } = props;
-  const { level } = props;
+// algo steps
+interface AlgoStepProps {
+  contents: FragmentNode[];
+  sublist: ListNode | null;
+  stringifiedSteps: string;
+  currentSteps: number[];
+  isExit: boolean;
+  showOnlyVisited?: boolean;
+  visitedStepList: number[][];
+  scrollOnHighlight: boolean;
+}
 
-  // const currentSteps = useMemo(getCurrentSteps, [getCurrentSteps]);
+function AlgoStep({
+  stringifiedSteps,
+  currentSteps,
+  isExit,
+  contents,
+  sublist,
+  showOnlyVisited,
+  visitedStepList,
+  scrollOnHighlight,
+}: AlgoStepProps) {
+  const ref = useRef<HTMLLIElement>(null);
+  const highlightVisited = useAtomValue(atoms.app.highlightVisitedAtom);
 
-  const className = useMemo((): string => {
-    let className = "algo-step";
-    const highlight = isSameStep(steps, currentSteps);
-    const visited = props.visitedStepList.some(visitedSteps =>
-      isSameStep(visitedSteps, steps),
-    );
-    if (highlight && isExit) className += " exit-highlight";
-    else if (highlight) className += " highlight";
-    if (!highlight && visited) className += " visited";
-    return className;
-  }, [steps, currentSteps, props.visitedStepList]);
+  const steps = useMemo(
+    () => JSON.parse(stringifiedSteps) as number[],
+    [stringifiedSteps],
+  );
 
-  const handleClick = useCallback(() => {
-    setTimeout(() => onPrefixClick(steps), 0);
-  }, [onPrefixClick, steps]);
+  const highlight = useMemo(
+    () => isSameStep(steps, currentSteps),
+    [steps, currentSteps],
+  );
+
+  const visited = useMemo(
+    () => visitedStepList.some(vss => isSameStep(vss, steps)),
+    [steps, visitedStepList],
+  );
+
+  const shouldHide = showOnlyVisited && !visited && !highlight;
+
+  const className = useMemo(
+    () =>
+      twJoin([
+        "algo-step",
+        highlight && isExit ? "exit-highlight" : highlight ? "highlight" : "",
+        !highlight && highlightVisited && visited ? "visited" : "",
+        shouldHide ? "hidden" : "",
+      ]),
+    [highlight, highlightVisited, visited, showOnlyVisited, isExit, shouldHide],
+  );
+
+  const emitted = useMemo(() => emit(contents), [contents]);
+
+  useEffect(() => {
+    if (scrollOnHighlight && highlight) {
+      ref.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "nearest",
+      }); 
+    }
+
+  }, [highlight]);
 
   return (
     <>
-      <AlgoStepPrefix
-        steps={steps}
-        breakedStepsList={breakedStepsList}
-        onPrefixClick={onPrefixClick}
-      />
-      <AlgoStepCore
-        className={className}
-        contents={contents}
-        handleClick={handleClick}
-      />
+      {!shouldHide && <AlgoStepPrefix stringifiedSteps={stringifiedSteps} />}
+      <li
+        ref={ref}
+      // AlgoStepCore
+      className={twJoin(
+        "hover:bg-neutral-400/10 active:bg-neutral-400/20 transition-all cursor-pointer scroll-m-8",
+        className,
+      )}
+      data-this-step={stringifiedSteps}
+    >
+      {emitted}
+    </li>
       {sublist === null || sublist.name === "ul" ? null : (
         <AlgoStepList
           listNode={sublist}
-          steps={steps}
+          stringifiedSteps={stringifiedSteps}
           isExit={isExit}
           currentSteps={currentSteps}
-          breakedStepsList={breakedStepsList}
-          visitedStepList={props.visitedStepList}
-          onPrefixClick={onPrefixClick}
-          level={level}
+          showOnlyVisited={showOnlyVisited}
+          visitedStepList={visitedStepList}
+          scrollOnHighlight={scrollOnHighlight}
         />
       )}
     </>
-  );
-}
-
-interface CoreProps {
-  className: string;
-  contents: FragmentNode[];
-  handleClick: () => void;
-}
-
-function AlgoStepCore({ className, contents, handleClick }: CoreProps) {
-  return (
-    <li
-      className={twJoin(
-        className,
-        "hover:scale-[1.015625] hover:bg-neutral-100 active:scale-95 transition-all cursor-pointer",
-        "text-black",
-      )}
-      onClick={handleClick}
-    >
-      {Emitter.emit(contents)}
-    </li>
   );
 }

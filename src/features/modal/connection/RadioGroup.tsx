@@ -1,5 +1,5 @@
 import { Radio, RadioGroup } from "@headlessui/react";
-import { CheckCircle2Icon } from "lucide-react";
+import { CheckSquareIcon } from "lucide-react";
 import React, { type SetStateAction, type Dispatch } from "react";
 
 interface Props<T> {
@@ -34,8 +34,8 @@ export default function RadioGroupExample<T>({
             <Radio
               key={getId(o)}
               value={o}
-              className="group hover:scale-[1.03125] active:scale-95 relative flex cursor-pointer rounded-lg bg-black/5 py-4 px-5 text-black transition
-              focus:outline-none data-[focus]:outline-1 data-[focus]:outline-es-900 data-[checked]:bg-gradient-to-r data-[checked]:from-es-300 data-[checked]:to-es-100"
+              className="group hover:scale-[1.03125] active:scale-95 relative flex cursor-pointer rounded-lg bg-neutral-500/10 py-4 px-5 transition
+              focus:outline-hidden data-focus:outline-1 data-focus:outline-es-900 data-checked:bg-linear-to-r data-checked:from-es-500/60 dark:data-checked:from-es-900/60 data-checked:to-es-500/5 dark:data-checked:to-es-900/5"
             >
               <div className="flex w-full items-center justify-between">
                 <div className="flex flex-col text-sm gap-2">
@@ -45,7 +45,7 @@ export default function RadioGroupExample<T>({
                   {getDescription(o)}
                 </div>
                 <div className="min-w-6">
-                  <CheckCircle2Icon className="size-6 text-black/80 opacity-0 transition group-data-[checked]:opacity-100" />
+                  <CheckSquareIcon className="size-6 opacity-0 transition group-data-checked:opacity-100" />
                 </div>
               </div>
             </Radio>

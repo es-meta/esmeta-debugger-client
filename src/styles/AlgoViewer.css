@@ -6,8 +6,13 @@
   font-family: Cambria, Palatino Linotype, Palatino, Liberation Serif, serif;
 }
 
+.algo-container ol { list-style-type: decimal; }
+.algo-container ol ol { list-style-type: lower-alpha; }
+.algo-container ol ol ol { list-style-type: lower-roman; }
+
 .algo-container ol {
   padding-inline-start: 20px;
+  list-style-position: inside;
 }
 
 .algo-parameters {
@@ -32,27 +37,29 @@
 }
 
 .algo-step.highlight {
-  background-color: #E9FBE9;
+  background-color: #00FF0066;
 }
 
 .algo-step.visited {
-  background-color: #dfdfdf;
+  background-color: #80808066;
 }
 
 .algo-step.exit-highlight {
-  background-color: #E9E8FB;
+  background-color: #0000FF66;
 }
 
 .algo-step emu-val {
   font-weight: bold;
 }
 
+/* replaced to use tailwind */
+/*
 .algo-step var {
   color: #2aa198;
-}
+} */
 
 .algo-step var.field {
-  color: #000000;
+  color: currentColor;
   font-style: normal;
 }
 
