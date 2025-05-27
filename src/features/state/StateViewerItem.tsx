@@ -2,6 +2,7 @@ import type { ReactElement, ReactNode } from "react";
 import Card from "@/components/layout/Card";
 import CardHeader from "@/components/layout/CardHeader";
 import { SuspenseBoundary } from "@/components/primitives/suspense-boundary";
+import { LoaderCircleIcon } from "lucide-react";
 
 // State viewer item
 interface StateViewerItemProps {
@@ -23,7 +24,7 @@ export default function StateViewerItem(props: StateViewerItemProps) {
         recoverable
         loading={
           <div className="size-full flex items-center justify-center">
-            Loading... {import.meta.url}
+            <LoaderCircleIcon className="animate-spin" />
           </div>
         }
       >
