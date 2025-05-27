@@ -2,17 +2,7 @@ import { Handle, Position } from "@xyflow/react";
 import { memo } from "react";
 import { NodeData } from "@/types";
 import "@xyflow/react/dist/style.css";
-import { atom, useAtomValue } from "jotai";
-import { atoms } from "@/atoms";
-
-export const currentJSRange = atom<[number, number]>(get => {
-  const contextIdx = get(atoms.state.contextIdxAtom);
-  const callstack = get(atoms.state.callstackAtom);
-
-  const context = callstack?.[contextIdx];
-  const [start, end] = context?.jsRange ?? [-1, -1];
-  return [start, end];
-});
+import { atoms, useAtomValue } from "@/atoms";
 
 export function shouldHighlight(
   [markerStart, markerEnd]: [number, number],
@@ -48,7 +38,7 @@ const CLASSNAME = `w-[256px] h-fit py-4 pl-2 dark:bg-neutral-900
 
 export const nodeTypes = {
   syntactic: memo(({ data }: { data: NodeData }) => {
-    const jsRange = useAtomValue(currentJSRange);
+    const jsRange = useAtomValue(atoms.state.currentJSRangeWithFallbackAtom);
     const { Syntactic } = data.ast;
     return (
       <>
@@ -75,7 +65,7 @@ export const nodeTypes = {
     );
   }),
   lexical: memo(({ data }: { data: NodeData }) => {
-    const jsRange = useAtomValue(currentJSRange);
+    const jsRange = useAtomValue(atoms.state.currentJSRangeWithFallbackAtom);
     const { Lexical } = data.ast;
     return (
       <>

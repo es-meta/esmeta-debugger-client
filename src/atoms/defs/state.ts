@@ -157,3 +157,20 @@ function callstackFromRaw(raw: StepResultAdditional["callstack"]): CallStack {
       }) satisfies Context,
   );
 }
+
+export const currentJSRangeWithFallbackAtom = atom<[number, number]>(get => {
+  const contextIdx = get(contextIdxAtom);
+  const callstack = get(callstackAtom);
+
+  for (let i = contextIdx; i < callstack.length; i++) {
+    const context = callstack?.[i];
+    if (context?.jsRange) {
+      const [start, end] = context.jsRange;
+      if (start !== -1 && end !== -1) {
+        return [start, end];
+      }
+    }
+  }
+
+  return [-1, -1];
+});

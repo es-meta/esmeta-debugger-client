@@ -21,11 +21,7 @@ function JSEditorContent() {
   const [code, forceEdit] = useAtom(atoms.app.jsCodeAtom);
   const readOnly = useAtomValue(isJsReadOnly);
   const reprint = useAtomValue(atoms.state.reprintAtom);
-  const contextIdx = useAtomValue(atoms.state.contextIdxAtom);
-  const callstack = useAtomValue(atoms.state.callstackAtom);
-
-  const context = callstack?.[contextIdx];
-  const [start, end] = context?.jsRange ?? [-1, -1];
+  const [start, end] = useAtomValue(atoms.state.currentJSRangeWithFallbackAtom);
 
   useEffect(() => {
     if (reprint) {

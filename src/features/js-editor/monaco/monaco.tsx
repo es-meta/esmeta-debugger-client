@@ -5,9 +5,10 @@ import Editor, {
   type Monaco,
 } from "@monaco-editor/react";
 import { logger } from "@/utils";
-import { createRangeFromIndices } from "./utils";
+import { createRange } from "./utils";
 import { usePreferredColorScheme } from "@/hooks/use-preferred-color-scheme";
 import { Loading } from "./monaco.load";
+import { Debug } from "@/components/primitives";
 
 type IStandaloneCodeEditor = Parameters<OnMount>[0];
 type IStandaloneEditorConstructionOptions = NonNullable<
@@ -37,28 +38,35 @@ export default function MonacoEditor({
   const editorRef = useRef<IStandaloneCodeEditor | null>(null);
   const decorations = useRef<IEditorDecorationsCollection | null>(null);
 
-  const setDecorations = useCallback((start: number, end: number) => {
-    if (start === -1 || end === -1) {
-      decorations.current?.clear();
-      return;
-    } else if (monacoRef.current && decorations.current) {
-      const range = createRangeFromIndices(code, start, end);
+  const setDecorations = useCallback(
+    (start: number, end: number) => {
+      if (start === -1 || end === -1) {
+        decorations.current?.clear();
+        return;
+      } else if (monacoRef.current && decorations.current) {
+        const range = createRange(code, start, end);
 
-      decorations.current.set([
-        {
-          range: new monacoRef.current.Range(
-            range.startLineNumber,
-            range.startColumn,
-            range.endLineNumber,
-            range.endColumn,
-          ),
-          options: {
-            inlineClassName: "my-highlight",
+        decorations.current.set([
+          {
+            range: new monacoRef.current.Range(
+              range.startLineNumber,
+              range.startColumn,
+              range.endLineNumber,
+              range.endColumn,
+            ),
+            options: {
+              inlineClassName: "my-highlight",
+            },
           },
-        },
-      ]);
-    }
-  }, []);
+        ]);
+      }
+    },
+    [code],
+  );
+
+  useEffect(() => {
+    setDecorations(start, end);
+  }, [setDecorations, start, end]);
 
   const monacoBeforeMount: BeforeMount = useCallback(monaco => {
     monaco.editor.defineTheme("my-vs-dark", {
@@ -126,15 +134,17 @@ export default function MonacoEditor({
   }, [code, start, end]);
 
   return (
-    <Editor
-      loading={<Loading />}
-      language="javascript"
-      value={code}
-      onChange={s => onChange(s || "")}
-      beforeMount={monacoBeforeMount}
-      onMount={monacoDidMount}
-      theme={prefers === "light" ? "light" : "my-vs-dark"}
-      options={options}
-    />
+    <>
+      <Editor
+        loading={<Loading />}
+        language="javascript"
+        value={code}
+        onChange={s => onChange(s || "")}
+        beforeMount={monacoBeforeMount}
+        onMount={monacoDidMount}
+        theme={prefers === "light" ? "light" : "my-vs-dark"}
+        options={options}
+      />
+    </>
   );
 }

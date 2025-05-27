@@ -19,7 +19,11 @@ import { compressASTShallow } from "./utils";
 
 import { astToFlowReingoldTilfordBuchheim } from "./reignold-tilford-buchheim";
 import { atoms } from "@/atoms";
-import { currentJSRange, nodeTypes, shouldHighlight } from "./ast-nodes";
+import {
+  currentJSRangeWithFallbackAtom,
+  nodeTypes,
+  shouldHighlight,
+} from "./ast-nodes";
 import { NodeData } from "@/types";
 import { ChevronsDownUpIcon, ChevronsUpDownIcon } from "lucide-react";
 
@@ -51,9 +55,10 @@ export default function App() {
   const transformedCompressedAst = useAtomValue(
     astCompressedReingoldTilfordBuchheimAtom,
   );
+
   const transformedAst = useAtomValue(astReingoldTilfordBuchheimAtom);
 
-  const jsRange = useAtomValue(currentJSRange);
+  const jsRange = useAtomValue(currentJSRangeWithFallbackAtom);
 
   const [nodes, setNodes, onNodesChange] = useNodesState<FlowNode<NodeData>>(
     [],
