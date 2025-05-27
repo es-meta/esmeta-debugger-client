@@ -20,6 +20,8 @@ export function AlgoHeaderRighSide({ fid }: { fid: number }) {
 
   return (
     <>
+      {specInfo.isClo && <Closure from={irFunc.nameForContext} />}
+      {specInfo.isCont && <Continuation from={irFunc.nameForContext} />}
       <Tooltip>
         <TooltipTrigger
           asChild
@@ -37,5 +39,32 @@ export function AlgoHeaderRighSide({ fid }: { fid: number }) {
         </button>
       )}
     </>
+  );
+}
+
+function Closure({ from }: { from: string }) {
+  return (
+    <Tooltip>
+      <TooltipTrigger className="inline rounded-full bg-yellow-400 text-black font-sans text-xs ml-1 font-600 px-1">
+        Abstract Closure
+      </TooltipTrigger>
+      <TooltipContent>
+        This is an Abstract Closure captured at {from}.
+      </TooltipContent>
+    </Tooltip>
+  );
+}
+
+function Continuation({ from }: { from: string }) {
+  return (
+    <Tooltip>
+      <TooltipTrigger className="inline rounded-full bg-green-700 text-white font-sans text-xs ml-1 font-600 px-1">
+        Continuation
+      </TooltipTrigger>
+      <TooltipContent>
+        This is a continuation captured at {from}, to model ECMA-262's
+        behaviour.
+      </TooltipContent>
+    </Tooltip>
   );
 }

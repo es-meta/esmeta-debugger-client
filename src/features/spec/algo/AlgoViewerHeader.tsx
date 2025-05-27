@@ -13,23 +13,6 @@ export default function AlgoViewerHeader({ fid }: Props) {
   const irFunc = irFuncs[fid];
   const specInfo = irFunc.info;
 
-  const title = (() => {
-    if (specInfo?.sdoInfo && specInfo.isSdo === true) {
-      return specInfo.sdoInfo.method;
-    }
-
-    if (specInfo?.isBuiltIn === true) {
-      return irFunc.name.substring("INTRINSICS.".length);
-    }
-
-    if (specInfo?.methodInfo) {
-      const [, mn] = specInfo.methodInfo;
-      return mn;
-    }
-
-    return irFunc.name;
-  })();
-
   const isSdo = specInfo?.isSdo === true;
 
   const params = (
@@ -47,7 +30,7 @@ export default function AlgoViewerHeader({ fid }: Props) {
   return (
     <>
       <div className="pt-2 px-2 font-es font-600 text-lg">
-        <b>{title}</b>
+        <b>{irFunc.nameForContext}</b>
         <span className="algo-parameters">({params})</span>
         <AlgoHeaderRighSide fid={fid} />
       </div>
@@ -94,42 +77,14 @@ export function AlgoViewerHeaderUsingAlgoName({ name }: { name: string }) {
   const irFunc = Object.values(irFuncs).find(irFunc => irFunc.name === name);
   const specInfo = irFunc?.info;
 
-  const title = (() => {
-    if (specInfo?.sdoInfo && specInfo.isSdo === true) {
-      return specInfo.sdoInfo.method;
-    }
-
-    if (specInfo?.isBuiltIn === true) {
-      return name.substring("INTRINSICS.".length);
-    }
-
-    if (specInfo?.methodInfo) {
-      const [, mn] = specInfo.methodInfo;
-      return mn;
-    }
-
-    return name;
-  })();
-
   const isSdo = specInfo?.isSdo === true;
-
-  // const params = (
-  //   (specInfo?.isSdo === true || specInfo?.isMethod === true)  ?
-  //   algorithm.params.slice(1)
-  //   :
-  //   algorithm.params
-  // )
-  //   .map(({ name, optional }) => {
-  //       return optional ? name + "?" : name;
-  //     })
-  //   .join(", ");
 
   const prodInfo = specInfo?.sdoInfo?.prod?.prodInfo;
 
   return (
     <>
       <div className="pt-2 px-2 font-es font-600 text-lg">
-        <b>{title}</b>
+        <b>{irFunc?.nameForContext ?? name}</b>
         {/* <AlgoHeaderRighSide algorithm={algorithm} irToSpecMapping={irToSpecMapping} /> */}
       </div>
       {isSdo && (

@@ -3,16 +3,16 @@ import React, { useCallback, useMemo } from "react";
 import { parseAlgorithm } from "ecmarkdown";
 import AlgoStepList from "./AlgoStepList";
 import "@/styles/AlgoViewer.css";
-// import { addBreak, rmBreak } from "@/store/reducers/breapoint";
 import AlgoViewerHeader from "./AlgoViewerHeader";
 
 import { useAtomValue, atoms, useSetAtom } from "@/atoms";
 
-type AlgoViewerProps = { context: Context; showOnlyVisited: boolean };
+type AlgoViewerProps = { context: Context; showOnlyVisited: boolean; scrollOnHighlight: boolean };
 
 export default function AlgoView({
   context,
   showOnlyVisited,
+  scrollOnHighlight,
 }: AlgoViewerProps) {
   const irFuncs = useAtomValue(atoms.spec.irFuncsAtom);
   const breakpoints = useAtomValue(atoms.bp.bpAtom);
@@ -22,18 +22,21 @@ export default function AlgoView({
   const irFunc = irFuncs[fid];
   const currentSteps: number[] = useMemo(() => context?.steps ?? [], [context]);
 
-  const handleClick: React.MouseEventHandler<Element> = useCallback(
+  const handleClick: React.MouseEventHandler<HTMLDivElement> = useCallback(
     e => {
       const target = e.target;
       if (!(target instanceof HTMLElement)) return;
-      const stringified = target.dataset.thisStep;
+      const closest = target.closest("[data-this-step]") ?? target;
+      if (!(closest instanceof HTMLElement)) return;
+      const stringified = closest.dataset.thisStep;
       if (stringified === undefined) return;
       const steps = JSON.parse(stringified) as number[];
       onPrefixClick(
         breakpoints,
         addBreak,
         rmBreak,
-        irFunc.fid,
+        irFunc.info?.name ??
+          (() => (console.error("error: required spec info"), ""))(),
         irFunc.name,
         steps,
       );
@@ -67,6 +70,7 @@ export default function AlgoView({
         isExit={context.isExit}
         showOnlyVisited={showOnlyVisited}
         visitedStepList={context.visited}
+        scrollOnHighlight={scrollOnHighlight}
       />
     </div>
   );
@@ -78,15 +82,15 @@ function onPrefixClick(
   breakpoints: Breakpoint[],
   addBreak: (bp: Breakpoint) => void,
   rmBreak: (bp: number | "all") => void,
-  fid: number,
-  algoName: string,
+  algoNameRaw: string,
+  irName: string,
   steps: number[],
 ) {
   // find index of breakpoints
   const bpIdx = breakpoints.findIndex(bp => {
     if (bp.type === BreakpointType.Spec) {
       return (
-        bp.fid === fid &&
+        bp.algoName === algoNameRaw &&
         bp.steps.length === steps.length &&
         bp.steps.every((s, idx) => s === steps[idx])
       );
@@ -96,12 +100,12 @@ function onPrefixClick(
   // remove breakpoints
   if (bpIdx !== -1) rmBreak(bpIdx);
   else {
-    const bpName = `${steps} @ ${algoName}`;
+    const bpName = `${steps} @ ${irName}`;
     addBreak({
       type: BreakpointType.Spec,
-      fid,
       duplicateCheckId: bpName,
-      name: algoName,
+      algoName: algoNameRaw,
+      viewName: irName,
       steps,
       enabled: true,
     });
