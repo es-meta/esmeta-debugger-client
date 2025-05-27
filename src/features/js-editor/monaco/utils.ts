@@ -1,34 +1,55 @@
-export function createRangeFromIndices(text: string, from: number, to: number) {
-  const lines = text.split("\n"); // Split the text into lines
+/**
+ * `from` : inclusive
+ * `to`   : exlcusive
+ */
+export function createRange(text: string, from: number, to: number) {
+  const clipped = text.substring(from, to);
+  const leadingWhitespace = (clipped.match(/^\s*/)?.[0] ?? "").length;
+  const trailingWhitespace = (clipped.match(/\s*$/)?.[0] ?? "").length;
 
-  let currentPos = 0;
-  let startLineNumber = 0,
-    startColumn = 0;
-  let endLineNumber = 0,
-    endColumn = 0;
+  return createRangeFromOpenIndices(
+    text,
+    from + leadingWhitespace,
+    to - trailingWhitespace,
+  );
+}
+
+/**
+ * from : inclusive
+ * to   : exclusive
+ */
+function createRangeFromOpenIndices(text: string, from: number, to: number) {
+  const lines = text.split("\n");
+  let cursor = 0;
+
+  let startLine = 1,
+    startCol = 1;
+  let endLine = 1,
+    endCol = 1; // note: endCol 는 open
 
   for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-    const lineLength = line.length + 1; // +1 for the newline character
+    const lineLen = lines[i].length; // 개행 제외
 
-    if (from >= currentPos && from < currentPos + lineLength) {
-      startLineNumber = i + 1; // Line numbers are 1-based
-      startColumn = from - currentPos + 1; // Columns are 1-based
+    // 시작 위치
+    if (from >= cursor && from <= cursor + lineLen) {
+      startLine = i + 1;
+      startCol = from - cursor + 1; // 1-based
     }
 
-    if (to >= currentPos && to < currentPos + lineLength) {
-      endLineNumber = i + 1;
-      endColumn = to - currentPos + 1;
-      break; // Stop when we find the end position
+    // 끝 위치 (exclusive) → to 가 line 끝이면 lineLen 과 동일
+    if (to >= cursor && to <= cursor + lineLen) {
+      endLine = i + 1;
+      endCol = to - cursor + 1; // Monaco 는 open 그대로
+      break;
     }
 
-    currentPos += lineLength;
+    cursor += lineLen + 1; // 개행(+1)
   }
 
   return {
-    startLineNumber,
-    startColumn,
-    endLineNumber,
-    endColumn,
+    startLineNumber: startLine,
+    startColumn: startCol,
+    endLineNumber: endLine,
+    endColumn: endCol,
   };
 }
