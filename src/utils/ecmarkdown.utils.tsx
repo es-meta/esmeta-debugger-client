@@ -15,6 +15,7 @@ import type {
 // XXX check if this is the correct import
 import { DoubleBracketsNode } from "ecmarkdown/dist/node-types";
 import { SPEC_URL } from "@/constants";
+import { Var } from "./ecmarkdown/var";
 
 class Emitter {
   emit(node: Node[]) {
@@ -58,7 +59,7 @@ class Emitter {
   }
 
   emitUnderscore(node: UnderscoreNode) {
-    return e("var", { key: uuid() }, node.contents);
+    return <Var value={node.contents} />;
   }
 
   emitFields(node: DoubleBracketsNode) {
