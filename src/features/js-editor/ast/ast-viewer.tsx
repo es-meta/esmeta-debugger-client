@@ -20,7 +20,6 @@ import { compressASTShallow } from "./utils";
 import { astToFlowReingoldTilfordBuchheim } from "./reignold-tilford-buchheim";
 import { atoms } from "@/atoms";
 import {
-  currentJSRangeWithFallbackAtom,
   nodeTypes,
   shouldHighlight,
 } from "./ast-nodes";
@@ -58,7 +57,7 @@ export default function App() {
 
   const transformedAst = useAtomValue(astReingoldTilfordBuchheimAtom);
 
-  const jsRange = useAtomValue(currentJSRangeWithFallbackAtom);
+  const jsRange = useAtomValue(atoms.state.currentJSRangeWithFallbackAtom);
 
   const [nodes, setNodes, onNodesChange] = useNodesState<FlowNode<NodeData>>(
     [],
