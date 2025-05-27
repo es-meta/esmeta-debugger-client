@@ -2,20 +2,16 @@ import { FoldVerticalIcon, UnfoldVerticalIcon } from "lucide-react";
 import StateViewerItem from "../StateViewerItem";
 import JSContextItem from "./JSContextItem";
 import { atoms, useAtom } from "@/atoms";
-import { useLastResolvedAtomValue } from "@/hooks/use-atom-value-with-pending";
 import { v4 } from "uuid";
 import { useMemo } from "react";
-import { atom } from "jotai";
+import { atom, useAtomValue } from "jotai";
 
 const globalExpandAtom = atom<boolean | null>(null);
 
 export default function JSCallStackViewer() {
   const [globalExpand, setGlobalExpand] = useAtom(globalExpandAtom);
 
-  const [, executionStack] = useLastResolvedAtomValue(
-    atoms.state.esExecutionStack,
-    [],
-  );
+  const executionStack = useAtomValue(atoms.state.esExecutionStack);
 
   const prefix = useMemo(() => v4(), [executionStack]);
 
