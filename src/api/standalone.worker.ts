@@ -44,14 +44,6 @@ const doGetRequest = async (
       return JSON.parse((await _standaloneDebugger).spec_version());
 
     default:
-      if (endpoint.startsWith("state/context/")) {
-        return JSON.parse(
-          (await _standaloneDebugger).state_context(
-            Number(endpoint.split("/").at(2)),
-          ),
-        );
-      }
-
       throw apiError(endpoint);
   }
 };
@@ -144,16 +136,16 @@ const doWriteRequest = async (
       );
 
     case "exec/esAstStep":
-      return JSON.parse((await _standaloneDebugger).exec_esAstStep());
+      return JSON.parse((await _standaloneDebugger).exec_esAstStep(coerceBoolean(bodyObj)));
 
     case "exec/esStatementStep":
-      return JSON.parse((await _standaloneDebugger).exec_esStatementStep());
+      return JSON.parse((await _standaloneDebugger).exec_esStatementStep(coerceBoolean(bodyObj)));
 
     case "exec/esStepOver":
-      return JSON.parse((await _standaloneDebugger).exec_esStepOver());
+      return JSON.parse((await _standaloneDebugger).exec_esStepOver(coerceBoolean(bodyObj)));
 
     case "exec/esStepOut":
-      return JSON.parse((await _standaloneDebugger).exec_esStepOut());
+      return JSON.parse((await _standaloneDebugger).exec_esStepOut(coerceBoolean(bodyObj)));
 
     case "exec/irStep":
       return JSON.parse(
@@ -172,12 +164,22 @@ const doWriteRequest = async (
 
     case "exec/stepCntPlus":
       return JSON.parse(
-        (await _standaloneDebugger).exec_iterPlus(coerceBoolean(bodyObj)),
+        (await _standaloneDebugger).exec_stepCntPlus(coerceBoolean(bodyObj)),
       );
 
     case "exec/stepCntMinus":
       return JSON.parse(
-        (await _standaloneDebugger).exec_iterMinus(coerceBoolean(bodyObj)),
+        (await _standaloneDebugger).exec_stepCntMinus(coerceBoolean(bodyObj)),
+      );
+    
+    case "exec/instCntPlus":
+      return JSON.parse(
+        (await _standaloneDebugger).exec_instCntPlus(coerceBoolean(bodyObj)),
+      );
+    
+    case "exec/instCntMinus":
+      return JSON.parse(
+        (await _standaloneDebugger).exec_instCntMinus(coerceBoolean(bodyObj)),
       );
 
     default:
@@ -194,14 +196,21 @@ self.onmessage = async (e: MessageEvent<any>) => {
     switch (type) {
       case "META":
         input = data as StandaloneDebuggerInput;
-        // await import("@esmeta/main.mjs").then(async m =>
-        //   resolve(
-        //     await (m as ModuleGeneratedByScalaJS).StandaloneDebugger
-        //       .buildFrom(
-        //       input as StandaloneDebuggerInput,
-        //     ),
-        //   ),
-        // );
+        await import("@esmeta/main.mjs").then(async m =>
+          resolve(
+            await (m as ModuleGeneratedByScalaJS).StandaloneDebugger
+              .buildFrom(
+                input as StandaloneDebuggerInput,
+                (rate: number) => {
+                  self.postMessage({
+                  id: undefined,
+                  type: "RATE",
+                  data: rate,
+                  })
+                }
+            ),
+          ),
+        );
         await _standaloneDebugger;
         break;
       case "GET":

@@ -5,6 +5,7 @@ import type { StandaloneDebuggerInput } from "./standalone.type";
 import { atoms, jotaiStore } from "@/atoms";
 import { createIdGenerator, logger } from "@/utils";
 import { busyAtom } from "@/atoms/defs/app";
+import { rateAtom } from "./atom";
 
 // Create worker instance
 const workerPromise = instantiateWorker(
@@ -108,25 +109,40 @@ export async function instantiateWorker(
           new URL("@resources/dumps/tyModel.decls.json", import.meta.url),
         ),
         fetchText(
-          new URL("@resources/dumps/irToSpecNameMap.json", import.meta.url),
+          new URL("@resources/dumps/funcs.cfg.json", import.meta.url),
         ),
       ]).then(
-        ([funcs, version, grammar, tables, tyModel, irToSpecNameMap]) =>
+        ([funcs, version, grammar, tables, tyModel, funcsCfg]) =>
           ({
             funcs,
             version,
             grammar,
             tables,
             tyModel,
-            irToSpecNameMap,
+            funcsCfg,
           }) satisfies StandaloneDebuggerInput,
       );
 
-      function firstEventHandlerStandalone() {
+      function firstEventHandlerStandalone(e: MessageEvent) {
+        const response = e.data;
+        if (!response.id) return; // ignore rate messages
         w.removeEventListener("message", firstEventHandlerStandalone);
         resolve(w);
       }
 
+
+      function handleRate(e: MessageEvent) {
+        const response = e.data;
+        if (response.id === undefined && response.type === "RATE") {
+          const x = Math.min(response.data, 1);
+          jotaiStore.set(rateAtom, x);
+          if (x >= 1) {
+            w.removeEventListener("message", handleRate);
+          }
+        }
+      }
+
+      w.addEventListener("message", handleRate);
       w.addEventListener("message", firstEventHandlerStandalone);
       w.postMessage({ type: "META", data: input });
 

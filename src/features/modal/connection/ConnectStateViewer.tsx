@@ -14,6 +14,7 @@ import { useAtomValue, ExtractAtomValue } from "jotai";
 import { givenConfigAtom } from "@/atoms/defs/config";
 import { busyStateGetter } from "@/atoms/defs/app";
 import { atoms } from "@/atoms";
+import { rateAtom } from "@/api/atom";
 
 interface SingleProps {
   adaptive?: boolean;
@@ -21,6 +22,29 @@ interface SingleProps {
   icon: ReactElement<SVGElement>;
   text: string;
   content: string;
+}
+
+function SingleBuild({
+  adaptive = false,
+  className,
+  icon,
+  // text,
+  // content,
+}: SingleProps) {
+  const rate = useAtomValue(rateAtom);
+  return (
+    <div
+      className={twJoin(
+        "size-full flex flex-row gap-[0.1em] [&>svg]:size-[1em] [&>svg]:text-lg items-center rounded-lg text-xs uppercase font-700 font-mono",
+        className,
+        adaptive
+          ? "justify-center md:justify-start"
+          : "justify-start md:justify-start",
+      )}
+    >
+      {icon}
+      <span className="grow truncate text-center hidden md:inline">{Math.floor(rate * 100)}%</span>
+    </div>);
 }
 
 function Single({ adaptive = false, className, icon, text }: SingleProps) {
@@ -96,7 +120,7 @@ function ConnectState({
   switch (busyState) {
     case "init":
       return (
-        <Single
+        <SingleBuild
           adaptive={adaptive}
           className="text-yellow-500"
           icon={<CogIcon className="animate-spin" />}

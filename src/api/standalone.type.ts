@@ -32,13 +32,15 @@ export interface StandaloneDebugger {
   exec_irStepOver: (noBreak: boolean) => string;
   exec_irStepOut: (noBreak: boolean) => string;
 
-  exec_esAstStep: () => string;
-  exec_esStatementStep: () => string;
-  exec_esStepOver: () => string;
-  exec_esStepOut: () => string;
+  exec_esAstStep: (noBreak: boolean) => string;
+  exec_esStatementStep: (noBreak: boolean) => string;
+  exec_esStepOver: (noBreak: boolean) => string;
+  exec_esStepOut: (noBreak: boolean) => string;
 
-  exec_iterPlus: (noBreak: boolean) => string;
-  exec_iterMinus: (noBreak: boolean) => string;
+  exec_stepCntPlus: (noBreak: boolean) => string;
+  exec_stepCntMinus: (noBreak: boolean) => string;
+  exec_instCntPlus: (noBreak: boolean) => string;
+  exec_instCntMinus: (noBreak: boolean) => string;
 }
 
 export interface StandaloneDebuggerInput {
@@ -47,11 +49,11 @@ export interface StandaloneDebuggerInput {
   grammar: string;
   tables: string;
   tyModel: string;
-  irToSpecNameMap: string;
+  funcsCfg: string;
 }
 
 export interface ModuleGeneratedByScalaJS {
   StandaloneDebugger: {
-    buildFrom: (input: StandaloneDebuggerInput) => Promise<StandaloneDebugger>;
+    buildFrom: (input: StandaloneDebuggerInput, callback?: (n: number) => void) => Promise<StandaloneDebugger>;
   };
 }
