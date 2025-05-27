@@ -8,7 +8,6 @@ import { logger } from "@/utils";
 import { createRange } from "./utils";
 import { usePreferredColorScheme } from "@/hooks/use-preferred-color-scheme";
 import { Loading } from "./monaco.load";
-import { Debug } from "@/components/primitives";
 
 type IStandaloneCodeEditor = Parameters<OnMount>[0];
 type IStandaloneEditorConstructionOptions = NonNullable<
