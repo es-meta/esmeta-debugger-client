@@ -14,8 +14,8 @@
       ],
       [
         "[[ReferencedName]]",
-        "a String, a Symbol, or a Private Name",
-        "The name of the binding. Always a String if [[Base]] value is an Environment Record."
+        "an ECMAScript language value or a Private Name",
+        "The name of the binding. Always a String if [[Base]] value is an Environment Record. Otherwise, may be an ECMAScript language value other than a String or a Symbol until ToPropertyKey is performed."
       ],
       [
         "[[Strict]]",
@@ -26,26 +26,6 @@
         "[[ThisValue]]",
         "an ECMAScript language value or ~empty~",
         "If not ~empty~, the Reference Record represents a property binding that was expressed using the `super` keyword; it is called a Super Reference Record and its [[Base]] value will never be an Environment Record. In that case, the [[ThisValue]] field holds the *this* value at the time the Reference Record was created."
-      ]
-    ]
-  },
-  "table-iterator-interface-optional-properties" : {
-    "id" : "table-iterator-interface-optional-properties",
-    "header" : [
-      "Property",
-      "Value",
-      "Requirements"
-    ],
-    "rows" : [
-      [
-        "*\"return\"*",
-        "a function that returns an IteratorResult object",
-        "The returned object must conform to the IteratorResult interface. Invoking this method notifies the Iterator object that the caller does not intend to make any more `next` method calls to the Iterator. The returned IteratorResult object will typically have a *\"done\"* property whose value is *true*, and a *\"value\"* property with the value passed as the argument of the `return` method. However, this requirement is not enforced."
-      ],
-      [
-        "*\"throw\"*",
-        "a function that returns an IteratorResult object",
-        "The returned object must conform to the IteratorResult interface. Invoking this method notifies the Iterator object that the caller has detected an error condition. The argument may be used to identify the error condition and typically will be an exception object. A typical response is to `throw` the value passed as the argument. If the method does not `throw`, the returned IteratorResult object will typically have a *\"done\"* property whose value is *true*."
       ]
     ]
   },
@@ -66,21 +46,6 @@
         "[[Initializer]]",
         "an ECMAScript function object or ~empty~",
         "The initializer of the field, if any."
-      ]
-    ]
-  },
-  "table-time-zone-offset-string-code-points" : {
-    "id" : "table-time-zone-offset-string-code-points",
-    "header" : [
-      "Code Point",
-      "Unicode Name",
-      "Abbreviation"
-    ],
-    "rows" : [
-      [
-        "`U+2212`",
-        "MINUS SIGN",
-        "<MINUS>"
       ]
     ]
   },
@@ -377,22 +342,32 @@
   "table-module-graph-cycle-async-fields-6" : {
     "id" : "table-module-graph-cycle-async-fields-6",
     "header" : [
-      "Module",
-      "[[DFSIndex]]",
-      "[[DFSAncestorIndex]]",
-      "[[Status]]",
-      "[[AsyncEvaluation]]",
-      "[[AsyncParentModules]]",
-      "[[PendingAsyncDependencies]]"
+      "Field Module",
+      "_A_"
     ],
     "rows" : [
       [
-        "_A_",
-        "0",
-        "0",
-        "~evaluated~",
-        "*true*",
-        "« »",
+        "[[DFSIndex]]",
+        "0"
+      ],
+      [
+        "[[DFSAncestorIndex]]",
+        "0"
+      ],
+      [
+        "[[Status]]",
+        "~evaluated~"
+      ],
+      [
+        "[[AsyncEvaluationOrder]]",
+        "4"
+      ],
+      [
+        "[[AsyncParentModules]]",
+        "« »"
+      ],
+      [
+        "[[PendingAsyncDependencies]]",
         "0"
       ]
     ]
@@ -405,7 +380,7 @@
     ],
     "rows" : [
       [
-        "LoadRequestedModules( [ _hostDefined_ ] )",
+        "LoadRequestedModules([_hostDefined_])",
         "Prepares the module for linking by recursively loading all its dependencies, and returns a promise."
       ],
       [
@@ -608,7 +583,7 @@
       [
         "Number::sameValueZero",
         "`[x].includes(y)`",
-        "Array, Map, and Set methods, via , to test value equality, ignoring the difference between *+0*𝔽 and *-0*𝔽",
+        "via , to test value equality, ignoring the difference between *+0*𝔽 and *-0*𝔽, as in Array, Map, and Set methods",
         "Boolean"
       ],
       [
@@ -659,9 +634,9 @@
     ],
     "rows" : [
       [
-        "`@@iterator`",
-        "a function that returns an Iterator object",
-        "The returned object must conform to the Iterator interface."
+        "`%Symbol.iterator%`",
+        "a function that returns an iterator object",
+        "The returned object must conform to the iterator interface."
       ]
     ]
   },
@@ -715,58 +690,60 @@
   "table-module-graph-cycle-async-fields-1" : {
     "id" : "table-module-graph-cycle-async-fields-1",
     "header" : [
-      "Module",
-      "[[DFSIndex]]",
-      "[[DFSAncestorIndex]]",
-      "[[Status]]",
-      "[[AsyncEvaluation]]",
-      "[[AsyncParentModules]]",
-      "[[PendingAsyncDependencies]]"
+      "Field Module",
+      "_A_",
+      "_B_",
+      "_C_",
+      "_D_",
+      "_E_"
     ],
     "rows" : [
       [
-        "_A_",
+        "[[DFSIndex]]",
         "0",
-        "0",
-        "~evaluating-async~",
-        "*true*",
-        "« »",
-        "2 (_B_ and _C_)"
-      ],
-      [
-        "_B_",
         "1",
-        "0",
-        "~evaluating-async~",
-        "*true*",
-        "« _A_ »",
-        "1 (_D_)"
-      ],
-      [
-        "_C_",
+        "3",
         "2",
-        "0",
-        "~evaluating-async~",
-        "*true*",
-        "« _A_ »",
-        "2 (_D_ and _E_)"
+        "4"
       ],
       [
-        "_D_",
+        "[[DFSAncestorIndex]]",
+        "0",
+        "0",
+        "0",
+        "0",
+        "4"
+      ],
+      [
+        "[[Status]]",
+        "~evaluating-async~",
+        "~evaluating-async~",
+        "~evaluating-async~",
+        "~evaluating-async~",
+        "~evaluating-async~"
+      ],
+      [
+        "[[AsyncEvaluationOrder]]",
+        "4",
+        "1",
         "3",
         "0",
-        "~evaluating-async~",
-        "*true*",
-        "« _B_, _C_ »",
-        "0"
+        "2*"
       ],
       [
-        "_E_",
-        "4",
-        "4",
-        "~evaluating-async~",
-        "*true*",
-        "« _C_ »",
+        "[[AsyncParentModules]]",
+        "« »",
+        "« _A_ »",
+        "« _A_ »",
+        "« _B_, _C_ »",
+        "« _C_ »"
+      ],
+      [
+        "[[PendingAsyncDependencies]]",
+        "2 (_B_ and _C_)",
+        "1 (_D_)",
+        "2 (_D_ and _E_)",
+        "0",
         "0"
       ]
     ]
@@ -845,6 +822,13 @@
         "64-bit unsigned integer"
       ],
       [
+        "Float16Array %Float16Array%",
+        "~float16~",
+        "2",
+        "",
+        "16-bit IEEE floating point"
+      ],
+      [
         "Float32Array %Float32Array%",
         "~float32~",
         "4",
@@ -901,7 +885,7 @@
       ],
       [
         "HasSuperBinding()",
-        "Determine if an Environment Record establishes a `super` method binding. Return *true* if it does and *false* if it does not."
+        "Determine if an Environment Record establishes a `super` method binding. Return *true* if it does and *false* if it does not. If it returns *true* it implies that the Environment Record is a Function Environment Record, although the reverse implication does not hold."
       ],
       [
         "WithBaseObject()",
@@ -1064,7 +1048,7 @@
       [
         "*\"next\"*",
         "a function that returns a promise for an IteratorResult object",
-        "The returned promise, when fulfilled, must fulfill with an object that conforms to the IteratorResult interface. If a previous call to the `next` method of an AsyncIterator has returned a promise for an IteratorResult object whose *\"done\"* property is *true*, then all subsequent calls to the `next` method of that object should also return a promise for an IteratorResult object whose *\"done\"* property is *true*. However, this requirement is not enforced. Additionally, the IteratorResult object that serves as a fulfillment value should have a *\"value\"* property whose value is not a promise (or \"thenable\"). However, this requirement is also not enforced."
+        "The returned promise, when fulfilled, must fulfill with an object that conforms to the IteratorResult interface. If a previous call to the `next` method of an async iterator has returned a promise for an IteratorResult object whose *\"done\"* property is *true*, then all subsequent calls to the `next` method of that object should also return a promise for an IteratorResult object whose *\"done\"* property is *true*. However, this requirement is not enforced. Additionally, the IteratorResult object that serves as a fulfillment value should have a *\"value\"* property whose value is not a promise (or \"thenable\"). However, this requirement is also not enforced."
       ]
     ]
   },
@@ -1098,7 +1082,7 @@
     "rows" : [
       [
         "[[AsyncGeneratorState]]",
-        "*undefined*, ~suspended-start~, ~suspended-yield~, ~executing~, ~awaiting-return~, or ~completed~",
+        "~suspended-start~, ~suspended-yield~, ~executing~, ~draining-queue~, or ~completed~",
         "The current execution state of the async generator."
       ],
       [
@@ -1109,7 +1093,7 @@
       [
         "[[AsyncGeneratorQueue]]",
         "a List of AsyncGeneratorRequest Records",
-        "Records which represent requests to resume the async generator. Except during state transitions, it is non-empty if and only if [[AsyncGeneratorState]] is either ~executing~ or ~awaiting-return~."
+        "Records which represent requests to resume the async generator. Except during state transitions, it is non-empty if and only if [[AsyncGeneratorState]] is either ~executing~ or ~draining-queue~."
       ],
       [
         "[[GeneratorBrand]]",
@@ -1165,6 +1149,11 @@
         "[[KeptAlive]]",
         "a List of either Objects or Symbols",
         "Initially a new empty List, representing the list of objects and/or symbols to be kept alive until the end of the current Job"
+      ],
+      [
+        "[[ModuleAsyncEvaluationCount]]",
+        "an integer",
+        "Initially 0, used to assign unique incrementing values to the [[AsyncEvaluationOrder]] field of modules that are asynchronous or have asynchronous dependencies."
       ]
     ]
   },
@@ -1178,6 +1167,51 @@
       [
         "Generator",
         "The Generator that this execution context is evaluating."
+      ]
+    ]
+  },
+  "table-iterator-interface-optional-properties" : {
+    "id" : "table-iterator-interface-optional-properties",
+    "header" : [
+      "Property",
+      "Value",
+      "Requirements"
+    ],
+    "rows" : [
+      [
+        "*\"return\"*",
+        "a function that returns an IteratorResult object",
+        "The returned object must conform to the IteratorResult interface. Invoking this method notifies the iterator object that the caller does not intend to make any more `next` method calls to the iterator. The returned IteratorResult object will typically have a *\"done\"* property whose value is *true*, and a *\"value\"* property with the value passed as the argument of the `return` method. However, this requirement is not enforced."
+      ],
+      [
+        "*\"throw\"*",
+        "a function that returns an IteratorResult object",
+        "The returned object must conform to the IteratorResult interface. Invoking this method notifies the iterator object that the caller has detected an error condition. The argument may be used to identify the error condition and typically will be an exception object. A typical response is to `throw` the value passed as the argument. If the method does not `throw`, the returned IteratorResult object will typically have a *\"done\"* property whose value is *true*."
+      ]
+    ]
+  },
+  "table-loadedmodulerequest-fields" : {
+    "id" : "table-loadedmodulerequest-fields",
+    "header" : [
+      "Field Name",
+      "Value Type",
+      "Meaning"
+    ],
+    "rows" : [
+      [
+        "[[Specifier]]",
+        "a String",
+        "The module specifier"
+      ],
+      [
+        "[[Attributes]]",
+        "a List of ImportAttribute Records",
+        "The import attributes"
+      ],
+      [
+        "[[Module]]",
+        "a Module Record",
+        "The loaded module corresponding to this module request"
       ]
     ]
   },
@@ -1203,11 +1237,6 @@
         "[[DeclarativeRecord]]",
         "a Declarative Environment Record",
         "Contains bindings for all declarations in global code for the associated realm code except for |FunctionDeclaration|, |GeneratorDeclaration|, |AsyncFunctionDeclaration|, |AsyncGeneratorDeclaration|, and |VariableDeclaration| bindings."
-      ],
-      [
-        "[[VarNames]]",
-        "a List of Strings",
-        "The string names bound by |FunctionDeclaration|, |GeneratorDeclaration|, |AsyncFunctionDeclaration|, |AsyncGeneratorDeclaration|, and |VariableDeclaration| declarations in global code for the associated realm."
       ]
     ]
   },
@@ -1236,7 +1265,7 @@
       ],
       [
         "[[NewTarget]]",
-        "an Object or *undefined*",
+        "a constructor or *undefined*",
         "If this Environment Record was created by the [[Construct]] internal method, [[NewTarget]] is the value of the [[Construct]] _newTarget_ parameter. Otherwise, its value is *undefined*."
       ]
     ]
@@ -1252,7 +1281,7 @@
       [
         "[[Iterator]]",
         "an Object",
-        "An object that conforms to the Iterator or AsyncIterator interface."
+        "An object that conforms to the iterator interface or the async iterator interface."
       ],
       [
         "[[NextMethod]]",
@@ -1262,7 +1291,7 @@
       [
         "[[Done]]",
         "a Boolean",
-        "Whether the iterator has been closed."
+        "Whether the iterator has completed or been closed."
       ]
     ]
   },
@@ -1381,31 +1410,39 @@
   "table-module-graph-cycle-async-fields-2" : {
     "id" : "table-module-graph-cycle-async-fields-2",
     "header" : [
-      "Module",
-      "[[DFSIndex]]",
-      "[[DFSAncestorIndex]]",
-      "[[Status]]",
-      "[[AsyncEvaluation]]",
-      "[[AsyncParentModules]]",
-      "[[PendingAsyncDependencies]]"
+      "Field Module",
+      "_C_",
+      "_E_"
     ],
     "rows" : [
       [
-        "_C_",
-        "2",
-        "0",
-        "~evaluating-async~",
-        "*true*",
-        "« _A_ »",
-        "1 (_D_)"
+        "[[DFSIndex]]",
+        "3",
+        "4"
       ],
       [
-        "_E_",
-        "4",
-        "4",
-        "~evaluated~",
-        "*true*",
-        "« _C_ »",
+        "[[DFSAncestorIndex]]",
+        "0",
+        "4"
+      ],
+      [
+        "[[Status]]",
+        "~evaluating-async~",
+        "~evaluated~"
+      ],
+      [
+        "[[AsyncEvaluationOrder]]",
+        "3",
+        "2"
+      ],
+      [
+        "[[AsyncParentModules]]",
+        "« _A_ »",
+        "« _C_ »"
+      ],
+      [
+        "[[PendingAsyncDependencies]]",
+        "1 (_D_)",
         "0"
       ]
     ]
@@ -1413,31 +1450,39 @@
   "table-module-graph-cycle-async-fields-5" : {
     "id" : "table-module-graph-cycle-async-fields-5",
     "header" : [
-      "Module",
-      "[[DFSIndex]]",
-      "[[DFSAncestorIndex]]",
-      "[[Status]]",
-      "[[AsyncEvaluation]]",
-      "[[AsyncParentModules]]",
-      "[[PendingAsyncDependencies]]"
+      "Field Module",
+      "_A_",
+      "_B_"
     ],
     "rows" : [
       [
-        "_A_",
+        "[[DFSIndex]]",
         "0",
+        "1"
+      ],
+      [
+        "[[DFSAncestorIndex]]",
         "0",
-        "~evaluating-async~",
-        "*true*",
-        "« »",
         "0"
       ],
       [
-        "_B_",
-        "1",
+        "[[Status]]",
+        "~evaluating-async~",
+        "~evaluated~"
+      ],
+      [
+        "[[AsyncEvaluationOrder]]",
+        "4",
+        "1"
+      ],
+      [
+        "[[AsyncParentModules]]",
+        "« »",
+        "« _A_ »"
+      ],
+      [
+        "[[PendingAsyncDependencies]]",
         "0",
-        "~evaluated~",
-        "*true*",
-        "« _A_ »",
         "0"
       ]
     ]
@@ -1502,7 +1547,7 @@
       ],
       [
         "[[GlobalObject]]",
-        "an Object or *undefined*",
+        "an Object",
         "The global object for this realm"
       ],
       [
@@ -1517,8 +1562,8 @@
       ],
       [
         "[[LoadedModules]]",
-        "a List of Records with fields [[Specifier]] (a String) and [[Module]] (a Module Record)",
-        "A map from the specifier strings imported by this realm to the resolved Module Record. The list does not contain two different Records with the same [[Specifier]]. As mentioned in HostLoadImportedModule (), [[LoadedModules]] in Realm Records is only used when running an `import()` expression in a context where there is no active script or module."
+        "a List of LoadedModuleRequest Records",
+        "A map from the specifier strings imported by this realm to the resolved Module Record. The list does not contain two different Records _r1_ and _r2_ such that ModuleRequestsEqual(_r1_, _r2_) is *true*. As mentioned in HostLoadImportedModule (), [[LoadedModules]] in Realm Records is only used when running an `import()` expression in a context where there is no active script or module."
       ],
       [
         "[[HostDefined]]",
@@ -1573,12 +1618,12 @@
       [
         "%ArrayIteratorPrototype%",
         "",
-        "The prototype of Array iterator objects ()"
+        "The prototype of Array Iterator objects ()"
       ],
       [
         "%AsyncFromSyncIteratorPrototype%",
         "",
-        "The prototype of async-from-sync iterator objects ()"
+        "The prototype of Async-from-Sync Iterator objects ()"
       ],
       [
         "%AsyncFunction%",
@@ -1588,7 +1633,12 @@
       [
         "%AsyncGeneratorFunction%",
         "",
-        "The constructor of async iterator objects ()"
+        "The constructor of async generator function objects ()"
+      ],
+      [
+        "%AsyncGeneratorPrototype%",
+        "",
+        "The prototype of async generator objects ()"
       ],
       [
         "%AsyncIteratorPrototype%",
@@ -1671,6 +1721,11 @@
         "The FinalizationRegistry constructor ()"
       ],
       [
+        "%Float16Array%",
+        "`Float16Array`",
+        "The Float16Array constructor ()"
+      ],
+      [
         "%Float32Array%",
         "`Float32Array`",
         "The Float32Array constructor ()"
@@ -1683,7 +1738,7 @@
       [
         "%ForInIteratorPrototype%",
         "",
-        "The prototype of For-In iterator objects ()"
+        "The prototype of For-In Iterator objects ()"
       ],
       [
         "%Function%",
@@ -1693,7 +1748,12 @@
       [
         "%GeneratorFunction%",
         "",
-        "The constructor of Generators ()"
+        "The constructor of generator function objects ()"
+      ],
+      [
+        "%GeneratorPrototype%",
+        "",
+        "The prototype of generator objects ()"
       ],
       [
         "%Int8Array%",
@@ -1721,9 +1781,14 @@
         "The `isNaN` function ()"
       ],
       [
-        "%IteratorPrototype%",
+        "%Iterator%",
+        "`Iterator`",
+        "The `Iterator` constructor ()"
+      ],
+      [
+        "%IteratorHelperPrototype%",
         "",
-        "An object that all standard built-in iterator objects indirectly inherit from"
+        "The prototype of Iterator Helper objects ()"
       ],
       [
         "%JSON%",
@@ -1738,7 +1803,7 @@
       [
         "%MapIteratorPrototype%",
         "",
-        "The prototype of Map iterator objects ()"
+        "The prototype of Map Iterator objects ()"
       ],
       [
         "%Math%",
@@ -1808,7 +1873,7 @@
       [
         "%SetIteratorPrototype%",
         "",
-        "The prototype of Set iterator objects ()"
+        "The prototype of Set Iterator objects ()"
       ],
       [
         "%SharedArrayBuffer%",
@@ -1823,7 +1888,7 @@
       [
         "%StringIteratorPrototype%",
         "",
-        "The prototype of String iterator objects ()"
+        "The prototype of String Iterator objects ()"
       ],
       [
         "%Symbol%",
@@ -1889,6 +1954,11 @@
         "%WeakSet%",
         "`WeakSet`",
         "The WeakSet constructor ()"
+      ],
+      [
+        "%WrapForValidIteratorPrototype%",
+        "",
+        "The prototype of wrapped iterator objects returned by Iterator.from ()"
       ]
     ]
   },
@@ -1909,6 +1979,26 @@
         "%unescape%",
         "`unescape`",
         "The `unescape` function ()"
+      ]
+    ]
+  },
+  "table-importattribute-fields" : {
+    "id" : "table-importattribute-fields",
+    "header" : [
+      "Field Name",
+      "Value Type",
+      "Meaning"
+    ],
+    "rows" : [
+      [
+        "[[Key]]",
+        "a String",
+        "The attribute key"
+      ],
+      [
+        "[[Value]]",
+        "a String",
+        "The attribute value"
       ]
     ]
   },
@@ -1963,34 +2053,6 @@
       [
         "GetThisBinding()",
         "Return the value of this Environment Record's `this` binding."
-      ],
-      [
-        "HasVarDeclaration (N)",
-        "Determines if the argument identifier has a binding in this Environment Record that was created using a |VariableDeclaration|, |FunctionDeclaration|, |GeneratorDeclaration|, |AsyncFunctionDeclaration|, or |AsyncGeneratorDeclaration|."
-      ],
-      [
-        "HasLexicalDeclaration (N)",
-        "Determines if the argument identifier has a binding in this Environment Record that was created using a lexical declaration such as a |LexicalDeclaration| or a |ClassDeclaration|."
-      ],
-      [
-        "HasRestrictedGlobalProperty (N)",
-        "Determines if the argument is the name of a global object property that may not be shadowed by a global lexical binding."
-      ],
-      [
-        "CanDeclareGlobalVar (N)",
-        "Determines if a corresponding CreateGlobalVarBinding call would succeed if called for the same argument _N_."
-      ],
-      [
-        "CanDeclareGlobalFunction (N)",
-        "Determines if a corresponding CreateGlobalFunctionBinding call would succeed if called for the same argument _N_."
-      ],
-      [
-        "CreateGlobalVarBinding(N, D)",
-        "Used to create and initialize to *undefined* a global `var` binding in the [[ObjectRecord]] component of a Global Environment Record. The binding will be a mutable binding. The corresponding global object property will have attribute values appropriate for a `var`. The String value _N_ is the bound name. If _D_ is *true*, the binding may be deleted. Logically equivalent to CreateMutableBinding followed by a SetMutableBinding but it allows var declarations to receive special treatment."
-      ],
-      [
-        "CreateGlobalFunctionBinding(N, V, D)",
-        "Create and initialize a global `function` binding in the [[ObjectRecord]] component of a Global Environment Record. The binding will be a mutable binding. The corresponding global object property will have attribute values appropriate for a `function`. The String value _N_ is the bound name. _V_ is the initialization value. If the Boolean argument _D_ is *true*, the binding may be deleted. Logically equivalent to CreateMutableBinding followed by a SetMutableBinding but it allows function declarations to receive special treatment."
       ]
     ]
   },
@@ -2010,41 +2072,51 @@
       [
         "[[Exports]]",
         "a List of Strings",
-        "A List whose elements are the String values of the exported names exposed as own properties of this object. The list is ordered as if an Array of those String values had been sorted using %Array.prototype.sort% using *undefined* as _comparefn_."
+        "A List whose elements are the String values of the exported names exposed as own properties of this object. The list is sorted according to lexicographic code unit order."
       ]
     ]
   },
   "table-module-graph-cycle-async-fields-9" : {
     "id" : "table-module-graph-cycle-async-fields-9",
     "header" : [
-      "Module",
-      "[[DFSIndex]]",
-      "[[DFSAncestorIndex]]",
-      "[[Status]]",
-      "[[AsyncEvaluation]]",
-      "[[AsyncParentModules]]",
-      "[[PendingAsyncDependencies]]",
-      "[[EvaluationError]]"
+      "Field Module",
+      "_A_",
+      "_B_"
     ],
     "rows" : [
       [
-        "_A_",
+        "[[DFSIndex]]",
         "0",
-        "0",
-        "~evaluated~",
-        "*true*",
-        "« »",
-        "0",
-        "_C_'s Evaluation Error"
+        "1"
       ],
       [
-        "_B_",
-        "1",
+        "[[DFSAncestorIndex]]",
         "0",
+        "0"
+      ],
+      [
+        "[[Status]]",
         "~evaluated~",
-        "*true*",
-        "« _A_ »",
+        "~evaluated~"
+      ],
+      [
+        "[[AsyncEvaluationOrder]]",
+        "4",
+        "1"
+      ],
+      [
+        "[[AsyncParentModules]]",
+        "« »",
+        "« _A_ »"
+      ],
+      [
+        "[[PendingAsyncDependencies]]",
         "0",
+        "0"
+      ],
+      [
+        "[[EvaluationError]]",
+        "_C_'s Evaluation Error",
         "~empty~"
       ]
     ]
@@ -2057,16 +2129,8 @@
     ],
     "rows" : [
       [
-        "BindThisValue(V)",
-        "Set the [[ThisValue]] and record that it has been initialized."
-      ],
-      [
         "GetThisBinding()",
         "Return the value of this Environment Record's `this` binding. Throws a *ReferenceError* if the `this` binding has not been initialized."
-      ],
-      [
-        "GetSuperBase()",
-        "Return the object that is the base for `super` property accesses bound in this Environment Record. The value *undefined* indicates that such accesses will produce runtime errors."
       ]
     ]
   },
@@ -2077,10 +2141,6 @@
       "Purpose"
     ],
     "rows" : [
-      [
-        "CreateImportBinding(N, M, N2)",
-        "Create an immutable indirect binding in a Module Environment Record. The String value _N_ is the text of the bound name. _M_ is a Module Record, and _N2_ is a binding that exists in _M_'s Module Environment Record."
-      ],
       [
         "GetThisBinding()",
         "Return the value of this Environment Record's `this` binding."
@@ -2137,8 +2197,8 @@
     "rows" : [
       [
         "[[ModuleRequest]]",
-        "a String",
-        "String value of the |ModuleSpecifier| of the |ImportDeclaration|."
+        "a ModuleRequest Record",
+        "ModuleRequest Record representing the |ModuleSpecifier| and import attributes of the |ImportDeclaration|."
       ],
       [
         "[[ImportName]]",
@@ -2187,8 +2247,8 @@
     "rows" : [
       [
         "[[Realm]]",
-        "a Realm Record or *undefined*",
-        "The realm within which this script was created. *undefined* if not yet assigned."
+        "a Realm Record",
+        "The realm within which this script was created."
       ],
       [
         "[[ECMAScriptCode]]",
@@ -2197,8 +2257,8 @@
       ],
       [
         "[[LoadedModules]]",
-        "a List of Records with fields [[Specifier]] (a String) and [[Module]] (a Module Record)",
-        "A map from the specifier strings imported by this script to the resolved Module Record. The list does not contain two different Records with the same [[Specifier]]."
+        "a List of LoadedModuleRequest Records",
+        "A map from the specifier strings imported by this script to the resolved Module Record. The list does not contain two different Records _r1_ and _r2_ such that ModuleRequestsEqual(_r1_, _r2_) is *true*."
       ],
       [
         "[[HostDefined]]",
@@ -2416,6 +2476,26 @@
       ]
     ]
   },
+  "table-modulerequest-fields" : {
+    "id" : "table-modulerequest-fields",
+    "header" : [
+      "Field Name",
+      "Value Type",
+      "Meaning"
+    ],
+    "rows" : [
+      [
+        "[[Specifier]]",
+        "a String",
+        "The module specifier"
+      ],
+      [
+        "[[Attributes]]",
+        "a List of ImportAttribute Records",
+        "The import attributes"
+      ]
+    ]
+  },
   "table-string-single-character-escape-sequences" : {
     "id" : "table-string-single-character-escape-sequences",
     "header" : [
@@ -2490,9 +2570,9 @@
     ],
     "rows" : [
       [
-        "`@@asyncIterator`",
-        "a function that returns an AsyncIterator object",
-        "The returned object must conform to the AsyncIterator interface."
+        "`%Symbol.asyncIterator%`",
+        "a function that returns an async iterator object",
+        "The returned object must conform to the async iterator interface."
       ]
     ]
   },
@@ -2519,31 +2599,39 @@
   "table-module-graph-cycle-async-fields-4" : {
     "id" : "table-module-graph-cycle-async-fields-4",
     "header" : [
-      "Module",
-      "[[DFSIndex]]",
-      "[[DFSAncestorIndex]]",
-      "[[Status]]",
-      "[[AsyncEvaluation]]",
-      "[[AsyncParentModules]]",
-      "[[PendingAsyncDependencies]]"
+      "Field Module",
+      "_A_",
+      "_C_"
     ],
     "rows" : [
       [
-        "_A_",
+        "[[DFSIndex]]",
         "0",
-        "0",
-        "~evaluating-async~",
-        "*true*",
-        "« »",
-        "1 (_B_)"
+        "3"
       ],
       [
-        "_C_",
-        "2",
+        "[[DFSAncestorIndex]]",
         "0",
-        "~evaluated~",
-        "*true*",
-        "« _A_ »",
+        "0"
+      ],
+      [
+        "[[Status]]",
+        "~evaluating-async~",
+        "~evaluated~"
+      ],
+      [
+        "[[AsyncEvaluationOrder]]",
+        "4",
+        "3"
+      ],
+      [
+        "[[AsyncParentModules]]",
+        "« »",
+        "« _A_ »"
+      ],
+      [
+        "[[PendingAsyncDependencies]]",
+        "1 (_B_)",
         "0"
       ]
     ]
@@ -2563,8 +2651,8 @@
       ],
       [
         "[[PromiseResult]]",
-        "an ECMAScript language value",
-        "The value with which the promise has been fulfilled or rejected, if any. Only meaningful if [[PromiseState]] is not ~pending~."
+        "an ECMAScript language value or ~empty~",
+        "The value with which the promise has been fulfilled or rejected, if any. ~empty~ if and only if the [[PromiseState]] is ~pending~."
       ],
       [
         "[[PromiseFulfillReactions]]",
@@ -2592,67 +2680,67 @@
     ],
     "rows" : [
       [
-        "@@asyncIterator",
+        "%Symbol.asyncIterator%",
         "*\"Symbol.asyncIterator\"*",
-        "A method that returns the default AsyncIterator for an object. Called by the semantics of the `for`-`await`-`of` statement."
+        "A method that returns the default async iterator for an object. Called by the semantics of the `for`-`await`-`of` statement."
       ],
       [
-        "@@hasInstance",
+        "%Symbol.hasInstance%",
         "*\"Symbol.hasInstance\"*",
         "A method that determines if a constructor object recognizes an object as one of the constructor's instances. Called by the semantics of the `instanceof` operator."
       ],
       [
-        "@@isConcatSpreadable",
+        "%Symbol.isConcatSpreadable%",
         "*\"Symbol.isConcatSpreadable\"*",
         "A Boolean valued property that if true indicates that an object should be flattened to its array elements by `Array.prototype.concat`."
       ],
       [
-        "@@iterator",
+        "%Symbol.iterator%",
         "*\"Symbol.iterator\"*",
-        "A method that returns the default Iterator for an object. Called by the semantics of the for-of statement."
+        "A method that returns the default iterator for an object. Called by the semantics of the for-of statement."
       ],
       [
-        "@@match",
+        "%Symbol.match%",
         "*\"Symbol.match\"*",
         "A regular expression method that matches the regular expression against a string. Called by the `String.prototype.match` method."
       ],
       [
-        "@@matchAll",
+        "%Symbol.matchAll%",
         "*\"Symbol.matchAll\"*",
-        "A regular expression method that returns an iterator, that yields matches of the regular expression against a string. Called by the `String.prototype.matchAll` method."
+        "A regular expression method that returns an iterator that yields matches of the regular expression against a string. Called by the `String.prototype.matchAll` method."
       ],
       [
-        "@@replace",
+        "%Symbol.replace%",
         "*\"Symbol.replace\"*",
         "A regular expression method that replaces matched substrings of a string. Called by the `String.prototype.replace` method."
       ],
       [
-        "@@search",
+        "%Symbol.search%",
         "*\"Symbol.search\"*",
         "A regular expression method that returns the index within a string that matches the regular expression. Called by the `String.prototype.search` method."
       ],
       [
-        "@@species",
+        "%Symbol.species%",
         "*\"Symbol.species\"*",
         "A function valued property that is the constructor function that is used to create derived objects."
       ],
       [
-        "@@split",
+        "%Symbol.split%",
         "*\"Symbol.split\"*",
         "A regular expression method that splits a string at the indices that match the regular expression. Called by the `String.prototype.split` method."
       ],
       [
-        "@@toPrimitive",
+        "%Symbol.toPrimitive%",
         "*\"Symbol.toPrimitive\"*",
         "A method that converts an object to a corresponding primitive value. Called by the ToPrimitive abstract operation."
       ],
       [
-        "@@toStringTag",
+        "%Symbol.toStringTag%",
         "*\"Symbol.toStringTag\"*",
         "A String valued property that is used in the creation of the default string description of an object. Accessed by the built-in method `Object.prototype.toString`."
       ],
       [
-        "@@unscopables",
+        "%Symbol.unscopables%",
         "*\"Symbol.unscopables\"*",
         "An object valued property whose own and inherited property names are property names that are excluded from the `with` environment bindings of the associated object."
       ]
@@ -2661,41 +2749,76 @@
   "table-module-graph-cycle-async-fields-3" : {
     "id" : "table-module-graph-cycle-async-fields-3",
     "header" : [
-      "Module",
-      "[[DFSIndex]]",
-      "[[DFSAncestorIndex]]",
-      "[[Status]]",
-      "[[AsyncEvaluation]]",
-      "[[AsyncParentModules]]",
-      "[[PendingAsyncDependencies]]"
+      "Field Module",
+      "_B_",
+      "_C_",
+      "_D_"
     ],
     "rows" : [
       [
-        "_B_",
+        "[[DFSIndex]]",
         "1",
-        "0",
-        "~evaluating-async~",
-        "*true*",
-        "« _A_ »",
-        "0"
-      ],
-      [
-        "_C_",
-        "2",
-        "0",
-        "~evaluating-async~",
-        "*true*",
-        "« _A_ »",
-        "0"
-      ],
-      [
-        "_D_",
         "3",
+        "2"
+      ],
+      [
+        "[[DFSAncestorIndex]]",
         "0",
-        "~evaluated~",
-        "*true*",
-        "« _B_, _C_ »",
+        "0",
         "0"
+      ],
+      [
+        "[[Status]]",
+        "~evaluating-async~",
+        "~evaluating-async~",
+        "~evaluated~"
+      ],
+      [
+        "[[AsyncEvaluationOrder]]",
+        "1",
+        "3",
+        "0"
+      ],
+      [
+        "[[AsyncParentModules]]",
+        "« _A_ »",
+        "« _A_ »",
+        "« _B_, _C_ »"
+      ],
+      [
+        "[[PendingAsyncDependencies]]",
+        "0",
+        "0",
+        "0"
+      ]
+    ]
+  },
+  "table-regexp-string-iterator-instance-slots" : {
+    "id" : "table-regexp-string-iterator-instance-slots",
+    "header" : [
+      "Internal Slot",
+      "Description"
+    ],
+    "rows" : [
+      [
+        "[[IteratingRegExp]]",
+        "The regular expression used for iteration. IsRegExp([[IteratingRegExp]]) is initially *true*."
+      ],
+      [
+        "[[IteratedString]]",
+        "The String value being iterated upon."
+      ],
+      [
+        "[[Global]]",
+        "A Boolean value to indicate whether the [[IteratingRegExp]] is global or not."
+      ],
+      [
+        "[[Unicode]]",
+        "A Boolean value to indicate whether the [[IteratingRegExp]] is in Unicode mode or not."
+      ],
+      [
+        "[[Done]]",
+        "A Boolean value to indicate whether the iteration is complete or not."
       ]
     ]
   },
@@ -2709,7 +2832,7 @@
     "rows" : [
       [
         "[[GeneratorState]]",
-        "*undefined*, ~suspended-start~, ~suspended-yield~, ~executing~, or ~completed~",
+        "~suspended-start~, ~suspended-yield~, ~executing~, or ~completed~",
         "The current execution state of the generator."
       ],
       [
@@ -2805,35 +2928,6 @@
       ]
     ]
   },
-  "table-format-control-code-point-usage" : {
-    "id" : "table-format-control-code-point-usage",
-    "header" : [
-      "Code Point",
-      "Name",
-      "Abbreviation",
-      "Usage"
-    ],
-    "rows" : [
-      [
-        "`U+200C`",
-        "ZERO WIDTH NON-JOINER",
-        "<ZWNJ>",
-        "|IdentifierPart|"
-      ],
-      [
-        "`U+200D`",
-        "ZERO WIDTH JOINER",
-        "<ZWJ>",
-        "|IdentifierPart|"
-      ],
-      [
-        "`U+FEFF`",
-        "ZERO WIDTH NO-BREAK SPACE",
-        "<ZWNBSP>",
-        "|WhiteSpace|"
-      ]
-    ]
-  },
   "table-proxy-handler-methods" : {
     "id" : "table-proxy-handler-methods",
     "header" : [
@@ -2898,24 +2992,36 @@
   "table-module-graph-cycle-async-fields-8" : {
     "id" : "table-module-graph-cycle-async-fields-8",
     "header" : [
-      "Module",
-      "[[DFSIndex]]",
-      "[[DFSAncestorIndex]]",
-      "[[Status]]",
-      "[[AsyncEvaluation]]",
-      "[[AsyncParentModules]]",
-      "[[PendingAsyncDependencies]]",
-      "[[EvaluationError]]"
+      "Field Module",
+      "_A_"
     ],
     "rows" : [
       [
-        "_A_",
-        "0",
-        "0",
-        "~evaluated~",
-        "*true*",
-        "« »",
-        "0",
+        "[[DFSIndex]]",
+        "0"
+      ],
+      [
+        "[[DFSAncestorIndex]]",
+        "0"
+      ],
+      [
+        "[[Status]]",
+        "~evaluated~"
+      ],
+      [
+        "[[AsyncEvaluationOrder]]",
+        "4"
+      ],
+      [
+        "[[AsyncParentModules]]",
+        "« »"
+      ],
+      [
+        "[[PendingAsyncDependencies]]",
+        "0"
+      ],
+      [
+        "[[EvaluationError]]",
         "_C_'s Evaluation Error"
       ]
     ]
@@ -3020,8 +3126,8 @@
       ],
       [
         "[[ModuleRequest]]",
-        "a String or *null*",
-        "The String value of the |ModuleSpecifier| of the |ExportDeclaration|. *null* if the |ExportDeclaration| does not have a |ModuleSpecifier|."
+        "a ModuleRequest Record or *null*",
+        "The ModuleRequest Record representing the |ModuleSpecifier| and import attributes of the |ExportDeclaration|. *null* if the |ExportDeclaration| does not have a |ModuleSpecifier|."
       ],
       [
         "[[ImportName]]",
@@ -3032,6 +3138,27 @@
         "[[LocalName]]",
         "a String or *null*",
         "The name that is used to locally access the exported value from within the importing module. *null* if the exported value is not locally accessible from within the module."
+      ]
+    ]
+  },
+  "table-internal-slots-of-array-iterator-instances" : {
+    "id" : "table-internal-slots-of-array-iterator-instances",
+    "header" : [
+      "Internal Slot",
+      "Description"
+    ],
+    "rows" : [
+      [
+        "[[IteratedArrayLike]]",
+        "The array-like object that is being iterated."
+      ],
+      [
+        "[[ArrayLikeNextIndex]]",
+        "The integer index of the next element to be examined by this iterator."
+      ],
+      [
+        "[[ArrayLikeIterationKind]]",
+        "A String value that identifies what is returned for each element of the iteration. The possible values are: ~key~, ~value~, ~key+value~."
       ]
     ]
   },
@@ -3165,13 +3292,13 @@
       ],
       [
         "[[RequestedModules]]",
-        "a List of Strings",
-        "A List of all the |ModuleSpecifier| strings used by the module represented by this record to request the importation of a module. The List is in source text occurrence order."
+        "a List of ModuleRequest Records",
+        "A List of the ModuleRequest Records associated with the imports in this module. The List is in source text occurrence order of the imports."
       ],
       [
         "[[LoadedModules]]",
-        "a List of Records with fields [[Specifier]] (a String) and [[Module]] (a Module Record)",
-        "A map from the specifier strings used by the module represented by this record to request the importation of a module to the resolved Module Record. The list does not contain two different Records with the same [[Specifier]]."
+        "a List of LoadedModuleRequest Records",
+        "A map from the specifier strings used by the module represented by this record to request the importation of a module with the relative import attributes to the resolved Module Record. The list does not contain two different Records _r1_ and _r2_ such that ModuleRequestsEqual(_r1_, _r2_) is *true*."
       ],
       [
         "[[CycleRoot]]",
@@ -3184,9 +3311,9 @@
         "Whether this module is individually asynchronous (for example, if it's a Source Text Module Record containing a top-level await). Having an asynchronous dependency does not mean this field is *true*. This field must not change after the module is parsed."
       ],
       [
-        "[[AsyncEvaluation]]",
-        "a Boolean",
-        "Whether this module is either itself asynchronous or has an asynchronous dependency. Note: The order in which this field is set is used to order queued executions, see ."
+        "[[AsyncEvaluationOrder]]",
+        "~unset~, an integer, or ~done~",
+        "This field is initially set to ~unset~, and remains ~unset~ for fully synchronous modules. For modules that are either themselves asynchronous or have an asynchronous dependency, it is set to an integer that determines the order in which execution of pending modules is queued by . Once the pending module is executed, the field is set to ~done~."
       ],
       [
         "[[TopLevelCapability]]",
@@ -3363,12 +3490,12 @@
       [
         "*\"return\"*",
         "a function that returns a promise for an IteratorResult object",
-        "The returned promise, when fulfilled, must fulfill with an object that conforms to the IteratorResult interface. Invoking this method notifies the AsyncIterator object that the caller does not intend to make any more `next` method calls to the AsyncIterator. The returned promise will fulfill with an IteratorResult object which will typically have a *\"done\"* property whose value is *true*, and a *\"value\"* property with the value passed as the argument of the `return` method. However, this requirement is not enforced. Additionally, the IteratorResult object that serves as a fulfillment value should have a *\"value\"* property whose value is not a promise (or \"thenable\"). If the argument value is used in the typical manner, then if it is a rejected promise, a promise rejected with the same reason should be returned; if it is a fulfilled promise, then its fulfillment value should be used as the *\"value\"* property of the returned promise's IteratorResult object fulfillment value. However, these requirements are also not enforced."
+        "The returned promise, when fulfilled, must fulfill with an object that conforms to the IteratorResult interface. Invoking this method notifies the async iterator object that the caller does not intend to make any more `next` method calls to the async iterator. The returned promise will fulfill with an IteratorResult object which will typically have a *\"done\"* property whose value is *true*, and a *\"value\"* property with the value passed as the argument of the `return` method. However, this requirement is not enforced. Additionally, the IteratorResult object that serves as a fulfillment value should have a *\"value\"* property whose value is not a promise (or \"thenable\"). If the argument value is used in the typical manner, then if it is a rejected promise, a promise rejected with the same reason should be returned; if it is a fulfilled promise, then its fulfillment value should be used as the *\"value\"* property of the returned promise's IteratorResult object fulfillment value. However, these requirements are also not enforced."
       ],
       [
         "*\"throw\"*",
         "a function that returns a promise for an IteratorResult object",
-        "The returned promise, when fulfilled, must fulfill with an object that conforms to the IteratorResult interface. Invoking this method notifies the AsyncIterator object that the caller has detected an error condition. The argument may be used to identify the error condition and typically will be an exception object. A typical response is to return a rejected promise which rejects with the value passed as the argument. If the returned promise is fulfilled, the IteratorResult fulfillment value will typically have a *\"done\"* property whose value is *true*. Additionally, it should have a *\"value\"* property whose value is not a promise (or \"thenable\"), but this requirement is not enforced."
+        "The returned promise, when fulfilled, must fulfill with an object that conforms to the IteratorResult interface. Invoking this method notifies the async iterator object that the caller has detected an error condition. The argument may be used to identify the error condition and typically will be an exception object. A typical response is to return a rejected promise which rejects with the value passed as the argument. If the returned promise is fulfilled, the IteratorResult object fulfillment value will typically have a *\"done\"* property whose value is *true*. Additionally, it should have a *\"value\"* property whose value is not a promise (or \"thenable\"), but this requirement is not enforced."
       ]
     ]
   },
@@ -3383,42 +3510,72 @@
       [
         "*\"next\"*",
         "a function that returns an IteratorResult object",
-        "The returned object must conform to the IteratorResult interface. If a previous call to the `next` method of an Iterator has returned an IteratorResult object whose *\"done\"* property is *true*, then all subsequent calls to the `next` method of that object should also return an IteratorResult object whose *\"done\"* property is *true*. However, this requirement is not enforced."
+        "The returned object must conform to the IteratorResult interface. If a previous call to the `next` method of an iterator has returned an IteratorResult object whose *\"done\"* property is *true*, then all subsequent calls to the `next` method of that object should also return an IteratorResult object whose *\"done\"* property is *true*. However, this requirement is not enforced."
       ]
     ]
   },
   "table-module-graph-cycle-async-fields-7" : {
     "id" : "table-module-graph-cycle-async-fields-7",
     "header" : [
-      "Module",
-      "[[DFSIndex]]",
-      "[[DFSAncestorIndex]]",
-      "[[Status]]",
-      "[[AsyncEvaluation]]",
-      "[[AsyncParentModules]]",
-      "[[PendingAsyncDependencies]]",
-      "[[EvaluationError]]"
+      "Field Module",
+      "_A_",
+      "_C_"
     ],
     "rows" : [
       [
-        "_A_",
+        "[[DFSIndex]]",
         "0",
-        "0",
-        "~evaluated~",
-        "*true*",
-        "« »",
-        "1 (_B_)",
-        "~empty~"
+        "3"
       ],
       [
-        "_C_",
-        "2",
-        "1",
-        "~evaluated~",
-        "*true*",
-        "« _A_ »",
+        "[[DFSAncestorIndex]]",
         "0",
+        "0"
+      ],
+      [
+        "[[Status]]",
+        "~evaluated~",
+        "~evaluated~"
+      ],
+      [
+        "[[AsyncEvaluationOrder]]",
+        "4",
+        "3"
+      ],
+      [
+        "[[AsyncParentModules]]",
+        "« »",
+        "« _A_ »"
+      ],
+      [
+        "[[PendingAsyncDependencies]]",
+        "1 (_B_)",
+        "0"
+      ],
+      [
+        "[[EvaluationError]]",
+        "~empty~",
         "_C_'s evaluation error"
+      ]
+    ]
+  },
+  "table-synthetic-module-record-fields" : {
+    "id" : "table-synthetic-module-record-fields",
+    "header" : [
+      "Field Name",
+      "Value Type",
+      "Meaning"
+    ],
+    "rows" : [
+      [
+        "[[ExportNames]]",
+        "a List of Strings",
+        "The names of the exports of the module. This list does not contain duplicates."
+      ],
+      [
+        "[[EvaluationSteps]]",
+        "an Abstract Closure",
+        "The initialization logic to perform upon evaluation of the module, taking the Synthetic Module Record as its sole argument. It must not modify [[ExportNames]]. It may return an abrupt completion."
       ]
     ]
   },
@@ -3525,36 +3682,36 @@
         "[[ChosenValues]]",
         "a List of Chosen Value Records",
         "Maps ReadSharedMemory or ReadModifyWriteSharedMemory events to the List of byte values chosen during the evaluation."
+      ]
+    ]
+  },
+  "table-set-record-fields" : {
+    "id" : "table-set-record-fields",
+    "header" : [
+      "Field Name",
+      "Value",
+      "Meaning"
+    ],
+    "rows" : [
+      [
+        "[[SetObject]]",
+        "an Object",
+        "the Set or similar object."
       ],
       [
-        "[[AgentOrder]]",
-        "an agent-order Relation",
-        "Defined below."
+        "[[Size]]",
+        "a non-negative integer or +∞",
+        "The reported size of the object."
       ],
       [
-        "[[ReadsBytesFrom]]",
-        "a reads-bytes-from mathematical function",
-        "Defined below."
+        "[[Has]]",
+        "a function object",
+        "The `has` method of the object."
       ],
       [
-        "[[ReadsFrom]]",
-        "a reads-from Relation",
-        "Defined below."
-      ],
-      [
-        "[[HostSynchronizesWith]]",
-        "a host-synchronizes-with Relation",
-        "Defined below."
-      ],
-      [
-        "[[SynchronizesWith]]",
-        "a synchronizes-with Relation",
-        "Defined below."
-      ],
-      [
-        "[[HappensBefore]]",
-        "a happens-before Relation",
-        "Defined below."
+        "[[Keys]]",
+        "a function object",
+        "The `keys` method of the object."
       ]
     ]
   },
@@ -3570,7 +3727,7 @@
         "Initialize the Environment Record of the module, including resolving all imported bindings, and create the module's execution context."
       ],
       [
-        "ExecuteModule( [ _promiseCapability_ ] )",
+        "ExecuteModule([_promiseCapability_])",
         "Evaluate the module's code within its execution context. If this module has *true* in [[HasTLA]], then a PromiseCapability Record is passed as an argument, and the method is expected to resolve or reject the given capability. In this case, the method must not throw an exception, but instead reject the PromiseCapability Record if necessary."
       ]
     ]

@@ -3344,6 +3344,45 @@
     },
     {
       "lhs" : {
+        "name" : "AttributeKey",
+        "params" : [
+        ]
+      },
+      "kind" : {
+        "Syntactic" : {
+          
+        }
+      },
+      "oneof" : false,
+      "rhsVec" : [
+        {
+          "conditions" : [
+          ],
+          "symbols" : [
+            {
+              "name" : "IdentifierName",
+              "args" : [
+              ]
+            }
+          ],
+          "id" : null
+        },
+        {
+          "conditions" : [
+          ],
+          "symbols" : [
+            {
+              "name" : "StringLiteral",
+              "args" : [
+              ]
+            }
+          ],
+          "id" : null
+        }
+      ]
+    },
+    {
+      "lhs" : {
         "name" : "AwaitExpression",
         "params" : [
           "Yield"
@@ -8712,6 +8751,13 @@
               ]
             },
             {
+              "symbol" : {
+                "name" : "WithClause",
+                "args" : [
+                ]
+              }
+            },
+            {
               "term" : ";"
             }
           ],
@@ -12696,6 +12742,93 @@
               ]
             },
             {
+              "symbol" : {
+                "term" : ","
+              }
+            },
+            {
+              "term" : ")"
+            }
+          ],
+          "id" : null
+        },
+        {
+          "conditions" : [
+          ],
+          "symbols" : [
+            {
+              "term" : "import"
+            },
+            {
+              "term" : "("
+            },
+            {
+              "name" : "AssignmentExpression",
+              "args" : [
+                {
+                  "kind" : {
+                    "True" : {
+                      
+                    }
+                  },
+                  "name" : "In"
+                },
+                {
+                  "kind" : {
+                    "Pass" : {
+                      
+                    }
+                  },
+                  "name" : "Yield"
+                },
+                {
+                  "kind" : {
+                    "Pass" : {
+                      
+                    }
+                  },
+                  "name" : "Await"
+                }
+              ]
+            },
+            {
+              "term" : ","
+            },
+            {
+              "name" : "AssignmentExpression",
+              "args" : [
+                {
+                  "kind" : {
+                    "True" : {
+                      
+                    }
+                  },
+                  "name" : "In"
+                },
+                {
+                  "kind" : {
+                    "Pass" : {
+                      
+                    }
+                  },
+                  "name" : "Yield"
+                },
+                {
+                  "kind" : {
+                    "Pass" : {
+                      
+                    }
+                  },
+                  "name" : "Await"
+                }
+              ]
+            },
+            {
+              "symbol" : {
+                "term" : ","
+              }
+            },
+            {
               "term" : ")"
             }
           ],
@@ -12825,6 +12958,13 @@
               ]
             },
             {
+              "symbol" : {
+                "name" : "WithClause",
+                "args" : [
+                ]
+              }
+            },
+            {
               "term" : ";"
             }
           ],
@@ -12841,6 +12981,13 @@
               "name" : "ModuleSpecifier",
               "args" : [
               ]
+            },
+            {
+              "symbol" : {
+                "name" : "WithClause",
+                "args" : [
+                ]
+              }
             },
             {
               "term" : ";"
@@ -20833,6 +20980,126 @@
     },
     {
       "lhs" : {
+        "name" : "WithClause",
+        "params" : [
+        ]
+      },
+      "kind" : {
+        "Syntactic" : {
+          
+        }
+      },
+      "oneof" : false,
+      "rhsVec" : [
+        {
+          "conditions" : [
+          ],
+          "symbols" : [
+            {
+              "term" : "with"
+            },
+            {
+              "term" : "{"
+            },
+            {
+              "term" : "}"
+            }
+          ],
+          "id" : null
+        },
+        {
+          "conditions" : [
+          ],
+          "symbols" : [
+            {
+              "term" : "with"
+            },
+            {
+              "term" : "{"
+            },
+            {
+              "name" : "WithEntries",
+              "args" : [
+              ]
+            },
+            {
+              "symbol" : {
+                "term" : ","
+              }
+            },
+            {
+              "term" : "}"
+            }
+          ],
+          "id" : null
+        }
+      ]
+    },
+    {
+      "lhs" : {
+        "name" : "WithEntries",
+        "params" : [
+        ]
+      },
+      "kind" : {
+        "Syntactic" : {
+          
+        }
+      },
+      "oneof" : false,
+      "rhsVec" : [
+        {
+          "conditions" : [
+          ],
+          "symbols" : [
+            {
+              "name" : "AttributeKey",
+              "args" : [
+              ]
+            },
+            {
+              "term" : ":"
+            },
+            {
+              "name" : "StringLiteral",
+              "args" : [
+              ]
+            }
+          ],
+          "id" : null
+        },
+        {
+          "conditions" : [
+          ],
+          "symbols" : [
+            {
+              "name" : "AttributeKey",
+              "args" : [
+              ]
+            },
+            {
+              "term" : ":"
+            },
+            {
+              "name" : "StringLiteral",
+              "args" : [
+              ]
+            },
+            {
+              "term" : ","
+            },
+            {
+              "name" : "WithEntries",
+              "args" : [
+              ]
+            }
+          ],
+          "id" : null
+        }
+      ]
+    },
+    {
+      "lhs" : {
         "name" : "WithStatement",
         "params" : [
           "Yield",
@@ -22050,7 +22317,73 @@
           ],
           "symbols" : [
             {
-              "term" : "(?:"
+              "term" : "(?"
+            },
+            {
+              "name" : "RegularExpressionModifiers",
+              "args" : [
+              ]
+            },
+            {
+              "term" : ":"
+            },
+            {
+              "name" : "Disjunction",
+              "args" : [
+                {
+                  "kind" : {
+                    "Pass" : {
+                      
+                    }
+                  },
+                  "name" : "UnicodeMode"
+                },
+                {
+                  "kind" : {
+                    "Pass" : {
+                      
+                    }
+                  },
+                  "name" : "UnicodeSetsMode"
+                },
+                {
+                  "kind" : {
+                    "Pass" : {
+                      
+                    }
+                  },
+                  "name" : "NamedCaptureGroups"
+                }
+              ]
+            },
+            {
+              "term" : ")"
+            }
+          ],
+          "id" : null
+        },
+        {
+          "conditions" : [
+          ],
+          "symbols" : [
+            {
+              "term" : "(?"
+            },
+            {
+              "name" : "RegularExpressionModifiers",
+              "args" : [
+              ]
+            },
+            {
+              "term" : "-"
+            },
+            {
+              "name" : "RegularExpressionModifiers",
+              "args" : [
+              ]
+            },
+            {
+              "term" : ":"
             },
             {
               "name" : "Disjunction",
@@ -26205,26 +26538,6 @@
           "symbols" : [
             {
               "term" : "$"
-            }
-          ],
-          "id" : null
-        },
-        {
-          "conditions" : [
-          ],
-          "symbols" : [
-            {
-              "abbr" : "ZWNJ"
-            }
-          ],
-          "id" : null
-        },
-        {
-          "conditions" : [
-          ],
-          "symbols" : [
-            {
-              "abbr" : "ZWJ"
             }
           ],
           "id" : null
@@ -30744,6 +31057,93 @@
     },
     {
       "lhs" : {
+        "name" : "RegularExpressionModifier",
+        "params" : [
+        ]
+      },
+      "kind" : {
+        "Lexical" : {
+          
+        }
+      },
+      "oneof" : true,
+      "rhsVec" : [
+        {
+          "conditions" : [
+          ],
+          "symbols" : [
+            {
+              "term" : "i"
+            }
+          ],
+          "id" : null
+        },
+        {
+          "conditions" : [
+          ],
+          "symbols" : [
+            {
+              "term" : "m"
+            }
+          ],
+          "id" : null
+        },
+        {
+          "conditions" : [
+          ],
+          "symbols" : [
+            {
+              "term" : "s"
+            }
+          ],
+          "id" : null
+        }
+      ]
+    },
+    {
+      "lhs" : {
+        "name" : "RegularExpressionModifiers",
+        "params" : [
+        ]
+      },
+      "kind" : {
+        "Lexical" : {
+          
+        }
+      },
+      "oneof" : false,
+      "rhsVec" : [
+        {
+          "conditions" : [
+          ],
+          "symbols" : [
+            {
+              "empty" : null
+            }
+          ],
+          "id" : null
+        },
+        {
+          "conditions" : [
+          ],
+          "symbols" : [
+            {
+              "name" : "RegularExpressionModifiers",
+              "args" : [
+              ]
+            },
+            {
+              "name" : "RegularExpressionModifier",
+              "args" : [
+              ]
+            }
+          ],
+          "id" : null
+        }
+      ]
+    },
+    {
+      "lhs" : {
         "name" : "RegularExpressionNonTerminator",
         "params" : [
         ]
@@ -34092,43 +34492,6 @@
     },
     {
       "lhs" : {
-        "name" : "TemporalSign",
-        "params" : [
-        ]
-      },
-      "kind" : {
-        "NumericString" : {
-          
-        }
-      },
-      "oneof" : false,
-      "rhsVec" : [
-        {
-          "conditions" : [
-          ],
-          "symbols" : [
-            {
-              "name" : "ASCIISign",
-              "args" : [
-              ]
-            }
-          ],
-          "id" : null
-        },
-        {
-          "conditions" : [
-          ],
-          "symbols" : [
-            {
-              "abbr" : "MINUS"
-            }
-          ],
-          "id" : null
-        }
-      ]
-    },
-    {
-      "lhs" : {
         "name" : "TimeSeparator",
         "params" : [
           "Extended"
@@ -34189,7 +34552,7 @@
           ],
           "symbols" : [
             {
-              "name" : "TemporalSign",
+              "name" : "ASCIISign",
               "args" : [
               ]
             },
@@ -34206,7 +34569,7 @@
           ],
           "symbols" : [
             {
-              "name" : "TemporalSign",
+              "name" : "ASCIISign",
               "args" : [
               ]
             },
@@ -34236,7 +34599,7 @@
           ],
           "symbols" : [
             {
-              "name" : "TemporalSign",
+              "name" : "ASCIISign",
               "args" : [
               ]
             },
@@ -35839,7 +36202,73 @@
           ],
           "symbols" : [
             {
-              "term" : "(?:"
+              "term" : "(?"
+            },
+            {
+              "name" : "RegularExpressionModifiers",
+              "args" : [
+              ]
+            },
+            {
+              "term" : ":"
+            },
+            {
+              "name" : "Disjunction",
+              "args" : [
+                {
+                  "kind" : {
+                    "False" : {
+                      
+                    }
+                  },
+                  "name" : "UnicodeMode"
+                },
+                {
+                  "kind" : {
+                    "False" : {
+                      
+                    }
+                  },
+                  "name" : "UnicodeSetsMode"
+                },
+                {
+                  "kind" : {
+                    "Pass" : {
+                      
+                    }
+                  },
+                  "name" : "NamedCaptureGroups"
+                }
+              ]
+            },
+            {
+              "term" : ")"
+            }
+          ],
+          "id" : null
+        },
+        {
+          "conditions" : [
+          ],
+          "symbols" : [
+            {
+              "term" : "(?"
+            },
+            {
+              "name" : "RegularExpressionModifiers",
+              "args" : [
+              ]
+            },
+            {
+              "term" : "-"
+            },
+            {
+              "name" : "RegularExpressionModifiers",
+              "args" : [
+              ]
+            },
+            {
+              "term" : ":"
             },
             {
               "name" : "Disjunction",
