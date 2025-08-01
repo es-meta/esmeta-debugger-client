@@ -97,19 +97,19 @@ export async function instantiateWorker(
       const w = new Worker(new URL("./standalone.worker.ts", import.meta.url));
 
       const input = await Promise.all([
-        fetchText(new URL("@resources/dumps/funcs.json", import.meta.url)),
+        fetchText(new URL("@resources/dump/debugger/funcs.json", import.meta.url)),
         fetchText(
-          new URL("@resources/dumps/spec.version.json", import.meta.url),
+          new URL("@resources/dump/debugger/spec.version.json", import.meta.url),
         ),
-        fetchText(new URL("@resources/dumps/grammar.json", import.meta.url)),
+        fetchText(new URL("@resources/dump/debugger/grammar.json", import.meta.url)),
         fetchText(
-          new URL("@resources/dumps/spec.tables.json", import.meta.url),
-        ),
-        fetchText(
-          new URL("@resources/dumps/tyModel.decls.json", import.meta.url),
+          new URL("@resources/dump/debugger/spec.tables.json", import.meta.url),
         ),
         fetchText(
-          new URL("@resources/dumps/funcs.cfg.json", import.meta.url),
+          new URL("@resources/dump/debugger/tyModel.decls.json", import.meta.url),
+        ),
+        fetchText(
+          new URL("@resources/dump/debugger/funcs.cfg.json", import.meta.url),
         ),
       ]).then(
         ([funcs, version, grammar, tables, tyModel, funcsCfg]) =>
