@@ -60,7 +60,7 @@
     ]
   },
   "devDependencies": {
-    "@playwright/test": "^1.28.1",
+    "@playwright/test": "^1.56.1",
     "@tailwindcss/postcss": "^4.1.5",
     "@types/d3-graphviz": "^2.6.10",
     "@types/node": "^22.10.2",
