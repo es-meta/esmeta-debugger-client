@@ -48,13 +48,15 @@ function Right() {
   return (
     <div className="flex flex-row items-center justify-end md:gap-1">
       <a
-        className="flex flex-row gap-1 items-center text-md font-500 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg active:scale-90 transition-all cursor-pointer p-2 hover:underline"
+        className="flex flex-row gap-1 items-center font-500 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg active:scale-90 transition-all cursor-pointer p-2 hover:underline"
         href={GITHUB_LINK_ESMETA_DOCS}
         target="_blank"
         rel="noopener noreferrer"
         title="Discover ESMeta Project on GitHub"
       >
-        <BookIcon className="size-[1em]" />
+        <span className="text-lg">
+          <BookIcon className="size-[1em]" />
+        </span>
         Docs
       </a>
       <a
@@ -69,13 +71,13 @@ function Right() {
         </span>
         GitHub
       </a>
-      <ShareButton />
-      <SettingButton />
       <div className="h-6 px-1 flex flex-row">
         <div className="w-[1px] h-6 bg-neutral-300 dark:bg-neutral-700" />
       </div>
       <ConnectionSettings />
       <SpecVersionView />
+      <ShareButton />
+      <SettingButton />
     </div>
   );
 }

@@ -42,7 +42,7 @@ export default function ShareButtonContent() {
     <div className="space-y-6">
       <article className="space-y-2 mt-6">
         <Field className="flex flex-row items-center justify-between">
-          <Label className="font-500 text-lg">
+          <Label className="font-500">
             Encode current API setting
             <aside>
               This will include the current API setting in the shared link.
@@ -55,7 +55,7 @@ export default function ShareButtonContent() {
         </Field>
       </article>
       <article className="space-y-2 mt-6">
-        <h3 className="font-500 text-lg">Share this website:</h3>
+        <h3 className="font-500">Share this website:</h3>
 
         <div className="flex flex-row">
           <CopyURLBox content={basic} />
@@ -71,7 +71,7 @@ export default function ShareButtonContent() {
       </article>
 
       <article className="space-y-2">
-        <h3 className="font-500 text-lg">Share with code:</h3>
+        <h3 className="font-500">Share with code:</h3>
         <CopyURLBox content={withCode} />
         {withCode.length > URL_TOO_LONG_THRESHOLD && (
           <aside className="text-es-500 dark:text-es-400">
@@ -84,7 +84,7 @@ export default function ShareButtonContent() {
       </article>
 
       <article className="space-y-2">
-        <h3 className="font-500 text-lg">Share code and current state:</h3>
+        <h3 className="font-500">Share code and current state:</h3>
         <aside>
           <p>
             This link enables `resume` button, which will start the program from

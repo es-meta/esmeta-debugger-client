@@ -14,7 +14,7 @@ export default function SettingsContent() {
     <div className="space-y-6">
       <article className="space-y-2">
         <Field className="flex flex-row items-center justify-between">
-          <Label className="font-500 text-lg">
+          <Label className="font-500">
             Developer Mode
             <aside>
               This mode enables some internal features, to debug the debugger
@@ -25,7 +25,7 @@ export default function SettingsContent() {
         </Field>
 
         <Field className="flex flex-row items-center justify-between">
-          <Label className="font-500 text-lg">Show Visited Steps&nbsp;</Label>
+          <Label className="font-500">Show Visited Steps&nbsp;</Label>
           <Switch checked={showVisited} onChange={toggleShowVisited} />
         </Field>
       </article>
