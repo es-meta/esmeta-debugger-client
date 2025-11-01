@@ -1,4 +1,3 @@
-
 import { atom, useAtom } from "jotai";
 import { useCallback } from "react";
 import { twJoin } from "tailwind-merge";
@@ -10,7 +9,10 @@ export function Var({ value }: { value: string }) {
   const [highlightVar, setHighlightVar] = useAtom(highlightVarAtom);
 
   const className = twJoin(
-    highlightVar.includes(value) ? classMap[simpleHash(value) % classMap.length]  + " text-black dark:text-white": "text-[#2aa198]",
+    highlightVar.includes(value)
+      ? classMap[simpleHash(value) % classMap.length] +
+          " text-black dark:text-white"
+      : "text-[#2aa198]",
     "cursor-pointer rounded px-1 py-0.5",
     "transition-colors ",
   );
@@ -24,12 +26,12 @@ export function Var({ value }: { value: string }) {
       }
     });
   }, []);
-  
+
   return (
-    <var className={className} onClick={onClick} data-algo-var={value}>{value}</var>
+    <var className={className} onClick={onClick} data-algo-var={value}>
+      {value}
+    </var>
   );
-
-
 }
 
 const classMap = [

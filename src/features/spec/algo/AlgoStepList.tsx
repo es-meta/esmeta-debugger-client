@@ -13,7 +13,10 @@ interface AlgoStepPrefixProps {
 }
 
 function AlgoStepPrefix({ stringifiedSteps }: AlgoStepPrefixProps) {
-  const steps = useMemo(() => JSON.parse(stringifiedSteps) as number[], [stringifiedSteps]);
+  const steps = useMemo(
+    () => JSON.parse(stringifiedSteps) as number[],
+    [stringifiedSteps],
+  );
   const callStack = useAtomValue(atoms.state.callstackAtom);
   const contextIdx = useAtomValue(atoms.state.contextIdxAtom);
   const breakpoints = useAtomValue(atoms.bp.bpAtom);
@@ -149,9 +152,8 @@ function AlgoStep({
         behavior: "smooth",
         block: "nearest",
         inline: "nearest",
-      }); 
+      });
     }
-
   }, [highlight]);
 
   return (
@@ -159,15 +161,15 @@ function AlgoStep({
       {!shouldHide && <AlgoStepPrefix stringifiedSteps={stringifiedSteps} />}
       <li
         ref={ref}
-      // AlgoStepCore
-      className={twJoin(
-        "hover:bg-neutral-400/10 active:bg-neutral-400/20 transition-all cursor-pointer scroll-m-8",
-        className,
-      )}
-      data-this-step={stringifiedSteps}
-    >
-      {emitted}
-    </li>
+        // AlgoStepCore
+        className={twJoin(
+          "hover:bg-neutral-400/10 active:bg-neutral-400/20 transition-all cursor-pointer scroll-m-8",
+          className,
+        )}
+        data-this-step={stringifiedSteps}
+      >
+        {emitted}
+      </li>
       {sublist === null || sublist.name === "ul" ? null : (
         <AlgoStepList
           listNode={sublist}

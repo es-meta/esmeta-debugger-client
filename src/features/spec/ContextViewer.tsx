@@ -45,8 +45,9 @@ export function ContextViewer({ context, embed }: Props) {
               specification’s requirements.
             </li>
             <li>
-              The content is not written in <b>ecmarkdown</b> but structured as a lookup
-              table, and thus was manually modeled as an IR function in ESMeta.
+              The content is not written in <b>ecmarkdown</b> but structured as
+              a lookup table, and thus was manually modeled as an IR function in
+              ESMeta.
             </li>
             <li>
               It serves as a spec-compliant auxiliary function designed to
@@ -58,5 +59,11 @@ export function ContextViewer({ context, embed }: Props) {
     );
   }
 
-  return <AlgoViewer showOnlyVisited={isEmbeded} context={context} scrollOnHighlight={!embed} />;
+  return (
+    <AlgoViewer
+      showOnlyVisited={isEmbeded}
+      context={context}
+      scrollOnHighlight={!embed}
+    />
+  );
 }
