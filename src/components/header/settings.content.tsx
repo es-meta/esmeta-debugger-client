@@ -13,21 +13,21 @@ export default function SettingsContent() {
   return (
     <div className="space-y-6">
       <article className="space-y-2">
-        <Field>
-          <Label className="font-500 text-xl">Developer Mode&nbsp;</Label>
+        <Field className="flex flex-row items-center justify-between">
+          <Label className="font-500 text-lg">
+            Developer Mode
+            <aside>
+              This mode enables some internal features, to debug the debugger
+              application itself.
+            </aside>
+          </Label>
           <Switch checked={devMode} onChange={toggleDevMode} />
         </Field>
-        <Field>
-          <Label className="font-500 text-xl">Show Visited Steps&nbsp;</Label>
+
+        <Field className="flex flex-row items-center justify-between">
+          <Label className="font-500 text-lg">Show Visited Steps&nbsp;</Label>
           <Switch checked={showVisited} onChange={toggleShowVisited} />
         </Field>
-
-        <aside>
-          <p>
-            This mode enables some internal features, such as{" "}
-            <code>Iter +</code> and <code>Iter -</code>.
-          </p>
-        </aside>
       </article>
     </div>
   );
