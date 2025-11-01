@@ -41,9 +41,12 @@ export default function ShareButtonContent() {
   return (
     <div className="space-y-6">
       <article className="space-y-2 mt-6">
-        <Field>
-          <Label className="font-500 text-xl">
-            Encode current API setting:&nbsp;
+        <Field className="flex flex-row items-center justify-between">
+          <Label className="font-500 text-lg">
+            Encode current API setting
+            <aside>
+              This will include the current API setting in the shared link.
+            </aside>
           </Label>
           <Switch
             checked={include}
@@ -52,20 +55,36 @@ export default function ShareButtonContent() {
         </Field>
       </article>
       <article className="space-y-2 mt-6">
-        <h3 className="font-500 text-xl">Share this website:</h3>
+        <h3 className="font-500 text-lg">Share this website:</h3>
 
         <div className="flex flex-row">
           <CopyURLBox content={basic} />
         </div>
+        {basic.length > URL_TOO_LONG_THRESHOLD && (
+          <aside className="text-es-500 dark:text-es-400">
+            <p>
+              Note: The URL is quite long, some platforms may have issues
+              handling it.
+            </p>
+          </aside>
+        )}
       </article>
 
       <article className="space-y-2">
-        <h3 className="font-500 text-xl">Share with code:</h3>
+        <h3 className="font-500 text-lg">Share with code:</h3>
         <CopyURLBox content={withCode} />
+        {withCode.length > URL_TOO_LONG_THRESHOLD && (
+          <aside className="text-es-500 dark:text-es-400">
+            <p>
+              Note: The URL is quite long, some platforms may have issues
+              handling it.
+            </p>
+          </aside>
+        )}
       </article>
 
       <article className="space-y-2">
-        <h3 className="font-500 text-xl">Share code and current state:</h3>
+        <h3 className="font-500 text-lg">Share code and current state:</h3>
         <aside>
           <p>
             This link enables `resume` button, which will start the program from
@@ -82,7 +101,17 @@ export default function ShareButtonContent() {
             </p>
           </aside>
         )}
+        {(withMoment?.length ?? 0) > URL_TOO_LONG_THRESHOLD && (
+          <aside className="text-es-500 dark:text-es-400">
+            <p>
+              Note: The URL is quite long, some platforms may have issues
+              handling it.
+            </p>
+          </aside>
+        )}
       </article>
     </div>
   );
 }
+
+const URL_TOO_LONG_THRESHOLD = 2000;
