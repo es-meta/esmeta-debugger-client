@@ -1,5 +1,6 @@
 export const HOMEPAGE_LINK_ESMETA = "https://es-meta.github.io";
 export const GITHUB_LINK_ESMETA = "https://github.com/es-meta/esmeta";
+export const GITHUB_LINK_ESMETA_DOCS = "https://github.com/es-meta/docs";
 
 export const IS_DEBUG = import.meta.env.DEV;
 
