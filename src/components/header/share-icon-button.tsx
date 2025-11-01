@@ -1,5 +1,3 @@
-"use client";
-
 import { useTransient } from "@/hooks/use-transient";
 import { cn } from "@/utils";
 import { ShareIcon } from "lucide-react";
