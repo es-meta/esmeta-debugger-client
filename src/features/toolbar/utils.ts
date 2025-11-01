@@ -3,41 +3,41 @@ import { logger } from "@/utils";
 import type { useDebuggerActions } from "@/hooks/use-debugger-actions";
 
 const map = (
-  key: string,
+  code: string,
   cond: Selected,
   devMode: boolean,
   actions: ReturnType<typeof useDebuggerActions>,
 ) => {
-  switch (key) {
-    case "r":
+  switch (code) {
+    case "KeyR":
       return cond.disableRun ? null : actions.run;
-    case "e":
+    case "KeyE":
       return cond.disableResume ? null : actions.resume;
-    case "q":
+    case "KeyQ":
       return cond.disableQuit ? null : actions.stop;
-    case "c":
+    case "KeyC":
       return cond.disableGoingForward ? null : actions.specContinue;
-    case "s":
+    case "KeyS":
       return cond.disableGoingForward ? null : actions.specStep;
-    case "o":
+    case "KeyO":
       return cond.disableGoingForward ? null : actions.specStepOver;
-    case "u":
+    case "KeyU":
       return cond.disableGoingForward ? null : actions.specStepOut;
-    case "b":
+    case "KeyB":
       return cond.disableGoingBackward ? null : actions.specStepBack;
-    case "a":
+    case "KeyA":
       return cond.disableGoingBackward ? null : actions.specStepBackOver;
-    case "k":
+    case "KeyK":
       return cond.disableGoingBackward ? null : actions.specStepBackOut;
-    case "w":
+    case "KeyW":
       return cond.disableGoingBackward ? null : actions.specRewind;
-    case "j":
+    case "KeyJ":
       return cond.disableGoingForward ? null : actions.esStepStatement;
-    case "p":
+    case "KeyP":
       return cond.disableGoingForward ? null : actions.esStepAst;
-    case "v":
+    case "KeyV":
       return cond.disableGoingForward ? null : actions.esStepOver;
-    case "t":
+    case "KeyT":
       return cond.disableGoingForward ? null : actions.esStepOut;
     default:
       return null;
@@ -54,17 +54,15 @@ export const handleKeyPressBuilder = (
 
     if (
       focusedElement instanceof HTMLElement &&
-      (focusedElement.tagName === "INPUT" ||
-        focusedElement.tagName === "TEXTAREA")
-    )
-      return;
+      (focusedElement.tagName.toUpperCase() !== "BODY")
+    ) return;
 
     const isComplex =
       event.ctrlKey || event.metaKey || event.altKey || event.shiftKey;
 
     logger.log?.(`${event.key}`);
 
-    const action = map(event.key, cond, devMode, actions);
+    const action = map(event.code, cond, devMode, actions);
 
     if (action && !isComplex) {
       action();
