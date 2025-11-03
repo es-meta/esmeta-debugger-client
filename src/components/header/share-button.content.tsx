@@ -1,8 +1,5 @@
 import { CopyURLBox } from "./copy-url-box";
-import {
-  SEARCHPARAM_NAME_ITER,
-  SEARCHPARAM_NAME_PROG,
-} from "@/constants";
+import { SEARCHPARAM_NAME_ITER, SEARCHPARAM_NAME_PROG } from "@/constants";
 import { atoms, useAtomValue } from "@/atoms";
 
 export default function ShareButtonContent() {
@@ -47,7 +44,7 @@ export default function ShareButtonContent() {
         <h3 className="font-500">Share code and current state:</h3>
         <aside>
           This link enables `resume` button, which will start the program from
-          the current state.{' '}
+          the current state.{" "}
           <span className="text-red-500 dark:text-red-400">
             Please note that this link might break after ECMA-262 or ESMeta
             updates.
@@ -73,10 +70,10 @@ function LengthWarning({ length }: { length: number }) {
   if (length > URL_TOO_LONG_THRESHOLD) {
     return (
       <aside className="text-es-500 dark:text-es-400">
-        Note: The URL is extremely long, some platforms may have issues handling it.
+        Note: The URL is extremely long, some platforms may have issues handling
+        it.
       </aside>
     );
   }
   return null;
 }
-
