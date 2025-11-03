@@ -15,11 +15,11 @@ export default function SpecVersionViewContent() {
 
   return (
     <>
-      <h4 className="mt-4 text-lg font-700">
+      <h4 className="font-500">
         ECMA-262 (Specification) Version
       </h4>
 
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col">
         <div className={CLASSNAME}>
           <TagIcon />
           {spec.tag || "unknown tag"}
@@ -30,14 +30,12 @@ export default function SpecVersionViewContent() {
         </div>
       </div>
 
-      <h4 className="mt-4 text-lg font-700">ESMeta Version</h4>
+      <h4 className="font-500">ESMeta Version</h4>
       <div className={CLASSNAME}>
-        <InfoIcon />
         {esmeta ?? "unknown version"}
       </div>
-      <h4 className="mt-4 text-lg font-700">ESMeta Debugger Client Version</h4>
+      <h4 className="font-500">ESMeta Debugger Client Version</h4>
       <div className={CLASSNAME}>
-        <InfoIcon />
         {client}
       </div>
     </>
