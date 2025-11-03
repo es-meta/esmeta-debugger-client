@@ -54,8 +54,9 @@ export const handleKeyPressBuilder = (
 
     if (
       focusedElement instanceof HTMLElement &&
-      (focusedElement.tagName.toUpperCase() !== "BODY")
-    ) return;
+      focusedElement.tagName.toUpperCase() !== "BODY"
+    )
+      return;
 
     const isComplex =
       event.ctrlKey || event.metaKey || event.altKey || event.shiftKey;
