@@ -132,7 +132,7 @@ export function AnimatedDialog({
               onClose={handleClose}
             >
               <LazyComps.TransitionChild as={Fragment} {...animationPropsBg}>
-                <LazyComps.DialogBackdrop className="fixed inset-0 bg-black/20 backdrop-blur-md" />
+                <LazyComps.DialogBackdrop className="fixed inset-0 bg-black/10 backdrop-blur-xs" />
               </LazyComps.TransitionChild>
 
               <div className="fixed inset-0 overflow-y-auto">

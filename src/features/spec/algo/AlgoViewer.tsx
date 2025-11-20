@@ -7,7 +7,11 @@ import AlgoViewerHeader from "./AlgoViewerHeader";
 
 import { useAtomValue, atoms, useSetAtom } from "@/atoms";
 
-type AlgoViewerProps = { context: Context; showOnlyVisited: boolean; scrollOnHighlight: boolean };
+type AlgoViewerProps = {
+  context: Context;
+  showOnlyVisited: boolean;
+  scrollOnHighlight: boolean;
+};
 
 export default function AlgoView({
   context,

@@ -5,7 +5,6 @@ import {
 } from "@/components/ui/resizable";
 
 import { JSCodeEditor } from "@/features/js-editor";
-import { CommandBarLazy } from "./features/command";
 import { StateViewer } from "@/features/state";
 import { SpecViewer } from "@/features/spec";
 import { Toolbar } from "@/features/toolbar";
@@ -36,7 +35,6 @@ export default function DebuggerApp() {
           </SuspenseBoundary>
         </ResizablePanel>
       </ResizablePanelGroup>
-      <CommandBarLazy />
     </main>
   );
 }

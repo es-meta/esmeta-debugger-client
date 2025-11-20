@@ -1,4 +1,3 @@
-
 export function getSearchQuery(name: string): string | null {
   const x = new URLSearchParams(location.search).get(name);
   // logger.log?.("[PREPARING]", "getSearchQuery", "got", x, "for", name);

@@ -1,10 +1,14 @@
-import { GITHUB_LINK_ESMETA, HOMEPAGE_LINK_ESMETA } from "@/constants";
+import {
+  GITHUB_LINK_ESMETA,
+  GITHUB_LINK_ESMETA_DOCS,
+  HOMEPAGE_LINK_ESMETA,
+} from "@/constants";
 import ConnectionSettings from "@/features/modal/connection/ConnectionSettings";
 import SpecVersionView from "@/features/spec/SpecVersionView";
 import ShareButton from "./share-button";
-import WelcomeModal from "@/features/docs/welcome/Welcome";
 import SettingButton from "./settings";
 import { GitHubIcon } from "../icon";
+import { BookIcon } from "lucide-react";
 
 export default function Header() {
   return (
@@ -43,23 +47,37 @@ function Left() {
 function Right() {
   return (
     <div className="flex flex-row items-center justify-end md:gap-1">
-      <ShareButton />
       <a
-        className="flex flex-row gap-1 items-center text-lg font-500 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg active:scale-90 transition-all cursor-pointer p-2"
+        className="flex flex-row gap-1 items-center font-500 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg active:scale-90 transition-all cursor-pointer p-2 hover:underline"
+        href={GITHUB_LINK_ESMETA_DOCS}
+        target="_blank"
+        rel="noopener noreferrer"
+        title="Discover ESMeta Project on GitHub"
+      >
+        <span className="text-lg">
+          <BookIcon className="size-[1em]" />
+        </span>
+        Docs
+      </a>
+      <a
+        className="flex flex-row gap-1 items-center font-500 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg active:scale-90 transition-all cursor-pointer p-2 hover:underline"
         href={GITHUB_LINK_ESMETA}
         target="_blank"
         rel="noopener noreferrer"
         title="Discover ESMeta Project on GitHub"
       >
-        <GitHubIcon />
+        <span className="text-lg">
+          <GitHubIcon />
+        </span>
+        GitHub
       </a>
-      <WelcomeModal />
-      <SettingButton />
       <div className="h-6 px-1 flex flex-row">
         <div className="w-[1px] h-6 bg-neutral-300 dark:bg-neutral-700" />
       </div>
       <ConnectionSettings />
       <SpecVersionView />
+      <ShareButton />
+      <SettingButton />
     </div>
   );
 }

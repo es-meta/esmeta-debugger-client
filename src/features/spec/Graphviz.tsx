@@ -5,7 +5,7 @@ import { Loading } from "./Graphviz.load";
 import { useAtomValue } from "jotai";
 import { atoms } from "@/atoms";
 import { usePreferredColorScheme } from "@/hooks/use-preferred-color-scheme";
-import AwesomeDebouncePromise from 'awesome-debounce-promise';
+import AwesomeDebouncePromise from "awesome-debounce-promise";
 
 interface Props {
   dot: string;
@@ -17,7 +17,7 @@ const defaultOptions: GraphvizOptions = {
 };
 
 async function getNewDiv(dot: string): Promise<HTMLDivElement> {
-  return new Promise<HTMLDivElement>((resolve) => {
+  return new Promise<HTMLDivElement>(resolve => {
     const div = document.createElement("div");
 
     graphviz(div, defaultOptions).renderDot(dot, () => {
@@ -26,7 +26,9 @@ async function getNewDiv(dot: string): Promise<HTMLDivElement> {
   });
 }
 
-const getNewDivDebounced = AwesomeDebouncePromise(getNewDiv, 100, { onlyResolvesLast : true });
+const getNewDivDebounced = AwesomeDebouncePromise(getNewDiv, 100, {
+  onlyResolvesLast: true,
+});
 
 function GraphvizContent({ dot }: Props) {
   const theme = usePreferredColorScheme();
@@ -34,16 +36,17 @@ function GraphvizContent({ dot }: Props) {
   const [completed, setCompleted] = useState<string | null>(null);
 
   useEffect(() => {
-      (getNewDivDebounced(dot)).then(div => {
+    getNewDivDebounced(dot)
+      .then(div => {
         if (div && ref.current) {
           ref.current.innerHTML = ""; // Clear previous content
           ref.current.append(...div.childNodes);
         }
-      }).then(() => {
+      })
+      .then(() => {
         setCompleted(dot);
-      }).finally(() => {
-        
-      });
+      })
+      .finally(() => {});
   }, [dot]);
 
   const busy = useAtomValue(atoms.app.busyStateGetter);

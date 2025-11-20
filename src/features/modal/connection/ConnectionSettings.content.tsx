@@ -18,7 +18,7 @@ export default function ConnectionSettingsContent({
 }: Props) {
   return (
     <>
-      <h4 className="mt-4 text-lg font-700">Connection Mode</h4>
+      <h4 className="font-500">Connection Mode</h4>
       <RadioGroupExample
         selected={selected}
         setSelected={setSelected}
@@ -28,7 +28,7 @@ export default function ConnectionSettingsContent({
         getLabel={p => p.name}
         getDescription={p => p.description}
       />
-      <h4 className="mt-4 text-lg font-700">API Address</h4>
+      <h4 className="font-500">API Address</h4>
       <input
         type="text"
         className="rounded-lg"
@@ -40,7 +40,7 @@ export default function ConnectionSettingsContent({
       <aside>
         <p>This settings needs to be saved.</p>
       </aside>
-      <div className="flex justify-end mt-4 gap-2">
+      <div className="flex justify-end gap-2">
         <button className="button-styled" data-dialog-control="close">
           Cancel
         </button>

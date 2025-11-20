@@ -43,8 +43,11 @@ function SingleBuild({
       )}
     >
       {icon}
-      <span className="grow truncate text-center hidden md:inline">{Math.floor(rate * 100)}%</span>
-    </div>);
+      <span className="grow truncate text-center hidden md:inline">
+        {Math.floor(rate * 100)}%
+      </span>
+    </div>
+  );
 }
 
 function Single({ adaptive = false, className, icon, text }: SingleProps) {

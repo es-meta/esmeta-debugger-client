@@ -108,9 +108,7 @@ export async function instantiateWorker(
         fetchText(
           new URL("@resources/dumps/tyModel.decls.json", import.meta.url),
         ),
-        fetchText(
-          new URL("@resources/dumps/funcs.cfg.json", import.meta.url),
-        ),
+        fetchText(new URL("@resources/dumps/funcs.cfg.json", import.meta.url)),
       ]).then(
         ([funcs, version, grammar, tables, tyModel, funcsCfg]) =>
           ({
@@ -129,7 +127,6 @@ export async function instantiateWorker(
         w.removeEventListener("message", firstEventHandlerStandalone);
         resolve(w);
       }
-
 
       function handleRate(e: MessageEvent) {
         const response = e.data;

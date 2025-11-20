@@ -19,10 +19,7 @@ import { compressASTShallow } from "./utils";
 
 import { astToFlowReingoldTilfordBuchheim } from "./reignold-tilford-buchheim";
 import { atoms } from "@/atoms";
-import {
-  nodeTypes,
-  shouldHighlight,
-} from "./ast-nodes";
+import { nodeTypes, shouldHighlight } from "./ast-nodes";
 import { NodeData } from "@/types";
 import { ChevronsDownUpIcon, ChevronsUpDownIcon } from "lucide-react";
 

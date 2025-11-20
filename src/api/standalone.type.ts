@@ -54,6 +54,9 @@ export interface StandaloneDebuggerInput {
 
 export interface ModuleGeneratedByScalaJS {
   StandaloneDebugger: {
-    buildFrom: (input: StandaloneDebuggerInput, callback?: (n: number) => void) => Promise<StandaloneDebugger>;
+    buildFrom: (
+      input: StandaloneDebuggerInput,
+      callback?: (n: number) => void,
+    ) => Promise<StandaloneDebugger>;
   };
 }
