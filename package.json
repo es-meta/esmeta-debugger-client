@@ -16,7 +16,7 @@
     "fzf": "^0.5.2",
     "jotai": "^2.20.1",
     "lucide-react": "^1.23.0",
-    "motion": "^11.18.2",
+    "motion": "^12.42.2",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-intersection-observer": "^9.16.0",
