@@ -19,7 +19,7 @@
     "motion": "^12.42.2",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
-    "react-intersection-observer": "^9.16.0",
+    "react-intersection-observer": "^10.0.3",
     "react-resizable-panels": "^2.1.9",
     "react-toastify": "^11.1.0",
     "tailwind-merge": "^3.6.0",
