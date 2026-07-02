@@ -7,9 +7,9 @@ interface Props<T> {
   options: T[];
   setSelected: Dispatch<SetStateAction<T>>;
   getId: (t: T) => string | number;
-  getIcon: (t: T) => React.ReactElement<SVGElement>;
+  getIcon: (t: T) => React.ReactElement;
   getLabel: (t: T) => string;
-  getDescription: (t: T) => React.ReactElement<HTMLParagraphElement>;
+  getDescription: (t: T) => React.ReactElement;
 }
 
 export default function RadioGroupExample<T>({

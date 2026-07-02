@@ -6,7 +6,7 @@ import {
 } from "react";
 
 interface Props extends PropsWithChildren {
-  icon?: ReactElement<SVGElement> | null;
+  icon?: ReactElement | null;
   title: string;
 }
 
@@ -24,7 +24,7 @@ export default function CardHeader({ title, children, icon }: Props) {
 }
 
 interface PropsMultiple<T extends string> extends PropsWithChildren {
-  icon?: ReactElement<SVGElement> | null;
+  icon?: ReactElement | null;
   titles: readonly T[];
   title: T;
   onSelect: Dispatch<T> | Dispatch<SetStateAction<T>>;

@@ -19,7 +19,7 @@ import {
 export interface ViewerItem {
   name: string;
   id: ExtractAtomValue<typeof clientActiveViewerAtom>;
-  icon: ReactElement<SVGElement>;
+  icon: ReactElement;
   view: ReturnType<typeof lazy>;
   devOnly: boolean;
 }
