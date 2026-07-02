@@ -1,6 +1,6 @@
 import typescript from "@typescript-eslint/eslint-plugin";
 import typescriptParser from "@typescript-eslint/parser";
-import prettier from "eslint-config-prettier";
+import prettier from "eslint-config-prettier/flat";
 
 export default [
   {
