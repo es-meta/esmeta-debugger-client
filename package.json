@@ -20,7 +20,7 @@
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-intersection-observer": "^10.0.3",
-    "react-resizable-panels": "^2.1.9",
+    "react-resizable-panels": "^4.12.0",
     "react-toastify": "^11.1.0",
     "tailwind-merge": "^3.6.0",
     "tailwind-styled-components": "^2.2.0",
