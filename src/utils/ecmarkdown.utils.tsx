@@ -1,4 +1,4 @@
-import { Fragment, createElement as e } from "react";
+import { Fragment, createElement as e, type ReactElement } from "react";
 import { v4 as uuid } from "uuid";
 import type {
   Node,
@@ -105,7 +105,7 @@ class Emitter {
     return this.wrapFragment("emu-const", node.contents);
   }
 
-  emitFragment(fragment: Node[]): JSX.Element {
+  emitFragment(fragment: Node[]): ReactElement {
     return e(
       Fragment,
       null,

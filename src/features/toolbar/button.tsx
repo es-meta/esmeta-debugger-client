@@ -5,7 +5,7 @@ import { cn } from "@/utils";
 interface Props {
   position?: "left" | "right" | "center" | "single";
   disabled?: boolean;
-  icon: ReactElement<SVGElement>;
+  icon: ReactElement;
   label: ReactNode;
   onClick?: () => void;
   className?: string;

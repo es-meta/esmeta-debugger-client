@@ -19,7 +19,7 @@ import { rateAtom } from "@/api/atom";
 interface SingleProps {
   adaptive?: boolean;
   className?: string;
-  icon: ReactElement<SVGElement>;
+  icon: ReactElement;
   text: string;
   content: string;
 }

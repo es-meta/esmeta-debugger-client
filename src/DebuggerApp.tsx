@@ -19,16 +19,17 @@ export default function DebuggerApp() {
       <Toolbar />
       <ResizablePanelGroup
         direction="horizontal"
+        resizeTargetMinimumSize={{ coarse: 16, fine: 8 }}
         className="bg-white dark:bg-neutral-900 rounded-lg border grow flex overflow-hidden"
       >
         <ResizablePanel minSize={8}>
           <JSCodeEditor />
         </ResizablePanel>
-        <ResizableHandle withHandle hitAreaMargins={{ coarse: 16, fine: 8 }} />
+        <ResizableHandle withHandle />
         <ResizablePanel minSize={8} className="">
           <SpecViewer />
         </ResizablePanel>
-        <ResizableHandle withHandle hitAreaMargins={{ coarse: 16, fine: 8 }} />
+        <ResizableHandle withHandle />
         <ResizablePanel minSize={8} collapsible>
           <SuspenseBoundary fatal>
             <StateViewer />

@@ -8,7 +8,7 @@ interface Props<T> {
   options: T[];
   setSelected: (t: T) => void;
   getId: (t: T) => string | number;
-  getIcon: (t: T) => React.ReactElement<SVGElement>;
+  getIcon: (t: T) => React.ReactElement;
   getLabel: (t: T) => string;
 }
 

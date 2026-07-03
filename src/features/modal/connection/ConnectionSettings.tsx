@@ -65,7 +65,7 @@ export default function ConnectionSettings() {
 interface Plan {
   id: string;
   name: string;
-  description: React.ReactElement<HTMLParagraphElement>;
+  description: React.ReactElement;
   icon: React.ReactElement;
 }
 
