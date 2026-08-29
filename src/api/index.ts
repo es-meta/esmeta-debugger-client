@@ -102,6 +102,7 @@ export async function instantiateWorker(
           new URL("@resources/dumps/spec.version.json", import.meta.url),
         ),
         fetchText(new URL("@resources/dumps/grammar.json", import.meta.url)),
+        fetchText(new URL("@resources/dumps/spec.constants.json", import.meta.url)),
         fetchText(
           new URL("@resources/dumps/spec.tables.json", import.meta.url),
         ),
@@ -110,11 +111,12 @@ export async function instantiateWorker(
         ),
         fetchText(new URL("@resources/dumps/funcs.cfg.json", import.meta.url)),
       ]).then(
-        ([funcs, version, grammar, tables, tyModel, funcsCfg]) =>
+        ([funcs, version, grammar, constants, tables, tyModel, funcsCfg]) =>
           ({
             funcs,
             version,
             grammar,
+            constants,
             tables,
             tyModel,
             funcsCfg,

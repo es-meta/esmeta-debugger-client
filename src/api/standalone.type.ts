@@ -47,6 +47,7 @@ export interface StandaloneDebuggerInput {
   funcs: string;
   version: string;
   grammar: string;
+  constants: string;
   tables: string;
   tyModel: string;
   funcsCfg: string;

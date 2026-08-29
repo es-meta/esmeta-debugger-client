@@ -1,0 +1,58 @@
+[
+  {
+    "name" : "HoursPerDay",
+    "value" : {
+      "DecimalMathValueLiteral" : {
+        "n" : 24
+      }
+    }
+  },
+  {
+    "name" : "MinutesPerHour",
+    "value" : {
+      "DecimalMathValueLiteral" : {
+        "n" : 60
+      }
+    }
+  },
+  {
+    "name" : "SecondsPerMinute",
+    "value" : {
+      "DecimalMathValueLiteral" : {
+        "n" : 60
+      }
+    }
+  },
+  {
+    "name" : "msPerSecond",
+    "value" : {
+      "NumberLiteral" : {
+        "double" : 1000.0
+      }
+    }
+  },
+  {
+    "name" : "msPerMinute",
+    "value" : {
+      "NumberLiteral" : {
+        "double" : 60000.0
+      }
+    }
+  },
+  {
+    "name" : "msPerHour",
+    "value" : {
+      "NumberLiteral" : {
+        "double" : 3600000.0
+      }
+    }
+  },
+  {
+    "name" : "msPerDay",
+    "value" : {
+      "NumberLiteral" : {
+        "double" : 8.64E7
+      }
+    }
+  }
+]
